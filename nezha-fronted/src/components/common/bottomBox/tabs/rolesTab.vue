@@ -92,7 +92,8 @@ export default {
           }
         ]
       },
-      searchLabel: { roleId: this.obj.id }
+      searchLabel: { roleId: this.obj.id },
+      fromBottom: true
     }
   },
   watch: {
@@ -119,9 +120,15 @@ export default {
         }
       }
     },
-    obj (n) {
-      this.searchLabel = { roleId: this.obj.id }
-      this.getTableData()
+    obj: {
+      immediate: true,
+      async handler (n) {
+        if (n) {
+          this.searchLabel = { roleId: this.obj.id }
+          await this.getPreference()
+          this.getTableData()
+        }
+      }
     }
   },
   methods: {

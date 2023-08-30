@@ -1,8 +1,8 @@
 <template>
-  <div class="module-list">
+  <div class="module-list" v-my-loading="preferenceLoading">
     <nzDetailView
       v-my-loading="detailViewLoading || tools.loading"
-      v-if="detailType !== 'list'"
+      v-if="detailType !== 'list'&&!preferenceLoading"
       :api="url"
       ref="detailList"
       :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
@@ -72,7 +72,7 @@
       ref="dataList"
       :api="url"
       :tableId="tableId"
-      v-if="detailType === 'list'"
+      v-if="detailType === 'list'&&!preferenceLoading"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.module"
       :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"

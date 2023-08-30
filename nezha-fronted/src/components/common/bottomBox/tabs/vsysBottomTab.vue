@@ -66,8 +66,20 @@ export default {
       },
       searchLabel: {},
       tableData: [],
-      orderBy: { order: 'ascending', prop: 'id' }
-
+      orderBy: { order: 'ascending', prop: 'id' },
+      fromBottom: true
+    }
+  },
+  watch: {
+    obj: {
+      deep: true,
+      immediate: true,
+      async handler (n) {
+        if (n) {
+          await this.getPreference()
+          this.getTableData()
+        }
+      }
     }
   },
   methods: {

@@ -75,9 +75,10 @@ export default {
   watch: {
     obj: {
       immediate: true,
-      handler (n) {
+      async handler (n) {
         if (n) {
           this.searchLabel = {}
+          await this.getPreference()
           this.getTableData()
         }
       }
@@ -122,6 +123,7 @@ export default {
   },
   methods: {
     getTableData () {
+      this.tools.loading = true
       if (this.orderBy) {
         this.$set(this.searchLabel, 'orderBy', this.orderBy)
       } else {

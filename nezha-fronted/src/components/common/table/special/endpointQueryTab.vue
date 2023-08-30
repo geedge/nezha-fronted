@@ -113,9 +113,10 @@ export default {
     obj: {
       immediate: true,
       deep: true,
-      handler (n) {
+      async handler (n) {
         if (n) {
           this.currentEndpoint = JSON.parse(JSON.stringify(n))
+          await this.getPreference()
           this.queryEndpoint()
         }
       }
@@ -173,6 +174,25 @@ export default {
     }
   },
   methods: {
+    // 获取用户偏好
+    async getPreference () {
+      const res = await this.$get('/sys/user/preference', { key: this.tableId })
+      if (res.data[this.tableId]) {
+        const data = JSON.parse(res.data[this.tableId])
+        this.pageObj.pageSize = data.pageSize
+      }
+    },
+    // 设置用户偏好
+    setPreference () {
+      const params = {
+        pageSize: this.pageObj.pageSize
+      }
+      this.$put('/sys/user/preference', { [this.tableId]: JSON.stringify(params) }).then(res => {
+        if (res.code !== 200) {
+          this.$message.error(res.msg || res.error)
+        }
+      })
+    },
     selectChange (selection) { // selection 选中的row的数组
       this.batchDeleteObjs = selection
       this.$emit('changSelection', selection)
@@ -408,7 +428,7 @@ export default {
     },
     pageSize (val) {
       this.pageObj.pageSize = val
-      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.setPreference()
       this.handleCurrentChange()
     },
     handleCurrentChange () {
@@ -454,9 +474,6 @@ export default {
     }
   },
   created () {
-    // this.getPanelData()
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    this.pageObj.pageSize = pageSize || 20
   }
 }
 </script>

@@ -138,7 +138,8 @@ export default {
           readonly: true,
           disabled: false
         }]
-      }
+      },
+      fromBottom: true
     }
   },
   methods: {
@@ -179,9 +180,10 @@ export default {
     obj: {
       immediate: true,
       deep: true,
-      handler (n, o) {
+      async handler (n, o) {
         if (n) {
           this.searchLabel = {}
+          await this.getPreference()
           this.getTableData()
         }
       }

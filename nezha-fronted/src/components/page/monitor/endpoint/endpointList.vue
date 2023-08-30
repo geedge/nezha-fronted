@@ -1,8 +1,8 @@
 <template>
-  <div id="endpoint-list">
+  <div id="endpoint-list" v-my-loading="preferenceLoading">
     <nzDetailView
       v-my-loading="detailViewLoading || tools.loading"
-      v-if="detailType !== 'list'"
+      v-if="detailType !== 'list'&&!preferenceLoading"
       :api="url"
       ref="detailList"
       :layout="dataListLayout"
@@ -71,7 +71,7 @@
     <nz-data-list
       v-my-loading="detailViewLoading"
       ref="dataList"
-      v-if="detailType === 'list'"
+      v-if="detailType === 'list'&&!preferenceLoading"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.endpoint"
@@ -385,7 +385,7 @@ export default {
       tableId: 'endpointTable',
       queryPermission: 'account_view',
       endpointTableHeight: 'calc(100% - 244px)', // 主列表table高度
-      dataListLayout: localStorage.getItem('dataList-layout' + 'endpointTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'endpointTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
+      dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [

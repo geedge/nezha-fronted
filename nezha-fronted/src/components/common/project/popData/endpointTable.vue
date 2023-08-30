@@ -84,7 +84,7 @@ export default {
   data () {
     return {
       url: 'monitor/endpoint',
-      tableId: 'endpointTableProject',
+      tableId: 'projectEndpoint',
       pageObj: {
         pageNo: 1,
         pageSize: this.$CONSTANTS.defaultPageSize,
@@ -138,20 +138,36 @@ export default {
       },
       deleteBox: {},
       needAlertDaysData: true,
-      trendKey: 'endpointId'
+      trendKey: 'endpointId',
+      projectPopTable: true
     }
   },
   created () {
-    // 是否存在分页缓存
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    if (pageSize != 'undefined' && pageSize != null) {
-      this.pageObj.pageSize = pageSize
-    }
   },
-  mounted () {
+  async mounted () {
+    await this.getPreference()
     this.getTableData()
   },
   methods: {
+    // 获取用户偏好
+    async getPreference () {
+      const res = await this.$get('/sys/user/preference', { key: this.tableId })
+      if (res.data[this.tableId]) {
+        const data = JSON.parse(res.data[this.tableId])
+        this.pageObj.pageSize = data.pageSize
+      }
+    },
+    // 设置用户偏好
+    setPreference () {
+      const params = {
+        pageSize: this.pageObj.pageSize
+      }
+      this.$put('/sys/user/preference', { [this.tableId]: JSON.stringify(params) }).then(res => {
+        if (res.code !== 200) {
+          this.$message.error(res.msg || res.error)
+        }
+      })
+    },
     getTableData: function () {
       this.tools.loading = true
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
@@ -208,7 +224,7 @@ export default {
     },
     pageSize (val) {
       this.pageObj.pageSize = val
-      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.setPreference()
       this.getTableData()
     },
     selectChange (s) {

@@ -92,7 +92,7 @@ export default {
         topoData: {},
         querysArray: {},
         currentProject: {},
-        params: {},
+        params: {}
       },
       /* 二级页面相关 */
       bottomBox: {
@@ -311,7 +311,6 @@ export default {
     },
     endpointPageSize (val) {
       this.endpointPageObj.pageSize = val
-      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
       this.getEndpointTableData()
     },
 
@@ -608,11 +607,6 @@ export default {
   },
   created () {
     this.currentProject = this.$store.state.currentProject
-    // 是否存在分页缓存
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    if (pageSize) {
-      this.endpointPageObj.pageSize = pageSize
-    }
   },
   mounted () {
     // 初始化表头

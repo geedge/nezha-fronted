@@ -267,7 +267,7 @@ export default {
       }
     },
     updateCustomTableTitle (custom) {
-      this.$emit('update:customTableTitle', custom)
+      this.$parent.updateCustomTableTitle(custom)
     },
     // 全屏
     fullScreen () {

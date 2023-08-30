@@ -75,7 +75,8 @@ export default {
       },
       timer: null,
       sameLabels: ['endpointLabels', 'labelsType', 'lastScrape', 'lastScrapeDuration', 'health', 'lastError', 'str'],
-      orderBy: {}
+      orderBy: {},
+      fromBottom: true
     }
   },
   watch: {
@@ -86,12 +87,13 @@ export default {
       }, 500)
     },
     obj: {
-      // immediate: true,
+      immediate: true,
       deep: true,
-      handler (n, o) {
+      async handler (n, o) {
         if (n) {
           this.searchLabel = {}
           this.inputDateSearch = ''
+          await this.getPreference()
           this.getTableData()
         }
       }
@@ -245,7 +247,7 @@ export default {
     },
     pageSize (val) {
       this.pageObj.pageSize = val
-      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.setPreference()
       this.handleCurrentChange()
     },
     // 计算当前分页需要返回数据的条数
@@ -314,8 +316,7 @@ export default {
     clearInterval(this.timer)
   },
   created () {
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    this.pageObj.pageSize = pageSize || 20
+
   }
 }
 </script>

@@ -80,9 +80,15 @@ export default {
     }
   },
   watch: {
-    obj (n) {
-      this.searchLabel = { id: n.id }
-      this.getTableData()
+    obj: {
+      immediate: true,
+      async handler (n) {
+        if (n) {
+          this.searchLabel = { id: n.id }
+          await this.getPreference()
+          this.getTableData()
+        }
+      }
     },
     queryExpression (n) {
       const temp = this
@@ -109,7 +115,8 @@ export default {
       filterTime: [
         bus.timeFormate(bus.getOffsetTimezoneData(-1), 'YYYY-MM-DD HH:mm:ss'),
         bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss')
-      ]
+      ],
+      fromBottom: true
     }
   },
   methods: {

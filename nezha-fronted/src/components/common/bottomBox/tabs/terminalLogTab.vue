@@ -60,9 +60,15 @@ export default {
     }
   },
   watch: {
-    obj (n) {
-      this.searchLabel = { userId: n.id }
-      this.getTableData()
+    obj: {
+      immediate: true,
+      async handler (n) {
+        if (n) {
+          this.searchLabel = { userId: n.id }
+          await this.getPreference()
+          this.getTableData()
+        }
+      }
     }
   },
   data () {
@@ -124,7 +130,8 @@ export default {
         ]
       },
       nowTime: '',
-      searchLabel: { userId: this.obj.id }
+      searchLabel: { userId: this.obj.id },
+      fromBottom: true
     }
   },
   methods: {

@@ -1,8 +1,8 @@
 <template>
-  <div style="height: 100%" id="asset-batch-table">
+  <div style="height: 100%" id="asset-batch-table" v-my-loading="preferenceLoading">
     <nzDetailView
       v-my-loading="detailViewLoading || tools.loading"
-      v-if="detailType !== 'list'"
+      v-if="detailType !== 'list'&&!preferenceLoading"
       :api="url"
       ref="detailList"
       :layout="dataListLayout"
@@ -74,7 +74,7 @@
     </nzDetailView>
     <nz-data-list
       v-my-loading="detailViewLoading"
-      v-if="detailType === 'list'"
+      v-if="detailType === 'list'&&!preferenceLoading"
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
@@ -247,7 +247,7 @@ export default {
         batchShow: false
       },
       silenceBoxShow: false,
-      dataListLayout: localStorage.getItem('dataList-layoutassetNzTableHeightOffset' + 'assetTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'assetTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
+      dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
       assetNzTableHeightOffset: 287, // 包含click-search时nz-table的高度
       blankObject: {
         id: '',

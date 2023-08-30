@@ -46,7 +46,9 @@ export default {
       delFlag: false,
       fromBottom: false,
       operationWidth: '165', // 操作列宽
-      searchCheckBox: {}
+      searchCheckBox: {},
+      detailType: 'list',
+      preferenceLoading: true
     }
   },
   provide () {
@@ -203,9 +205,9 @@ export default {
       this.pageObj.pageNo = val
       this.getTableData()
     },
-    pageSize (val) {
+    async pageSize (val) {
       this.pageObj.pageSize = val
-      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.setPreference()
       this.getTableData()
     },
     add () {
@@ -305,7 +307,7 @@ export default {
       } else {
         this.dataListLayout.push('clickSearch')
       }
-      localStorage.setItem('dataList-layout' + this.tableId, JSON.stringify(this.dataListLayout))
+      this.setPreference()
     },
     addSilence (row, type) {
       this.blankSilenceObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss')
@@ -376,6 +378,92 @@ export default {
     showText (row) {
       this.dialogShowText = true
       this.dialogText = row.alertRule.trbShot
+    },
+    // 获取用户偏好
+    async getPreference () {
+      this.preferenceLoading = true
+      const res = await this.$get('/sys/user/preference', { key: this.tableId })
+      let tableHeaders
+      if (res.data[this.tableId]) {
+        const data = JSON.parse(res.data[this.tableId])
+        this.pageObj.pageSize = data.pageSize
+        this.detailType = data.view
+        this.dataListLayout = data.layout
+        tableHeaders = data.tableHeaders
+      }
+      this.preferenceLoading = false
+      this.$nextTick(() => {
+        this.setCustomTableTitle(tableHeaders)
+      })
+      // 请求完用户偏好 打开底部弹窗
+      if (this.fromBottom || this.projectPopTable) { return }
+      const q = this.$route.query
+      if (q.bottomBox && JSON.parse(q.bottomBox)) {
+        this.$nextTick(() => {
+          this.detailType = q.detailType
+          const detailType = this.detailType === 'list' ? 'dataList' : 'detailList'
+          this.$refs[detailType].bottomBox.showSubList = JSON.parse(q.bottomBox)
+          this.$refs[detailType].bottomBox.targetTab = q.targetTab
+          this.$refs[detailType].bottomBox.object = JSON.parse(q.selectObj)
+        })
+      } else if (this.detailType === 'view' && q.detailType && q.selectObj) {
+        this.detailType = q.detailType
+        this.detailViewRightObj = JSON.parse(q.selectObj)
+        this.$store.commit('setGlobalSearchId', this.detailViewRightObj.id)
+      }
+    },
+    // 设置用户偏好
+    setPreference () {
+      const params = {
+        pageSize: this.pageObj.pageSize,
+        view: this.detailType || 'list',
+        tableHeaders: this.tools.customTableTitle
+      }
+      if (this.dataListLayout) {
+        params.layout = this.dataListLayout
+      }
+      this.$put('/sys/user/preference', { [this.tableId]: JSON.stringify(params) }).then(res => {
+        if (res.code !== 200) {
+          this.$message.error(res.msg || res.error)
+        }
+      })
+    },
+    setCustomTableTitle (tableHeaders) {
+      let tableTitle = ''
+      if (this.$refs.dataTable) {
+        tableTitle = this.$refs.dataTable.tableTitle
+      } else if (this.$refs.dataDetail) {
+        tableTitle = this.$refs.dataDetail.tableTitle
+      }
+      if (!tableTitle || !this.tableId) {
+        return
+      }
+      const preferenceTableTitle = tableHeaders || tableTitle
+      if (tableTitle) {
+        // 先根据本地缓存中的prop进行排序
+        tableTitle.sort(function (a, b) {
+          return preferenceTableTitle.findIndex(function (c) {
+            return c.prop === a.prop
+          }) - preferenceTableTitle.findIndex(function (c) {
+            return c.prop === b.prop
+          })
+        })
+        this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
+          item.show = preferenceTableTitle[index].show
+          return item
+        })
+      }
+      if (preferenceTableTitle && (preferenceTableTitle.length > tableTitle.length)) {
+        const arr = preferenceTableTitle.splice(tableTitle.length, preferenceTableTitle.length)
+        arr.forEach(item => {
+          item.minWidth = item.label.length * 16 + 20
+        })
+        this.tools.customTableTitle = this.tools.customTableTitle.concat(arr)
+      }
+    },
+    updateCustomTableTitle (custom) {
+      this.tools.customTableTitle = custom
+      this.setPreference()
     }
   },
   watch: {
@@ -1336,50 +1424,20 @@ export default {
     }
     this.initQueryFromPath(searchKeys)
   },
-  mounted () {
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    if (pageSize && pageSize !== 'undefined') {
-      this.pageObj.pageSize = pageSize
-    }
+  async mounted () {
+    // 先设置默认的表头
     let tableTitle = ''
     if (this.$refs.dataTable) {
       tableTitle = this.$refs.dataTable.tableTitle
     } else if (this.$refs.dataDetail) {
       tableTitle = this.$refs.dataDetail.tableTitle
     }
-    if (!tableTitle || !this.tableId) {
-      return
+    if (tableTitle && this.tableId) {
+      this.tools.customTableTitle = tableTitle
     }
-    let localStorageTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    localStorageTableTitle = localStorageTableTitle ? JSON.parse(localStorageTableTitle) : tableTitle
-    if (tableTitle) {
-      // 先根据本地缓存中的prop进行排序
-      tableTitle.sort(function (a, b) {
-        return localStorageTableTitle.findIndex(function (c) {
-          return c.prop === a.prop
-        }) - localStorageTableTitle.findIndex(function (c) {
-          return c.prop === b.prop
-        })
-      })
-      this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
-        item.show = localStorageTableTitle[index].show
-        return item
-      })
-    }
-    if (localStorageTableTitle && (localStorageTableTitle.length > tableTitle.length)) {
-      const arr = localStorageTableTitle.splice(tableTitle.length, localStorageTableTitle.length)
-      arr.forEach(item => {
-        item.minWidth = item.label.length * 16 + 20
-      })
-      this.tools.customTableTitle = this.tools.customTableTitle.concat(arr)
-    }
-    if (!this.fromBottom) {
+    if (!this.fromBottom && !this.projectPopTable) {
+      await this.getPreference()
       this.getTableData()
-      this.$nextTick(() => {
-        if (this.$refs.dataTable) {
-          this.$refs.dataTable.$refs.dataTable && this.$refs.dataTable.$refs.dataTable.doLayout()
-        }
-      })
     }
   },
   beforeDestroy () {

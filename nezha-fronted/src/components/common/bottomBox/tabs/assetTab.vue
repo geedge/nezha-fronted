@@ -132,7 +132,8 @@ export default {
       snmpCredentialData: [],
       fieldGroupData: [],
       needAlertDaysData: true,
-      trendKey: 'assetId'
+      trendKey: 'assetId',
+      fromBottom: true
     }
   },
   methods: {
@@ -294,7 +295,7 @@ export default {
     obj: {
       immediate: true,
       deep: true,
-      handler (n, o) {
+      async handler (n, o) {
         this.searchLabel = {}
         this.searchLabel.dcIds = n.id
         if (this.from === fromRoute.model) {
@@ -305,6 +306,7 @@ export default {
           delete this.searchLabel.dcIds
           this.searchLabel.pids = n.id
         }
+        await this.getPreference()
         this.getTableData()
       }
     }

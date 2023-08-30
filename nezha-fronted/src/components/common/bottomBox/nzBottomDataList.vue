@@ -175,7 +175,7 @@ export default {
   },
   methods: {
     updateCustomTableTitle (custom) {
-      this.$emit('update:customTableTitle', custom)
+      this.$parent.updateCustomTableTitle(custom)
     },
     search (searchObj) {
       this.$emit('search', searchObj)

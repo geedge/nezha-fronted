@@ -125,11 +125,6 @@ export default {
     if (this.postPageSizes && this.postPageSizes.length > 0) {
       this.pageSize = this.postPageSizes[0]
       this.resetPageSizes()
-    } else {
-      const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageSize = parseInt(pageSize)
-      }
     }
   },
   watch: {
@@ -149,6 +144,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n, o) {
+        this.pageSize = this.pageObj.pageSize
       }
     }
   }

@@ -209,9 +209,6 @@ export default {
     }
   },
   methods: {
-    updateCustomTableTitle (custom) {
-      this.$emit('update:customTableTitle', custom)
-    },
     // 全屏
     fullScreen () {
       const vm = this

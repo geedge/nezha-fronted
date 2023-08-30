@@ -132,7 +132,8 @@ export default {
             disabled: false
           }
         ]
-      }
+      },
+      fromBottom: true
     }
   },
   created () {
@@ -234,10 +235,11 @@ export default {
     obj: {
       immediate: true,
       deep: true,
-      handler (n) {
+      async handler (n) {
         if (n) {
           this.currentDc = JSON.parse(JSON.stringify(n))
           this.searchLabel = { dcIds: this.currentDc.id }
+          await this.getPreference()
           this.getTableData()
         }
       }

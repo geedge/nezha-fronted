@@ -33,19 +33,19 @@ export default {
           cb()
         }
       }
-      if (q.bottomBox && JSON.parse(q.bottomBox)) {
-        this.$nextTick(() => {
-          this.detailType = q.detailType
-          const detailType = this.detailType === 'list' ? 'dataList' : 'detailList'
-          this.$refs[detailType].bottomBox.showSubList = JSON.parse(q.bottomBox)
-          this.$refs[detailType].bottomBox.targetTab = q.targetTab
-          this.$refs[detailType].bottomBox.object = JSON.parse(q.selectObj)
-        })
-      } else if (this.detailType === 'view' && q.detailType && q.selectObj) {
-        this.detailType = q.detailType
-        this.detailViewRightObj = JSON.parse(q.selectObj)
-        this.$store.commit('setGlobalSearchId', this.detailViewRightObj.id)
-      }
+      // if (q.bottomBox && JSON.parse(q.bottomBox)) {
+      //   this.$nextTick(() => {
+      //     this.detailType = q.detailType
+      //     const detailType = this.detailType === 'list' ? 'dataList' : 'detailList'
+      //     this.$refs[detailType].bottomBox.showSubList = JSON.parse(q.bottomBox)
+      //     this.$refs[detailType].bottomBox.targetTab = q.targetTab
+      //     this.$refs[detailType].bottomBox.object = JSON.parse(q.selectObj)
+      //   })
+      // } else if (this.detailType === 'view' && q.detailType && q.selectObj) {
+      //   this.detailType = q.detailType
+      //   this.detailViewRightObj = JSON.parse(q.selectObj)
+      //   this.$store.commit('setGlobalSearchId', this.detailViewRightObj.id)
+      // }
     },
     // 更新path，包含请求参数
     updatePath (param, path, from) {
@@ -58,7 +58,6 @@ export default {
         })
         if (!from) {
           const detailType = this.detailType === 'list' ? 'dataList' : 'detailList'
-          localStorage.setItem('detail-view-' + this.tableId, this.detailType)
           if (this.detailType) {
             params.detailType = this.detailType
           }

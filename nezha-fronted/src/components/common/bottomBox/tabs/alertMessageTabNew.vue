@@ -158,12 +158,13 @@ export default {
   watch: {
     obj: {
       immediate: true,
-      handler (n) {
+      async handler (n) {
         if (n) {
           this.searchLabel = {}
           if (this.from === fromRoute.alertSilence) {
             this.state = '2'
           }
+          await this.getPreference()
           this.searchLabel = {}
           // this.getTableData()
           setTimeout(() => {
@@ -187,7 +188,7 @@ export default {
       url: 'alert/message',
       urlNew: 'alert/message/query',
       alertSilenceUrl: '',
-      tableId: 'alertMessageModule', // 需要分页的table的id，用于记录每页数量
+      tableId: 'alertMessageTab', // 需要分页的table的id，用于记录每页数量
       state: '1',
       blankSilenceObject: {
         id: '',

@@ -60,9 +60,15 @@ export default {
     }
   },
   watch: {
-    obj (n) {
-      this.searchLabel = { id: n.id }
-      this.getTableData()
+    obj: {
+      immediate: true,
+      async handler (n) {
+        if (n) {
+          this.searchLabel = { id: n.id }
+          await this.getPreference()
+          this.getTableData()
+        }
+      }
     }
   },
   data () {
@@ -82,7 +88,8 @@ export default {
         ]
       },
       nowTime: '',
-      searchLabel: { id: this.obj.id }
+      searchLabel: { id: this.obj.id },
+      fromBottom: true
     }
   },
   methods: {

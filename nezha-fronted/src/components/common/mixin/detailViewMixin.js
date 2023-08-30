@@ -14,7 +14,6 @@ export default {
   },
   data () {
     return {
-      detailType: localStorage.getItem('detail-view-' + this.tableId) || 'list',
       detailViewRightObj: '',
       detailViewLoading: false,
       detailTimer: '',
@@ -22,7 +21,6 @@ export default {
     }
   },
   created () {
-    this.detailType = localStorage.getItem('detail-view-' + this.tableId) || 'list'
   },
   mounted () {
     setTimeout(() => {
@@ -43,12 +41,12 @@ export default {
         return
       }
       this.detailType = flag
+      this.setPreference()
       // this.$refs.dataList.bottomBox.showSubList = false
       // if (this.orderBy) {
       //   this.detailViewRightObj = ''
       // }
       let dataList = ''
-      localStorage.setItem('detail-view-' + this.tableId, this.detailType)
       if (this.detailType === 'view') {
         dataList = 'detailList'
         if (this.from === this.fromRoute.asset) {
