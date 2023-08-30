@@ -2,54 +2,32 @@
     <div id="lokiStatusTable">
       <div class="cortex-service">
           <div class="cortex-title" style="margin-top: 0px;">{{$t('cortex.serviceStatus')}}</div>
-          <el-table
-          :data="servicesTableData"
-          border>
-            <el-table-column
-            v-for="(item, index) in serviceTitle"
-            :key="`col-${index}-${item.prop}`"
-            :fixed="item.fixed"
-            :label="item.label"
-            :min-width="`${item.minWidth}`"
-            :prop="item.prop"
-            :resizable="true"
-            :width="`${item.width}`"
-            class="data-column"
-            >
-            <template slot="header">
-               <span class="data-column__span">{{item.label}}</span>
-                <div class="col-resize-area"></div>
-            </template>
-             <template slot-scope="scope" :column="item">
-              <span v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-              <template v-else>-</template>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-table
-          :data="servicesTableData"
-          border>
-            <el-table-column
-            v-for="(item, index) in serviceTitleSub"
-            :key="`col-${index}-${item.prop}`"
-            :fixed="item.fixed"
-            :label="item.label"
-            :min-width="`${item.minWidth}`"
-            :prop="item.prop"
-            :resizable="true"
-            :width="`${item.width}`"
-            class="data-column"
-            >
-            <template slot="header">
-               <span class="data-column__span">{{item.label}}</span>
-                <div class="col-resize-area"></div>
-            </template>
-             <template slot-scope="scope" :column="item">
-              <span v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-              <template v-else>-</template>
-              </template>
-            </el-table-column>
-          </el-table>
+          <div v-for="(serviceTitle, index) in serviceTitleAll" :key="index">
+            <el-table
+              :data="servicesTableData"
+              border>
+              <el-table-column
+                v-for="(item, index) in serviceTitle"
+                :key="`col-${index}-${item.prop}`"
+                :fixed="item.fixed"
+                :label="item.label"
+                :min-width="`${item.minWidth}`"
+                :prop="item.prop"
+                :resizable="true"
+                :width="`${item.width}`"
+                class="data-column"
+              >
+                <template slot="header">
+                  <span class="data-column__span">{{item.label}}</span>
+                  <div class="col-resize-area"></div>
+                </template>
+                <template slot-scope="scope" :column="item">
+                  <span v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+                  <template v-else>-</template>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
       </div>
       <div class="cortex-ring">
         <div class="cortex-title">{{$t('cortex.ringStatus')}}</div>
@@ -171,70 +149,104 @@ export default {
           prop: 'ownership',
           minWidth: 180
         }],
-      serviceTitle: [
-        {
-          label: 'Ready',
-          prop: 'ready',
-          minWidth: 180
-        },
-        {
-          label: 'Querier',
-          prop: 'querier',
-          minWidth: 180
-        },
-        {
-          label: 'Member list KV',
-          prop: 'memberlist-kv',
-          minWidth: 180
-        },
-        {
-          label: 'Store',
-          prop: 'store',
-          minWidth: 180
-        },
-        {
-          label: 'Distributor',
-          prop: 'distributor',
-          minWidth: 180
-        },
-        {
-          label: 'Ingester',
-          prop: 'ingester',
-          minWidth: 180
-        }
+      serviceTitleAll:[
+        [
+          {
+            label: 'Ready',
+            prop: 'ready',
+            minWidth: 180
+          },
+          {
+            label: 'Querier',
+            prop: 'querier',
+            minWidth: 180
+          },
+          {
+            label: 'Member list KV',
+            prop: 'memberlist-kv',
+            minWidth: 180
+          },
+          {
+            label: 'Store',
+            prop: 'store',
+            minWidth: 180
+          },
+          {
+            label: 'Distributor',
+            prop: 'distributor',
+            minWidth: 180
+          },
+          {
+            label: 'Ingester',
+            prop: 'ingester',
+            minWidth: 180
+          }
+        ],
+        [
+          {
+            label: 'Query frontend tripperware',
+            prop: 'query-frontend-tripperware',
+            minWidth: 180
+          },
+          {
+            label: 'Query frontend',
+            prop: 'query-frontend',
+            minWidth: 180
+          },
+          {
+            label: 'Ingester querier',
+            prop: 'ingester-querier',
+            minWidth: 180
+          },
+          {
+            label: 'Server',
+            prop: 'server',
+            minWidth: 180
+          },
+          {
+            label: 'Ring',
+            prop: 'ring',
+            minWidth: 180
+          },
+          {
+            label: 'Query scheduler',
+            prop: 'query-scheduler',
+            minWidth: 180
+          }
+        ],
+        [
+          {
+            label: 'Cache generation loader',
+            prop: 'cache-generation-loader',
+            minWidth: 180
+          },
+          {
+            label: 'Compactor',
+            prop: 'compactor',
+            minWidth: 180
+          },
+          {
+            label: 'Usage report',
+            prop: 'usage-report',
+            minWidth: 180
+          },
+          {
+            label: '',
+            prop: '',
+            minWidth: 180
+          },
+          {
+            label: '',
+            prop: '',
+            minWidth: 180
+          },
+          {
+            label: '',
+            prop: '',
+            minWidth: 180
+          }
+        ],
       ],
-      serviceTitleSub: [
-        {
-          label: 'Query frontend tripperware',
-          prop: 'query-frontend-tripperware',
-          minWidth: 180
-        },
-        {
-          label: 'Query frontend',
-          prop: 'query-frontend',
-          minWidth: 180
-        },
-        {
-          label: 'Ingester querier',
-          prop: 'ingester-querier',
-          minWidth: 180
-        },
-        {
-          label: 'Server',
-          prop: 'server',
-          minWidth: 180
-        },
-        {
-          label: 'Ring',
-          prop: 'ring',
-          minWidth: 180
-        },
-        {
-          label: 'Query scheduler',
-          prop: 'query-scheduler',
-          minWidth: 180
-        }
-      ]
     }
   },
   mounted () {
