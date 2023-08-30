@@ -50,7 +50,7 @@
                 </el-select>
               </el-form-item>
               <!-- retries -->
-              <el-form-item prop="retries" style="margin-bottom:14px" :label="$t('Retries')">
+              <el-form-item prop="retries" style="margin-bottom:14px" :label="$t('overall.retries')">
                 <div class="wrap" style="height:32px">
                   <el-input v-model.number="discoveryForm.retries" placeholder="">
                   </el-input>

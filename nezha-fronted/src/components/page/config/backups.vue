@@ -26,7 +26,7 @@
       <div class="system-title">{{ $t("backup.recent") }}</div>
       <nz-data-list
         ref="dataList"
-        id="modelTable"
+        id="modelTable2"
         :data="tableData2"
         border
         from="backups"
@@ -60,14 +60,16 @@ import nzDataList from '@/components/common/table/nzDataList'
 import backupsTable from '@/components/common/table/settings/backupsTable'
 import backupsBox from '@/components/common/rightBox/administration/backupsBox'
 import bus from '@/libs/bus'
+import dataListMixin from "@/components/common/mixin/dataList";
+import routerPathParams from "@/components/common/mixin/routerPathParams";
 
 export default {
   name: 'backups',
-  mixins: [],
+  mixins: [dataListMixin, routerPathParams],
   props: [''],
   data () {
     return {
-
+      object: {},
       url: '/sys/backup',
       customTableTitle: [
         { label: this.$t('alert.config.schedEnable'), prop: 'schedule' },

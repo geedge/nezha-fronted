@@ -74,7 +74,7 @@ export default {
         total: 0
       },
       timer: null,
-      sameLabels: ['endpointLabels', 'labelsType', 'lastScrape', 'lastScrapeDuration', 'health', 'lastError', 'str'],
+      sameLabels: ['endpointLabels', 'labelsType', 'lastScrape', 'lastScrapeDuration', 'health', 'lastError', 'str', 'healthOther'],
       orderBy: {},
       fromBottom: true
     }
@@ -146,6 +146,14 @@ export default {
                   }
                 }
               })
+              item.lastScrapeDuration = (item.lastScrapeDuration * 1000).toFixed(3) + 'ms'
+              item.lastScrape = this.momentTz(item.lastScrape)
+              if (item.health == 'up') {
+                item.healthOther = 'UP'
+              }
+              if (item.health == 'down') {
+                item.healthOther = 'DOWN'
+              }
               return item
             })
             const globalSearchId = this.$store.getters.getGlobalSearchId
@@ -179,6 +187,8 @@ export default {
         const lastScrape = bus.timeFormate(date.lastScrape, this.timeFormatMain) || ''
         const lastScrapeDuration = date.lastScrapeDuration || ''
         const health = date.health || ''
+        const healthOther = date.healthOther || ''
+        console.log(healthOther)
         const lastError = date.lastError || ''
         const asset = date.asset
         const cpu = date.cpu
@@ -208,6 +218,7 @@ export default {
           user,
           labels,
           discoveredLabels,
+          healthOther,
           str
         }
         let simpleTemp = ''
