@@ -5,15 +5,18 @@
 * */
 import bus from '../../libs/bus'
 import { formatScientificNotation } from '@/components/common/js/tools'
-function none (value, index) {
-  const scientificNotationValue = formatScientificNotation(value, 2)
+function none (value, index, type = 1, dot = 2) {
+  const scientificNotationValue = formatScientificNotation(value, dot)
   if (!numberWithEConvent(scientificNotationValue)) {
     return scientificNotationValue
   }
   if (isNaN(value) || value === null) {
     return value
   }
-  return keepDoubleNumber(value)
+  if (scientificNotationValue == 0) {
+    return 0
+  }
+  return scientificNotationValue
 }
 function short (value, index, type = 1, dot) {
   if (type == 1) {
@@ -24,24 +27,24 @@ function short (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, [' ', 'K', 'Mil', 'Bil', 'Til', 'Quadrillion', 'Quintillion'], 2)
   }
 }
-function percent01 (value, index) {
-  const scientificNotationValue = formatScientificNotation(value, 2)
+function percent01 (value, index, type = 1, dot = 2) {
+  const scientificNotationValue = formatScientificNotation(value, dot)
   if (!numberWithEConvent(scientificNotationValue)) {
     return `${scientificNotationValue} %`
   }
   value = parseFloat((Number(value)).toFixed(2))
   return `${value} %`
 }
-function percent02 (value, index) {
-  const scientificNotationValue = formatScientificNotation(value, 2)
+function percent02 (value, index, type = 1, dot = 2) {
+  const scientificNotationValue = formatScientificNotation(value, dot)
   if (!numberWithEConvent(scientificNotationValue)) {
     return `${scientificNotationValue} %`
   }
-  value = parseFloat((Number(value) * 100).toFixed(2))
+  value = parseFloat((Number(value) * 100).toFixed(dot))
   return `${value} %`
 }
-function localFormat (value, index) {
-  const scientificNotationValue = formatScientificNotation(value, 2)
+function localFormat (value, index, type = 1, dot = 2) {
+  const scientificNotationValue = formatScientificNotation(value, dot)
   if (!numberWithEConvent(scientificNotationValue)) {
     return `${scientificNotationValue} %`
   }
