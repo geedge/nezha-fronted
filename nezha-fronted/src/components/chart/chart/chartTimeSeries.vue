@@ -438,8 +438,8 @@ export default {
             const color = self.colorList[item.seriesIndex]
             const previousItem = arr.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
             let paramsDot = bus.countDecimals(item.data[1])
-            if (paramsDot < self.chartDot) {
-              paramsDot = self.chartDot
+            if (paramsDot < decimals) {
+              paramsDot = decimals
             } else if (paramsDot > 6) {
               paramsDot = 6
             }
@@ -514,7 +514,7 @@ export default {
                 <span>${self.$t('dashboard.dashboard.chartTotal')}</span>
               </div>
               <div class="row__value">
-                <span>${chartDataFormat.getUnit(unit).compute(sum, null, decimals)}</span>
+                <span>${chartDataFormat.getUnit(unit).compute(sum, null, -1, decimals)}</span>
               </div>
             </div>
           `
