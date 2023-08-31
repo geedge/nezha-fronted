@@ -3682,7 +3682,7 @@ export default {
         const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
         this.filterTime = this.timePickerRange.time
         this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.filterTime)
-        this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+        this.setSearchTime('filterTime')
       })
     },
     selectMetricsLogs (val, icon, label) {
@@ -4116,7 +4116,7 @@ export default {
       if (this.$refs.pickTime) {
         const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-        this.setSearchTime(nowTimeType.type, nowTimeType.value)
+        this.setSearchTime('filterTime')
       }
       if (this.expressions && this.expressions.length >= 1) {
         let error = false
@@ -4155,7 +4155,7 @@ export default {
         const nowTimeType = data.nowTimeType
         this.filterTime = data.searchTime
         if (nowTimeType && nowTimeType.type) {
-          this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+          this.setSearchTime('filterTime')
         }
         if (nowTimeType) {
           nowTimeType.start_time = this.filterTime[0]
@@ -4213,28 +4213,6 @@ export default {
         param[this.position] = JSON.stringify(q)
       }
       this.$router.replace({ query: param })
-    },
-    setSearchTime (type, val) { // 设置searchTime
-      if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
-        this.$set(this.filterTime, 0, startTime)
-        this.$set(this.filterTime, 1, endTime)
-        this.$set(this.filterTime, 2, val + 'm')
-      } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
-        this.$set(this.filterTime, 0, startTime)
-        this.$set(this.filterTime, 1, endTime)
-        this.$set(this.filterTime, 2, val + 'h')
-      } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
-        this.$set(this.filterTime, 0, startTime)
-        this.$set(this.filterTime, 1, endTime)
-        this.$set(this.filterTime, 2, val + 'd')
-      }
-      this.$refs.pickTime.$refs.timePicker.searchTime = this.filterTime
     },
     storeHistory () {
       const expire = 24

@@ -204,6 +204,12 @@ export default {
         { id: 10, text: this.$t('dashboard.dashboard.lastSevenDay'), type: 'date', value: 7 },
         { id: 11, text: this.$t('dashboard.dashboard.lastThirtyDay'), type: 'date', value: 30 }
       ],
+      relativeData: [
+        { id: 13, text: 'today', type: 'relative', value: 0 },
+        { id: 14, text: 'Yesterday ', type: 'relative', value: 1 },
+        { id: 15, text: 'The day before yesterday', type: 'relative', value: 2 },
+        { id: 16, text: 'This day last week', type: 'relative', value: 7 }
+      ],
       timeShowData: [],
       nowTimeType: {
         id: 4,
@@ -232,6 +238,7 @@ export default {
   mounted () {
     this.timePickerLocked = localStorage.getItem('nz-time-picker-locked') ? JSON.parse(localStorage.getItem('nz-time-picker-locked')) : false
     this.timeShowData = JSON.parse(JSON.stringify(this.timeData))
+    this.timeShowData.push(...this.relativeData)
     this.timeShowData.shift()
     this.getItem()
     this.getUtcStr()
@@ -322,6 +329,7 @@ export default {
       this.showTime = this.nowTimeType = {
         id: 0,
         text: this.searchTime[0] + ' ' + this.$t('dashboard.dashboard.to') + ' ' + this.searchTime[1],
+        type: 'custom',
         value: -1
       }
       this.isCustom = true
@@ -527,7 +535,22 @@ export default {
       // }
     },
     setSearchTime (type, val, time) {
-      if (type === 'minute') {
+      if (type === 'relative') {
+        const now = new Date(bus.computeTimezone(new Date().getTime()))
+        let start = bus.timeFormate(now, 'YYYY-MM-DD')
+        let end = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
+        console.log(start, end, val)
+        if (this.nowTimeType.id === 13) { // today
+          start += '00:00:00'
+          end += ''
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+        }
+        console.log(start, end)
+        this.$set(this.searchTime, 0, start)
+        this.$set(this.searchTime, 1, end)
+        this.$set(this.searchTime, 2, this.nowTimeType.id)
+      } else if (type === 'minute') {
         const startTime = bus.timeFormate(
           new Date(bus.computeTimezone(new Date().getTime())).setMinutes(
             new Date(bus.computeTimezone(new Date().getTime())).getMinutes() -

@@ -267,6 +267,10 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    .date-range-item {
+      height: 353px;
+      overflow-y: auto;
+    }
     ul {
       flex: 1;
       padding: 0;
@@ -312,8 +316,10 @@
 @media (max-height: 900px) {
   .date-range-panel {
     .date-range-panel-content-right {
-      height: 180px;
-      overflow-y: auto;
+      .date-range-item {
+        height: 180px;
+        overflow-y: auto;
+      }
     }
     .date-range-panel-content-left {
       height: 180px;

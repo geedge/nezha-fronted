@@ -67,7 +67,6 @@
 
 <script>
 import bus from '@/libs/bus'
-import topologyL5 from '@/components/common/project/topologyL5'
 import meta2dMain from '@/components/common/project/meta2d/meta2dMain'
 import beforeMeta2d from '@/components/common/mixin/beforeMeta2d'
 import { clearTopology } from '@/components/common/js/common'
@@ -76,7 +75,6 @@ export default {
   name: 'project2',
   mixins: [beforeMeta2d],
   components: {
-    topologyL5,
     meta2dMain
   },
   data () {

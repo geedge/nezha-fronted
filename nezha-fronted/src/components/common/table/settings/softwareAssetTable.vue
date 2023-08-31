@@ -56,6 +56,11 @@
               <i v-if="scope.row.asset&&scope.row.asset.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.asset.name)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
+          <template v-else-if="item.prop === 'category'">
+            <div>
+              {{scope.row.type ? scope.row.type.category : '-'}}
+            </div>
+          </template>
           <template v-else-if="item.prop === 'project'">
             <div class="document-copy-block">
               <span class="document-copy-text"

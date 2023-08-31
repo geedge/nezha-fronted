@@ -160,7 +160,22 @@ export default {
         this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         const type = nowTimeType.type
         const val = nowTimeType.value
-        if (type === 'minute') {
+        if (type === 'relative') {
+          const now = new Date(bus.computeTimezone(new Date().getTime()))
+          let start = bus.timeFormate(now, 'YYYY-MM-DD')
+          let end = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
+          let unit = ''
+          if (nowTimeType.id === 13) { // today
+            unit = 't'
+            start += '00:00:00'
+            end += ''
+            start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
+            end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+          }
+          this.$set(this[key], 0, start)
+          this.$set(this[key], 1, end)
+          this.$set(this[key], 2, val + unit)
+        } else if (type === 'minute') {
           const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
           const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
           this.$set(this[key], 0, startTime)
@@ -179,6 +194,7 @@ export default {
           this.$set(this[key], 1, endTime)
           this.$set(this[key], 2, val + 'd')
         }
+        console.log(this[key], 'mainMixin')
         this.$refs.pickTime.$refs.timePicker.searchTime = this[key]
       }
       if (cb) {

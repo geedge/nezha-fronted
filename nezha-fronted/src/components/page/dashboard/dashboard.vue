@@ -852,7 +852,7 @@ export default {
       clearTopology()
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-      this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+      this.setSearchTime('searchTime')
       this.getData(this.filter)
       this.$store.dispatch('dispatchPanelTime', {
         time: this.searchTime,
@@ -871,27 +871,7 @@ export default {
         this.updatePath(param, path)
       }
     },
-    setSearchTime (type, val, nowTimeType) { // 设置searchTime
-      if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), this.panelDateFormatTime)
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), this.panelDateFormatTime)
-        this.$set(this.searchTime, 0, startTime)
-        this.$set(this.searchTime, 1, endTime)
-        this.$set(this.searchTime, 2, val + 'm')
-      } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), this.panelDateFormatTime)
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), this.panelDateFormatTime)
-        this.$set(this.searchTime, 0, startTime)
-        this.$set(this.searchTime, 1, endTime)
-        this.$set(this.searchTime, 2, val + 'h')
-      } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), this.panelDateFormatTime)
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), this.panelDateFormatTime)
-        this.$set(this.searchTime, 0, startTime)
-        this.$set(this.searchTime, 1, endTime)
-        this.$set(this.searchTime, 2, val + 'd')
-      }
-      this.$refs.pickTime && (this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime)
+    storeDispatchPanelTime () { // 设置searchTime
       this.$store.dispatch('dispatchPanelTime', {
         time: this.searchTime,
         nowTimeType: this.nowTimeType
@@ -1199,7 +1179,7 @@ export default {
         this.nowTimeType = this.$lodash.cloneDeep(nowTimeType)
         // 刷新时间范围
         this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType)
-        this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+        this.setSearchTime('searchTime')
         this.$store.dispatch('dispatchPanelTime', {
           time: this.searchTime,
           nowTimeType: this.nowTimeType
@@ -1219,7 +1199,7 @@ export default {
         const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
         this.searchTime = this.timePickerRange.time
         this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.searchTime)
-        this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+        this.setSearchTime('searchTime')
       })
     },
     // 设置默认刷新
@@ -1257,7 +1237,7 @@ export default {
     this.$store.commit('setMode', this.mode)
     await this.getTableData()
     if (this.nowTimeType.type) {
-      this.setSearchTime(this.nowTimeType.type, this.nowTimeType.value, this.nowTimeType)
+      this.setSearchTime('searchTime')
     }
     if (this.nowTimeType) {
       this.nowTimeType.start_time = this.searchTime[0]

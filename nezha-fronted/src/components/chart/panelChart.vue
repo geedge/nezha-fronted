@@ -203,6 +203,7 @@ export default {
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
       let endTime = ''
+      // todo 刷新 需要判断是否是相对时间
       if (isRefresh) { // 刷新则视情况更新时间范围
         const now = new Date(bus.computeTimezone(new Date().getTime()))
         const origin = new Date(bus.timeFormate(bus.formateTimeToTime(this.timeRange[1]), 'YYYY-MM-DD HH:mm:ss'))

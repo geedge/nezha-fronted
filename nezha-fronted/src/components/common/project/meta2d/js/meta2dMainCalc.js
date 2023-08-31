@@ -4,9 +4,6 @@ import { activityDiagram } from '@meta2d/activity-diagram'
 import { classPens } from '@meta2d/class-diagram'
 import { sequencePens, sequencePensbyCtx } from '@meta2d/sequence-diagram'
 // import { chartsPens } from '@meta2d/le5le-charts'
-import {
-  disposeTopoOldData
-} from '../../L5/services/canvas.js'
 import { getTopology, setTopology, dealImg, topologyImg } from '@/components/common/js/common'
 import bus from '@/libs/bus'
 import topoUtil from '@/components/common/project/meta2d/js/topoUtil'
