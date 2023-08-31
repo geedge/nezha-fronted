@@ -23,6 +23,7 @@
     .el-table__body {
       border-collapse: separate;
       border-spacing: 0 6px;
+      width: auto !important;
       tr {
         background-color: $--background-color-empty;
       }
@@ -31,26 +32,50 @@
         padding: 1px 0;
         border: none;
       }
-      td.el-table__expanded-cell {
-        padding: 0 0 0 60px;
-        background-color: $--popover-background-color !important;
-      }
-      pre {
-        border: none;
-        background: none;
-      }
-      td.el-table__expanded-cell:hover {
-        padding: 0 0 0 60px;
-        background-color: $--background-color-base !important;
-      }
-      pre:hover {
-        background: none;
-        border: none;
-      }
       // 左侧边框
       td:first-child {
         border-left: 3px solid;
       }
+      td:nth-of-type(1) {
+        .cell{
+          width: 48px;
+        }
+      }
+      td:nth-of-type(2) {
+        .cell{
+          width: 160px;
+        }
+      }
+      td.el-table__expanded-cell {
+        padding: 0;
+        background-color: $--popover-background-color !important;
+      }
+      td.el-table__expanded-cell:hover {
+        background-color: $--background-color-base !important;
+      }
+      td.el-table__expanded-cell:first-child {
+        border-left: none;
+      }
+      pre {
+        border: none;
+        background: none;
+        padding: 15px !important;
+        overflow-x: auto;
+      }
+      .log-pre-wrap{
+        padding-left: 60px;
+        position: relative;
+      }
+      .log-pre-wrap::after{
+        content: "";
+        display: block;
+        position: absolute;
+        width: 3px;
+        top: -6px;
+        bottom: 0px;
+        left: 0px;
+      }
+
       td.log-border--debug {
         border-left-color: #1f78c1;
       }
@@ -72,16 +97,34 @@
       td.log-border--unknown {
         border-left-color: #B4C7DE;
       }
-      td.el-table__expanded-cell:first-child {
-        border-left: none;
+
+      .log-pre-wrap.log-border--debug::after {
+        background-color: #1f78c1;
       }
+      .log-pre-wrap.log-border--info::after {
+        background-color: #7eb26d;
+      }
+      .log-pre-wrap.log-border--warn::after {
+        background-color: #ff851b;
+      }
+      .log-pre-wrap.log-border--error::after {
+        background-color: #e24d42;
+      }
+      .log-pre-wrap.log-border--fatal::after {
+        background-color: #705da0;
+      }
+      .log-pre-wrap.log-border--trace::after {
+        background-color: #6ed0e0;
+      }
+      .log-pre-wrap.log-border--unknown::after {
+        background-color: #B4C7DE;
+      }
+      
       // 不换行
       .log-row-wrap--no-wrap .cell {
         white-space: nowrap;
         overflow: visible;
         .text-ellipsis{
-          overflow:hidden;
-          text-overflow:ellipsis;
           white-space:nowrap
         }
       }
@@ -96,6 +139,8 @@
       .context-cell{
         visibility: hidden;
         vertical-align: middle;
+        position: sticky;
+        right: 0;
         .cell{
           padding: 0;
           display: flex;
@@ -195,7 +240,12 @@
       .context-header{
         padding: 8px 16px;
         border: 1px solid $--border-color-light;
+        font-size: 14px;
         color: $--color-text-primary;
+        .nz-icon-override{
+          font-size: 16px;
+          color: $--color-text-regular;
+        }
       }
       .macth-before{
         font-size: 14px;

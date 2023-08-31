@@ -44,7 +44,9 @@
           type="expand"
         >
           <template slot-scope="{ row }">
-            <pre>{{row.labels}}</pre>
+            <div class="log-pre-wrap" :class="'log-border--'+row.level">
+              <pre>{{row.labels}}</pre>
+            </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -56,10 +58,9 @@
         </el-table-column>
         <el-table-column
           prop="legend"
-          width="140"
         >
           <template slot-scope="{ row }">
-            <div style="width: 100%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap" :title="aliasLegend(row)">{{aliasLegend(row)}}</div>
+            <div :title="aliasLegend(row)">{{aliasLegend(row)}}</div>
           </template>
         </el-table-column>
         <el-table-column

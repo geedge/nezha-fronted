@@ -9,7 +9,13 @@
       @close="closeDialog"
     >
       <div class="log-detail">
-        <div class="context-header" v-html="handlerLabels(rowData.labels)"></div>
+        <div class="context-header">
+          <copy :copyData='getExpression(rowData.labels)' :showInfo='getExpression(rowData.labels)'>
+            <template slot="copy-text">
+              <span v-html="handlerLabels(rowData.labels)"></span>
+            </template>
+          </copy>
+        </div>
         <div class="macth-before">
           <div>
             <p v-show="!loading">{{$t('explore.beforeMatch', { dataLength: beforeLength })}}</p>
@@ -46,7 +52,9 @@
                   type="expand"
                 >
                   <template slot-scope="{ row }">
-                    <pre>{{row.labels}}</pre>
+                    <div class="log-pre-wrap" :class="'log-border--'+row.level">
+                      <pre>{{row.labels}}</pre>
+                    </div>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -76,8 +84,10 @@
 </template>
 
 <script>
+import copy from '@/components/common/copy'
 export default {
   name: 'logContext',
+  components: { copy },
   props: {
     contextVisible: {
       type: Boolean,
