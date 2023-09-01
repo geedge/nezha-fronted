@@ -40,7 +40,6 @@
       <div v-if="dropdownFlag" class="date-range-panel popper-z-index" :class="timeBoxClass">
         <el-row class="date-range-panel-top" style="position: relative">
           <el-col
-            :span="16"
             class="date-range-panel-content date-range-panel-content-left"
           >
             <div class="date-range-title" style="padding-left: 0">
@@ -105,7 +104,6 @@
             </div>
           </el-col>
           <el-col
-            :span="8"
             class="date-range-panel-content date-range-panel-content-right"
             style="border-left: 1px solid rgba(0, 0, 0, 0.09)"
           >
@@ -202,13 +200,17 @@ export default {
         { id: 8, text: this.$t('dashboard.dashboard.lastTwentyFourHour'), type: 'hour', value: 24 },
         { id: 9, text: this.$t('dashboard.dashboard.lastTwoDay'), type: 'date', value: 2 },
         { id: 10, text: this.$t('dashboard.dashboard.lastSevenDay'), type: 'date', value: 7 },
-        { id: 11, text: this.$t('dashboard.dashboard.lastThirtyDay'), type: 'date', value: 30 }
-      ],
-      relativeData: [
+        { id: 11, text: this.$t('dashboard.dashboard.lastThirtyDay'), type: 'date', value: 30 },
         { id: 13, text: 'today', type: 'relative', value: 0 },
         { id: 14, text: 'Yesterday ', type: 'relative', value: 1 },
         { id: 15, text: 'The day before yesterday', type: 'relative', value: 2 },
-        { id: 16, text: 'This day last week', type: 'relative', value: 7 }
+        { id: 16, text: 'This day last week', type: 'relative', value: 7 },
+        { id: 17, text: 'This week', type: 'relative', value: 0 },
+        { id: 18, text: 'Previous week', type: 'relative', value: 1 },
+        { id: 19, text: 'This month', type: 'relative', value: 0 },
+        { id: 20, text: 'Previous month', type: 'relative', value: 1 }
+      ],
+      relativeData: [
       ],
       timeShowData: [],
       nowTimeType: {
@@ -537,19 +539,90 @@ export default {
     setSearchTime (type, val, time) {
       if (type === 'relative') {
         const now = new Date(bus.computeTimezone(new Date().getTime()))
-        let start = bus.timeFormate(now, 'YYYY-MM-DD')
+        const nowTimeType = this.nowTimeType
+        const oneDTimestamp = 24 * 60 * 60 * 1000
+        let start = bus.timeFormate(now, 'YYYY-MM-DD') // 使用固定时间格式 方便添加  00:00:00 23:59:59
         let end = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
-        console.log(start, end, val)
-        if (this.nowTimeType.id === 13) { // today
-          start += '00:00:00'
-          end += ''
+        let unit = ''
+        if (nowTimeType.id === 13) { // today
+          unit = 't'
+          end = start + ' 23:59:59'
+          start += ' 00:00:00'
           start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
           end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
         }
-        console.log(start, end)
+        if (nowTimeType.id === 14) { // Yesterday
+          unit = 't'
+          end = start + ' 23:59:59'
+          start += ' 00:00:00'
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss') - oneDTimestamp)
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss') - oneDTimestamp)
+        }
+        if (nowTimeType.id === 15) { // The day before yesterday
+          unit = 't'
+          end = start + ' 23:59:59'
+          start += ' 00:00:00'
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss') - 2 * oneDTimestamp)
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss') - 2 * oneDTimestamp)
+        }
+        if (nowTimeType.id === 16) { // This day last week
+          unit = 't'
+          end = start + ' 23:59:59'
+          start += ' 00:00:00'
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss') - 7 * oneDTimestamp)
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss') - 7 * oneDTimestamp)
+        }
+        if (nowTimeType.id === 17) { // This week
+          unit = 'w'
+          const noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
+          const nowDay = this.momentDays(noTime)
+          end = start + ' 23:59:59'
+          if (nowDay == 0) {
+            start = this.momentSetDay(noTime, -6, 'YYYY-MM-DD')
+          } else {
+            start = this.momentSetDay(noTime, 1, 'YYYY-MM-DD')
+          }
+          start += ' 00:00:00'
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+        }
+        if (nowTimeType.id === 18) { // Previous week
+          unit = 'w'
+          let noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
+          noTime = noTime - 7 * oneDTimestamp
+          const nowDay = this.momentDays(noTime)
+          if (nowDay == 0) { // 判断当前是否是周天 周天则为 -6 - 0 非周天 则是 1 - 7
+            start = this.momentSetDay(noTime, -6, 'YYYY-MM-DD')
+            end = this.momentSetDay(noTime, 0, 'YYYY-MM-DD')
+          } else {
+            start = this.momentSetDay(noTime, 1, 'YYYY-MM-DD')
+            end = this.momentSetDay(noTime, 7, 'YYYY-MM-DD')
+          }
+          start += ' 00:00:00'
+          end += ' 23:59:59'
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+        }
+        if (nowTimeType.id === 19) { // this month
+          unit = 'm'
+          const noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
+          end = start + ' 23:59:59'
+          start = this.momentSetMonthDate(noTime, 1)
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+        }
+        if (nowTimeType.id === 20) { // Previous month 需要判断当前是否是 1号
+          unit = 'm'
+          const noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
+          end = this.momentStrToTimestamp(this.momentSetMonthDate(noTime, 1)) - 1000 // 当月1号 00:00:00 减1s 则是上月最后一天 23:59:59
+          console.log(end, '1')
+          start = this.momentSetMonthDate(end, 1, 'YYYY-MM-DD') + ' 00:00:00'
+          console.log(start, '1')
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
+          end = this.momentTz(end)
+        }
         this.$set(this.searchTime, 0, start)
         this.$set(this.searchTime, 1, end)
-        this.$set(this.searchTime, 2, this.nowTimeType.id)
+        this.$set(this.searchTime, 2, val + unit)
       } else if (type === 'minute') {
         const startTime = bus.timeFormate(
           new Date(bus.computeTimezone(new Date().getTime())).setMinutes(

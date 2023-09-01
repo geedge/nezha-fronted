@@ -312,7 +312,15 @@ export default {
         { id: 8, text: this.$t('dashboard.dashboard.lastTwentyFourHour'), type: 'hour', value: 24 },
         { id: 9, text: this.$t('dashboard.dashboard.lastTwoDay'), type: 'date', value: 2 },
         { id: 10, text: this.$t('dashboard.dashboard.lastSevenDay'), type: 'date', value: 7 },
-        { id: 11, text: this.$t('dashboard.dashboard.lastThirtyDay'), type: 'date', value: 30 }
+        { id: 11, text: this.$t('dashboard.dashboard.lastThirtyDay'), type: 'date', value: 30 },
+        { id: 13, text: 'today', type: 'relative', value: 0 },
+        { id: 14, text: 'Yesterday ', type: 'relative', value: 1 },
+        { id: 15, text: 'The day before yesterday', type: 'relative', value: 2 },
+        { id: 16, text: 'This day last week', type: 'relative', value: 7 },
+        { id: 17, text: 'This week', type: 'relative', value: 0 },
+        { id: 18, text: 'Previous week', type: 'relative', value: 1 },
+        { id: 19, text: 'This month', type: 'relative', value: 0 },
+        { id: 20, text: 'Previous month', type: 'relative', value: 1 }
       ],
       intervalList: [
         { value: 0, label: this.$t('dashboard.dashboard.chartForm.lockList.off') },
@@ -621,7 +629,7 @@ export default {
       if (this.$refs.pickTime) {
         const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-        this.setSearchTime('searchTime', this.storeDispatchPanelTime)
+        this.setSearchTime('searchTime',nowTimeType, this.storeDispatchPanelTime)
         this.filter.dashboardId = this.showPanel.id
         this.getData(this.filter)
         this.$store.dispatch('dispatchPanelTime', {
@@ -888,7 +896,7 @@ export default {
         this.nowTimeType = this.$lodash.cloneDeep(nowTimeType)
         // 刷新时间范围
         this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType)
-        this.setSearchTime('searchTime', this.storeDispatchPanelTime)
+        this.setSearchTime('searchTime',this.nowTimeType, this.storeDispatchPanelTime)
         this.$store.dispatch('dispatchPanelTime', {
           time: this.searchTime,
           nowTimeType: this.nowTimeType
@@ -907,7 +915,7 @@ export default {
         const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
         this.searchTime = this.timePickerRange.time
         this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.searchTime)
-        this.setSearchTime('searchTime', this.storeDispatchPanelTime)
+        this.setSearchTime('searchTime',nowTimeType, this.storeDispatchPanelTime)
       })
     },
     // 设置默认刷新

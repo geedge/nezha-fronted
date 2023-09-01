@@ -341,7 +341,7 @@ export default {
         minute = minute > 9 ? minute : '0' + minute // 如果分钟小于10,则在前面加0补充为两位数字
         if (minTime !== null && maxTime !== null) {
           const diffSec = (maxTime - minTime)
-          const secOneDay = 24 * 60 * 60// 1天的秒数
+          const secOneDay = 12 * 60 * 60// 0.5天的秒数
           const secOneMonth = secOneDay * 30// 30天的秒数
           const dateFormatStr = self.timeFormatMain.split(' ')[0]
           let str = ''

@@ -344,7 +344,15 @@ export default {
         { id: 8, text: this.$t('dashboard.dashboard.lastTwentyFourHour'), type: 'hour', value: 24 },
         { id: 9, text: this.$t('dashboard.dashboard.lastTwoDay'), type: 'date', value: 2 },
         { id: 10, text: this.$t('dashboard.dashboard.lastSevenDay'), type: 'date', value: 7 },
-        { id: 11, text: this.$t('dashboard.dashboard.lastThirtyDay'), type: 'date', value: 30 }
+        { id: 11, text: this.$t('dashboard.dashboard.lastThirtyDay'), type: 'date', value: 30 },
+        { id: 13, text: 'today', type: 'relative', value: 0 },
+        { id: 14, text: 'Yesterday ', type: 'relative', value: 1 },
+        { id: 15, text: 'The day before yesterday', type: 'relative', value: 2 },
+        { id: 16, text: 'This day last week', type: 'relative', value: 7 },
+        { id: 17, text: 'This week', type: 'relative', value: 0 },
+        { id: 18, text: 'Previous week', type: 'relative', value: 1 },
+        { id: 19, text: 'This month', type: 'relative', value: 0 },
+        { id: 20, text: 'Previous month', type: 'relative', value: 1 }
       ],
       intervalList: [
         { value: 0, label: this.$t('dashboard.dashboard.chartForm.lockList.off') },
@@ -1170,7 +1178,9 @@ export default {
     // 时间选择器设置默认时间范围
     setDefaultTimeRange () {
       this.$nextTick(() => {
+        console.log(this.$route.query.searchTime)
         if (this.$route.query.searchTime) return
+        console.log(213123213)
         let nowTimeType = this.$lodash.cloneDeep(this.timeData[3])
         const defaultTimeRange = this.$lodash.get(this.showPanel, 'param.defaultTimeRange')
         if (defaultTimeRange) {
@@ -1237,7 +1247,7 @@ export default {
     this.$store.commit('setMode', this.mode)
     await this.getTableData()
     if (this.nowTimeType.type) {
-      this.setSearchTime('searchTime')
+      this.setSearchTime('searchTime',this.nowTimeType)
     }
     if (this.nowTimeType) {
       this.nowTimeType.start_time = this.searchTime[0]

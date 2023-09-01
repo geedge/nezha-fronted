@@ -167,7 +167,7 @@
 }
 .date-range-panel {
   // height: 460px;
-  width: 500px;
+  width: 570px;
   background: $--background-color-empty;
   box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
   position: absolute;
@@ -176,6 +176,7 @@
   z-index: 1;
   cursor: default;
   .date-range-panel-content-left {
+    width: 335px;
     padding-left: 10px;
     display: flex;
     flex-direction: column;
@@ -264,13 +265,10 @@
   }
 
   .date-range-panel-content-right {
+    width: 235px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    .date-range-item {
-      height: 353px;
-      overflow-y: auto;
-    }
     ul {
       flex: 1;
       padding: 0;
@@ -279,6 +277,7 @@
       margin: 0;
 
       li {
+        box-sizing: border-box;
         width: 100%;
         flex: 1;
         display: flex;
@@ -310,6 +309,11 @@
         }
       }
 
+    }
+    .date-range-item {
+      height: 353px;
+      overflow-y: auto;
+      flex: unset;
     }
   }
 }

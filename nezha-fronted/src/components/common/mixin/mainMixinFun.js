@@ -91,6 +91,20 @@ export default {
       const date = moment.tz(str, format, offset).valueOf()
       return date
     },
+    momentDays (timestamp) { // 只接受时间戳
+      const offset = localStorage.getItem('nz-sys-timezone')
+      return moment.tz(timestamp, offset).day()
+    },
+    momentSetDay (timestamp, day, fmt) { // 只接受时间戳
+      const offset = localStorage.getItem('nz-sys-timezone')
+      const format = fmt || localStorage.getItem('nz-default-dateFormat')
+      return moment.tz(timestamp, offset).day(day).format(format)
+    },
+    momentSetMonthDate (timestamp, date = 1, fmt) { // 只接受时间戳
+      const offset = localStorage.getItem('nz-sys-timezone')
+      const format = fmt || localStorage.getItem('nz-default-dateFormat')
+      return moment.tz(timestamp, offset).date(date).format(format)
+    },
     onCopy (txt) {
       this.$copyText(txt).then(() => {
         this.$message.success({ message: this.$t('overall.copySuccess') })
@@ -154,23 +168,93 @@ export default {
       }
     },
     /* 时间条件查询--end */
-    setSearchTime (key, cb) { // 设置searchTime
+    setSearchTime (key, nowType, cb) { // 设置searchTime
       if (this.$refs.pickTime) {
-        const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-        this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+        const nowTimeType = nowType || this.$refs.pickTime.$refs.timePicker.nowTimeType
+        this.nowTimeType = nowType || this.$refs.pickTime.$refs.timePicker.nowTimeType
         const type = nowTimeType.type
         const val = nowTimeType.value
+        const oneDTimestamp = 24 * 60 * 60 * 1000
         if (type === 'relative') {
           const now = new Date(bus.computeTimezone(new Date().getTime()))
-          let start = bus.timeFormate(now, 'YYYY-MM-DD')
+          let start = bus.timeFormate(now, 'YYYY-MM-DD') // 使用固定时间格式 方便添加  00:00:00 23:59:59
           let end = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
           let unit = ''
           if (nowTimeType.id === 13) { // today
             unit = 't'
-            start += '00:00:00'
-            end += ''
+            end = start + ' 23:59:59'
+            start += ' 00:00:00'
             start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
             end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+          }
+          if (nowTimeType.id === 14) { // Yesterday
+            unit = 't'
+            end = start + ' 23:59:59'
+            start += ' 00:00:00'
+            start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss') - oneDTimestamp)
+            end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss') - oneDTimestamp)
+          }
+          if (nowTimeType.id === 15) { // The day before yesterday
+            unit = 't'
+            end = start + ' 23:59:59'
+            start += ' 00:00:00'
+            start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss') - 2 * oneDTimestamp)
+            end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss') - 2 * oneDTimestamp)
+          }
+          if (nowTimeType.id === 16) { // This day last week
+            unit = 't'
+            end = start + ' 23:59:59'
+            start += ' 00:00:00'
+            start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss') - 7 * oneDTimestamp)
+            end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss') - 7 * oneDTimestamp)
+          }
+          if (nowTimeType.id === 17) { // This week
+            unit = 'w'
+            const noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
+            const nowDay = this.momentDays(noTime)
+            end = start + ' 23:59:59'
+            if (nowDay == 0) {
+              start = this.momentSetDay(noTime, -6, 'YYYY-MM-DD')
+            } else {
+              start = this.momentSetDay(noTime, 1, 'YYYY-MM-DD')
+            }
+            start += ' 00:00:00'
+            start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
+            end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+          }
+          if (nowTimeType.id === 18) { // Previous week
+            unit = 'w'
+            let noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
+            noTime = noTime - 7 * oneDTimestamp
+            const nowDay = this.momentDays(noTime)
+            if (nowDay == 0) { // 判断当前是否是周天 周天则为 -6 - 0 非周天 则是 1 - 7
+              start = this.momentSetDay(noTime, -6, 'YYYY-MM-DD')
+              end = this.momentSetDay(noTime, 0, 'YYYY-MM-DD')
+            } else {
+              start = this.momentSetDay(noTime, 1, 'YYYY-MM-DD')
+              end = this.momentSetDay(noTime, 7, 'YYYY-MM-DD')
+            }
+            start += ' 00:00:00'
+            end += ' 23:59:59'
+            start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
+            end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+          }
+          if (nowTimeType.id === 19) { // this month
+            unit = 'm'
+            const noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
+            end = start + ' 23:59:59'
+            start = this.momentSetMonthDate(noTime, 1)
+            end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+          }
+          if (nowTimeType.id === 20) { // Previous month 需要判断当前是否是 1号
+            unit = 'm'
+            const noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
+            end = this.momentStrToTimestamp(this.momentSetMonthDate(noTime, 1)) - 1000 // 当月1号 00:00:00 减1s 则是上月最后一天 23:59:59
+            console.log(end, '1')
+            start = this.momentSetMonthDate(end, 1, 'YYYY-MM-DD') + ' 00:00:00'
+            console.log(start, '1')
+            start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
+            end = this.momentTz(end)
           }
           this.$set(this[key], 0, start)
           this.$set(this[key], 1, end)
