@@ -91,14 +91,26 @@ export default new Vue({
       const oneDay = 86400000
       const sevenDay = 604800000
       const thirtyDay = 2592000000
-      if (numInterval < oneDay) { // 小于1天，step为15s
+      if (numInterval < oneDay / 2) { // 小于12小时
         step = '15s'
+      } else if (numInterval < oneDay) { // 小于1天，step为15s
+        step = '30s'
+      } else if (numInterval < oneDay * 2) { // 小于2天，step为15s
+        step = '1m'
       } else if (numInterval < sevenDay) { // 小于7天，step为5m
         step = '5m'
       } else if (numInterval < thirtyDay) { // 小于30天，step为10m
-        step = '10m'
-      } else {
         step = '30m'
+      } else if (numInterval < thirtyDay * 2) {
+        step = '45m'
+      } else if (numInterval < thirtyDay * 3) {
+        step = '1h'
+      } else if (numInterval < thirtyDay * 6) {
+        step = '3h'
+      } else if (numInterval < thirtyDay * 12) {
+        step = '5h'
+      } else {
+        step = '24h'
       }
       return step
     },

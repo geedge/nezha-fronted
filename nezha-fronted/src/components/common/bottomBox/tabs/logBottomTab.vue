@@ -129,7 +129,7 @@ export default {
     },
     getData () {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-      this.setSearchTime(nowTimeType.type, nowTimeType.value)
+      this.setSearchTime('filterTime')
       this.$store.dispatch('dispatchTimePickerRange', {
         time: this.searchTime,
         nowTimeType: this.nowTimeType
@@ -144,30 +144,8 @@ export default {
         const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
         this.filterTime = this.timePickerRange.time
         this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.filterTime)
-        this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+        this.setSearchTime('filterTime')
       })
-    },
-    setSearchTime (type, val) { // 设置searchTime
-      if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
-        this.$set(this.filterTime, 0, startTime)
-        this.$set(this.filterTime, 1, endTime)
-        this.$set(this.filterTime, 2, val + 'm')
-      } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
-        this.$set(this.filterTime, 0, startTime)
-        this.$set(this.filterTime, 1, endTime)
-        this.$set(this.filterTime, 2, val + 'h')
-      } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
-        this.$set(this.filterTime, 0, startTime)
-        this.$set(this.filterTime, 1, endTime)
-        this.$set(this.filterTime, 2, val + 'd')
-      }
-      this.$refs.pickTime.$refs.timePicker.searchTime = this.filterTime
     },
     queryLogData (limit) { // log的chart和table是一个请求
       this.loading = true

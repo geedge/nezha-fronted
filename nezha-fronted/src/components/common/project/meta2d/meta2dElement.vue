@@ -1113,9 +1113,7 @@
 <script>
 import nezhaColor from '@/components/common/nezhaColor'
 import meta2dSelectImage from '@/components/common/project/meta2d/meta2dSelectImage'
-import { imageTemp } from '@/components/common/project/L5/services/canvas'
 import { dealImg, getUUID, topologyImg } from '@/components/common/js/common'
-import imgDefault from '@/components/common/project/L5/services/img'
 import { ColorReverse, randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import lodash from 'lodash'
 import draggable from 'vuedraggable'
