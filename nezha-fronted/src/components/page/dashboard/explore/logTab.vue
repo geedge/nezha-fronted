@@ -62,6 +62,7 @@
           v-if="time"
           prop="date"
           width="160"
+          class-name="log-date"
         >
           <!-- <template slot-scope="{ row }">{{utcTimeToTimezoneStr(row.date)}}</template> -->
           <template slot-scope="{ row }">{{momentTz(row.secondTime * 1000)}}</template>

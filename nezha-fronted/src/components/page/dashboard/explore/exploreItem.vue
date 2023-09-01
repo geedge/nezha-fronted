@@ -117,7 +117,7 @@
           <el-collapse v-show="!showIntroduce" v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
             <!--metric-->
             <template v-if="showMetrics">
-              <el-collapse-item name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+              <el-collapse-item v-if="!allMatrix" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
                 <div class="chart-room">
                   <chart ref="exploreChart" :unit="chartUnit" :timeRange="filterTime"></chart>
                 </div>
@@ -203,50 +203,40 @@
                     <span>{{$t('explore.resultSeries')}}：{{this.storedTableData.length}}</span>
                   </div>
                   <div class="nz-table-list explore-table">
-                    <el-table
-                      v-my-loading="tools.loading"
-                      class="row-table"
-                      :class="{'expand-results-table':expandResults}"
-                      :data="storedTableData"
-                      :show-header="false"
-                      :cell-style="{verticalAlign: 'top'}">
-                      <el-table-column
-                        prop="element"
-                        :resizable="true"
-                        :min-width="1000"
-                        column-key="element"
-                        :label="$t('dashboard.dashboard.chartForm.element')">
-                        <template slot-scope="scope">
-                          <copy :copyData='scope.row.element' :showInfo='scope.row.element'>
+                    <ul v-my-loading="tools.loading" class="row-table" :class="{'expand-results-table':expandResults}">
+                      <li class="row-table-row" v-for="(row,index) in storedTableData" :key="index">
+                        <div class="table-row-left">
+                          <copy :copyData='row.element' :showInfo='row.element'>
                             <template slot="copy-text">
-                              <span v-if="expandResults" v-html="scope.row.expandElement"></span>
-                              <span v-else v-html="scope.row.colorElement"></span>
+                              <span v-if="expandResults" v-html="row.expandElement"></span>
+                              <span v-else v-html="row.colorElement"></span>
                             </template>
                           </copy>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        :resizable="false"
-                        prop="value"
-                        column-key="value"
-                        :label="$t('overall.value')"
-                        :min-width="110"
-                        align="right">
-                        <template slot-scope="scope">
-                          <h2 class="expand-value" v-if="expandResults">{{$t('overall.value')}}</h2>
-                          <span>{{scope.row.value||'-'}}</span>
-                        </template>
-                      </el-table-column>
-                      <template slot="empty">
-                        <div v-if="!tools.loading" class="table-no-data">
-                          <svg class="icon" aria-hidden="true">
-                            <use xlink:href="#nz-icon-no-data-list"></use>
-                          </svg>
-                          <div class="table-no-data__title">No results found</div>
                         </div>
-                        <div v-else>&nbsp;</div>
-                      </template>
-                    </el-table>
+                        <div class="table-row-right" :style="{'align-self':row.valueList?'':'flex-start'}">
+                          <template v-if="row.valueList">
+                            <ul class="valueList">
+                              <li v-for="item in row.valueList" :key="item.timestamp">
+                                <span>{{item.value}}</span>
+                                <span>{{item.timestamp}}</span>
+                                <span>{{item.time}}</span>
+                                <span>{{item.interval}}</span>
+                              </li>
+                            </ul>
+                          </template>
+                          <template v-else>
+                            <h2 class="expand-value" v-if="expandResults">{{$t('overall.value')}}</h2>
+                            <span>{{row.value||'-'}}</span>
+                          </template>
+                        </div>
+                      </li>
+                      <div v-if="!tools.loading&&!storedTableData.length" class="table-no-data">
+                        <svg class="icon" aria-hidden="true">
+                          <use xlink:href="#nz-icon-no-data-list"></use>
+                        </svg>
+                        <div class="table-no-data__title">No results found</div>
+                      </div>
+                    </ul>
                   </div>
                 </template>
               </el-collapse-item>
@@ -3623,7 +3613,8 @@ export default {
       ],
       tableHover: false,
       showTopBtn: false, // top按钮
-      scrollbarWrap: null
+      scrollbarWrap: null,
+      allMatrix: false // metric是否全部为matrix类型
     }
   },
   async created () {
@@ -3640,6 +3631,13 @@ export default {
     this.scrollbarWrap.removeEventListener('scroll', this.onScroll)
   },
   methods: {
+    cellStyle ({ row }) {
+      if (row.valueList) {
+        return { verticalAlign: 'middle' }
+      } else {
+        return { verticalAlign: 'top' }
+      }
+    },
     async loadWebAssembly () {
       try {
         // eslint-disable-next-line no-undef
@@ -3900,14 +3898,14 @@ export default {
       }
     },
     queryChartData () {
-      this.$refs.exploreChart.startLoading()
+      this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
       if (this.expressions.length > 0) {
         const requestArr = []
         const promqlInputIndexs = []
         const queryExpression = []
         // 过滤掉state为0的元素
         this.expressions.forEach((item, index) => {
-          if (item != '' && this.promqlKeys[index].state) {
+          if (item != '' && this.promqlKeys[index].state && !this.promqlKeys[index].matrix) {
             const step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
             promqlInputIndexs.push(index)
             queryExpression.push(item)
@@ -3986,11 +3984,11 @@ export default {
             this.$refs.exploreChart.setSeries(series)
             this.defaultChartVisible = true
           }
-          this.$refs.exploreChart.endLoading()
+          this.$refs.exploreChart && this.$refs.exploreChart.endLoading()
         })
       }
     },
-    queryTableData () {
+    async queryTableData () {
       this.tools.loading = true
       if (this.expressions.length > 0) {
         const requestArr = []
@@ -4003,81 +4001,103 @@ export default {
         if (requestArr.length > 0) {
           this.showIntroduce = false
         }
-        axios.all(requestArr).then(res => {
-          const tData = []
-          let tLabels = []
-          if (res.length > 0) {
-            this.storedTableData = []
-            this.tableData = []
-            this.tableTitle = []
-            this.tools.customTableTitle = []
-            res.forEach((response, index) => {
-              if (response.data && response.status === 'success') {
-                let data = response.data.result
-                if (data) {
-                  if (data.length && !Array.isArray(data[0].value)) {
-                    data = [{
-                      metric: {},
-                      value: data
-                    }]
-                  }
-                  data.forEach((result, i) => {
-                    let metrics = Object.assign({}, result.metric)
+        const res = await axios.all(requestArr)
+        const tData = []
+        let tLabels = []
+        if (res.length > 0) {
+          this.storedTableData = []
+          this.tableData = []
+          this.tableTitle = []
+          this.tools.customTableTitle = []
+
+          this.allMatrix = res.every(d => d.data.resultType === 'matrix')
+
+          res.forEach((response, index) => {
+            if (response.data && response.status === 'success') {
+              // matrix类型不请求chart接口 只展示表格数据
+              this.promqlKeys[index].matrix = response.data.resultType === 'matrix'
+              let data = response.data.result
+              if (data) {
+                if (data.length && !Array.isArray(data[0].value) && response.data.resultType !== 'matrix') {
+                  data = [{
+                    metric: {},
+                    value: data
+                  }]
+                }
+                data.forEach((result, i) => {
+                  let metrics = Object.assign({}, result.metric)
+                  if (response.data.resultType === 'matrix') {
+                    this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.values[0][1], null, 2))
+                    this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000)))
+                  } else {
                     this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.value[1], null, 2))
                     this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.value[0] * 1000)))
-                    for (const key in metrics) {
-                      const label = {
-                        label: key,
-                        prop: key,
-                        show: true
-                      }
-                      const temp = tLabels.find((item, index) => {
-                        return item.prop == label.prop
-                      })
-                      if (!temp) {
-                        tLabels.push(label)
-                      }
+                  }
+                  for (const key in metrics) {
+                    const label = {
+                      label: key,
+                      prop: key,
+                      show: true
                     }
-                    // 处理row模式数据
-                    const rowData = this.handlerRowData(result.metric)
-                    rowData.value = metrics['value#' + index]
-                    metrics = Object.assign(metrics, rowData)
-                    tData.push(metrics)
-                  })
-                }
+                    const temp = tLabels.find((item, index) => {
+                      return item.prop == label.prop
+                    })
+                    if (!temp) {
+                      tLabels.push(label)
+                    }
+                  }
+
+                  // 处理row模式数据
+                  const rowData = this.handlerRowData(result.metric)
+                  rowData.value = metrics['value#' + index]
+                  metrics = Object.assign(metrics, rowData)
+                  if (response.data.resultType === 'matrix') {
+                    metrics.valueList = result.values.map((item, index) => {
+                      const obj = {}
+                      obj.value = chartDataFormat.getUnit(this.chartUnit || 2).compute(item[1], null, 2)
+                      obj.timestamp = '@' + item[0]
+                      obj.time = bus.timeFormate(bus.computeTimezone(item[0] * 1000))
+                      if (index) { // 与前一个数据间隔
+                        obj.interval = item[0] - result.values[index - 1][0]
+                      }
+                      return obj
+                    })
+                  }
+                  tData.push(metrics)
+                })
               }
-              tLabels.sort((a, b) => {
-                return a.prop.charCodeAt(0) - b.prop.charCodeAt(0)
-              })
-              tLabels = tLabels.filter(label => label.prop !== 'time')
-              tLabels.unshift({
-                label: this.$t('overall.time'),
-                prop: 'time',
-                show: true
-              })
-              const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type', 'asset_id', 'endpoint_id', 'project_id', 'datacenter_id', 'module_id', 'nz_agent_id', 'parent_asset_id']
-              tLabels.forEach(tLabel => {
-                if (filterArr.indexOf(tLabel.prop) !== -1) {
-                  tLabel.show = false
-                  tLabel.allowed = true
-                }
-              })
-            })
-            if (tData.length > 0) {
-              this.storedTableData = Object.assign([], tData)
-              this.pageObj.total = this.storedTableData.length
-              this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
-              this.tableTitle = Object.assign([], tLabels)
-              this.tools.customTableTitle = Object.assign([], tLabels)
-              this.defaultTableVisible = true
-            } else {
-              // this.defaultTableVisible = false;
-              this.pageObj.total = 0
-              this.pageObj.pageNo = 1
             }
+            tLabels.sort((a, b) => {
+              return a.prop.charCodeAt(0) - b.prop.charCodeAt(0)
+            })
+            tLabels = tLabels.filter(label => label.prop !== 'time')
+            tLabels.unshift({
+              label: this.$t('overall.time'),
+              prop: 'time',
+              show: true
+            })
+            const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type', 'asset_id', 'endpoint_id', 'project_id', 'datacenter_id', 'module_id', 'nz_agent_id', 'parent_asset_id']
+            tLabels.forEach(tLabel => {
+              if (filterArr.indexOf(tLabel.prop) !== -1) {
+                tLabel.show = false
+                tLabel.allowed = true
+              }
+            })
+          })
+          if (tData.length > 0) {
+            this.storedTableData = Object.assign([], tData)
+            this.pageObj.total = this.storedTableData.length
+            this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
+            this.tableTitle = Object.assign([], tLabels)
+            this.tools.customTableTitle = Object.assign([], tLabels)
+            this.defaultTableVisible = true
+          } else {
+            // this.defaultTableVisible = false;
+            this.pageObj.total = 0
+            this.pageObj.pageNo = 1
           }
-          this.tools.loading = false
-        })
+        }
+        this.tools.loading = false
       }
     },
     handlerRowData (data) {
@@ -4112,7 +4132,7 @@ export default {
       const rowData = { element: temp, colorElement: colorTemp, expandElement: expandTemp }
       return rowData
     },
-    expressionChange () {
+    async expressionChange () {
       if (this.$refs.pickTime) {
         const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
@@ -4138,7 +4158,8 @@ export default {
         }
         if (error) { return }
         if (this.showMetrics) {
-          this.queryTableData()
+          this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
+          await this.queryTableData()
           this.queryChartData()
           this.storeHistory()
         } else {

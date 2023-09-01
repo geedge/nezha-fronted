@@ -107,50 +107,40 @@
                 <span>{{$t('explore.resultSeries')}}：{{this.storedTableData.length}}</span>
               </div>
               <div class="nz-table-list explore-table">
-                <el-table
-                  v-my-loading="tools.loading"
-                  class="row-table"
-                  :class="{'expand-results-table':expandResults}"
-                  :data="storedTableData"
-                  :show-header="false"
-                  :cell-style="{verticalAlign: 'top'}">
-                  <el-table-column
-                    prop="element"
-                    :resizable="true"
-                    :min-width="1000"
-                    column-key="element"
-                    :label="$t('dashboard.dashboard.chartForm.element')">
-                    <template slot-scope="scope">
-                      <copy :copyData='scope.row.element' :showInfo='scope.row.element'>
-                        <template slot="copy-text">
-                          <span v-if="expandResults" v-html="scope.row.expandElement"></span>
-                          <span v-else v-html="scope.row.colorElement"></span>
+                <ul v-my-loading="tools.loading" class="row-table" :class="{'expand-results-table':expandResults}">
+                    <li class="row-table-row" v-for="(row,index) in storedTableData" :key="index">
+                      <div class="table-row-left">
+                        <copy :copyData='row.element' :showInfo='row.element'>
+                          <template slot="copy-text">
+                            <span v-if="expandResults" v-html="row.expandElement"></span>
+                            <span v-else v-html="row.colorElement"></span>
+                          </template>
+                        </copy>
+                      </div>
+                      <div class="table-row-right" :style="{'align-self':row.valueList?'':'flex-start'}">
+                        <template v-if="row.valueList">
+                          <ul class="valueList">
+                            <li v-for="item in row.valueList" :key="item.timestamp">
+                              <span>{{item.value}}</span>
+                              <span>{{item.timestamp}}</span>
+                              <span>{{item.time}}</span>
+                              <span>{{item.interval}}</span>
+                            </li>
+                          </ul>
                         </template>
-                      </copy>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :resizable="false"
-                    prop="value"
-                    column-key="value"
-                    :label="$t('overall.value')"
-                    :min-width="110"
-                    align="right">
-                    <template slot-scope="scope">
-                      <h2 class="expand-value" v-if="expandResults">{{$t('overall.value')}}</h2>
-                      <span>{{scope.row.value||'-'}}</span>
-                    </template>
-                  </el-table-column>
-                  <template slot="empty">
-                    <div v-if="!tools.loading" class="table-no-data">
+                        <template v-else>
+                          <h2 class="expand-value" v-if="expandResults">{{$t('overall.value')}}</h2>
+                          <span>{{row.value||'-'}}</span>
+                        </template>
+                      </div>
+                    </li>
+                    <div v-if="!tools.loading&&!storedTableData.length" class="table-no-data">
                       <svg class="icon" aria-hidden="true">
                         <use xlink:href="#nz-icon-no-data-list"></use>
                       </svg>
                       <div class="table-no-data__title">No results found</div>
                     </div>
-                    <div v-else>&nbsp;</div>
-                  </template>
-                </el-table>
+                  </ul>
               </div>
             </template>
           </el-collapse-item>
@@ -239,6 +229,13 @@ export default {
     window.addEventListener('resize', this.logsCollapseChange)
   },
   methods: {
+    cellStyle ({ row }) {
+      if (row.valueList) {
+        return { verticalAlign: 'middle' }
+      } else {
+        return { verticalAlign: 'top' }
+      }
+    },
     handlerRowData (data) {
       const metric = this.$lodash.cloneDeep(data)
       const metricName = metric.__name__ || ''

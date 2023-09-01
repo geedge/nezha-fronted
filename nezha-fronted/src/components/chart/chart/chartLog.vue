@@ -53,6 +53,7 @@
           v-if="time"
           prop="date"
           width="160"
+          class-name="log-date"
         >
           <template slot-scope="{ row }">{{utcTimeToTimezoneStr(row.date)}}</template>
         </el-table-column>
