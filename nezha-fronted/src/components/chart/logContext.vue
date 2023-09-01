@@ -18,7 +18,7 @@
         </div>
         <div class="macth-before">
           <div>
-            <p v-show="!loading">{{$t('explore.beforeMatch', { dataLength: beforeLength })}}</p>
+            <p v-show="!loading">{{$t('explore.afterMatch', { dataLength: afterLength })}}</p>
           </div>
           <div style="display:flex;align-items: center;">
             <div class="log-operation margin-r-20">
@@ -76,7 +76,7 @@
           </div>
         </div>
         <div class="macth-after">
-          <p v-show="!loading">{{$t('explore.afterMatch', { dataLength: afterLength })}}</p>
+          <p v-show="!loading">{{$t('explore.beforeMatch', { dataLength: beforeLength })}}</p>
         </div>
       </div>
     </el-dialog>
