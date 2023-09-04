@@ -274,7 +274,7 @@ export default {
             this.tooltip.activeIndex = undefined
           })
 
-          // 修复echarts bug(dataZoom设置为inside 未按住ctrl 页面无法滚动)
+          // 修复echarts bug(dataZoom设置为inside 未按住shift 页面无法滚动)
           // 监听按键按下事件
           document.addEventListener('keydown', this.keydown)
           // 监听按键松开事件
@@ -286,9 +286,9 @@ export default {
     },
     keydown (event) {
       // 监听按键按下事件
-      // 判断是否按下了Ctrl键
-      if (event.ctrlKey) {
-        // 如果按下了Ctrl键，则启用Echarts的dataZoom功能
+      // 判断是否按下了shift键
+      if (event.shiftKey) {
+        // 如果按下了shift键，则启用Echarts的dataZoom功能
         getChart(this.chartId).setOption({
           dataZoom: [{
             disabled: false
@@ -298,9 +298,9 @@ export default {
     },
     keyup (event) {
       // 监听按键松开事件
-      // 判断是否释放了Ctrl键
-      if (!event.ctrlKey) {
-        // 如果释放了Ctrl键，则禁用Echarts的dataZoom功能
+      // 判断是否释放了shift键
+      if (!event.shiftKey) {
+        // 如果释放了shift键，则禁用Echarts的dataZoom功能
         getChart(this.chartId).setOption({
           dataZoom: [{
             disabled: true
