@@ -52,7 +52,7 @@ export const chartTimeSeriesLineOption = {
     {
       disabled: true,
       type: 'inside',
-      zoomOnMouseWheel: 'ctrl'
+      zoomOnMouseWheel: 'shift'
     }
   ],
   color: initColor(),
