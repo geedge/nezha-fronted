@@ -16,27 +16,31 @@
             </template>
           </copy>
         </div>
-        <div class="macth-before">
-          <div>
-            <p v-show="!loading">{{$t('explore.afterMatch', { dataLength: afterLength })}}</p>
-          </div>
-          <div style="display:flex;align-items: center;">
-            <div class="log-operation margin-r-20">
-              <span class="operation-label">{{$t('dashboard.explore.wrapLines')}}</span>
-              <el-switch
-                v-model="wrapLines"
-                @change="currentRowCenter"
-              >
-              </el-switch>
+        <div class="context-loading-wrap" v-my-loading="loading">
+          <div class="macth-before">
+            <div>
+              <p v-show="!loading&&setting.descending">{{$t('explore.afterMatch', { dataLength: afterLength })}}</p>
+              <p v-show="!loading&&!setting.descending">{{$t('explore.beforeMatch', { dataLength: beforeLength })}}</p>
             </div>
-            <div class="log-operation">
-              <el-select v-model="lines" @change="queryContext" size="small" style="width: 100px;" :popper-append-to-body="false" popper-class="right-box-select-top right-public-box-dropdown-top select-auto">
-                <el-option v-for="option in linesOptions" :value="option" :label="option+' '+$t('explore.lines')" :key="option"></el-option>
-              </el-select>
+            <div style="display:flex;align-items: center;">
+              <div class="log-operation margin-r-20">
+                <span class="operation-label">{{$t('dashboard.explore.wrapLines')}}</span>
+                <el-switch
+                  v-model="wrapLines"
+                  @change="currentRowCenter"
+                >
+                </el-switch>
+              </div>
+              <div class="log-operation">
+                <el-select v-model="lines" @change="queryContext" size="small" style="width: 100px;" :popper-append-to-body="false" popper-class="right-box-select-top right-public-box-dropdown-top select-auto">
+                  <el-option v-for="option in linesOptions" :value="option" :label="option+' '+$t('explore.lines')" :key="option"></el-option>
+                </el-select>
+              </div>
+              <button :class="{'nz-btn-disabled': loading}" class="top-tool-btn" style="cursor: pointer;z-index: 2;" type="button" @click="exportLog" :title="$t('overall.download')">
+                <i class="nz-icon nz-icon-download"></i>
+              </button>
             </div>
           </div>
-        </div>
-        <div v-my-loading="loading" class="context-loading-wrap">
           <div class="context-list">
             <div class="log-table">
               <el-table
@@ -58,6 +62,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column
+                  v-if="setting.time"
                   prop="date"
                   width="160"
                 >
@@ -74,9 +79,10 @@
               </el-table>
             </div>
           </div>
-        </div>
-        <div class="macth-after">
-          <p v-show="!loading">{{$t('explore.beforeMatch', { dataLength: beforeLength })}}</p>
+          <div class="macth-after">
+            <p v-show="!loading&&setting.descending">{{$t('explore.beforeMatch', { dataLength: beforeLength })}}</p>
+            <p v-show="!loading&&!setting.descending">{{$t('explore.afterMatch', { dataLength: afterLength })}}</p>
+          </div>
         </div>
       </div>
     </el-dialog>
@@ -85,6 +91,7 @@
 
 <script>
 import copy from '@/components/common/copy'
+import axios from 'axios'
 export default {
   name: 'logContext',
   components: { copy },
@@ -93,7 +100,8 @@ export default {
       type: Boolean,
       default: false
     },
-    rowData: {} // 当前行数据
+    rowData: {}, // 当前行数据
+    setting: Object // 根据传入的设置 显示数据
   },
   data () {
     return {
@@ -108,6 +116,7 @@ export default {
     }
   },
   created () {
+    this.wrapLines = this.setting.wrapLines
     this.tableData = [this.rowData]
     this.queryContext()
   },
@@ -128,11 +137,61 @@ export default {
         this.afterLength = logData[0].result.length
         const afterData = this.filterLogType(logData[0].result).reverse()
         this.tableData = [...afterData, this.rowData, ...beforData]
+        // 数据正序展示
+        if (!this.setting.descending) {
+          this.tableData.reverse()
+        }
         this.loading = false
         this.currentRowCenter()
       }).catch(e => {
         this.loading = false
         this.$message.error(this.$t('config.terminallog.statusItem.unknownError'))
+      })
+    },
+    exportLog () {
+      const expr = this.getExpression()
+      let start, end
+      if (this.setting.descending) {
+        start = this.$lodash.get(this.tableData[this.tableData.length - 1], 'timestamp')
+        end = this.$lodash.get(this.tableData[0], 'timestamp')
+      } else {
+        start = this.$lodash.get(this.tableData[0], 'timestamp')
+        end = this.$lodash.get(this.tableData[this.tableData.length - 1], 'timestamp')
+      }
+      const params = {
+        logql: [expr],
+        start,
+        end,
+        direction: this.setting.descending ? 'backward' : 'forward'
+      }
+      axios.get('/logs/loki/export', { responseType: 'blob', params: params }).then(res => {
+        if (window.navigator.msSaveOrOpenBlob) {
+          // 兼容ie11
+          const blobObject = new Blob([res.data])
+          window.navigator.msSaveOrOpenBlob(blobObject, 'log')
+        } else {
+          const url = URL.createObjectURL(new Blob([res.data]))
+          const a = document.createElement('a')
+          document.body.appendChild(a) // 此处增加了将创建的添加到body当中
+          a.href = url
+          a.download = 'log'
+          a.target = '_blank'
+          a.click()
+          a.remove() // 将a标签移除
+        }
+      }, error => {
+        const $self = this
+        const reader = new FileReader()
+        reader.onload = function (event) {
+          const responseText = reader.result
+          const exception = JSON.parse(responseText)
+          if (exception.message) {
+            $self.$message.error(exception.message)
+          } else {
+            console.error(error)
+          }
+        }
+        reader.readAsText(error.response.data)
       })
     },
     filterLogType (data) {

@@ -200,7 +200,7 @@
                       <span>{{$t('explore.expandResults')}}</span>
                       <el-switch v-model="expandResults" @click.native.stop tabindex="0"></el-switch>
                     </div>
-                    <span>{{$t('explore.resultSeries')}}：{{this.storedTableData.length}}</span>
+                    <span>{{$t('explore.resultSeries')}}：{{this.results}}</span>
                   </div>
                   <div class="nz-table-list explore-table">
                     <ul v-my-loading="tools.loading" class="row-table" :class="{'expand-results-table':expandResults}">
@@ -213,21 +213,24 @@
                             </template>
                           </copy>
                         </div>
-                        <div class="table-row-right" :style="{'align-self':row.valueList?'':'flex-start'}">
-                          <template v-if="row.valueList">
-                            <ul class="valueList">
-                              <li v-for="item in row.valueList" :key="item.timestamp">
-                                <span>{{item.value}}</span>
-                                <span>{{item.timestamp}}</span>
-                                <span>{{item.time}}</span>
-                                <span>{{item.interval}}</span>
-                              </li>
-                            </ul>
-                          </template>
-                          <template v-else>
-                            <h2 class="expand-value" v-if="expandResults">{{$t('overall.value')}}</h2>
-                            <span>{{row.value||'-'}}</span>
-                          </template>
+                        <div class="table-row-right">
+                          <h2 class="expand-value" v-if="expandResults">{{$t('overall.value')}}</h2>
+                          <ul v-if="row.valueList" class="valueList">
+                            <li v-for="item in row.valueList" :key="item.timestamp">
+                              <span>{{item.value}}</span>
+                              <span>{{item.timestamp}}</span>
+                              <span>{{item.time}}</span>
+                              <span>{{item.interval}}</span>
+                            </li>
+                          </ul>
+                          <ul v-else class="valueList">
+                            <li>
+                              <span>{{row.value}}</span>
+                              <span>{{row.timestamp}}</span>
+                              <span>{{row.time}}</span>
+                              <span style="opacity:0">+30</span>
+                            </li>
+                          </ul>
                         </div>
                       </li>
                       <div v-if="!tools.loading&&!storedTableData.length" class="table-no-data">
@@ -3614,7 +3617,8 @@ export default {
       tableHover: false,
       showTopBtn: false, // top按钮
       scrollbarWrap: null,
-      allMatrix: false // metric是否全部为matrix类型
+      allMatrix: false, // metric是否全部为matrix类型
+      results: 0 // 结果序列
     }
   },
   async created () {
@@ -3631,13 +3635,6 @@ export default {
     this.scrollbarWrap.removeEventListener('scroll', this.onScroll)
   },
   methods: {
-    cellStyle ({ row }) {
-      if (row.valueList) {
-        return { verticalAlign: 'middle' }
-      } else {
-        return { verticalAlign: 'top' }
-      }
-    },
     async loadWebAssembly () {
       try {
         // eslint-disable-next-line no-undef
@@ -4009,6 +4006,7 @@ export default {
           this.tableData = []
           this.tableTitle = []
           this.tools.customTableTitle = []
+          this.results = 0
 
           this.allMatrix = res.every(d => d.data.resultType === 'matrix')
 
@@ -4032,6 +4030,7 @@ export default {
                   } else {
                     this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.value[1], null, 2))
                     this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.value[0] * 1000)))
+                    this.$set(metrics, 'timestamp', '@' + result.value[0])
                   }
                   for (const key in metrics) {
                     const label = {
@@ -4051,17 +4050,21 @@ export default {
                   const rowData = this.handlerRowData(result.metric)
                   rowData.value = metrics['value#' + index]
                   metrics = Object.assign(metrics, rowData)
+                  // matrix 类型数据
                   if (response.data.resultType === 'matrix') {
                     metrics.valueList = result.values.map((item, index) => {
+                      this.results++
                       const obj = {}
                       obj.value = chartDataFormat.getUnit(this.chartUnit || 2).compute(item[1], null, 2)
                       obj.timestamp = '@' + item[0]
                       obj.time = bus.timeFormate(bus.computeTimezone(item[0] * 1000))
                       if (index) { // 与前一个数据间隔
-                        obj.interval = item[0] - result.values[index - 1][0]
+                        obj.interval = '+' + parseInt(item[0] - result.values[index - 1][0]).toString()
                       }
                       return obj
                     })
+                  } else {
+                    this.results++
                   }
                   tData.push(metrics)
                 })

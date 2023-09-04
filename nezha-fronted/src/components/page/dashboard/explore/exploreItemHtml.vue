@@ -229,13 +229,6 @@ export default {
     window.addEventListener('resize', this.logsCollapseChange)
   },
   methods: {
-    cellStyle ({ row }) {
-      if (row.valueList) {
-        return { verticalAlign: 'middle' }
-      } else {
-        return { verticalAlign: 'top' }
-      }
-    },
     handlerRowData (data) {
       const metric = this.$lodash.cloneDeep(data)
       const metricName = metric.__name__ || ''

@@ -178,6 +178,30 @@
 
       &.log-operation--right {
         margin-left: auto;
+        .top-tool-btn{
+          margin-left: auto;
+          height: 32px;
+          width: 36px;
+          cursor: pointer;
+          border: 1px solid $--button-icon-border-color;
+          outline: none;
+          border-radius: $--button-border-radius;
+          background-color: $--background-color-empty;
+          transition:all .2s;
+          color: $--button-icon-color;
+            i {
+            font-size: 14px;
+            color: $--button-icon-color;
+          }
+        }
+        .top-tool-btn:focus{
+          background-color: $--button-icon-active-background-color;
+          border: 1px solid $--button-icon-active-border-color !important;
+          color: $--button-icon-active-color;
+          i {
+            color: $--button-icon-active-color;
+          }
+        }
       }
       &:not(:last-of-type) {
         margin-right: 30px;
@@ -255,6 +279,30 @@
         .operation-label {
           padding-right: 10px;
           color: $--color-text-regular;
+        }
+        .top-tool-btn{
+          margin-left: 20px;
+          height: 32px;
+          width: 36px;
+          cursor: pointer;
+          border: 1px solid $--button-icon-border-color;
+          outline: none;
+          border-radius: $--button-border-radius;
+          background-color: $--background-color-empty;
+          transition:all .2s;
+          color: $--button-icon-color;
+            i {
+            font-size: 14px;
+            color: $--button-icon-color;
+          }
+        }
+        .top-tool-btn:focus{
+          background-color: $--button-icon-active-background-color;
+          border: 1px solid $--button-icon-active-border-color !important;
+          color: $--button-icon-active-color;
+          i {
+            color: $--button-icon-active-color;
+          }
         }
       }
       .macth-after{

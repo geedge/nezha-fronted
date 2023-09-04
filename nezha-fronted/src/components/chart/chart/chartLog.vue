@@ -92,7 +92,7 @@
       </template>
     </div>
     <!-- 查看上下文 -->
-    <logContext  v-if="contextVisible" :contextVisible.sync="contextVisible" :rowData="currentRow"></logContext>
+    <logContext v-if="contextVisible" :contextVisible.sync="contextVisible" :rowData="currentRow" :setting="contextSetting"></logContext>
   </div>
 </template>
 
@@ -168,7 +168,8 @@ export default {
       myChart: null,
       noData: false,
       contextVisible: false,
-      currentRow: {}
+      currentRow: {},
+      contextSetting: {}
     }
   },
   methods: {
@@ -176,6 +177,11 @@ export default {
       this.currentRow = this.$lodash.cloneDeep(row)
       this.currentRow.current = true
       this.contextVisible = true
+      this.contextSetting = {
+        descending: this.operations.descending,
+        time: this.time,
+        wrapLines: this.wrapLines
+      }
     },
     initChart () {
       this.tableData = []

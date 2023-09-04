@@ -112,7 +112,7 @@
       </template>
     </div>
     <!-- 查看上下文 -->
-    <logContext  v-if="contextVisible" :contextVisible.sync="contextVisible" :rowData="currentRow"></logContext>
+    <logContext v-if="contextVisible" :contextVisible.sync="contextVisible" :rowData="currentRow" :setting="contextSetting"></logContext>
   </div>
 </template>
 
@@ -202,7 +202,8 @@ export default {
       noData: false,
       filterData: [],
       contextVisible: false,
-      currentRow: {}
+      currentRow: {},
+      contextSetting: {}
     }
   },
   created () {
@@ -216,6 +217,11 @@ export default {
       this.currentRow = this.$lodash.cloneDeep(row)
       this.currentRow.current = true
       this.contextVisible = true
+      this.contextSetting = {
+        descending: this.operations.descending,
+        time: this.time,
+        wrapLines: this.wrapLines
+      }
     },
     resetOperation () {
       this.operations = {
