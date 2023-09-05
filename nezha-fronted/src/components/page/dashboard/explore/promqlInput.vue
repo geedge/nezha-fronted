@@ -431,23 +431,24 @@
 <script>
 import selectAlertSilence from '../../../common/alert/selectAlertSilence'
 import { get } from '@/http'
-import { PromQLExtension } from 'codemirror-promql'
-import { basicSetup } from '@codemirror/basic-setup'
-// import { EditorState } from '@codemirror/state';
-import { highlightSelectionMatches } from '@codemirror/search'
-import { EditorState, Prec, Compartment } from '@codemirror/state'
-import { indentOnInput, syntaxTree } from '@codemirror/language'
+import { PromQLExtension } from '@prometheus-io/codemirror-promql'
+import { baseTheme, promqlHighlighter, lightTheme } from './CMTheme.tsx'
+import { newCompleteStrategy } from '@prometheus-io/codemirror-promql/dist/esm/complete'
+// import {basicSetup} from '@codemirror/basic-setup';
 import { EditorView, highlightSpecialChars, keymap, ViewUpdate, placeholder } from '@codemirror/view'
-import { history, historyKeymap } from '@codemirror/history'
-import { bracketMatching } from '@codemirror/matchbrackets'
-import { defaultKeymap, insertNewlineAndIndent } from '@codemirror/commands'
-import { commentKeymap } from '@codemirror/comment'
+import { EditorState, Prec, Compartment } from '@codemirror/state'
+import { bracketMatching, indentOnInput, syntaxHighlighting, syntaxTree } from '@codemirror/language'
+import { defaultKeymap, history, historyKeymap, insertNewlineAndIndent } from '@codemirror/commands'
+import { highlightSelectionMatches } from '@codemirror/search'
 import { lintKeymap } from '@codemirror/lint'
-import { baseTheme, promqlHighlighter } from './CMTheme.tsx'
-import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets'
-import { autocompletion, completionKeymap, CompletionContext, CompletionResult } from '@codemirror/autocomplete'
-import { newCompleteStrategy } from 'codemirror-promql/dist/esm/complete'
-
+import {
+  autocompletion,
+  completionKeymap,
+  CompletionContext,
+  CompletionResult,
+  closeBrackets,
+  closeBracketsKeymap
+} from '@codemirror/autocomplete'
 export default {
   name: 'promqlInput',
   components: {
@@ -568,23 +569,35 @@ export default {
     }
   },
   methods: {
-    initCodeMirror () {
+    async initCodeMirror () {
       const self = this
       let baseUrl = this.$axios.defaults.baseURL
       if (!baseUrl || baseUrl == '/') {
         baseUrl = window.location.protocol + '//' + window.location.host
       }
-      const promQL = new PromQLExtension().setComplete(
-        {
-          completeStrategy: query(newCompleteStrategy({
-            remote: {
-              url: baseUrl + '/prom',
-              fetchFn: this.fetchFn
-            }
-          }))
-        }
-      )
-      function query (CompleteStrategy) {
+      // let metadataOptions = await this.$get('prom/api/v1/metadata')
+      // console.log(metadataOptions)
+      // metadataOptions = metadataOptions.data
+      // let metricsdataOptions = await this.$get('prom//api/v1/label/__name__/values')
+      // console.log(metricsdataOptions)
+      // metricsdataOptions = metricsdataOptions.data
+
+      const promqlExtension = new PromQLExtension()
+        .activateCompletion(true)
+        .activateLinter(true)
+        .setComplete({
+          completeStrategy: new HistoryCompleteStrategy(
+            newCompleteStrategy({
+              remote: {
+                url: baseUrl + '/prom/',
+                fetchFn: self.fetchFn
+              },
+              maxMetricsMetadata: 99999
+            })
+          )
+
+        })
+      function HistoryCompleteStrategy (CompleteStrategy) {
         const obj = {}
         obj.complete = CompleteStrategy
         obj.queryHistory = []
@@ -618,15 +631,18 @@ export default {
         }
         return obj
       }
+      const highlighter = syntaxHighlighting(promqlHighlighter)
       const dynamicConfigCompartment = new Compartment()
       const dynamicConfig = [
-        promqlHighlighter,
-        promQL.asExtension(),
-        baseTheme
+        highlighter,
+        promqlExtension.asExtension(),
+        lightTheme
       ]
       if (!this.newView) {
         const EditorViewstate = EditorState.create({
+          doc: self.codeMirrorValue[self.index],
           extensions: [
+            // basicSetup,
             baseTheme,
             highlightSpecialChars(),
             history(),
@@ -637,18 +653,9 @@ export default {
             autocompletion(),
             highlightSelectionMatches(),
             EditorView.lineWrapping,
-            keymap.of([
-              ...closeBracketsKeymap,
-              ...defaultKeymap,
-              ...historyKeymap,
-              ...commentKeymap,
-              ...completionKeymap,
-              ...lintKeymap
-            ]),
-            // placeholder('Expression (press Shift+Enter for newlines)'),
+            keymap.of([...closeBracketsKeymap, ...defaultKeymap, ...historyKeymap, ...completionKeymap, ...lintKeymap]),
+            placeholder('Expression (press Shift+Enter for newlines)'),
             dynamicConfigCompartment.of(dynamicConfig),
-            // This keymap is added without precedence so that closing the autocomplete dropdown
-            // via Escape works without blurring the editor.
             keymap.of([
               {
                 key: 'Escape',
@@ -658,7 +665,7 @@ export default {
                 }
               }
             ]),
-            Prec.override(
+            Prec.highest(
               keymap.of([
                 {
                   key: 'Enter',
@@ -677,7 +684,6 @@ export default {
               self.newChange(update.state.doc.toString())
             })
           ],
-          doc: self.codeMirrorValue[self.index],
           editorState: {
             changeByRange: self.newChange,
             changes: self.newDoc,
@@ -691,9 +697,6 @@ export default {
         })
         self.newView = view
       } else {
-        // console.log('viewIsOk')
-        // const { from} = self.newView.state.selection.ranges[0]
-        // const to = self.codeMirrorValue.length
         const to = self.oldcCodeLength
         const from = self.oldcCodeLength
         self.newView.dispatch(
