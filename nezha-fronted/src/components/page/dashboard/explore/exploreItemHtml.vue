@@ -21,7 +21,7 @@
       <el-collapse v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
         <!--metric-->
         <template v-if="showMetrics">
-          <el-collapse-item name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+          <el-collapse-item v-if="!allMatrix" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
             <div class="chart-room">
               <chart ref="exploreChart" :unit="chartUnitType" :timeRange="filterTime"></chart>
             </div>
@@ -104,7 +104,7 @@
                   <span>{{$t('explore.expandResults')}}</span>
                   <el-switch v-model="expandResults" @click.native.stop tabindex="0"></el-switch>
                 </div>
-                <span>{{$t('explore.resultSeries')}}：{{this.storedTableData.length}}</span>
+                <span>{{$t('explore.resultSeries')}}：{{this.results}}</span>
               </div>
               <div class="nz-table-list explore-table">
                 <ul v-my-loading="tools.loading" class="row-table" :class="{'expand-results-table':expandResults}">
@@ -117,21 +117,24 @@
                           </template>
                         </copy>
                       </div>
-                      <div class="table-row-right" :style="{'align-self':row.valueList?'':'flex-start'}">
-                        <template v-if="row.valueList">
-                          <ul class="valueList">
-                            <li v-for="item in row.valueList" :key="item.timestamp">
-                              <span>{{item.value}}</span>
-                              <span>{{item.timestamp}}</span>
-                              <span>{{item.time}}</span>
-                              <span>{{item.interval}}</span>
-                            </li>
-                          </ul>
-                        </template>
-                        <template v-else>
-                          <h2 class="expand-value" v-if="expandResults">{{$t('overall.value')}}</h2>
-                          <span>{{row.value||'-'}}</span>
-                        </template>
+                      <div class="table-row-right">
+                        <h2 class="expand-value" v-if="expandResults">{{$t('overall.value')}}</h2>
+                        <ul v-if="row.valueList" class="valueList">
+                          <li v-for="item in row.valueList" :key="item.timestamp">
+                            <span>{{item.value}}</span>
+                            <span>{{item.timestamp}}</span>
+                            <span>{{item.time}}</span>
+                            <span>{{item.interval}}</span>
+                          </li>
+                        </ul>
+                        <ul v-else class="valueList">
+                          <li>
+                            <span>{{row.value}}</span>
+                            <span>{{row.timestamp}}</span>
+                            <span>{{row.time}}</span>
+                            <span style="opacity:0">+30</span>
+                          </li>
+                        </ul>
                       </div>
                     </li>
                     <div v-if="!tools.loading&&!storedTableData.length" class="table-no-data">
@@ -211,7 +214,9 @@ export default {
       logTabNoData: [],
       storedTableData: [],
       tableMode: 'table',
-      expandResults: false
+      expandResults: false,
+      allMatrix: false, // metric是否全部为matrix类型
+      results: 0 // 结果序列
     }
   },
   mounted () {
@@ -291,6 +296,7 @@ export default {
       this.pageObj.pageNo = 1
       if (this.showMetrics) {
         if (this.dataJson.data && this.dataJson.data.length >= 1) {
+          this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
           this.queryTableData()
           this.queryChartData()
           this.storeHistory()
@@ -307,8 +313,14 @@ export default {
       const tData = []
       let tLabels = []
       if (res.length > 0) {
+        this.storedTableData = []
         this.tableData = []
         this.tableTitle = []
+        this.tools.customTableTitle = []
+        this.results = 0
+
+        this.allMatrix = res.filter((r, i) => r.state).every(d => d.data.resultType === 'matrix' && d.api === 'query')
+
         res.forEach((response, index) => {
           if (!response.state) {
             return
@@ -326,6 +338,7 @@ export default {
                 }
                 this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnitType || 2).compute(result.values[0][1], null, 2))
                 this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000)))
+
                 for (const key in metrics) {
                   const label = {
                     label: key,
@@ -343,6 +356,23 @@ export default {
                 const rowData = this.handlerRowData(result.metric)
                 rowData.value = metrics['value#' + index]
                 metrics = Object.assign(metrics, rowData)
+                // matrix 类型数据
+                if (response.data.resultType === 'matrix' && response.api === 'query') {
+                  metrics.valueList = result.values.map((item, index) => {
+                    this.results++
+                    const obj = {}
+                    obj.value = chartDataFormat.getUnit(this.chartUnitType || 2).compute(item[1], null, 2)
+                    obj.timestamp = '@' + item[0]
+                    obj.time = bus.timeFormate(bus.computeTimezone(item[0] * 1000))
+                    if (index) { // 与前一个数据间隔
+                      obj.interval = '+' + parseInt(item[0] - result.values[index - 1][0]).toString()
+                    }
+                    return obj
+                  })
+                } else {
+                  metrics.timestamp = '@' + result.values[0][0]
+                  this.results++
+                }
                 tData.push(metrics)
               })
             }
@@ -379,16 +409,14 @@ export default {
       this.tools.loading = false
     },
     queryChartData () {
-      this.$refs.exploreChart.startLoading()
-      const res = this.dataJson.data
+      this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
+      let res = this.dataJson.data
       let series = []
       const promqlInputIndexs = []
       const legend = []
+      res = res.filter((r, i) => r.state && r.api === 'query_range')
       if (res.length > 0) {
         res.forEach((response, index) => {
-          if (!response.state) {
-            return
-          }
           const promqlIndex = promqlInputIndexs[index]
           if (response.data) {
             const data = response.data.result
@@ -442,15 +470,17 @@ export default {
           }
         })
 
-        this.$refs.exploreChart.setLegend(legend)
-        this.$refs.exploreChart.setRandomColors(series.length)
-        if (!series.length) {
-          series = ''
-        }
-        this.$refs.exploreChart.setSeries(series)
-        this.defaultChartVisible = true
+        this.$nextTick(() => {
+          this.$refs.exploreChart.setLegend(legend)
+          this.$refs.exploreChart.setRandomColors(series.length)
+          if (!series.length) {
+            series = ''
+          }
+          this.$refs.exploreChart.setSeries(series)
+          this.defaultChartVisible = true
+        })
       }
-      this.$refs.exploreChart.endLoading()
+      this.$refs.exploreChart && this.$refs.exploreChart.endLoading()
     },
     storeHistory () {
       const expire = 24

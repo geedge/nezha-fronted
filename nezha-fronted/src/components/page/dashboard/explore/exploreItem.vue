@@ -4030,7 +4030,6 @@ export default {
                   } else {
                     this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.value[1], null, 2))
                     this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.value[0] * 1000)))
-                    this.$set(metrics, 'timestamp', '@' + result.value[0])
                   }
                   for (const key in metrics) {
                     const label = {
@@ -4064,6 +4063,7 @@ export default {
                       return obj
                     })
                   } else {
+                    metrics.timestamp = '@' + result.value[0]
                     this.results++
                   }
                   tData.push(metrics)
