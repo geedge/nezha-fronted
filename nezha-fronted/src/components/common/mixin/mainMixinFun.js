@@ -103,7 +103,56 @@ export default {
     momentSetMonthDate (timestamp, date = 1, fmt) { // 只接受时间戳
       const offset = localStorage.getItem('nz-sys-timezone')
       const format = fmt || localStorage.getItem('nz-default-dateFormat')
-      return moment.tz(timestamp, offset).date(date).format(format)
+      const month = moment.tz(timestamp, offset).month()
+      const year = moment.tz(timestamp, offset).year()
+      const day = date > 28 ? this.formatDate(year, month, date) : date
+      return moment.tz(timestamp, offset).date(day).format(format)
+    },
+    formatDate (year, month, date) {
+      if (date < 28) {
+        return date
+      } else {
+        const isRunYear = ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
+        let day = 0
+        const myMonth = month + 1
+        switch (myMonth) {
+          case 1:
+          case 3:
+          case 5:
+          case 7:
+          case 8:
+          case 10:
+          case 12:
+            if (date > 31) {
+              day = 31
+            } else {
+              day = date
+            }
+            break
+          case 4:
+          case 6:
+          case 9:
+          case 11:
+            if (date > 30) {
+              day = 30
+            } else {
+              day = date
+            }
+            break
+          case 2:
+            if (date > 28) {
+              if (!isRunYear) {
+                day = 28
+              } else {
+                day = date > 29 ? 29 : date
+              }
+            } else {
+              day = date
+            }
+            break
+        }
+        return day
+      }
     },
     onCopy (txt) {
       this.$copyText(txt).then(() => {
@@ -215,8 +264,10 @@ export default {
             end = start + ' 23:59:59'
             if (nowDay == 0) {
               start = this.momentSetDay(noTime, -6, 'YYYY-MM-DD')
+              end = this.momentSetDay(noTime, 0, 'YYYY-MM-DD')
             } else {
               start = this.momentSetDay(noTime, 1, 'YYYY-MM-DD')
+              end = this.momentSetDay(noTime, 7, 'YYYY-MM-DD')
             }
             start += ' 00:00:00'
             start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
@@ -242,9 +293,9 @@ export default {
           if (nowTimeType.id === 19) { // this month
             unit = 'm'
             const noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
-            end = start + ' 23:59:59'
+            const endTime = this.momentStrToTimestamp(start + ' 23:59:59', 'YYYY-MM-DD HH:mm:ss')
             start = this.momentSetMonthDate(noTime, 1)
-            end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+            end = this.momentSetMonthDate(endTime, 31)
           }
           if (nowTimeType.id === 20) { // Previous month 需要判断当前是否是 1号
             unit = 'm'

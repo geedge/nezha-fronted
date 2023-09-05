@@ -579,8 +579,10 @@ export default {
           end = start + ' 23:59:59'
           if (nowDay == 0) {
             start = this.momentSetDay(noTime, -6, 'YYYY-MM-DD')
+            end = this.momentSetDay(noTime, 0, 'YYYY-MM-DD')
           } else {
             start = this.momentSetDay(noTime, 1, 'YYYY-MM-DD')
+            end = this.momentSetDay(noTime, 7, 'YYYY-MM-DD')
           }
           start += ' 00:00:00'
           start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
@@ -606,9 +608,10 @@ export default {
         if (nowTimeType.id === 19) { // this month
           unit = 'm'
           const noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
-          end = start + ' 23:59:59'
+          const endTime = this.momentStrToTimestamp(start + ' 23:59:59', 'YYYY-MM-DD HH:mm:ss')
           start = this.momentSetMonthDate(noTime, 1)
-          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+          end = this.momentSetMonthDate(endTime, 31)
+          console.log(end)
         }
         if (nowTimeType.id === 20) { // Previous month 需要判断当前是否是 1号
           unit = 'm'
