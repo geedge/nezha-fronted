@@ -580,7 +580,8 @@ export default {
             remote: {
               url: baseUrl + '/prom',
               fetchFn: this.fetchFn
-            }
+            },
+            maxMetricsMetadata: 99999
           }))
         }
       )
