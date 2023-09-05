@@ -367,7 +367,10 @@ export default {
             retention: Number(this.editBackup.retention)
           }).then((res) => {
             if (res.code === 200) {
+              this.$message.success(this.$t('tip.saveSuccess'))
               this.esc(true)
+            } else {
+              this.$message.error(res.msg || res.error)
             }
           })
         }

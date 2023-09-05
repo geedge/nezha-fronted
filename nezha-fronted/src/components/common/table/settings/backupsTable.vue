@@ -45,7 +45,7 @@
           <button class="table-operation-button" @click="backupNow(scope.row)" :title="$t('config.backup')">
             <i class="nz-icon-beifen nz-icon"></i>
           </button>
-          <button class="table-operation-edit" @click="edit(scope.row)" :title="$t('backup.edit')">
+          <button class="table-operation-edit" style="cursor: pointer" @click="edit(scope.row)" :title="$t('backup.edit')">
             <i class="nz-icon-gear nz-icon"></i>
           </button>
         </div>
@@ -130,12 +130,14 @@ export default {
       }
     },
     Restore (row) {
+      this.$store.dispatch('dispatchHomeLoading', true)
       let ts = true
       if (ts) {
         ts = false
         setTimeout(() => {
           ts = true
           put('/sys/backup/restore', { filename: row.fileName }).then(res => {
+            this.$store.dispatch('dispatchHomeLoading', false)
             if (res.code == 200) {
               this.$emit('getTableData', 'recent')
               this.$message.success(this.$t('backup.Restore'))
@@ -155,7 +157,9 @@ export default {
       return bus.getNumStr(item)
     },
     backupNow (item) {
-      post('/sys/backup').then((res) => {
+      this.$store.dispatch('dispatchHomeLoading', true)
+      this.$post('/sys/backup').then((res) => {
+        this.$store.dispatch('dispatchHomeLoading', false)
         if (res.code == 200) {
           this.$message.success(this.$t('backup.backupNow'))
           bus.$emit('backupNow')
