@@ -201,14 +201,14 @@ export default {
         { id: 9, text: this.$t('dashboard.dashboard.lastTwoDay'), type: 'date', value: 2 },
         { id: 10, text: this.$t('dashboard.dashboard.lastSevenDay'), type: 'date', value: 7 },
         { id: 11, text: this.$t('dashboard.dashboard.lastThirtyDay'), type: 'date', value: 30 },
-        { id: 13, text: 'today', type: 'relative', value: 0 },
-        { id: 14, text: 'Yesterday ', type: 'relative', value: 1 },
-        { id: 15, text: 'The day before yesterday', type: 'relative', value: 2 },
-        { id: 16, text: 'This day last week', type: 'relative', value: 7 },
-        { id: 17, text: 'This week', type: 'relative', value: 0 },
-        { id: 18, text: 'Previous week', type: 'relative', value: 1 },
-        { id: 19, text: 'This month', type: 'relative', value: 0 },
-        { id: 20, text: 'Previous month', type: 'relative', value: 1 }
+        { id: 13, text: this.$t('el.datepicker.today'), type: 'relative', value: 0 },
+        { id: 14, text: this.$t('time.yesterday'), type: 'relative', value: 1 },
+        { id: 15, text: this.$t('time.beforeYesterday'), type: 'relative', value: 2 },
+        { id: 16, text: this.$t('time.lastWeekDay'), type: 'relative', value: 7 },
+        { id: 17, text: this.$t('time.thisWeek'), type: 'relative', value: 0 },
+        { id: 18, text: this.$t('time.previousWeek'), type: 'relative', value: 1 },
+        { id: 19, text: this.$t('time.thisMonth'), type: 'relative', value: 0 },
+        { id: 20, text: this.$t('time.previousMonth'), type: 'relative', value: 1 }
       ],
       relativeData: [
       ],

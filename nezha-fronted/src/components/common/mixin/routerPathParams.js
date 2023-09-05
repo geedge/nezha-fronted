@@ -237,6 +237,75 @@ export default {
           delete obj[key]
         }
       })
+    },
+    initTimeType (value) {
+      switch (value) {
+        case '5m' :
+          this.defaultPick = 1
+          break
+        case '15m' :
+          this.defaultPick = 2
+          break
+        case '30m' :
+          this.defaultPick = 3
+          break
+        case '1h' :
+          this.defaultPick = 4
+          break
+        case '3h' :
+          this.defaultPick = 5
+          break
+        case '6h' :
+          this.defaultPick = 6
+          break
+        case '12h' :
+          this.defaultPick = 7
+          break
+        case '1d' :
+          this.defaultPick = 8
+          break
+        case '24h' :
+          this.defaultPick = 8
+          break
+        case '2d' :
+          this.defaultPick = 9
+          break
+        case '7d' :
+          this.defaultPick = 10
+          break
+        case '30d' :
+          this.defaultPick = 11
+          break
+        case 'all' :
+          this.defaultPick = 12
+          break
+        case '0t' :
+          this.defaultPick = 13
+          break
+        case '1t' :
+          this.defaultPick = 14
+          break
+        case '2t' :
+          this.defaultPick = 15
+          break
+        case '7t' :
+          this.defaultPick = 16
+          break
+        case '0w' :
+          this.defaultPick = 17
+          break
+        case '1w' :
+          this.defaultPick = 18
+          break
+        case '0m' :
+          this.defaultPick = 19
+          break
+        case '1m' :
+          this.defaultPick = 20
+          break
+        default:
+          this.defaultPick = 0
+      }
     }
   }
 }
