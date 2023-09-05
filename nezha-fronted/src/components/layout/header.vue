@@ -183,6 +183,7 @@ export default {
               localStorage.setItem('nz-language', lang)
               this.$store.commit('setLanguage', lang)
               this.$i18n.locale = lang
+              this.$message.success(this.$t('tip.saveSuccess'))
               setTimeout(() => {
                 window.location.reload()
               }, 800)
