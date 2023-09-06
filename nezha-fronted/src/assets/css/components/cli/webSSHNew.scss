@@ -316,4 +316,18 @@
     z-index: 1000;
   }
 }
+.terminal-setting {
+  .system-title {
+    background: $--background-color-base;
+    padding: 7px 10px !important;
+    box-sizing: border-box;
+    border-radius: 2px;
+  }
+  .el-form-item__tip {
+    margin: 8px 0 15px 0;
+  }
+  .terminal-setting-item {
+    margin-bottom: 40px;
+  }
+}
 
