@@ -319,7 +319,8 @@
       margin-right: 5px;
     }
     .terminal-menu-item-disabled {
-      background: $--background-color-disabled;
+      //background: $--background-color-disabled;
+      cursor: not-allowed !important;
       color: $--color-text-disabled;
     }
   }
