@@ -312,8 +312,16 @@
   .terminal-menu {
     position: fixed;
     width: 150px;
-    border-radius: 2px;
+    border-radius: 4px;
     z-index: 1000;
+    padding: 10px 15px;
+    .nz-icon {
+      margin-right: 5px;
+    }
+    .terminal-menu-item-disabled {
+      background: $--background-color-disabled;
+      color: $--color-text-disabled;
+    }
   }
 }
 .terminal-setting {
