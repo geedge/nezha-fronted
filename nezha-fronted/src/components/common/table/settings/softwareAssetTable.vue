@@ -160,6 +160,12 @@ export default {
         //   sortable: 'custom'
         // },
         {
+          label: this.$t('overall.type'),
+          prop: 'type',
+          minWidth: 200,
+          show: true
+        },
+        {
           label: this.$t('project.project.projectName'),
           prop: 'project',
           minWidth: 200,
@@ -170,12 +176,7 @@ export default {
           minWidth: 200,
           show: true
         },
-        {
-          label: this.$t('overall.type'),
-          prop: 'type',
-          minWidth: 200,
-          show: true
-        },
+
         {
           label: this.$t('overall.remark'),
           prop: 'remark',
