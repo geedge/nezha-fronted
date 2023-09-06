@@ -44,7 +44,8 @@
             </copy>
           </template>
           <template v-else-if="item.prop === 'asset'">
-            <div class="document-copy-block">
+            <div>
+              <div class="document-copy-block" v-if="scope.row.asset">
               <span
                 class="document-copy-text"
                 :title="scope.row.asset&&scope.row.asset.name"
@@ -53,7 +54,9 @@
                 <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
                 {{scope.row.asset&&scope.row.asset.name}}
               </span>
-              <i v-if="scope.row.asset&&scope.row.asset.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.asset.name)" :title="$t('overall.copyText')"></i>
+                <i v-if="scope.row.asset&&scope.row.asset.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.asset.name)" :title="$t('overall.copyText')"></i>
+              </div>
+              <span v-else>--</span>
             </div>
           </template>
           <template v-else-if="item.prop === 'category'">
@@ -62,14 +65,17 @@
             </div>
           </template>
           <template v-else-if="item.prop === 'project'">
-            <div class="document-copy-block">
+            <div>
+              <div class="document-copy-block" v-if="scope.row.project">
               <span class="document-copy-text"
                     :title="scope.row[item.prop].name"
                     @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
                     @mouseleave="labelHover(scope.row, item.prop, false,true)">
               {{scope.row[item.prop].name}}
               </span>
-              <i v-if="scope.row[item.prop].name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop].name)" :title="$t('overall.copyText')"></i>
+                <i v-if="scope.row[item.prop].name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop].name)" :title="$t('overall.copyText')"></i>
+              </div>
+              <span v-else>--</span>
             </div>
           </template>
           <template v-else-if="item.prop === 'type'">
