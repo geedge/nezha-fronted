@@ -13,7 +13,7 @@
         <div class="terminal-menu-item">
           <span @click="copySelection()"><i class="nz-icon nz-icon-override"/>{{$t('overall.duplicate')}}</span>
         </div>
-        <div :disabled="!showPaste" class="terminal-menu-item" :class="showPaste ? '': 'terminal-menu-item-disabled'">
+        <div class="terminal-menu-item" :class="showPaste ? '': 'terminal-menu-item-disabled'">
           <span @click="paste()"> <i class="nz-icon nz-icon-putongwenjianlianjie"/> {{$t('project.topology.paste')}}</span>
         </div>
         <div class="terminal-menu-item">
