@@ -26,16 +26,18 @@
       <div v-html="tooltip.tooltipHtml"></div>
       <!-- dataLink -->
       <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
-        <!-- 只有一条数据时显示 -->
-        <div class="chart-dataLink-item select-series" v-if="isGrey.filter(value => value === false).length==1" @click="showAllSeries">
-          <i class="nz-icon nz-icon-a-Showallseries"></i>
-          <span>{{$t('dashboard.showAllSeries')}}</span>
-        </div>
-        <!-- 有多条数据时显示 -->
-        <div class="chart-dataLink-item select-series" v-else @click="showSelectedSeries">
-          <i class="nz-icon nz-icon-a-Showseletedseries"></i>
-          <span>{{$t('dashboard.showSelectedSeries')}}</span>
-        </div>
+        <template v-if="series.length > 1">
+          <!-- 只有一条数据时显示 -->
+          <div class="chart-dataLink-item select-series" v-if="isGrey.filter(value => value === false).length==1" @click="showAllSeries">
+            <i class="nz-icon nz-icon-a-Showallseries"></i>
+            <span>{{$t('dashboard.showAllSeries')}}</span>
+          </div>
+          <!-- 有多条数据时显示 -->
+          <div class="chart-dataLink-item select-series" v-else @click="showSelectedSeries">
+            <i class="nz-icon nz-icon-a-Showseletedseries"></i>
+            <span>{{$t('dashboard.showSelectedSeries')}}</span>
+          </div>
+        </template>
         <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
