@@ -644,6 +644,12 @@ export default {
         }
         chartInfo.elements && (chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\r|\n+/g, ''))
       }
+
+      // 设置dataLink
+      if (this.currentMsg.alertRule.param) {
+        chartInfo.param.dataLink = this.currentMsg.alertRule.param.dataLink
+      }
+
       chartInfo.id = this.currentMsg.id
       chartInfo.name = this.currentMsg.alertRule.name
       chartInfo.isAlertMessage = true

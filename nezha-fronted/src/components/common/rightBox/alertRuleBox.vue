@@ -338,6 +338,91 @@
               }">
             </el-time-picker>
           </el-form-item>
+
+          <!--Data link-->
+          <div class="chart-config">
+            <div class="alert-rule-split-title">{{$t('dashboard.dashboard.chartForm.dataLink')}}</div>
+            <draggable
+              v-model="editAlertRule.param.dataLink"
+              @start="start"
+              @end="onEnd"
+              :scroll-sensitivity="150"
+              :options="{
+              dragClass:'drag-dataLink-class',
+              fallbackClass:'fallback-class',
+              forceFallback:true,
+              ghostClass:'chart-ghost',
+              chosenClass:'choose-class',
+              scroll:true,
+              filter: '.drag-disabled',
+              animation: 150,
+              handle: '.drag-sort'
+            }">
+              <div v-for="(item,index) in editAlertRule.param.dataLink" :key="index" :class="item.error? 'is-item-box-error' : ''">
+                <div class="chart-title chart-title-config">
+                  <span class="chart-title-content">
+                    <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showDataLink(index)"></i>
+                    <span v-show="!item.show" class="title-content-left">
+                      <span>
+                        {{item.title}}
+                      </span>
+                    </span>
+                  </span>
+                  <span>
+                    <span @click="addDataLink()" :title="$t('tip.add')">
+                      <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
+                    </span>
+                    <span style="margin-right: 5px" :title="$t('overall.duplicate')">
+                      <i @click="copyDataLink(index)" class="nz-icon nz-icon-override"></i>
+                    </span>
+                    <span style="margin-right: 5px" class="nz-icon-minus-medium" :title="$t('overall.delete')">
+                      <i @click="removeDataLink(index)" class="nz-icon nz-icon-minus"></i>
+                    </span>
+                    <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.dashboard.chartForm.sort')">
+                      <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
+                    </span>
+                  </span>
+                </div>
+                <transition-group appear tag="div" name="el-zoom-in-top">
+                  <el-row class="thresholds-item" v-show="item.show" :key="1">
+                    <div>
+                      <div class='mapping-display'>{{$t("dashboard.dashboard.chartForm.title")}}</div>
+                    </div>
+                    <!-- Title -->
+                    <el-form-item :prop="'param.dataLink.' + index + '.title'" class="thresholds-from-item">
+                      <el-input size="small" v-model="item.title"></el-input>
+                    </el-form-item>
+                    <div>
+                      <div class='mapping-display'>{{$t('dashboard.dashboard.chartForm.openIn')}}</div>
+                    </div>
+                    <!-- Open in -->
+                    <el-form-item :prop="'param.dataLink.' + index + '.openIn'" class="thresholds-from-item">
+                      <el-select
+                        v-model="item.openIn"
+                        size="small"
+                      >
+                        <el-option value="newTab" :label="$t('dashboard.dashboard.chartForm.newTab')"></el-option>
+                        <el-option value="currentTab" :label="$t('dashboard.dashboard.chartForm.currentTab')"></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-row>
+                  <el-row class="thresholds-item" v-show="item.show" :key="2">
+                    <div>
+                      <div class='mapping-display'>{{$t('dashboard.dashboard.chartForm.dataLinkUrl')}}</div>
+                    </div>
+                    <!-- url -->
+                    <el-form-item :prop="'param.dataLink.' + index + '.url'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
+                      <el-input v-model="item.url" size="small"  @change="hideError('dataLink',index)"/>
+                    </el-form-item>
+                  </el-row>
+                </transition-group>
+              </div>
+            </draggable>
+            <div @click="addDataLink" class="thresholds-add">
+              {{$t('overall.addDataLink')}}
+            </div>
+          </div>
+
           <div class="alert-rule-split-title">{{ $t('overall.more') }}</div>
 <!--          &lt;!&ndash;panel&ndash;&gt;-->
 <!--          <el-form-item-->
@@ -388,7 +473,7 @@ import editRigthBox from '../mixin/editRigthBox'
 import richTextEditor from '@/components/chart/richTextEditor'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
 import selectPanel from '@/components/common/popBox/selectPanel'
-
+import draggable from 'vuedraggable'
 export default {
   name: 'alertRuleBox',
   props: {
@@ -397,6 +482,7 @@ export default {
   components: {
     'promql-input': promqlInput,
     richTextEditor,
+    draggable,
     selectPanel
   },
   mixins: [editRigthBox, promqlInputMixin],
@@ -604,6 +690,12 @@ export default {
       if (this.editAlertRule.type !== 3) {
         this.editAlertRule.expr = this.expressions[0]
       }
+
+      const param = this.$lodash.cloneDeep(this.editAlertRule.param)
+      param.dataLink.forEach(item => {
+        delete item.error
+      })
+
       // 处理condition 删除掉不需要的属性
       const condition = this.editAlertRule.condition.map(item => {
         return {
@@ -617,7 +709,8 @@ export default {
         ...this.editAlertRule,
         method: this.editAlertRule.method.join(','),
         type: this.editAlertRule.type,
-        condition
+        condition,
+        param
       }
       if (this.editAlertRule.trbShot && this.editAlertRule.trbShot == '<div  class="editor-core ql-container ql-snow"><div class="ql-editor"><p><br></p></div></div>') {
         this.editAlertRule.trbShot = ''
@@ -650,6 +743,7 @@ export default {
             })
           }
         } else {
+          this.datalinkError()
           this.prevent_opt.save = false
           return false
         }
@@ -799,6 +893,50 @@ export default {
       if (node) {
         this.panelName = node.data.name
       }
+    },
+    addDataLink () {
+      this.editAlertRule.param.dataLink.push({
+        show: true,
+        title: '',
+        url: '',
+        openIn: 'newTab'
+      })
+    },
+    copyDataLink (index) {
+      this.editAlertRule.param.dataLink.push({ ...this.editAlertRule.param.dataLink[index] })
+    },
+    removeDataLink (index) {
+      this.editAlertRule.param.dataLink.splice(index, 1)
+    },
+    showDataLink (index) {
+      this.editAlertRule.param.dataLink[index].show = !this.editAlertRule.param.dataLink[index].show
+    },
+    datalinkError () {
+      this.$refs.alertRuleForm.validate((blooen, object) => {
+        Object.keys(object).forEach(item => {
+          const keyArr = item.split('.')
+          console.log(keyArr)
+          if (keyArr.length >= 4) {
+            this.editAlertRule[keyArr[0]][keyArr[1]][keyArr[2]].error = true
+          }
+        })
+        if (!blooen) {
+          this.$forceUpdate()
+        }
+      })
+    },
+    hideError (key, index) {
+      if (!this.editAlertRule.param[key] || !this.editAlertRule.param[key].length) {
+        return
+      }
+      this.editAlertRule.param[key][index].error = false
+      this.$forceUpdate()
+    },
+    start () {
+      document.body.classList.add('isDrag')
+    },
+    onEnd () {
+      document.body.classList.remove('isDrag')
     }
   },
   mounted () {
@@ -815,6 +953,11 @@ export default {
         const obj = this.$lodash.cloneDeep(n)
         if (!obj.dashboardId) {
           obj.dashboardId = ''
+        }
+        if (!obj.param) {
+          obj.param = {
+            dataLink: []
+          }
         }
         this.editAlertRule = this.$lodash.cloneDeep(obj)
         this.showPanel.id = this.editAlertRule.dashboardId

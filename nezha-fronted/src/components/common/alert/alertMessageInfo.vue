@@ -58,7 +58,7 @@
 <script>
 import ChartScreenHeader from '@/components/chart/ChartScreenHeader'
 import chart from '@/components/chart/chart'
-import { isChartPie, isTimeSeries, getGroupHeight, isGroup } from '@/components/chart/chart/tools'
+import { isTimeSeries, getGroupHeight, isGroup } from '@/components/chart/chart/tools'
 import { alertMessage as alertMessageConstant, chartType, fromRoute } from '@/components/common/js/constants'
 import bus from '@/libs/bus'
 import axios from 'axios'
@@ -68,7 +68,7 @@ import lodash from 'lodash'
 import alertMessageInfoTab from '@/components/common/alert/alertMessageInfoTab'
 import alertMessageInfoTimeLine from '@/components/common/alert/alertMessageInfoTimeLine'
 export default {
-  name: 'panelChart',
+  name: 'alertMessageInfo',
   components: {
     alertMessageInfoTab,
     chart,
