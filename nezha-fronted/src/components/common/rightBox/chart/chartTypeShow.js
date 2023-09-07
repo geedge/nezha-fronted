@@ -223,7 +223,7 @@ export default {
         default: return false
       }
     },
-    isShowRightYAxis (type) {
+    isTimeSeries (type) {
       switch (type) {
         case 'line':
         case 'area':

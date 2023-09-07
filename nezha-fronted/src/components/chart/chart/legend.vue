@@ -127,11 +127,6 @@ export default {
     }
   },
   methods: {
-    onCopy (txt) {
-      this.$copyText(txt).then(() => {
-        this.$message.success({ message: this.$t('overall.copySuccess') })
-      })
-    },
     clickLegend (legendName, index) {
       /* 点击legend
           * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮

@@ -324,31 +324,17 @@ export default {
       const pointX = point[0]
       const pointY = point[1]
       // 外层div大小
-      const viewWidth = size.viewSize[0]
+      // const viewWidth = size.viewSize[0]
       // const viewHeight = size.viewSize[1]
       // 提示框大小
       const boxWidth = size.contentSize[0]
       const boxHeight = size.contentSize[1]
-      if (!this.isFullscreen) { // 本地显示
-        const chartDom = document.getElementById('chart-local-' + this.chartInfo.id)
-        if (chartDom) {
-          if (windowMouse.x < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-            x = pointX + 15
-          } else {
-            x = pointX - boxWidth - 15
-          }
-          if (windowMouse.y + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
-            y = pointY + 15
-          } else {
-            y = pointY - boxHeight - 10
-          }
-          return [x, y]
-        }
-      } else {
-        if (pointX < (viewWidth / 2)) { // 说明鼠标在左边放不下提示框
-          x = pointX + 10
+      const chartDom = document.getElementById('chart-local-' + this.chartInfo.id)
+      if (chartDom) {
+        if (windowMouse.x < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+          x = pointX + 15
         } else {
-          x = pointX - boxWidth
+          x = pointX - boxWidth - 15
         }
         if (windowMouse.y + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
           y = pointY + 15

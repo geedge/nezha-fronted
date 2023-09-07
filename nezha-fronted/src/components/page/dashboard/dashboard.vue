@@ -265,6 +265,10 @@ export default {
             label: '',
             min: undefined,
             max: undefined
+          },
+          option: {
+            lineWidth: 1,
+            pointSize: 6
           }
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
@@ -617,14 +621,22 @@ export default {
         if (this.chart.type === 'group' && !this.chart.param.collapse == undefined) {
           this.chart.param.collapse = false
         }
-        if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point') && !this.chart.param.rightYAxis) {
-          this.chart.param.rightYAxis = {
-            elementNames: [],
-            style: 'line',
-            unit: 2,
-            label: '',
-            min: undefined,
-            max: undefined
+        if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point')) {
+          if (!this.chart.param.rightYAxis) {
+            this.chart.param.rightYAxis = {
+              elementNames: [],
+              style: 'line',
+              unit: 2,
+              label: '',
+              min: undefined,
+              max: undefined
+            }
+          }
+          if (!this.chart.param.option) {
+            this.chart.param.option = {
+              lineWidth: 1,
+              pointSize: 6
+            }
           }
         }
         if (this.chart.type === 'stat') {
@@ -651,14 +663,22 @@ export default {
             if (this.chart.type === 'group' && !this.chart.param.collapse == undefined) {
               this.chart.param.collapse = false
             }
-            if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point') && !this.chart.param.rightYAxis) {
-              this.chart.param.rightYAxis = {
-                elementNames: [],
-                style: 'line',
-                unit: 2,
-                label: '',
-                min: undefined,
-                max: undefined
+            if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point')) {
+              if (!this.chart.param.rightYAxis) {
+                this.chart.param.rightYAxis = {
+                  elementNames: [],
+                  style: 'line',
+                  unit: 2,
+                  label: '',
+                  min: undefined,
+                  max: undefined
+                }
+              }
+              if (!this.chart.param.option) {
+                this.chart.param.option = {
+                  lineWidth: 1,
+                  pointSize: 6
+                }
               }
             }
             if (this.chart.type === 'stat') {
