@@ -323,49 +323,10 @@ export default {
       this.searchTimeHeader[0] = q.startAt ? this.momentTz(q.startAt) : ''
       this.searchTimeHeader[1] = q.endAt ? this.momentTz(q.endAt) : ''
       this.searchTimeHeader[2] = q.timeType
-      switch (this.searchTimeHeader[2]) {
-        case '5m' :
-          this.defaultPick = 1
-          break
-        case '15m' :
-          this.defaultPick = 2
-          break
-        case '30m' :
-          this.defaultPick = 3
-          break
-        case '1h' :
-          this.defaultPick = 4
-          break
-        case '3h' :
-          this.defaultPick = 5
-          break
-        case '6h' :
-          this.defaultPick = 6
-          break
-        case '12h' :
-          this.defaultPick = 7
-          break
-        case '1d' :
-          this.defaultPick = 8
-          break
-        case '24h' :
-          this.defaultPick = 8
-          break
-        case '2d' :
-          this.defaultPick = 9
-          break
-        case '7d' :
-          this.defaultPick = 10
-          break
-        case '30d' :
-          this.defaultPick = 11
-          break
-        case 'all' :
-          this.defaultPick = 12
-          break
-        default:
-          this.defaultPick = 0
+      if (!q.startAt) {
+        this.searchTimeHeader[2] = 'all'
       }
+      this.initTimeType(this.searchTimeHeader[2])
       // this.defaultPick = 11
     },
     labelsSort (obj) {

@@ -87,7 +87,7 @@ export default {
   methods: {
     dateChange () {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-      this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+      this.setSearchTime('searchTime', nowTimeType)
       this.filter.start_time = bus.timeFormate(this.searchTime[0])
       this.filter.end_time = bus.timeFormate(this.searchTime[1])
       this.filter.value = this.searchTime[2]
@@ -103,28 +103,28 @@ export default {
     closeDialog () {
       this.$emit('close')
     },
-    setSearchTime (type, val, nowTimeType) { // 设置searchTime
-      if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
-        this.$set(this.searchTime, 0, startTime)
-        this.$set(this.searchTime, 1, endTime)
-        this.$set(this.searchTime, 2, val + 'm')
-      } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
-        this.$set(this.searchTime, 0, startTime)
-        this.$set(this.searchTime, 1, endTime)
-        this.$set(this.searchTime, 2, val + 'h')
-      } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
-        this.$set(this.searchTime, 0, startTime)
-        this.$set(this.searchTime, 1, endTime)
-        this.$set(this.searchTime, 2, val + 'd')
-      }
-      this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime
-    },
+    // setSearchTime (type, val, nowTimeType) { // 设置searchTime
+    //   if (type === 'minute') {
+    //     const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
+    //     const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+    //     this.$set(this.searchTime, 0, startTime)
+    //     this.$set(this.searchTime, 1, endTime)
+    //     this.$set(this.searchTime, 2, val + 'm')
+    //   } else if (type === 'hour') {
+    //     const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
+    //     const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+    //     this.$set(this.searchTime, 0, startTime)
+    //     this.$set(this.searchTime, 1, endTime)
+    //     this.$set(this.searchTime, 2, val + 'h')
+    //   } else if (type === 'date') {
+    //     const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
+    //     const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+    //     this.$set(this.searchTime, 0, startTime)
+    //     this.$set(this.searchTime, 1, endTime)
+    //     this.$set(this.searchTime, 2, val + 'd')
+    //   }
+    //   this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime
+    // },
     showTime (type) {
       switch (type) {
         case 'line' :
@@ -205,10 +205,10 @@ export default {
       this.nowType.end_time = this.searchTime[1]
       if (!this.nowTimeType) {
         this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
-        this.setSearchTime(this.nowType.type, this.nowType.value, this.nowType)
+        this.setSearchTime('searchTime', this.nowType)
       } else {
         this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
-        this.setSearchTime(this.nowType.type, this.nowType.value, this.nowType)
+        this.setSearchTime('searchTime', this.nowType)
       }
     }
   }

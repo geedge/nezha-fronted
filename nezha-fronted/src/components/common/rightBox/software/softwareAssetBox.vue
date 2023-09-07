@@ -1,5 +1,5 @@
 <template>
-  <div v-clickoutside="{obj: editSoftwareAsset, func: esc}" class="right-box right-box-editSoftwareAsset right-box-edit-endpoint ">
+  <div v-clickoutside="{obj: editSoftwareAsset,oldData:oldData, func: esc}" class="right-box right-box-editSoftwareAsset right-box-edit-endpoint ">
     <div class="right-box__header">
       <div class="header__title">{{editSoftwareAsset.id ? $t('softwareAsset.edit') : $t('softwareAsset.create')}}</div>
       <div class="header__operation">
@@ -184,6 +184,7 @@ export default {
     return {
       assetConstants,
       disabled: false,
+      oldData: {},
       editSoftwareAsset: {
         id: '',
         name: '',
@@ -252,13 +253,17 @@ export default {
         this.isEdit = true
         const editSoftwareAsset = JSON.parse(JSON.stringify(n))
         editSoftwareAsset.paramObj = []
+        if (editSoftwareAsset.projectId === -1) {
+          editSoftwareAsset.projectId = ''
+        }
+        editSoftwareAsset.assetId = ''
         // if (editSoftwareAsset.params) {
         //   Object.keys(editSoftwareAsset.params).forEach(key => {
         //     editSoftwareAsset.paramObj.push(editSoftwareAsset.params[key])
         //   })
         // }
-        editSoftwareAsset.assetId = ''
         this.editSoftwareAsset = editSoftwareAsset
+        this.oldData = this.$lodash.cloneDeep(this.editSoftwareAsset)
       }
     }
   },
@@ -269,7 +274,10 @@ export default {
   },
   mounted () {
     setTimeout(() => {
-      this.editSoftwareAsset.assetId = this.obj.assetId + ''
+      if (this.obj.assetId && this.obj.assetId !== -1) {
+        this.editSoftwareAsset.assetId = this.obj.assetId + ''
+        this.oldData = this.$lodash.cloneDeep(this.editSoftwareAsset)
+      }
     }, 500)
   },
   methods: {
@@ -381,6 +389,7 @@ export default {
           }
           this.editSoftwareAsset.paramObj.push(findItem.params[key])
         })
+        this.oldData = this.$lodash.cloneDeep(this.editSoftwareAsset)
       }
     }
   }

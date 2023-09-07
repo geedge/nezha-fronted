@@ -46,7 +46,7 @@
           </div>
           <el-form-item prop="paramObj">
             <div v-for="(label, i) in editSoftwareType.paramObj" :key="i" class="form__dotted-item form__dotted-item-required">
-              <el-form-item :prop="'paramObj.' + i + '.value.0'" :rules="[ { required: JSON.parse(label.param).required === '1', message: $t('validate.required'), trigger: 'blur' }]">
+              <el-form-item :prop="'paramObj.' + i + '.value.0'" :rules="[]">
                 <template v-slot:label>
                   <div class="form__labels-label">
                     <span>{{label.name}}</span>
