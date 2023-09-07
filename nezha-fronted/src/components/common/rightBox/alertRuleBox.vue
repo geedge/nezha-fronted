@@ -710,7 +710,7 @@ export default {
         method: this.editAlertRule.method.join(','),
         type: this.editAlertRule.type,
         condition,
-        param
+        param: JSON.stringify(param)
       }
       if (this.editAlertRule.trbShot && this.editAlertRule.trbShot == '<div  class="editor-core ql-container ql-snow"><div class="ql-editor"><p><br></p></div></div>') {
         this.editAlertRule.trbShot = ''
@@ -958,6 +958,8 @@ export default {
           obj.param = {
             dataLink: []
           }
+        } else {
+          obj.param = JSON.parse(obj.param)
         }
         this.editAlertRule = this.$lodash.cloneDeep(obj)
         this.showPanel.id = this.editAlertRule.dashboardId

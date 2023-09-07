@@ -647,7 +647,7 @@ export default {
 
       // 设置dataLink
       if (this.currentMsg.alertRule.param) {
-        chartInfo.param.dataLink = this.currentMsg.alertRule.param.dataLink
+        chartInfo.param.dataLink = JSON.parse(this.currentMsg.alertRule.param).dataLink
       }
 
       chartInfo.id = this.currentMsg.id
