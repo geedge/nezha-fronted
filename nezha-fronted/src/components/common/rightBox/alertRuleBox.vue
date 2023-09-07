@@ -339,27 +339,27 @@
             </el-time-picker>
           </el-form-item>
           <div class="alert-rule-split-title">{{ $t('overall.more') }}</div>
-          <!--panel-->
-          <el-form-item
-            class="form-item--half-width"
-            :label="$t('overall.associateDashboard')"
-            prop="dashboard"
-          >
-            <select-panel @setPanelName="setPanelName" ref="selectPanel" :disabled="false" :filter-panel="filterPanel" :chart-box="true" :panel-lock="true" :show-panel="showPanel" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel">
-              <template v-slot:header>
-                <div class="panel-select-header">
-                  <el-input id="chart-box-panelname" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="small" style="width: 596px"></el-input>
-                </div>
-              </template>
-              <template v-slot:trigger>
-<!--                <el-input placeholder="" size="small" clearable v-model="panelName" :disabled="false"></el-input>-->
-                <div class="alert-rule-box-dashboard">
-                  <div class="text-ellipsis alert-rule-box-dashboard-name" :title="panelName">{{panelName}}</div>
-                  <i class="nz-icon nz-icon-guanbi2" @click.stop="clearDashboard()"/>
-                </div>
-              </template>
-            </select-panel>
-          </el-form-item>
+<!--          &lt;!&ndash;panel&ndash;&gt;-->
+<!--          <el-form-item-->
+<!--            class="form-item&#45;&#45;half-width"-->
+<!--            :label="$t('overall.associateDashboard')"-->
+<!--            prop="dashboard"-->
+<!--          >-->
+<!--            <select-panel @setPanelName="setPanelName" ref="selectPanel" :disabled="false" :filter-panel="filterPanel" :chart-box="true" :panel-lock="true" :show-panel="showPanel" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel">-->
+<!--              <template v-slot:header>-->
+<!--                <div class="panel-select-header">-->
+<!--                  <el-input id="chart-box-panelname" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="small" style="width: 596px"></el-input>-->
+<!--                </div>-->
+<!--              </template>-->
+<!--              <template v-slot:trigger>-->
+<!--&lt;!&ndash;                <el-input placeholder="" size="small" clearable v-model="panelName" :disabled="false"></el-input>&ndash;&gt;-->
+<!--                <div class="alert-rule-box-dashboard">-->
+<!--                  <div class="text-ellipsis alert-rule-box-dashboard-name" :title="panelName">{{panelName}}</div>-->
+<!--                  <i class="nz-icon nz-icon-guanbi2" @click.stop="clearDashboard()"/>-->
+<!--                </div>-->
+<!--              </template>-->
+<!--            </select-panel>-->
+<!--          </el-form-item>-->
           <el-form-item :label="$t('alert.config.trbShot')" prop="trbShot">
             <rich-text-editor ref="richTextEditor" :edit-data="editAlertRule.trbShot" @after-init="afterInitRich"></rich-text-editor>
           </el-form-item>
@@ -804,7 +804,7 @@ export default {
   mounted () {
     this.getUserList()
     this.getNotifyData()
-    this.getDashboard()
+    // this.getDashboard()
   },
   watch: {
     alertRule: {

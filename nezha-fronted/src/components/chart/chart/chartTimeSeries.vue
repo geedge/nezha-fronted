@@ -179,6 +179,18 @@ export default {
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
 
+      const styleOption = this.$lodash.get(this.chartInfo, 'param.option')
+      if (styleOption) {
+        chartOption.series.forEach(item => {
+          if (item.lineStyle && styleOption.lineWidth != undefined) {
+            item.lineStyle.width = styleOption.lineWidth
+          }
+          if (styleOption.pointSize != undefined) {
+            item.symbolSize = styleOption.pointSize
+          }
+        })
+      }
+
       this.isGrey = this.legends.map(() => false)
       chartOption.color = this.colorList
       if (!this.series.length) {
@@ -265,12 +277,11 @@ export default {
               if (this.tooltip.activeIndex != params.seriesIndex) {
                 const option = myChart.getOption()
                 option.series[params.seriesIndex].symbol = 'circle'
-                option.series[params.seriesIndex].emphasis.itemStyle = {
-                  opacity: 1,
+                option.series[params.seriesIndex].itemStyle = {
                   borderColor: this.hexToRgb(params.color, 0.4),
-                  borderWidth: 6
+                  borderWidth: 5
                 }
-                myChart.setOption(option, true)
+                myChart.setOption(option)
               }
             }
             this.tooltip.activeIndex = params.seriesIndex
@@ -280,11 +291,8 @@ export default {
               const option = myChart.getOption()
               option.series.forEach(item => {
                 item.symbol = 'emptyCircle'
-                item.emphasis.itemStyle = {
-                  opacity: 1
-                }
               })
-              myChart.setOption(option, true)
+              myChart.setOption(option)
             }
             this.tooltip.activeIndex = undefined
           })

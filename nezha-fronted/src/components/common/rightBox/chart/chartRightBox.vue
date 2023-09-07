@@ -400,11 +400,6 @@ export default {
               varValue: '',
               result: 'show'
             },
-            dataLink: [],
-            tooltip: {
-              mode: 'all',
-              sort: 'none'
-            },
             rightYAxis: {
               elementNames: [],
               style: 'line',
@@ -412,6 +407,15 @@ export default {
               label: '',
               min: undefined,
               max: undefined
+            },
+            dataLink: [],
+            tooltip: {
+              mode: 'all',
+              sort: 'none'
+            },
+            option: {
+              lineWidth: 1,
+              pointSize: 6
             }
           }
         }

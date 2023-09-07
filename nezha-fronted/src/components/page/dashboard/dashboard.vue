@@ -271,6 +271,10 @@ export default {
           tooltip: {
             mode: 'all',
             sort: 'none'
+          },
+          option: {
+            lineWidth: 1,
+            pointSize: 6
           }
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
@@ -638,6 +642,12 @@ export default {
             }
             this.chart.param.enable.tooltip = true
           }
+          if (!this.chart.param.option) {
+            this.chart.param.option = {
+              lineWidth: 1,
+              pointSize: 6
+            }
+          }
         }
         if (this.chart.type === 'stat') {
           if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }
@@ -696,6 +706,12 @@ export default {
                   sort: 'none'
                 }
                 this.chart.param.enable.tooltip = true
+              }
+              if (!this.chart.param.option) {
+                this.chart.param.option = {
+                  lineWidth: 1,
+                  pointSize: 6
+                }
               }
             }
             if (this.chart.type === 'stat') {
@@ -1247,7 +1263,7 @@ export default {
     this.$store.commit('setMode', this.mode)
     await this.getTableData()
     if (this.nowTimeType.type) {
-      this.setSearchTime('searchTime',this.nowTimeType)
+      this.setSearchTime('searchTime', this.nowTimeType)
     }
     if (this.nowTimeType) {
       this.nowTimeType.start_time = this.searchTime[0]
