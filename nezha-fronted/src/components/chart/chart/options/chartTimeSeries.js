@@ -152,26 +152,23 @@ export const chartTimeSeriesLineOption = {
     type: 'line',
     symbol: 'emptyCircle', // 去掉点
     connectNulls: true,
-    symbolSize: [6, 6],
+    symbolSize: 6,
     smooth: 0.2, // 曲线变平滑
-    // showSymbol: false,
-    itemStyle: {
-      opacity: 0.001
-    },
+    showSymbol: false,
     data: [],
     lineStyle: {
       width: 1,
       opacity: 0.9
     },
     emphasis: {
-      focus: 'series',
-      itemStyle: {
-        opacity: 1
-      }
+      focus: 'series'
     },
     blur: {
       lineStyle: {
         opacity: 0.3
+      },
+      itemStyle: {
+        opacity: 1
       }
     }
   }],

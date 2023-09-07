@@ -3845,9 +3845,10 @@ export default {
             }
             data.forEach((result, i) => {
               const seriesItem = {
+                type: 'line',
                 name: '',
                 symbol: 'emptyCircle', // 去掉点
-                symbolSize: [2, 2],
+                symbolSize: [6, 6],
                 showSymbol: false,
                 smooth: 0.2, // 曲线变平滑
                 data: [],
@@ -3855,7 +3856,17 @@ export default {
                   width: 1,
                   opacity: 0.9
                 },
-                type: 'line'
+                emphasis: {
+                  focus: 'series'
+                },
+                blur: {
+                  lineStyle: {
+                    opacity: 0.3
+                  },
+                  itemStyle: {
+                    opacity: 1
+                  }
+                }
               }
               let legendName = ''
               seriesItem.data = result.values.map((item) => {
@@ -3927,9 +3938,10 @@ export default {
                 }
                 data.forEach((result, i) => {
                   const seriesItem = {
+                    type: 'line',
                     name: '',
                     symbol: 'emptyCircle', // 去掉点
-                    symbolSize: [2, 2],
+                    symbolSize: [6, 6],
                     showSymbol: false,
                     smooth: 0.2, // 曲线变平滑
                     data: [],
@@ -3937,7 +3949,17 @@ export default {
                       width: 1,
                       opacity: 0.9
                     },
-                    type: 'line'
+                    emphasis: {
+                      focus: 'series'
+                    },
+                    blur: {
+                      lineStyle: {
+                        opacity: 0.3
+                      },
+                      itemStyle: {
+                        opacity: 1
+                      }
+                    }
                   }
                   let legendName = ''
                   seriesItem.data = result.values.map((item) => {
