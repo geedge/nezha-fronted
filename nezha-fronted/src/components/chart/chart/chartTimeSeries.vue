@@ -26,7 +26,7 @@
       <div v-html="tooltip.tooltipHtml"></div>
       <!-- dataLink -->
       <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
-        <template v-if="this.series.length>1">
+        <template v-if="series.length > 1">
           <!-- 只有一条数据时显示 -->
           <div class="chart-dataLink-item select-series" v-if="isGrey.filter(value => value === false).length==1" @click="showAllSeries">
             <i class="nz-icon nz-icon-a-Showallseries"></i>
