@@ -10,7 +10,7 @@
       <div class="container__form">
         <el-form ref="modelForm" :model="editSoftwareAsset" :rules="rules" label-position="top" label-width="120px">
           <!--name-->
-          <el-form-item :label="$t('config.model.name')" prop="name">
+          <el-form-item :label="$t('overall.name')" prop="name">
             <el-input maxlength="128" show-word-limit v-model="editSoftwareAsset.name" size="small" type="text"></el-input>
           </el-form-item>
           <!--type-->
@@ -42,7 +42,7 @@
           </el-form-item>
           <!--project-->
           <el-form-item :label='$t("project.project.projectName")' class="select-warp" prop="projectId">
-            <el-select id="add-endpoint-project" v-model="editSoftwareAsset.projectId" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
+            <el-select id="add-endpoint-project" v-model="editSoftwareAsset.projectId" class="right-box__select" clearable placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
               <el-option v-for="item in projectList" :id="'project-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
