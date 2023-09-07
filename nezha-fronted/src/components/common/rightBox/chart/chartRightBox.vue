@@ -408,7 +408,11 @@ export default {
               min: undefined,
               max: undefined
             },
-            dataLink: []
+            dataLink: [],
+            option: {
+              lineWidth: 1,
+              pointSize: 6
+            }
           }
         }
       }
