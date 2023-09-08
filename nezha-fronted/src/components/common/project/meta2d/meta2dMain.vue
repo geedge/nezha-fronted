@@ -157,7 +157,7 @@ export default {
     },
     minScale: {
       type: Number,
-      default: 0.25
+      default: 0.001
     },
     querysArray: {},
     params: {},
