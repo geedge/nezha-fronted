@@ -200,11 +200,11 @@
                       <span>{{$t('explore.expandResults')}}</span>
                       <el-switch v-model="expandResults" @click.native.stop tabindex="0"></el-switch>
                     </div>
-                    <span>{{$t('explore.resultSeries')}}：{{this.results}}</span>
+                    <span>{{$t('explore.resultSeries')}}：{{rowData.length}}</span>
                   </div>
                   <div class="nz-table-list explore-table">
                     <ul v-my-loading="tools.loading" class="row-table" :class="{'expand-results-table':expandResults}">
-                      <li class="row-table-row" v-for="(row,index) in storedTableData" :key="index">
+                      <li class="row-table-row" v-for="(row,index) in rowData" :key="index">
                         <div class="table-row-left">
                           <copy :copyData='row.element' :showInfo='row.element'>
                             <template slot="copy-text">
@@ -3618,7 +3618,7 @@ export default {
       showTopBtn: false, // top按钮
       scrollbarWrap: null,
       allMatrix: false, // metric是否全部为matrix类型
-      results: 0 // 结果序列
+      rowData: []
     }
   },
   async created () {
@@ -4025,10 +4025,10 @@ export default {
         let tLabels = []
         if (res.length > 0) {
           this.storedTableData = []
+          this.rowData = []
           this.tableData = []
           this.tableTitle = []
           this.tools.customTableTitle = []
-          this.results = 0
 
           this.allMatrix = res.every(d => d.data.resultType === 'matrix')
 
@@ -4045,7 +4045,7 @@ export default {
                   }]
                 }
                 data.forEach((result, i) => {
-                  let metrics = Object.assign({}, result.metric)
+                  const metrics = Object.assign({}, result.metric)
                   if (response.data.resultType === 'matrix') {
                     this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.values[0][1], null, 2))
                     this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000)))
@@ -4066,15 +4066,24 @@ export default {
                       tLabels.push(label)
                     }
                   }
+                  if (response.data.resultType === 'matrix') {
+                    result.values.forEach(item => {
+                      tData.push({
+                        ...metrics,
+                        ['value#' + index]: chartDataFormat.getUnit(this.chartUnit || 2).compute(item[1], null, 2),
+                        time: bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000))
+                      })
+                    })
+                  } else {
+                    tData.push(metrics)
+                  }
 
                   // 处理row模式数据
                   const rowData = this.handlerRowData(result.metric)
                   rowData.value = metrics['value#' + index]
-                  metrics = Object.assign(metrics, rowData)
                   // matrix 类型数据
                   if (response.data.resultType === 'matrix') {
-                    metrics.valueList = result.values.map((item, index) => {
-                      this.results++
+                    rowData.valueList = result.values.map((item, index) => {
                       const obj = {}
                       obj.value = chartDataFormat.getUnit(this.chartUnit || 2).compute(item[1], null, 2)
                       obj.timestamp = '@' + item[0]
@@ -4085,10 +4094,10 @@ export default {
                       return obj
                     })
                   } else {
-                    metrics.timestamp = '@' + result.value[0]
-                    this.results++
+                    rowData.timestamp = '@' + result.value[0]
+                    rowData.time = bus.timeFormate(bus.computeTimezone(result.value[0] * 1000))
                   }
-                  tData.push(metrics)
+                  this.rowData.push(rowData)
                 })
               }
             }
