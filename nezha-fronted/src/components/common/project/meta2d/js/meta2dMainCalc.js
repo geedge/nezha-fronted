@@ -124,8 +124,12 @@ export default {
     },
     reload () {
       this.position.show = false
-      const endTime = new Date().getTime()
-      const startTime = endTime - 60 * this.params.timeType * 1000
+      let endTime = new Date().getTime()
+      let startTime = endTime - 60 * this.params.timeType * 1000
+      if (this.isChart) {
+        startTime = this.timeRange[0]
+        endTime = this.timeRange[1]
+      }
       this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
         this.clacTopoData(this.$lodash.cloneDeep(this.topoData), arr).then((data) => {
           if (!getTopology(this.meta2dId)) {

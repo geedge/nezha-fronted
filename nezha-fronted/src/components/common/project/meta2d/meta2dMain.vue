@@ -172,7 +172,9 @@ export default {
     paddingTop: {
       type: Number,
       default: 20
-    }
+    },
+    timeRange: {},
+    nowTimeType: {}
   },
   data () {
     return {
@@ -187,8 +189,6 @@ export default {
         map: false
       },
     }
-  },
-  computed: {
   },
   components: {
     meta2dHeader,
