@@ -19,6 +19,7 @@
               class="meta2d-chart"
               :is-chart="true"
               :iconArray="iconArray"
+              :time-range="filterTime"
               :ref="'topology' + index"
               :paddingTop="40"
             />
