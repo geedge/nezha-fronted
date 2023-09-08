@@ -64,8 +64,9 @@ import logsData from '@/components/chart/logsData'
 import lodash from 'lodash'
 import alertMessageInfoTab from '@/components/common/alert/alertMessageInfoTab'
 import alertMessageInfoTimeLine from '@/components/common/alert/alertMessageInfoTimeLine'
+import { lineChartMove } from '@/components/common/js/common'
 export default {
-  name: 'panelChart',
+  name: 'alertMessageInfo',
   components: {
     alertMessageInfoTab,
     chart,
@@ -349,9 +350,13 @@ export default {
     this.showAllData = !this.showMultiple(this.chartInfo.type)
     this.getAlertMessageInfo()
     window.addEventListener('resize', this.resize)
+    if (!document.onmousemove) { // 添加鼠标移动事件监听
+      document.onmousemove = lineChartMove
+    }
   },
   destroyed () {
     window.removeEventListener('resize', this.resize)
+    document.onmousemove = null
   }
 }
 </script>
