@@ -68,7 +68,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item   class="half-form-item">
+          <el-form-item   class="half-form-item" style="width: 300px">
             <button :class="{'nz-btn-disabled':downloadAgentFlag}" :disabled="downloadAgentFlag" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="downloadAgent">{{$t('overall.download')}}</button>
             <span class="downloading" v-if="downloadAgentFlag">{{$t('overall.downloading')}}</span>
           </el-form-item>
