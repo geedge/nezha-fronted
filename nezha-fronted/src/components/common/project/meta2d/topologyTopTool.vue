@@ -179,7 +179,7 @@ export default {
     onTouchstart  (e) {
       const pen = {
         name: 'rectangle',
-        text: 'rectangle',
+        text: '',
         width: 100,
         height: 100
       }
@@ -191,7 +191,7 @@ export default {
       const offestY = data.y
       const pen = {
         name: 'rectangle',
-        text: 'rectangle',
+        text: '',
         width: 100,
         height: 100,
         x: 100 - offestX,

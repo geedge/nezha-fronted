@@ -260,11 +260,8 @@ export default {
               this.cursorDefault = false
             }
           })
-          // 设置dataLink的图表 或存在多条数据时 划过节点时鼠标样式为pointer（可点击）
+
           if (this.dataLink.length || this.series.length > 1) {
-            myChart.on('mousemove', () => {
-              this.cursorDefault = false
-            })
             myChart.on('click', this.chartClick)
             myChart.on('mousedown', (params) => {
               if (this.tooltip.dataLinkShow) {
@@ -274,27 +271,47 @@ export default {
             })
           }
 
-          myChart.on('mouseover', (params) => {
+          // 鼠标滑过当前symbol 改变样式
+          myChart.on('mousemove', (params) => {
+            // 设置dataLink的图表 或存在多条数据时 划过节点时鼠标样式为pointer（可点击）
+            if (this.dataLink.length || this.series.length > 1) {
+              myChart.on('mousemove', () => {
+                this.cursorDefault = false
+              })
+            }
             if (this.chartInfo.type !== 'point') {
-              if (this.tooltip.activeIndex != params.seriesIndex) {
-                const option = myChart.getOption()
-                option.series[params.seriesIndex].symbol = 'circle'
-                option.series[params.seriesIndex].itemStyle = {
+              const option = myChart.getOption()
+              const series = this.$lodash.cloneDeep(option.series)
+              series[params.seriesIndex].data[params.dataIndex] = {
+                symbol: 'circle',
+                itemStyle: {
                   borderColor: this.hexToRgb(params.color, 0.4),
                   borderWidth: 5
-                }
-                myChart.setOption(option)
+                },
+                value: params.value
               }
+              myChart.setOption({ series })
+              myChart.dispatchAction(
+                {
+                  type: 'highlight',
+                  dataIndex: params.dataIndex
+                }
+              )
             }
             this.tooltip.activeIndex = params.seriesIndex
           })
           myChart.on('mouseout', (params) => {
             if (this.chartInfo.type !== 'point') {
               const option = myChart.getOption()
-              option.series.forEach(item => {
-                item.symbol = 'emptyCircle'
+              const series = this.$lodash.cloneDeep(option.series)
+              series.forEach(s => {
+                s.data.forEach((item, index) => {
+                  if (item.itemStyle) {
+                    s.data[index] = item.value
+                  }
+                })
               })
-              myChart.setOption(option)
+              myChart.setOption({ series })
             }
             this.tooltip.activeIndex = undefined
           })
@@ -448,7 +465,7 @@ export default {
             }
             const seriesName = nameArr.join('-')
             if (i === 0 && item.seriesName.indexOf('Previous') === -1 && type == 'left') {
-              const value = bus.computeTimezone(item.data[0] * 1000)
+              const value = bus.computeTimezone(item.value[0] * 1000)
               const tData = new Date(value)
               str += '<div class="tooltip-title" style="margin-bottom: 5px">'
               str += bus.timeFormate(tData)
@@ -460,7 +477,7 @@ export default {
             }
             if (item.seriesName.indexOf('Previous') === -1 && type == 'right') {
               if (i == 0 && (rightYAxisIndex == 0 || (arr.some(item => item.seriesName.indexOf('Previous') !== -1)))) {
-                const value = bus.computeTimezone(item.data[0] * 1000)
+                const value = bus.computeTimezone(item.value[0] * 1000)
                 const tData = new Date(value)
                 str += '<div class="tooltip-title" style="margin-bottom: 5px">'
                 str += bus.timeFormate(tData)
@@ -473,7 +490,7 @@ export default {
             }
             if (flag && item.seriesName.indexOf('Previous') !== -1) {
               flag = false
-              const value = bus.computeTimezone(item.data[0] * 1000 - self.minusTime)
+              const value = bus.computeTimezone(item.value[0] * 1000 - self.minusTime)
               const tData = new Date(value)
               str += '<div class="tooltip-title" style="margin-bottom: 5px">'
               str += bus.timeFormate(tData)
@@ -481,17 +498,17 @@ export default {
             }
             const color = self.colorList[item.seriesIndex]
             const previousItem = arr.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
-            let paramsDot = bus.countDecimals(item.data[1])
+            let paramsDot = bus.countDecimals(item.value[1])
             if (paramsDot < decimals) {
               paramsDot = decimals
             } else if (paramsDot > 6) {
               paramsDot = 6
             }
-            const val = formatScientificNotation(item.data[1], paramsDot)
+            const val = formatScientificNotation(item.value[1], paramsDot)
             sum += isNaN(self.numberWithEConvent(val)) ? 0 : parseFloat(self.numberWithEConvent(val))
             let previousDom = ''
             if (previousItem) {
-              const previousVal = formatScientificNotation(previousItem.data[1], paramsDot)
+              const previousVal = formatScientificNotation(previousItem.value[1], paramsDot)
               let minusVal = 0
               let operator
               if (previousVal <= val) {
@@ -670,16 +687,16 @@ export default {
         unit = lodash.get(this, 'chartInfo.param.rightYAxis.unit', 2)
       }
       // title
-      const value = bus.computeTimezone(params.data[0] * 1000)
+      const value = bus.computeTimezone(params.value[0] * 1000)
       const tData = new Date(value)
       // value
-      let paramsDot = bus.countDecimals(params.data[1])
+      let paramsDot = bus.countDecimals(params.value[1])
       if (paramsDot < this.chartDot) {
         paramsDot = this.chartDot
       } else if (paramsDot > 6) {
         paramsDot = 6
       }
-      const val = formatScientificNotation(params.data[1], paramsDot)
+      const val = formatScientificNotation(params.value[1], paramsDot)
       // 根据左右轴设置图标
       let className = 'row__color-block'
       if (params.yAxisIndex == 0) {

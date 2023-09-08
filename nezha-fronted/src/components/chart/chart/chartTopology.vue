@@ -35,7 +35,7 @@ export default {
   props: {
     parentId: {
       type: String,
-      default: 'asset-1'
+      default: ''
     }
   },
   data () {

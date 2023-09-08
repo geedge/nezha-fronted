@@ -383,6 +383,7 @@ export default {
       this.getTableData()
     },
     assetBatch () {
+      this.$refs.transfer.clear()
       this.getTableData()
     },
     esc (refresh) {
@@ -510,6 +511,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        this.$refs.transfer.clear()
         this.getTableData()
       }
     },

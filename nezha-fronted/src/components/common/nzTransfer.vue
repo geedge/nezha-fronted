@@ -209,6 +209,11 @@ export default {
     endLoading () {
       this.loading = false
     },
+    clear () {
+      this.selectedData = []
+      this.selectableSelection = []
+      this.selectedSelection = []
+    },
     setRowShow ({ row }) {
       if (this.tableData.some(d => d.hide && row.id === d.id)) {
         return 'hide-row'

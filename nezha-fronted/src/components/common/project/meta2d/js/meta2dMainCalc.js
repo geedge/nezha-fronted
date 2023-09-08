@@ -144,7 +144,7 @@ export default {
           if (this.isChart) {
             getTopology(this.meta2dId).fitView(true, this.paddingTop)
           } else {
-            getTopology(this.meta2dId).centerView()
+            getTopology(this.meta2dId).fitView(true)
           }
           getTopology(this.meta2dId).lock(1)
           this.getNodesArr()
@@ -162,7 +162,7 @@ export default {
         return
       }
       if (name && !pen.text) {
-        pen.text = name
+        // pen.text = name
       }
       if (pen.data && pen.data.imageId) {
         const imageInfo = this.iconArray.find(item => item.id === pen.data.imageId)
