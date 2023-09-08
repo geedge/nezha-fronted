@@ -4419,6 +4419,7 @@ export default {
             min: undefined,
             max: undefined
           },
+          dataLink: [],
           option: {
             lineWidth: 1,
             pointSize: 6
