@@ -533,7 +533,7 @@ export default {
       params.forEach((item, i) => {
         const alias = this.queryAlias(item.seriesIndex)
         if (i === 0 && alias.indexOf('Previous ') === -1) {
-          const value = item.data[0]
+          const value = item.value[0]
           str += '<div class="tooltip-title" style="margin-bottom: 5px">'
           str += bus.timeFormate(bus.computeTimezone(value))
           str += '</div>'
@@ -542,13 +542,13 @@ export default {
           if (i !== 0) {
             str += '<div style="border:1px dashed #333;width:100%;margin-top: 5px"></div>'
           }
-          const value = item.data[0] - this.minusTime
+          const value = item.value[0] - this.minusTime
           str += bus.timeFormate(bus.computeTimezone(value))
           minusFlag = false
         }
-        showFlag = showFlag || item.data[1]
-        if (!isNaN(item.data[1] + '')) {
-          const val = Number(item.data[1])
+        showFlag = showFlag || item.value[1]
+        if (!isNaN(item.value[1] + '')) {
+          const val = Number(item.value[1])
           str += `<div class="${(this.tooltip.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}">`
           str += `<div class="row__label">
                     <span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>
@@ -565,7 +565,7 @@ export default {
           const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
           if (previousItem) {
             str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right;box-sizing: border-box;padding-right: 10px">'
-            const previousval = formatScientificNotation(previousItem.data[1], dot)
+            const previousval = formatScientificNotation(previousItem.value[1], dot)
             let minusVal = 0
             if (previousval <= val) {
               minusVal = val - previousval
@@ -759,16 +759,16 @@ export default {
       }
       const seriesName = nameArr.join('-')
       // title
-      const value = bus.computeTimezone(params.data[0])
+      const value = bus.computeTimezone(params.value[0])
       const tData = new Date(value)
       // value
-      let paramsDot = bus.countDecimals(params.data[1])
+      let paramsDot = bus.countDecimals(params.value[1])
       if (paramsDot < this.chartDot) {
         paramsDot = this.chartDot
       } else if (paramsDot > 6) {
         paramsDot = 6
       }
-      const val = formatScientificNotation(params.data[1], paramsDot)
+      const val = formatScientificNotation(params.value[1], paramsDot)
       const color = this.colors[params.seriesIndex]
       this.tooltip.tooltipHtml = `
         <div class="nz-chart__tooltip">
