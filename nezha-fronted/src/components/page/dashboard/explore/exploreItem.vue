@@ -4403,7 +4403,26 @@ export default {
           nullType: 'null',
           legend: { placement: 'bottom', values: [], show: true },
           thresholdShow: true,
-          thresholds: [{ value: undefined, color: '#eeeeeeff' }]
+          thresholds: [{ value: undefined, color: '#eeeeeeff' }],
+          showHeader: 1,
+          visibility: {
+            varName: '',
+            operator: 'equal',
+            varValue: '',
+            result: 'show'
+          },
+          rightYAxis: {
+            elementNames: [],
+            style: 'line',
+            unit: 2,
+            label: '',
+            min: undefined,
+            max: undefined
+          },
+          option: {
+            lineWidth: 1,
+            pointSize: 6
+          }
         },
         elements: [],
         panel: '',
