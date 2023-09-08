@@ -268,9 +268,6 @@ export default {
         })
 
         if (this.series.length > 1) {
-          this.chart.on('mousemove', () => {
-            this.cursorDefault = false
-          })
           this.chart.on('click', this.chartClick)
           this.chart.on('mousedown', (params) => {
             if (this.tooltip.dataLinkShow) {
@@ -280,25 +277,43 @@ export default {
           })
         }
 
-        this.chart.on('mouseover', (params) => {
-          if (this.tooltip.activeIndex != params.seriesIndex) {
-            const option = this.chart.getOption()
-            option.series[params.seriesIndex].symbol = 'circle'
-            option.series[params.seriesIndex].itemStyle = {
+        // 鼠标滑过当前symbol 改变样式
+        this.chart.on('mousemove', (params) => {
+          if (this.series.length > 1) {
+            this.chart.on('mousemove', () => {
+              this.cursorDefault = false
+            })
+          }
+          const option = this.chart.getOption()
+          const series = this.$lodash.cloneDeep(option.series)
+          series[params.seriesIndex].data[params.dataIndex] = {
+            symbol: 'circle',
+            itemStyle: {
               borderColor: this.hexToRgb(params.color, 0.4),
               borderWidth: 5
-            }
-            this.chart.setOption(option)
+            },
+            value: params.value
           }
+          this.chart.setOption({ series })
+          this.chart.dispatchAction(
+            {
+              type: 'highlight',
+              dataIndex: params.dataIndex
+            }
+          )
           this.tooltip.activeIndex = params.seriesIndex
         })
-
         this.chart.on('mouseout', (params) => {
           const option = this.chart.getOption()
-          option.series.forEach(item => {
-            item.symbol = 'emptyCircle'
+          const series = this.$lodash.cloneDeep(option.series)
+          series.forEach(s => {
+            s.data.forEach((item, index) => {
+              if (item.itemStyle) {
+                s.data[index] = item.value
+              }
+            })
           })
-          this.chart.setOption(option)
+          this.chart.setOption({ series })
           this.tooltip.activeIndex = undefined
         })
       }
