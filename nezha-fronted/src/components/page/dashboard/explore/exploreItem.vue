@@ -4422,6 +4422,10 @@ export default {
             max: undefined
           },
           dataLink: [],
+          tooltip: {
+            mode: 'all',
+            sort: 'none'
+          },
           option: {
             lineWidth: 1,
             pointSize: 6
