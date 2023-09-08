@@ -81,8 +81,9 @@ export default {
     init: function () {
       const meta2dOptions = {
         minScale: this.minScale,
-        maxScale: 2,
-        autoAnchor: false
+        // maxScale: 2,
+        autoAnchor: false,
+        // disableAnchor: true
       }
       const meta2d = new window.Meta2d(this.meta2dId, meta2dOptions)
       meta2d.register(flowPens())
@@ -126,9 +127,12 @@ export default {
       this.position.show = false
       let endTime = new Date().getTime()
       let startTime = endTime - 60 * this.params.timeType * 1000
-      if (this.isChart) {
+      if (this.isChart && this.timeRange) {
         startTime = this.timeRange[0]
         endTime = this.timeRange[1]
+      } else if (this.filterTime) {
+        startTime = this.filterTime[0]
+        endTime = this.filterTime[1]
       }
       this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
         this.clacTopoData(this.$lodash.cloneDeep(this.topoData), arr).then((data) => {
@@ -306,6 +310,9 @@ export default {
     },
     pensActive (pens, e) { // 选中节点
       setTimeout(() => {
+        pens.forEach(item => {
+          item.disableAnchor = false
+        })
         this.selectPens = pens
         this.modulesDiff(pens[0])
         this.$nextTick(() => {

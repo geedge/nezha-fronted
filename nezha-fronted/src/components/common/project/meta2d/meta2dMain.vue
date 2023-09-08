@@ -137,6 +137,11 @@ export default {
       option: this.option
     }
   },
+  computed: {
+    filterTime () {
+      return this.$store.getters.getTimeRange
+    },
+  },
   props: {
     meta2dId: {}, // 唯一id 不可重复
     iconArray: {
