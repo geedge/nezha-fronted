@@ -191,7 +191,11 @@ export default {
         this.minusTime = ''
         this.multipleTime = false
       }
-      this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
+      if (this.chartInfo.type === 'diagram') {
+        this.chartInfo.loaded && this.query(elements, startTime, endTime, step, '', true)
+      } else {
+        this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
+      }
     },
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh, params) { // 获取chart的数据前的准备 主要用于处理时间参数
@@ -236,12 +240,12 @@ export default {
       this.variablesHandle()
       const elements = this.chartInfo.elements || []
       if (this.isExportHtml) {
-        this.chartInfo.loaded && this.queryData(elements, startTime, endTime, step, params)
+        this.chartInfo.loaded && this.queryData(elements, startTime, endTime, step, params, isRefresh)
         return
       }
-      this.chartInfo.loaded && this.query(elements, startTime, endTime, step, params)
+      this.chartInfo.loaded && this.query(elements, startTime, endTime, step, params, isRefresh)
     },
-    query (elements, startTime, endTime, step, params) { // 获取chart的数据
+    query (elements, startTime, endTime, step, params, isRefresh) { // 获取chart的数据
       this.isError = false
       this.allDataLength = 0
       // this.chartData = this.chartInfo.chartData
@@ -508,6 +512,12 @@ export default {
                 this.chartData = []
               } else {
                 this.chartData = [this.chartInfo.param.topo]
+              }
+              if (isRefresh) {
+                let dom = this.$refs.chart.$refs['chart' + this.chartInfo.id]
+                if (dom) {
+                  dom.refresh([startTime, endTime])
+                }
               }
             }
             if (this.chartInfo.type === 'group') {

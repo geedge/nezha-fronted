@@ -105,7 +105,7 @@
                 @mouseleave="labelHover1(scope.row, item.prop, false, $event, true)">
             [{{scope.row.configs[0].enable ?  'Metrics':''}}{{scope.row.configs[0].enable&&scope.row.configs[1].enable?',':''}}{{scope.row.configs[1].enable ?  'Logs' : ''}}]
           </span>
-          <nz-tooltip :that="scope.row[item.prop]" class="data-column__" v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop" @tipHover="tipHover($event,scope.row, item.prop,)" >
+          <nz-tooltip :that="scope.row[item.prop]" class="data-column__" v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop" @tipHover="nztipHover($event,scope.row, item.prop,)" >
               <div name="default">
                 <span class="copy-value-content" :title="$t('overall.duplicate')"> <i class="nz-icon nz-icon-override" @click="copyValue(clConfigs(scope.row))"></i></span>
                 <pre class="copy-value-content__pre">{{JSON.stringify(clConfigs(scope.row),null,2)}}</pre>
@@ -215,6 +215,7 @@
       :id="alertLabelId"
       :that="alertLabelObj"
       :type="alertLabelType"
+      @tipHover="tipHover"
     ></alertLabel>
   </div>
 </template>
@@ -366,7 +367,7 @@ export default {
       }
       // this.$set(this.tableData,index,item);// 调用父组件
     },
-    tipHover (tipLoading, item, type) {
+    nztipHover (tipLoading, item, type) {
       if (item[type].timeout) {
         clearTimeout(item[type].timeout)
         item[type].timeout = null

@@ -289,9 +289,9 @@ export default {
       if (this.scaleNum < 25) {
         this.scaleNum = 25
       }
-      if (this.scaleNum > 400) {
-        this.scaleNum = 400
-      }
+      // if (this.scaleNum > 400) {
+      //   this.scaleNum = 400
+      // }
       this.scale(this.scaleNum)
     },
     scale (val) {
