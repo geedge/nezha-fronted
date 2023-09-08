@@ -94,6 +94,7 @@ export default {
       if (res.code === 200) {
         this.dialogVisible = false
         this.$message.success(this.$t('tip.syncSuccess'))
+        this.$emit('getTableData')
       } else {
         this.$message.error(res.msg)
       }
