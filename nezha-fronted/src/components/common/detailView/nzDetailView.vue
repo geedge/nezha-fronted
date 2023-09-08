@@ -94,7 +94,7 @@
       ref="diagnosisTab"
       :diagnosisTabData ="diagnosisTabData"
     ></diagnosis-tab>
-    <config-sync ref="configSync" type="single" :from="triggerFrom" :batch-objs="syncObj"></config-sync>
+    <config-sync ref="configSync" type="single" :from="triggerFrom" :batch-objs="syncObj"  @getTableData="getTableData"></config-sync>
   </div>
 </template>
 
