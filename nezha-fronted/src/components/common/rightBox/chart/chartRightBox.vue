@@ -173,6 +173,9 @@ export default {
     panelChart
   },
   computed: {
+    lineOption () {
+      return this.nzDefaultConfig.option
+    },
     chartLastPosition () {
       return this.$store.getters.getChartLastPosition
     },
@@ -381,7 +384,7 @@ export default {
           height: 4,
           unit: 2,
           type: 'line',
-          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 , step: undefined}],
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }],
           param: {
             stack: 0,
             nullType: 'null',
@@ -409,10 +412,7 @@ export default {
               max: undefined
             },
             dataLink: [],
-            option: {
-              lineWidth: 1,
-              pointSize: 6
-            }
+            option: this.lineOption
           }
         }
       }
@@ -423,7 +423,7 @@ export default {
           height: 4,
           unit: 2,
           type: 'log',
-          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 , step: undefined}],
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }],
           param: {
             enable: {
               thresholds: false,
@@ -633,6 +633,21 @@ export default {
             delete item.buildIn
             delete item.chartId
           })
+        }
+        if ((obj.type === 'line' || obj.type === 'area' || obj.type === 'point')) {
+          if (!obj.param.rightYAxis) {
+            obj.param.rightYAxis = {
+              elementNames: [],
+              style: 'line',
+              unit: 2,
+              label: '',
+              min: undefined,
+              max: undefined
+            }
+          }
+          if (!obj.param.option) {
+            obj.param.option = this.lineOption
+          }
         }
         this.editChart = this.$lodash.cloneDeep(obj)
         this.oldData = this.$lodash.cloneDeep(obj)

@@ -230,12 +230,12 @@ export default {
                           theData: {
                             name: '',
                             symbol: 'emptyCircle', // 去掉点
-                            symbolSize: [2, 2],
+                            symbolSize: 8,
                             smooth: 0.2, // 曲线变平滑
                             showSymbol: false,
                             data: [],
                             lineStyle: {
-                              width: 1,
+                              width: 2,
                               opacity: 0.9
                             },
                             animation: false,

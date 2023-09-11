@@ -251,10 +251,7 @@ export default {
             max: undefined
           },
           dataLink: [],
-          option: {
-            lineWidth: 1,
-            pointSize: 6
-          }
+          option: undefined
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
         panel: '',
@@ -437,24 +434,6 @@ export default {
         if (this.chart.type === 'group' && !this.chart.param.collapse == undefined) {
           this.chart.param.collapse = false
         }
-        if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point')) {
-          if (!this.chart.param.rightYAxis) {
-            this.chart.param.rightYAxis = {
-              elementNames: [],
-              style: 'line',
-              unit: 2,
-              label: '',
-              min: undefined,
-              max: undefined
-            }
-          }
-          if (!this.chart.param.option) {
-            this.chart.param.option = {
-              lineWidth: 1,
-              pointSize: 6
-            }
-          }
-        }
         if (this.chart.type === 'stat') {
           if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }
           if (!this.chart.param.comparison) { this.chart.param.comparison = 'none' }
@@ -491,24 +470,6 @@ export default {
             }
             if (this.chart.type === 'group' && !this.chart.param.collapse == undefined) {
               this.chart.param.collapse = false
-            }
-            if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point')) {
-              if (!this.chart.param.rightYAxis) {
-                this.chart.param.rightYAxis = {
-                  elementNames: [],
-                  style: 'line',
-                  unit: 2,
-                  label: '',
-                  min: undefined,
-                  max: undefined
-                }
-              }
-              if (!this.chart.param.option) {
-                this.chart.param.option = {
-                  lineWidth: 1,
-                  pointSize: 6
-                }
-              }
             }
             if (this.chart.type === 'stat') {
               if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }

@@ -97,6 +97,9 @@ export default {
     }
   },
   computed: {
+    lineOption () {
+      return this.nzDefaultConfig.option
+    },
     hasLegend () {
       try {
         return [chartLegendPlacement.bottom, chartLegendPlacement.left, chartLegendPlacement.right].indexOf(this.chartInfo.param.legend.placement) > -1 && this.chartInfo.param.enable.legend
@@ -176,17 +179,19 @@ export default {
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
 
-      const styleOption = this.$lodash.get(this.chartInfo, 'param.option')
-      if (styleOption) {
-        chartOption.series.forEach(item => {
-          if (item.lineStyle && styleOption.lineWidth != undefined) {
-            item.lineStyle.width = styleOption.lineWidth
-          }
-          if (styleOption.pointSize != undefined) {
-            item.symbolSize = styleOption.pointSize
-          }
-        })
-      }
+      const styleOption = this.$lodash.get(this.chartInfo, 'param.option', {})
+      chartOption.series.forEach(item => {
+        if (item.lineStyle && styleOption.lineWidth != undefined) {
+          item.lineStyle.width = styleOption.lineWidth
+        } else {
+          item.lineStyle.width = this.lineOption.lineWidth
+        }
+        if (styleOption.pointSize != undefined) {
+          item.symbolSize = styleOption.pointSize
+        } else {
+          item.symbolSize = this.lineOption.pointSize
+        }
+      })
 
       this.isGrey = this.legends.map(() => false)
       chartOption.color = this.colorList
@@ -274,9 +279,9 @@ export default {
                 this.cursorDefault = false
               })
             }
-            if (this.chartInfo.type !== 'point') {
-              const option = myChart.getOption()
-              const series = this.$lodash.cloneDeep(option.series)
+            const option = myChart.getOption()
+            const series = this.$lodash.cloneDeep(option.series)
+            if (series[params.seriesIndex].type !== 'scatter') {
               series[params.seriesIndex].data[params.dataIndex] = {
                 symbol: 'circle',
                 itemStyle: {
@@ -296,9 +301,9 @@ export default {
             this.tooltip.activeIndex = params.seriesIndex
           })
           myChart.on('mouseout', (params) => {
-            if (this.chartInfo.type !== 'point') {
-              const option = myChart.getOption()
-              const series = this.$lodash.cloneDeep(option.series)
+            const option = myChart.getOption()
+            const series = this.$lodash.cloneDeep(option.series)
+            if (series[params.seriesIndex].type !== 'scatter') {
               series.forEach(s => {
                 s.data.forEach((item, index) => {
                   if (item.itemStyle) {
