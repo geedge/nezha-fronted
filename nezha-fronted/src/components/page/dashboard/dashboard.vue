@@ -272,7 +272,7 @@ export default {
             pointSize: 6
           }
         },
-        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
+        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 , step: undefined}],
         panel: '',
         sync: 0,
         remark: '',

@@ -106,6 +106,13 @@
                 <el-col style="flex: 1">
                   <el-input maxlength="512" show-word-limit size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
                 </el-col>
+                <el-col class="legend-title" style="margin-left: 10px">
+                  <span class="legend-title__span">{{$t('overall.step')}}&nbsp;</span>
+                </el-col>
+                <el-col style="flex: 1">
+                  <el-input-number @change="expressionChange" v-model="expressionsShow[index-1].step" size="small" :min="minStep" :precision="0" :controls="false" class="append_unit" :placeholder="$t('overall.auto')" :data-unit="$t('overall.seconds')">
+                  </el-input-number>
+                </el-col>
               </el-row>
             </el-row>
           </transition>
@@ -1341,7 +1348,11 @@ export default {
     }
   },
   mixins: [promqlInputMixin, publicConfig, chartTypeShow],
-  computed: {},
+  computed: {
+    minStep () {
+      return this.nzDefaultConfig.minStep
+    }
+  },
   data () {
     return {
       rules: {

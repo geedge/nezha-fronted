@@ -244,6 +244,13 @@ export default {
       }
       this.chartInfo.loaded && this.query(elements, startTime, endTime, step, params, isRefresh)
     },
+    getIemStep (element, step) {
+      let myStep = step
+      if (element.step) {
+        myStep = element.step + 's'
+      }
+      return myStep
+    },
     query (elements, startTime, endTime, step, params, isRefresh) { // 获取chart的数据
       this.isError = false
       this.allDataLength = 0
@@ -271,10 +278,11 @@ export default {
               urlPre += '/logs/loki'
             }
             let requests = elements.map((element) => {
+              const myStep = this.getIemStep(element, step)
               if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
                 return chartTempData
               }
-              let query = `${urlPre}/api/v1/query_range?start=${startTime}&end=${endTime}&step=${step}`
+              let query = `${urlPre}/api/v1/query_range?start=${startTime}&end=${endTime}&step=${myStep}`
               if (isTimeSeries(this.chartInfo.type)) {
                 let nullType = this.chartInfo.param.nullType || 'null'
                 nullType = (nullType === 'connected' ? 'null' : nullType)
@@ -298,10 +306,11 @@ export default {
             })
             if (this.multipleTime) {
               const multipleRequests = elements.map((element) => {
+                const myStep = this.getIemStep(element, step)
                 if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
                   return chartTempData
                 }
-                let query = `${urlPre}/api/v1/query_range?start=${startTime - this.minusTime / 1000}&end=${endTime - this.minusTime / 1000}&step=${step}`
+                let query = `${urlPre}/api/v1/query_range?start=${startTime - this.minusTime / 1000}&end=${endTime - this.minusTime / 1000}&step=${myStep}`
                 if (isTimeSeries(this.chartInfo.type)) {
                   let nullType = this.chartInfo.param.nullType || 'null'
                   nullType = (nullType === 'connected' ? 'null' : nullType)
@@ -351,7 +360,8 @@ export default {
               }
               if (comparisonSt && comparisonEt) {
                 const comparisonRequests = elements.map((element) => {
-                  let query = `${urlPre}/api/v1/query_range?start=${comparisonSt}&end=${comparisonEt}&step=${step}`
+                  const myStep = this.getIemStep(element, step)
+                  let query = `${urlPre}/api/v1/query_range?start=${comparisonSt}&end=${comparisonEt}&step=${myStep}`
                   if (element.filter) {
                     query += `&filter=${element.filter}`
                   }

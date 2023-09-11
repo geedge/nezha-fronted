@@ -327,7 +327,8 @@ export default {
               legend: this.expressionsShow[i].legend,
               name: this.expressionName[i],
               state: this.expressionsShow[i].state,
-              orderNum: i
+              orderNum: i,
+              step: this.expressionsShow[i].step
             })
           }
         })
@@ -407,7 +408,8 @@ export default {
           error: '',
           legend: '',
           elementId: '',
-          state: 1
+          state: 1,
+          step: undefined
         })
         this.expressionChange()
       } else {
@@ -420,7 +422,8 @@ export default {
           error: '',
           elementId: item.id,
           legend: item.legend,
-          state: item.state
+          state: item.state,
+          step: item.step
         })
       }
     },
