@@ -743,3 +743,6 @@ i.nz-icon-override{
 .el-form-item__error {
   padding-top: 0;
 }
+input::placeholder{
+  text-transform:capitalize;
+}

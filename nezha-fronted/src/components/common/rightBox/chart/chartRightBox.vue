@@ -381,7 +381,7 @@ export default {
           height: 4,
           unit: 2,
           type: 'line',
-          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 , step: undefined}],
           param: {
             stack: 0,
             nullType: 'null',
@@ -427,7 +427,7 @@ export default {
           height: 4,
           unit: 2,
           type: 'log',
-          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 , step: undefined}],
           param: {
             enable: {
               thresholds: false,

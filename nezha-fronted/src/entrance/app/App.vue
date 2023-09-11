@@ -26,6 +26,7 @@ export default {
     this.$axios.defaults.baseURL = result.body.baseUrl
     const version = result.body.version
     const baseUrl = result.body.baseUrl
+    this.$store.commit('setNzDefaultConfig', result.body)
     localStorage.setItem('nz-baseURL', baseUrl)
     const defaultWindowWidth = result.body.width || 1024
     if (version !== localStorage.getItem('nz-version')) {

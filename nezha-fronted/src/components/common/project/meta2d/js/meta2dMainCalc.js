@@ -79,7 +79,7 @@ export default {
       const meta2dOptions = {
         minScale: this.minScale,
         // maxScale: 2,
-        autoAnchor: false,
+        autoAnchor: false
         // disableAnchor: true
       }
       const meta2d = new window.Meta2d(this.meta2dId, meta2dOptions)
@@ -128,8 +128,12 @@ export default {
         startTime = this.timeRange[0]
         endTime = this.timeRange[1]
       } else if (this.filterTime) {
-        startTime = this.filterTime[0]
-        endTime = this.filterTime[1]
+        startTime = this.momentStrToTimestamp(this.filterTime[0])
+        endTime = this.momentStrToTimestamp(this.filterTime[1])
+      }
+      if (typeof (startTime) == 'string') {
+        startTime = this.momentStrToTimestamp(this.filterTime[0])
+        endTime = this.momentStrToTimestamp(this.filterTime[1])
       }
       this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
         this.clacTopoData(this.$lodash.cloneDeep(this.topoData), arr).then((data) => {
