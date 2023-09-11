@@ -58,9 +58,15 @@ const store = new Vuex.Store({
     diagnosisTab: {}, // 故障诊断
     showDiagnosisTab: false,
     configSync: {}, // 配置同步
-    showConfigSync: false
+    showConfigSync: false,
+    nzDefaultConfig: {
+      minStep: 60
+    },
   },
   getters: {
+    getNzDefaultConfig (state) {
+      return state.nzDefaultConfig
+    },
     getGlobalSearchId (state) {
       return state.globalSearchId
     },
@@ -135,6 +141,13 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
+    // 设置默认 config
+    setNzDefaultConfig (state, defaultConfig) {
+      state.nzDefaultConfig = {
+        ...state.nzDefaultConfig,
+        ...defaultConfig
+      }
+    },
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */
     projectListChange (state) {
       state.projectListChange++
