@@ -246,6 +246,17 @@ export default {
         return false
       }
       if (this.isTimeSeries) {
+        if (type == 'highlight' && getChart(this.chartId)) {
+          const option = getChart(this.chartId).getOption()
+          const series = this.$lodash.cloneDeep(option.series)
+          series[index].emphasis.focus = 'series'
+          getChart(this.chartId).setOption({ series })
+        } else if (getChart(this.chartId)) {
+          const option = getChart(this.chartId).getOption()
+          const series = this.$lodash.cloneDeep(option.series)
+          series[index].emphasis.focus = 'none'
+          getChart(this.chartId).setOption({ series })
+        }
         getChart(this.chartId) && getChart(this.chartId).dispatchAction({
           type: type,
           seriesIndex: index,

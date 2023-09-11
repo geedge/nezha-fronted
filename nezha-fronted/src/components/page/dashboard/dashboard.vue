@@ -267,8 +267,8 @@ export default {
             max: undefined
           },
           option: {
-            lineWidth: 1,
-            pointSize: 6
+            lineWidth: 2,
+            pointSize: 8
           }
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
@@ -634,8 +634,8 @@ export default {
           }
           if (!this.chart.param.option) {
             this.chart.param.option = {
-              lineWidth: 1,
-              pointSize: 6
+              lineWidth: 2,
+              pointSize: 8
             }
           }
         }
@@ -676,8 +676,8 @@ export default {
               }
               if (!this.chart.param.option) {
                 this.chart.param.option = {
-                  lineWidth: 1,
-                  pointSize: 6
+                  lineWidth: 2,
+                  pointSize: 8
                 }
               }
             }

@@ -370,6 +370,17 @@ export default {
       if (this.legend[index].isGray) {
         return false
       }
+      if (type == 'highlight' && this.chart) {
+        const option = this.chart.getOption()
+        const series = this.$lodash.cloneDeep(option.series)
+        series[index].emphasis.focus = 'series'
+        this.chart.setOption({ series })
+      } else if (this.chart) {
+        const option = this.chart.getOption()
+        const series = this.$lodash.cloneDeep(option.series)
+        series[index].emphasis.focus = 'none'
+        this.chart.setOption({ series })
+      }
       this.chart && this.chart.dispatchAction({
         type: type,
         seriesIndex: index,

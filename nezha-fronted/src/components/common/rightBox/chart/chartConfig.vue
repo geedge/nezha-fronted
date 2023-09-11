@@ -1263,8 +1263,8 @@ export default {
               max: undefined
             },
             option: {
-              lineWidth: 1,
-              pointSize: 6
+              lineWidth: 2,
+              pointSize: 86
             }
           }
           this.$nextTick(() => {

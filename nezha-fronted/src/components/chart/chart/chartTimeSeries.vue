@@ -6,8 +6,8 @@
     @mouseleave="mouseLeaveChart"
     v-my-loading="chartLoading"
   >
-    <div class="chart__canvas" style="position:relative">
-      <div :id="`chart-canvas-${chartId}`" :class="{'chart-cursor-default':cursorDefault}"></div>
+    <div class="chart__canvas" style="position:relative" :class="{'chart-cursor-default':cursorDefault}">
+      <div :id="`chart-canvas-${chartId}`"></div>
       <!-- 右y轴name -->
       <p class="rightYAxis-name" v-if="hasRightYAxis">
         <span>{{chartInfo.param.rightYAxis.label}}</span>
@@ -279,9 +279,9 @@ export default {
                 this.cursorDefault = false
               })
             }
-            if (this.chartInfo.type !== 'point') {
-              const option = myChart.getOption()
-              const series = this.$lodash.cloneDeep(option.series)
+            const option = myChart.getOption()
+            const series = this.$lodash.cloneDeep(option.series)
+            if (series[params.seriesIndex].type !== 'scatter') {
               series[params.seriesIndex].data[params.dataIndex] = {
                 symbol: 'circle',
                 itemStyle: {
@@ -301,9 +301,9 @@ export default {
             this.tooltip.activeIndex = params.seriesIndex
           })
           myChart.on('mouseout', (params) => {
-            if (this.chartInfo.type !== 'point') {
-              const option = myChart.getOption()
-              const series = this.$lodash.cloneDeep(option.series)
+            const option = myChart.getOption()
+            const series = this.$lodash.cloneDeep(option.series)
+            if (series[params.seriesIndex].type !== 'scatter') {
               series.forEach(s => {
                 s.data.forEach((item, index) => {
                   if (item.itemStyle) {

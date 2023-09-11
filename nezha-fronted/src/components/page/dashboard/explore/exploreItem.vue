@@ -3768,16 +3768,16 @@ export default {
                 type: 'line',
                 name: '',
                 symbol: 'emptyCircle', // 去掉点
-                symbolSize: [6, 6],
+                symbolSize: 8,
                 showSymbol: false,
                 smooth: 0.2, // 曲线变平滑
                 data: [],
                 lineStyle: {
-                  width: 1,
+                  width: 2,
                   opacity: 0.9
                 },
                 emphasis: {
-                  focus: 'series'
+                  focus: 'none'
                 },
                 blur: {
                   lineStyle: {
@@ -3861,16 +3861,16 @@ export default {
                     type: 'line',
                     name: '',
                     symbol: 'emptyCircle', // 去掉点
-                    symbolSize: [6, 6],
+                    symbolSize: 8,
                     showSymbol: false,
                     smooth: 0.2, // 曲线变平滑
                     data: [],
                     lineStyle: {
-                      width: 1,
+                      width: 2,
                       opacity: 0.9
                     },
                     emphasis: {
-                      focus: 'series'
+                      focus: 'none'
                     },
                     blur: {
                       lineStyle: {
@@ -4277,8 +4277,8 @@ export default {
             max: undefined
           },
           option: {
-            lineWidth: 1,
-            pointSize: 6
+            lineWidth: 2,
+            pointSize: 8
           }
         },
         elements: [],

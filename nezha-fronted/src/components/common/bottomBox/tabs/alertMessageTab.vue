@@ -443,7 +443,7 @@ export default {
                     smooth: 0.2, // 曲线变平滑
                     name: '',
                     lineStyle: {
-                      width: 1,
+                      width: 2,
                       opacity: 0.9
                     }
                   }

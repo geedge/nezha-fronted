@@ -152,16 +152,16 @@ export const chartTimeSeriesLineOption = {
     type: 'line',
     symbol: 'emptyCircle', // 去掉点
     connectNulls: true,
-    symbolSize: 6,
+    symbolSize: 8,
     smooth: 0.2, // 曲线变平滑
     showSymbol: false,
     data: [],
     lineStyle: {
-      width: 1,
+      width: 2,
       opacity: 0.9
     },
     emphasis: {
-      focus: 'series'
+      focus: 'none'
     },
     blur: {
       lineStyle: {
@@ -189,7 +189,7 @@ export const chartTimeSeriesScatterOption = {
     data: [],
     z: 9,
     emphasis: {
-      focus: 'series'
+      focus: 'none'
     }
   }]
 }
