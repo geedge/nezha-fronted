@@ -1407,6 +1407,9 @@ export default {
   computed: {
     minStep () {
       return this.nzDefaultConfig.minStep
+    },
+    lineOption () {
+      return this.nzDefaultConfig.option
     }
   },
   data () {
@@ -1508,10 +1511,7 @@ export default {
               mode: 'all',
               sort: 'none'
             },
-            option: {
-              lineWidth: 1,
-              pointSize: 6
-            }
+            option: this.lineOption
           }
           this.$nextTick(() => {
             this.chartConfig.param.thresholds.push({ value: undefined, color: randomcolor() })

@@ -60,8 +60,12 @@ const store = new Vuex.Store({
     configSync: {}, // 配置同步
     showConfigSync: false,
     nzDefaultConfig: {
-      minStep: 60
-    },
+      minStep: 60,
+      option: {
+        lineWidth: 2,
+        pointSize: 8
+      }
+    }
   },
   getters: {
     getNzDefaultConfig (state) {
