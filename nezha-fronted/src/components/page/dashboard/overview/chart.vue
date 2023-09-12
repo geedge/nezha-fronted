@@ -280,9 +280,7 @@ export default {
         // 鼠标滑过当前symbol 改变样式
         this.chart.on('mousemove', (params) => {
           if (this.series.length > 1) {
-            this.chart.on('mousemove', () => {
-              this.cursorDefault = false
-            })
+            this.cursorDefault = false
           }
           const option = this.chart.getOption()
           const series = this.$lodash.cloneDeep(option.series)
@@ -560,7 +558,7 @@ export default {
         showFlag = showFlag || item.value[1]
         if (!isNaN(item.value[1] + '')) {
           const val = Number(item.value[1])
-          str += `<div class="${(this.tooltip.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}">`
+          str += `<div class="${(this.tooltip.activeIndex == item.seriesIndex && this.legend.filter(value => value.isGray === false).length > 1) ? 'tooltip__row highlight' : 'tooltip__row'}">`
           str += `<div class="row__label">
                     <span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>
                     <span>${alias || item.seriesName}</span>

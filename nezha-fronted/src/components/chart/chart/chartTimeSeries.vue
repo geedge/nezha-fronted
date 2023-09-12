@@ -275,9 +275,7 @@ export default {
           // 鼠标滑过当前symbol 改变样式
           myChart.on('mousemove', (params) => {
             if (this.series.length > 1) {
-              myChart.on('mousemove', () => {
-                this.cursorDefault = false
-              })
+              this.cursorDefault = false
             }
             const option = myChart.getOption()
             const series = this.$lodash.cloneDeep(option.series)
@@ -573,7 +571,7 @@ export default {
 
             // 鼠标悬浮 series data symbol 时，tooltip 中相应的legend 高亮显示
             str += `
-            <div class="${(self.tooltip.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}">
+            <div class="${(self.tooltip.activeIndex == item.seriesIndex && self.isGrey.filter(value => value === false).length > 1) ? 'tooltip__row highlight' : 'tooltip__row'}">
               <div class="row__label">
                 <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${seriesName}</span>
