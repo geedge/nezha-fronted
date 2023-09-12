@@ -275,9 +275,7 @@ export default {
           myChart.on('mousemove', (params) => {
             // 设置dataLink的图表 或存在多条数据时 划过节点时鼠标样式为pointer（可点击）
             if (this.dataLink.length || this.series.length > 1) {
-              myChart.on('mousemove', () => {
-                this.cursorDefault = false
-              })
+              this.cursorDefault = false
             }
             const option = myChart.getOption()
             const series = this.$lodash.cloneDeep(option.series)
@@ -504,7 +502,7 @@ export default {
 
             // 鼠标悬浮 series data symbol 时，tooltip 中相应的legend 高亮显示
             str += `
-            <div class="${(self.tooltip.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}" title="${seriesName}">
+            <div class="${(self.tooltip.activeIndex == item.seriesIndex && self.isGrey.filter(value => value === false).length > 1) ? 'tooltip__row highlight' : 'tooltip__row'}" title="${seriesName}">
               <div class="row__label">
                 <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${seriesName}</span>
