@@ -26,18 +26,16 @@
       <div v-html="tooltip.tooltipHtml"></div>
       <!-- dataLink -->
       <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
-        <template v-if="series.length > 1">
-          <!-- 只有一条数据时显示 -->
-          <div class="chart-dataLink-item select-series" v-if="isGrey.filter(value => value === false).length==1" @click="showAllSeries">
-            <i class="nz-icon nz-icon-a-Showallseries"></i>
-            <span>{{$t('dashboard.showAllSeries')}}</span>
-          </div>
-          <!-- 有多条数据时显示 -->
-          <div class="chart-dataLink-item select-series" v-else @click="showSelectedSeries">
-            <i class="nz-icon nz-icon-a-Showseletedseries"></i>
-            <span>{{$t('dashboard.showSelectedSeries')}}</span>
-          </div>
-        </template>
+        <!-- 只有一条数据时显示 -->
+        <div class="chart-dataLink-item select-series" v-if="isGrey.filter(value => value === false).length==1" @click="showAllSeries">
+          <i class="nz-icon nz-icon-a-Showallseries"></i>
+          <span>{{$t('dashboard.showAllSeries')}}</span>
+        </div>
+        <!-- 有多条数据时显示 -->
+        <div class="chart-dataLink-item select-series" v-else @click="showSelectedSeries">
+          <i class="nz-icon nz-icon-a-Showseletedseries"></i>
+          <span>{{$t('dashboard.showSelectedSeries')}}</span>
+        </div>
         <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
@@ -181,9 +179,10 @@ export default {
 
       const styleOption = this.$lodash.get(this.chartInfo, 'param.option', {})
       chartOption.series.forEach(item => {
+        console.log(item.lineStyle)
         if (item.lineStyle && styleOption.lineWidth != undefined) {
           item.lineStyle.width = styleOption.lineWidth
-        } else {
+        } else if (item.lineStyle) {
           item.lineStyle.width = this.lineOption.lineWidth
         }
         if (styleOption.pointSize != undefined) {
@@ -247,7 +246,7 @@ export default {
 
         // 点击图表显示dataLink
         if (this.isInit) {
-          // 未设置dataLink的图表 鼠标样式为default
+          // 不可点击的样式为default
           myChart.getZr().on('mousemove', (params) => {
           // 获取鼠标在图表中的坐标
             const pointInPixel = [params.offsetX, params.offsetY]
@@ -261,22 +260,16 @@ export default {
             }
           })
 
-          if (this.dataLink.length || this.series.length > 1) {
-            myChart.on('click', this.chartClick)
-            myChart.on('mousedown', (params) => {
-              if (this.tooltip.dataLinkShow) {
-                const e = params.event.event
-                e.stopPropagation()
-              }
-            })
-          }
-
+          myChart.on('click', this.chartClick)
+          myChart.on('mousedown', (params) => {
+            if (this.tooltip.dataLinkShow) {
+              const e = params.event.event
+              e.stopPropagation()
+            }
+          })
           // 鼠标滑过当前symbol 改变样式
           myChart.on('mousemove', (params) => {
-            // 设置dataLink的图表 或存在多条数据时 划过节点时鼠标样式为pointer（可点击）
-            if (this.dataLink.length || this.series.length > 1) {
-              this.cursorDefault = false
-            }
+            this.cursorDefault = false
             const option = myChart.getOption()
             const series = this.$lodash.cloneDeep(option.series)
             if (series[params.seriesIndex].type !== 'scatter') {
@@ -502,7 +495,7 @@ export default {
 
             // 鼠标悬浮 series data symbol 时，tooltip 中相应的legend 高亮显示
             str += `
-            <div class="${(self.tooltip.activeIndex == item.seriesIndex && self.isGrey.filter(value => value === false).length > 1) ? 'tooltip__row highlight' : 'tooltip__row'}" title="${seriesName}">
+            <div class="${(self.tooltip.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}" title="${seriesName}">
               <div class="row__label">
                 <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${seriesName}</span>
@@ -700,16 +693,14 @@ export default {
       }
     },
     clickout () {
-      if (this.dataLink.length || this.series.length > 1) {
-        this.tooltip.show = false
-        this.tooltip.dataLinkShow = false
-        const option = {
-          tooltip: {
-            extraCssText: 'z-index:99999999;visibility:visible;'
-          }
+      this.tooltip.show = false
+      this.tooltip.dataLinkShow = false
+      const option = {
+        tooltip: {
+          extraCssText: 'z-index:99999999;visibility:visible;'
         }
-        getChart(this.chartId).setOption(option)
       }
+      getChart(this.chartId).setOption(option)
     },
     showSelectedSeries () {
       if (this.isConnect !== 'none') {
