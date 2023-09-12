@@ -402,6 +402,7 @@ export default {
         const expressionName = this.getExpressionName()
         this.expressionName.push(expressionName)
         this.expressionsShow.push({
+          id: getUUID(),
           show: true,
           hideInput: true,
           oldName: expressionName,
@@ -416,6 +417,7 @@ export default {
         this.expressions.push(item.expression)
         this.expressionName.push(item.name)
         this.expressionsShow.push({
+          id: getUUID(),
           show: true,
           hideInput: true,
           oldName: item.name,
@@ -434,6 +436,7 @@ export default {
       this.expressionsShow.push(
         {
           ...this.expressionsShow[index],
+          id: getUUID(),
           show: true,
           hideInput: true,
           oldName: expressionName,

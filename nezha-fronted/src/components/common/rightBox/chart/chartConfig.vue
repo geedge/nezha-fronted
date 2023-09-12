@@ -32,7 +32,7 @@
           class="element-item form-row-item thresholds-from-item"
           style="margin-bottom: 10px !important"
           v-for="index of chartConfig.elements.length"
-          :key="expressionName[index-1] + index"
+          :key="expressionsShow[index-1].id"
         >
           <div class="chart-title chart-title-config">
             <span class="chart-title-content el-form-item" :class="{
