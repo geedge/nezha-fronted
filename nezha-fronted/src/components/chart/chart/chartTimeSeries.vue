@@ -6,7 +6,7 @@
     @mouseleave="mouseLeaveChart"
     v-my-loading="chartLoading"
   >
-    <div class="chart__canvas" style="position:relative" :class="{'chart-cursor-default':cursorDefault}">
+    <div class="chart__canvas" style="position:relative">
       <div :id="`chart-canvas-${chartId}`"></div>
       <!-- 右y轴name -->
       <p class="rightYAxis-name" v-if="hasRightYAxis">
@@ -72,7 +72,6 @@ export default {
       isStack: false,
       hasRightYAxis: false,
       chartLoading: false,
-      cursorDefault: false,
       tooltip: {
         x: 0,
         y: 0,
@@ -248,35 +247,16 @@ export default {
           }
         }
         if (this.isInit) {
-          // 未设置dataLink的图表 鼠标样式为default
-          myChart.getZr().on('mousemove', (params) => {
-          // 获取鼠标在图表中的坐标
-            const pointInPixel = [params.offsetX, params.offsetY]
-            const option = myChart.getOption()
-            const zoomState = this.$lodash.get(option, 'toolbox[0].feature.dataZoom.iconStatus.zoom', 'normal')
-            // 判断鼠标在坐标轴中且zoom未被激活
-            if (myChart.containPixel('grid', pointInPixel) && zoomState === 'normal') {
-              this.cursorDefault = true
-            } else {
-              this.cursorDefault = false
+          myChart.on('click', this.chartClick)
+          myChart.on('mousedown', (params) => {
+            if (this.tooltip.dataLinkShow) {
+              const e = params.event.event
+              e.stopPropagation()
             }
           })
 
-          if (this.series.length > 1) {
-            myChart.on('click', this.chartClick)
-            myChart.on('mousedown', (params) => {
-              if (this.tooltip.dataLinkShow) {
-                const e = params.event.event
-                e.stopPropagation()
-              }
-            })
-          }
-
           // 鼠标滑过当前symbol 改变样式
           myChart.on('mousemove', (params) => {
-            if (this.series.length > 1) {
-              this.cursorDefault = false
-            }
             const option = myChart.getOption()
             const series = this.$lodash.cloneDeep(option.series)
             if (series[params.seriesIndex].type !== 'scatter') {
@@ -571,7 +551,7 @@ export default {
 
             // 鼠标悬浮 series data symbol 时，tooltip 中相应的legend 高亮显示
             str += `
-            <div class="${(self.tooltip.activeIndex == item.seriesIndex && self.isGrey.filter(value => value === false).length > 1) ? 'tooltip__row highlight' : 'tooltip__row'}">
+            <div class="${(self.tooltip.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}">
               <div class="row__label">
                 <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${seriesName}</span>
@@ -768,16 +748,14 @@ export default {
       }
     },
     clickout () {
-      if (this.series.length > 1) {
-        this.tooltip.show = false
-        this.tooltip.dataLinkShow = false
-        const option = {
-          tooltip: {
-            extraCssText: 'z-index:99999999;visibility:visible;'
-          }
+      this.tooltip.show = false
+      this.tooltip.dataLinkShow = false
+      const option = {
+        tooltip: {
+          extraCssText: 'z-index:99999999;visibility:visible;'
         }
-        getChart(this.chartId).setOption(option)
       }
+      getChart(this.chartId).setOption(option)
     },
     showSelectedSeries () {
       if (this.isConnect !== 'none') {

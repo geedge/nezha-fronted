@@ -4,7 +4,7 @@
     <div class="showMore" v-if="legendAll.length !== legend.length"><i class="nz-icon nz-icon-jinggao"></i>{{$t("dashboard.dashboard.moreTitle")}} <span class="moreChart" @click="showMore">{{$t("dashboard.dashboard.showAll")+legendAll.length}}</span></div>
     <div class="chart-header">{{chartTitle}}</div>
 
-    <div class="chart-body" ref="chartBody" :id="chartId" :class="{'chart-cursor-default':cursorDefault}"></div>
+    <div class="chart-body" ref="chartBody" :id="chartId"></div>
     <div class="chart-no-data" v-show="noData">No Data</div>
 
     <div class="legend-container legend-container-screen" :id="'legendArea' + chartId" ref="legendArea" v-show="legend.length>0">
@@ -82,7 +82,6 @@ export default {
       dataSize: 20,
       chartDot: 2,
       theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light',
-      cursorDefault: false,
       tooltip: {
         x: 0,
         y: 0,
@@ -213,11 +212,6 @@ export default {
         } else {
           this.option.yAxis.axisLabel.formatter = this.defaultYAxisFormatter
         }
-        if (this.series.length == 1) {
-          this.series.forEach(item => {
-            item.cursor = 'default'
-          })
-        }
       }
       if (this.series && this.series.length) {
         this.$set(this.option, 'series', this.series)
@@ -253,35 +247,16 @@ export default {
       }
 
       if (this.isInit) {
-        // 未设置dataLink的图表 鼠标样式为default
-        this.chart.getZr().on('mousemove', (params) => {
-          // 获取鼠标在图表中的坐标
-          const pointInPixel = [params.offsetX, params.offsetY]
-          const option = this.chart.getOption()
-          const zoomState = this.$lodash.get(option, 'toolbox[0].feature.dataZoom.iconStatus.zoom', 'normal')
-          // 判断鼠标在坐标轴中且zoom未被激活
-          if (this.chart.containPixel('grid', pointInPixel) && zoomState === 'normal') {
-            this.cursorDefault = true
-          } else {
-            this.cursorDefault = false
+        this.chart.on('click', this.chartClick)
+        this.chart.on('mousedown', (params) => {
+          if (this.tooltip.dataLinkShow) {
+            const e = params.event.event
+            e.stopPropagation()
           }
         })
 
-        if (this.series.length > 1) {
-          this.chart.on('click', this.chartClick)
-          this.chart.on('mousedown', (params) => {
-            if (this.tooltip.dataLinkShow) {
-              const e = params.event.event
-              e.stopPropagation()
-            }
-          })
-        }
-
         // 鼠标滑过当前symbol 改变样式
         this.chart.on('mousemove', (params) => {
-          if (this.series.length > 1) {
-            this.cursorDefault = false
-          }
           const option = this.chart.getOption()
           const series = this.$lodash.cloneDeep(option.series)
           series[params.seriesIndex].data[params.dataIndex] = {
@@ -558,7 +533,7 @@ export default {
         showFlag = showFlag || item.value[1]
         if (!isNaN(item.value[1] + '')) {
           const val = Number(item.value[1])
-          str += `<div class="${(this.tooltip.activeIndex == item.seriesIndex && this.legend.filter(value => value.isGray === false).length > 1) ? 'tooltip__row highlight' : 'tooltip__row'}">`
+          str += `<div class="${(this.tooltip.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}">`
           str += `<div class="row__label">
                     <span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>
                     <span>${alias || item.seriesName}</span>
@@ -800,16 +775,14 @@ export default {
       this.datalinkPosition(e)
     },
     clickout () {
-      if (this.series.length > 1) {
-        this.tooltip.show = false
-        this.tooltip.dataLinkShow = false
-        const option = {
-          tooltip: {
-            extraCssText: 'z-index:1000;visibility:visible;'
-          }
+      this.tooltip.show = false
+      this.tooltip.dataLinkShow = false
+      const option = {
+        tooltip: {
+          extraCssText: 'z-index:1000;visibility:visible;'
         }
-        this.chart.setOption(option)
       }
+      this.chart.setOption(option)
     },
     showSelectedSeries () {
       this.legend.forEach((item, index) => {

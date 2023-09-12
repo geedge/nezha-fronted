@@ -164,11 +164,6 @@ export default {
         })
       })
       this.$emit('chartIsNoData', this.isNoData)
-      if (this.series.length == 1) {
-        series.forEach(item => {
-          item.cursor = 'default'
-        })
-      }
       return series
     },
     // 单个legend
