@@ -282,10 +282,17 @@ export default {
                 value: params.value
               }
               myChart.setOption({ series })
+              const arr = []
+              series.forEach(item => {
+                if (item.type !== 'scatter') {
+                  arr.push(item.name)
+                }
+              })
               myChart.dispatchAction(
                 {
                   type: 'highlight',
-                  dataIndex: params.dataIndex
+                  dataIndex: params.dataIndex,
+                  seriesName: arr
                 }
               )
             }
