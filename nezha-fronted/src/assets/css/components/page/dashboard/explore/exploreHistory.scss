@@ -1,0 +1,92 @@
+.explore-history-box {
+  position: absolute;
+  max-height: 360px;
+  box-shadow: -1px 1px 10px -1px $--dropdown-menu-box-shadow-color;
+  border-radius: 2px;
+  min-height: 40px;
+  width: 100%;
+  background: $--background-color-empty;
+  bottom: -15px;
+  transform: translateY(100%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  .explore-history-box-header {
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 10px 0 10px;
+    height: 42px;
+    line-height: 42px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid $--border-color-light;
+    .header-text {
+      font-family: Roboto-Medium;
+      font-size: 14px;
+      color: $--color-text-primary;
+      letter-spacing: 0;
+      font-weight: 600;
+    }
+    .header-search {
+      width: 200px;
+    }
+  }
+  .explore-history-box-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .explore-history-item {
+    height: 32px;
+    line-height: 32px;
+    width: 100%;
+    font-size: 14px;
+    color: $--color-text-regular;
+    font-weight: 400;
+    display: flex;
+    box-sizing: border-box;
+    padding: 0 12px 0 20px;
+    .explore-history-item-icon {
+      display: none;
+      width: 46px;
+    }
+  }
+  .explore-history-item:hover{
+    background: $--table-row-hover-background-color;
+    .explore-history-item-content {
+      width: calc(100% - 46px);
+      box-sizing: border-box;
+    }
+    .explore-history-item-icon {
+      display: flex;
+      width: 46px;
+      justify-content: space-between;
+      .nz-icon{
+        cursor: pointer;
+      }
+    }
+  }
+  .no-more {
+    background: transparent !important;
+    text-align: center;
+    font-size: 12px;
+    color: $--color-text-secondary;
+    font-weight: 400;
+    display: block;
+  }
+  .explore-history-box-content.nodata {
+    background: transparent !important;
+    text-align: center;
+    font-size: 12px;
+    height: 300px;
+    color: $--color-text-secondary;
+    font-weight: 400;
+    flex-shrink: 0;
+    flex: unset;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -120,6 +120,14 @@
             <i v-else class="nz-icon nz-icon-mimabukejian" style="fontSize:16px"></i>
           </button>
           <button
+            v-if="plugins.indexOf('history') > -1"
+            class="top-tool-btn"
+            :title="$t('overall.history')"
+            @click.stop="showHistoryBox(!historyshow)"
+          >
+            <i class="nz-icon nz-icon-time" style="fontSize:16px"></i>
+          </button>
+          <button
             v-if="plugins.indexOf('add') > -1"
             class="top-tool-btn"
             :title="$t('tip.add')"
@@ -144,6 +152,7 @@
             <i class="nz-icon nz-icon-minus"></i>
           </button>
         </div>
+        <explore-history v-if="historyshow" :type="type" @close="showHistoryBox(false)" @selectHistory="selectHistory"/>
       </template>
       <!--right-box里的样式-->
       <template v-if="styleType === 2 || styleType === 3">
@@ -449,10 +458,12 @@ import {
   closeBrackets,
   closeBracketsKeymap
 } from '@codemirror/autocomplete'
+import exploreHistory from '@/components/page/dashboard/explore/histoyrComponent/exploreHistory'
 export default {
   name: 'promqlInput',
   components: {
-    selectAlertSilence
+    selectAlertSilence,
+    exploreHistory
   },
   props: {
     index: { type: Number },
@@ -519,7 +530,8 @@ export default {
       filterSilence: '',
       tempBoxId: {},
       loading: false,
-      firstInit: true
+      firstInit: true,
+      historyshow: false
     }
   },
   computed: {
@@ -1142,6 +1154,9 @@ export default {
     tempBoxClose () {
       this.cascaderValue = ''
     },
+    selectHistory (str) {
+      this.insertText(str)
+    },
     insertText (insertTxt) {
       // 获取el-input中的input元素
       // const elInput = this.$refs.elInput.$el.firstElementChild
@@ -1174,6 +1189,9 @@ export default {
           })
         )
       })
+    },
+    showHistoryBox (flag) {
+      this.historyshow = flag
     }
   },
   watch: {

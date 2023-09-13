@@ -307,11 +307,11 @@ export default {
           params.params = {}
           params.paramObj.forEach(item => {
             if (item.type === 'CHECKBOX') {
-              params.params[item.name] = item.value
+              params.params[item.metaKey] = item.value
             } else if (item.type === 'DATETIME' && JSON.parse(item.param).interval) {
-              params.params[item.name] = item.value
+              params.params[item.metaKey] = item.value
             } else {
-              params.params[item.name] = item.value[0]
+              params.params[item.metaKey] = item.value[0]
             }
           })
           params.icon = this.imageUrl
