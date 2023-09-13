@@ -104,7 +104,7 @@
                   </el-popover>
                 </el-col>
                 <el-col style="flex: 1">
-                  <el-input maxlength="512" show-word-limit size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
+                  <el-input maxlength="512" size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
                 </el-col>
                 <el-col class="legend-title" style="margin-left: 10px">
                   <span class="legend-title__span">{{$t('overall.step')}}&nbsp;</span>
