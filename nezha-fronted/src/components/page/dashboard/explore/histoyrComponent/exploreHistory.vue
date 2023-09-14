@@ -13,7 +13,7 @@
     </div>
     <div
       class="explore-history-box-content"
-      v-if="historyArr.length"
+      v-if="historyArr.length || firstLoading"
       infinite-scroll-disabled="disabled"
       v-loadMore="{
            load: loadNextData,
@@ -119,6 +119,7 @@ export default {
         } else {
           this.$message.error(res.msg || res.error)
         }
+        this.firstLoading = false
       })
     },
     hideMe () {

@@ -4408,12 +4408,13 @@ export default {
     },
     postHistory () {
       // expressions
-      const postArr = []
+      let postArr = []
       const queryKey = this.showMetrics ? 'explore-metric' : 'explore-log'
       const arr = this.promqlKeys.map((item, index) => {
         item.queryValue = this.expressions[index]
         return item
       })
+      console.log(arr, this.lastHistory)
       this.lastHistory.forEach((item) => {
         const findItem = arr.find(history => history.id == item.id)
         if (findItem && findItem.queryValue !== item.value) {
@@ -4432,9 +4433,10 @@ export default {
           })
         }
       })
+      postArr = postArr.filter(item => item.queryValue)
       this.$post('/sys/user/queryHistory', postArr).then(res => {
         console.log(res)
-        this.lastHistory = this.$lodash.cloneDeep(arr)
+        this.lastHistory = this.$lodash.cloneDeep(postArr)
       })
     },
     saveChart () {
