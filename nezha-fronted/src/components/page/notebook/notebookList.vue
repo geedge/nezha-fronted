@@ -176,11 +176,9 @@ export default {
         const cloneDataList = this.$lodash.cloneDeep(n)
         const tempList = cloneDataList.map((item, index) => {
           const height = item.height || ''
-          const id = item.id || index
           return {
             ...item,
-            id,
-            i: id,
+            i: item.id,
             w: 12,
             h: height || 4,
             x: item.x || 0,
@@ -198,7 +196,6 @@ export default {
           static: true
         })
         this.$nextTick(() => {
-          console.log(tempList)
           this.copyDataList = this.$lodash.cloneDeep(tempList)
           this.gridLayoutShow = true
           if (!this.isExportHtml) {

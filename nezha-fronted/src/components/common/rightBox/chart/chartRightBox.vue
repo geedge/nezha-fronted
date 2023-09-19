@@ -295,6 +295,7 @@ export default {
           params.param.datasource[0].filter = params.param.datasource[0].filter.filter(item => item.value)
         }
         if (this.from === 'notebook') {
+          delete params.oldElements
           self.$emit('on-create-success', params)
           return
         }

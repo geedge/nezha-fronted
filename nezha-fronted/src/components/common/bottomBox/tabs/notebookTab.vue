@@ -166,12 +166,6 @@ export default {
     notebookList
   },
   methods: {
-    getId (arr) { // 获取当前列表最大的id
-      const maxIdElement = arr.reduce(function (prev, current) {
-        return (prev.id > current.id) ? prev : current
-      })
-      return maxIdElement.id + 1
-    },
     done () {
       let charts = this.$lodash.cloneDeep(this.$refs.notebookList.copyDataList)
       charts = charts.filter(item => item.name !== 'groupTemp')
@@ -205,8 +199,17 @@ export default {
     // 图表创建成功，回调panel页面，进行图表的刷新
     createSuccess (chart) {
       delete chart.panelName
-      // this.$refs.notebookList.copyDataList.push(chart)
-      this.dataList.push(chart)
+      chart.loaded = false
+      if (chart.id) {
+        const index = this.$refs.notebookList.copyDataList.findIndex(item => item.id == chart.id)
+        this.$refs.notebookList.copyDataList.splice(index, 1, chart)
+      } else {
+        const id = this.getMaxId(this.$refs.notebookList.copyDataList) + 1
+        chart.id = id
+        chart.i = id
+        this.$refs.notebookList.copyDataList.push(chart)
+      }
+      this.$refs.notebookList.onScroll(this.scrollbarWrap.scrollTop)
       this.$store.dispatch('clearPanel')
     },
     addNotebook (position) {
@@ -216,6 +219,7 @@ export default {
     editChart (data, copy) {
       if (copy) {
         this.chart = JSON.parse(JSON.stringify(data))
+        this.chart.y = this.chart.y + 0.01
         this.chart.panelName = this.showPanel.name
         this.chart.id = ''
         this.chart.elements.forEach((item) => {
@@ -226,47 +230,24 @@ export default {
         if (this.chart.datasource !== 'metrics' && this.chart.datasource !== 'log') {
           delete this.chart.elements
         }
-        if (!this.chart.groupId || this.chart.groupId == -1) {
-          this.chart.groupId = ''
-        }
-        if (this.chart.type === 'group' && !this.chart.param.collapse == undefined) {
-          this.chart.param.collapse = false
-        }
         this.$nextTick(() => {
           this.$refs.addChartModal.isStable = 'stable'
         })
       } else {
-        this.rightBox.loading = true
-        this.$get('visual/dashboard/chart/' + data.id).then(res => {
-          this.rightBox.loading = false
-          if (res.code === 200) {
-            const chartData = res.data
-            this.chart = JSON.parse(JSON.stringify(chartData))
-            this.chart.panelName = this.showPanel.name
-            if (this.chart.param) {
-              this.chart.param = JSON.parse(this.chart.param)
-            } else {
-              this.chart.param = {}
-            }
-            if (!this.chart.groupId || this.chart.groupId == -1) {
-              this.chart.groupId = ''
-            }
-            if (this.chart.type === 'group' && !this.chart.param.collapse == undefined) {
-              this.chart.param.collapse = false
-            }
-            this.$nextTick(() => {
-              this.$refs.addChartModal.isStable = 'stable'
-            })
-          } else {
-            this.$message.error(res.msg)
-          }
+        this.chart = JSON.parse(JSON.stringify(data))
+        this.chart.panelName = this.showPanel.name
+        this.$nextTick(() => {
+          this.$refs.addChartModal.isStable = 'stable'
         })
       }
     },
+    delChart (chart) {
+      const index = this.$refs.notebookList.copyDataList.findIndex(item => item.id == chart.id)
+      this.$refs.notebookList.copyDataList.splice(index, 1)
+      this.$refs.notebookList.onScroll(this.scrollbarWrap.scrollTop)
+    },
     /* 图表相关操作--start */
     addChart (chart) {
-      const id = this.getId(this.$refs.notebookList.copyDataList)
-      console.log(chart)
       this.chart = {
         name: '',
         type: chart.type,
@@ -277,17 +258,43 @@ export default {
         w: 12,
         h: 4,
         x: 0,
-        id: id,
-        i: id,
+        y: 0,
         param: this.newChart(chart.type)
+      }
+      if (chart.position) {
+        if (chart.position.position === 'before') {
+          this.chart.y = chart.position.y - 0.01
+        } else {
+          this.chart.y = chart.position.y + 0.01
+        }
+      } else {
+        this.chart.y = this.getMaxY(this.$refs.notebookList.copyDataList)
       }
       if (this.chart.datasource === 'metrics') {
         this.chart.elements = [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }]
       }
-      this.chart.panelName = this.obj.name
+      this.chart.panelName = this.showPanel.name
       this.$nextTick(() => {
         this.$refs.addChartModal.isStable = 'stable'
       })
+    },
+    getMaxId (arr) { // 获取当前列表最大的id
+      if (!arr.length) {
+        return 1
+      }
+      const maxElement = arr.reduce(function (prev, current) {
+        return (prev.id > current.id) ? prev : current
+      })
+      return Math.max(maxElement.id, 1)
+    },
+    getMaxY (arr) { // 获取当前列表最大的y
+      if (!arr.length) {
+        return 0
+      }
+      const maxElement = arr.reduce(function (prev, current) {
+        return (prev.y > current.y) ? prev : current
+      })
+      return maxElement.y
     },
     newChart (type) {
       let param = {}
@@ -566,6 +573,10 @@ export default {
       immediate: true,
       handler (n) {
         this.notebookName = n.name
+        this.showPanel = {
+          id: n.id,
+          name: n.name
+        }
         this.getData()
         if (!n.id) {
           this.$store.commit('setNotebookEdit', true)
