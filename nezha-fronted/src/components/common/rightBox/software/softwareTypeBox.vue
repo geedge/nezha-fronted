@@ -315,7 +315,7 @@ export default {
           params.icon = this.imageUrl
           params.params = {}
           params.paramObj.forEach(item => {
-            params.params[item.name] = item
+            params.params[item.metaKey] = item
           })
           if (this.editSoftwareType.id) {
             this.$put(this.url, params).then(res => {

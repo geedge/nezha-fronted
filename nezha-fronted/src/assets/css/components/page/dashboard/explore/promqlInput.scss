@@ -188,6 +188,7 @@
 }
 #explore-promql-box{
   .query-row {
+    position: relative;
     .input-box {
       flex: 1;
     }

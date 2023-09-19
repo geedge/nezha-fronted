@@ -1104,6 +1104,7 @@ export const loadMore = {
   bind (el, binding) {
     // 获取element，定义scroll
     const selectDom = binding.value.dom ? el.querySelector(binding.value.dom) : el
+    el.hasMore = binding.value.hasMore
     heightLoad = bus.debounce(function () {
       if (!el.hasMore) {
         return

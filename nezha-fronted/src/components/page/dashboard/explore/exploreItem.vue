@@ -82,7 +82,7 @@
               :expression-list="expressions"
               :state="promqlKeys[index-1].state"
               :index="index-1"
-              :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable']"
+              :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable', 'history']"
               :styleType="1"
               type="metric"
               @enableExpression="enableExpression"
@@ -102,7 +102,7 @@
               :expression-list="expressions"
               :state="promqlKeys[index-1].state"
               :index="index-1"
-              :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable']"
+              :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable', 'history']"
               :styleType="1"
               type="log"
               @enableExpression="enableExpression"
@@ -3618,12 +3618,16 @@ export default {
       showTopBtn: false, // top按钮
       scrollbarWrap: null,
       allMatrix: false, // metric是否全部为matrix类型
-      rowData: []
+      rowData: [],
+      metricsHistory: [],
+      logsHistory: [],
+      lastHistory: []
     }
   },
   async created () {
     this.getPanelData()
     this.resetExpression()
+    // this.getExploreHistory()
     await this.loadWebAssembly()
     this.initQueryFromPath()
   },
@@ -3692,6 +3696,8 @@ export default {
     changeType (value) {
       this.showMetrics = value === 'Metrics'
       this.showIntroduce = true
+      this.lastHistory = []
+      // this.getExploreHistory()
       this.resetExpression()
     },
     split () {
@@ -4199,6 +4205,7 @@ export default {
         } else {
           this.queryLogData()
         }
+        this.postHistory()
       }
       this.updatePath()
     },
@@ -4398,6 +4405,39 @@ export default {
     },
     handleBox (show) {
       this.rightBox.show = show
+    },
+    postHistory () {
+      // expressions
+      let postArr = []
+      const queryKey = this.showMetrics ? 'explore-metric' : 'explore-log'
+      const arr = this.promqlKeys.map((item, index) => {
+        item.queryValue = this.expressions[index]
+        return item
+      })
+      console.log(arr, this.lastHistory)
+      this.lastHistory.forEach((item) => {
+        const findItem = arr.find(history => history.id == item.id)
+        if (findItem && findItem.queryValue !== item.value) {
+          postArr.push({
+            queryKey,
+            queryValue: findItem.queryValue
+          })
+        }
+      })
+      arr.forEach(item => {
+        const findItem = this.lastHistory.find(history => history.id == item.id)
+        if (!findItem) {
+          postArr.push({
+            queryKey,
+            queryValue: item.queryValue
+          })
+        }
+      })
+      postArr = postArr.filter(item => item.queryValue)
+      this.$post('/sys/user/queryHistory', postArr).then(res => {
+        console.log(res)
+        this.lastHistory = this.$lodash.cloneDeep(postArr)
+      })
     },
     saveChart () {
       const chart = {
