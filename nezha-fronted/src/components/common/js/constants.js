@@ -449,7 +449,8 @@ export const fromRoute = {
   backups: 'backups',
   ping: 'ping',
   trace: 'trace',
-  integration: 'integration'
+  integration: 'integration',
+  notebook: 'notebook'
 }
 
 export const chartdatasource = [

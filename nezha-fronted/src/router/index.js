@@ -239,6 +239,10 @@ export default new Router({
         {
           path: '/softwareAsset',
           component: resolve => require(['@/components/page/asset/software/softwareAsset'], resolve)
+        },
+        {
+          path: '/notebook',
+          component: resolve => require(['@/components/page/notebook/notebook'], resolve)
         }
       ]
     },

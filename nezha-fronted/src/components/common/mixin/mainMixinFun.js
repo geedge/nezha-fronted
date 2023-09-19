@@ -329,11 +329,10 @@ export default {
           this.$set(this[key], 1, endTime)
           this.$set(this[key], 2, val + 'd')
         }
-        console.log(this[key], 'mainMixin')
         this.$refs.pickTime.$refs.timePicker.searchTime = this[key]
       }
       if (cb) {
-        this.cb()
+        cb()
       }
     }
   }

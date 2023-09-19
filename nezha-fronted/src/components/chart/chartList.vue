@@ -829,7 +829,7 @@ export default {
             ...item,
             i: item.id,
             w: item.span,
-            h: height || 4,
+            h: height || 2,
             x: item.x || 0,
             y: item.y || 0,
             param

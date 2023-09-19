@@ -24,6 +24,19 @@
       </div>
     </div>
   </template>
+  <!-- notebook info -->
+  <template v-else-if="type === 'notebook'">
+    <div class="alert-label-header-title">
+      <div
+        class="alert-label-header-circle"
+      >
+        {{alertLabelData && alertLabelData.createUser ? alertLabelData.createUser.name.substr(0, 1) : "-" }}
+      </div>
+      <div class="alert-label-header-name">
+        {{alertLabelData && alertLabelData.name ? alertLabelData.name : "--"}}
+      </div>
+    </div>
+  </template>
   <template v-else>
     <div class="alert-label-header-title">
       <div
@@ -710,6 +723,35 @@
         </div>
       </div>
     </div>
+
+    <!-- type === 'user' -->
+    <div class="alert-label-info" v-if="type === 'notebook'" v-my-loading="loading">
+      <div class="alert-label-box">
+        <div class="alert-label-title">ID</div>
+        <div class="alert-label-value">
+          {{ alertLabelData && alertLabelData.id ? alertLabelData.id : "--" }}
+        </div>
+      </div>
+      <div class="alert-label-box name-labe document-copy-block">
+        <div class="alert-label-title">{{$t('overall.name')}}</div>
+        <div class="alert-label-value document-copy-text">
+          {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
+        </div>
+        <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">{{$t('notebook.author')}}</div>
+        <div class="alert-label-value">
+          {{ alertLabelData && alertLabelData.createUser ? alertLabelData.createUser.name : "--" }}
+        </div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">{{$t('notebook.modifiedTime')}}</div>
+        <div class="alert-label-value">
+          {{ alertLabelData && alertLabelData.uts ? momentTz(alertLabelData.uts) : "--" }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -898,6 +940,10 @@ export default {
         this.alertLabelData = this.that
       }
       if (this.type === 'recordRule') {
+        this.loading = false
+        this.alertLabelData = this.that
+      }
+      if (this.type === 'notebook') {
         this.loading = false
         this.alertLabelData = this.that
       }

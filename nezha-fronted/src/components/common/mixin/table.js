@@ -108,6 +108,11 @@ export default {
           })
           break
         }
+        case 'notebookTab': {
+          this.$store.commit('setNotebookEdit', true)
+          this.$emit('showBottomBox', 'notebookTab', row)
+          break
+        }
         default:
           this.$emit(command, row, param)
           break

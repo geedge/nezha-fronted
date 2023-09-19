@@ -6,6 +6,132 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "37390892",
+      "name": "Doughnut chart",
+      "font_class": "a-Doughnutchart",
+      "unicode": "e801",
+      "unicode_decimal": 59393
+    },
+    {
+      "icon_id": "37390891",
+      "name": "Bar_chart",
+      "font_class": "Bar_chart",
+      "unicode": "e802",
+      "unicode_decimal": 59394
+    },
+    {
+      "icon_id": "37390899",
+      "name": "Area charts",
+      "font_class": "a-Areacharts",
+      "unicode": "e7f2",
+      "unicode_decimal": 59378
+    },
+    {
+      "icon_id": "37390905",
+      "name": "Rose chart",
+      "font_class": "a-Rosechart",
+      "unicode": "e7f5",
+      "unicode_decimal": 59381
+    },
+    {
+      "icon_id": "37390903",
+      "name": "Point",
+      "font_class": "Point",
+      "unicode": "e7f6",
+      "unicode_decimal": 59382
+    },
+    {
+      "icon_id": "37390904",
+      "name": "Table",
+      "font_class": "Table",
+      "unicode": "e7f7",
+      "unicode_decimal": 59383
+    },
+    {
+      "icon_id": "37390902",
+      "name": "hexagon",
+      "font_class": "hexagon",
+      "unicode": "e7f8",
+      "unicode_decimal": 59384
+    },
+    {
+      "icon_id": "37390901",
+      "name": "text",
+      "font_class": "text2",
+      "unicode": "e7f9",
+      "unicode_decimal": 59385
+    },
+    {
+      "icon_id": "37390900",
+      "name": "rank",
+      "font_class": "rank1",
+      "unicode": "e7fa",
+      "unicode_decimal": 59386
+    },
+    {
+      "icon_id": "37390898",
+      "name": "Stat",
+      "font_class": "Stat",
+      "unicode": "e7fb",
+      "unicode_decimal": 59387
+    },
+    {
+      "icon_id": "37390897",
+      "name": "Sankey",
+      "font_class": "Sankey",
+      "unicode": "e7fc",
+      "unicode_decimal": 59388
+    },
+    {
+      "icon_id": "37390893",
+      "name": "Bubble",
+      "font_class": "Bubble",
+      "unicode": "e7fd",
+      "unicode_decimal": 59389
+    },
+    {
+      "icon_id": "37390895",
+      "name": "Pie chat",
+      "font_class": "a-Piechat",
+      "unicode": "e7fe",
+      "unicode_decimal": 59390
+    },
+    {
+      "icon_id": "37390896",
+      "name": "Guage",
+      "font_class": "Guage",
+      "unicode": "e7ff",
+      "unicode_decimal": 59391
+    },
+    {
+      "icon_id": "37390894",
+      "name": "funnel",
+      "font_class": "funnel1",
+      "unicode": "e800",
+      "unicode_decimal": 59392
+    },
+    {
+      "icon_id": "37390907",
+      "name": "line_chart",
+      "font_class": "line_chart",
+      "unicode": "e7f3",
+      "unicode_decimal": 59379
+    },
+    {
+      "icon_id": "37390906",
+      "name": "Treemap",
+      "font_class": "Treemap",
+      "unicode": "e7f4",
+      "unicode_decimal": 59380
+    },
+    {
+      "icon_id": "37300939",
+      "name": "外链",
+      "font_class": "wailian",
+      "unicode": "e7f1",
+      "unicode_decimal": 59377
+    },
+    {
       "icon_id": "37041244",
       "name": "Show all series",
       "font_class": "a-Showallseries",

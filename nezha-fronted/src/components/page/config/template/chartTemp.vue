@@ -173,10 +173,10 @@ export default {
         id: '',
         name: '',
         type: 'line',
-        span: 4,
+        span: 6,
         datasource: 'metrics',
         varType: 1,
-        height: 4,
+        height: 2,
         unit: 2,
         param: {
           stack: 0,

@@ -27,7 +27,8 @@ const panel = {
     currentMousemove: 0,
     variablesArr: [],
     timeBoxClass: '',
-    homeLoading: false
+    homeLoading: false,
+    notebookEdit: false
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -101,6 +102,9 @@ const panel = {
     },
     setHomeLoading (state, value) {
       state.homeLoading = value
+    },
+    setNotebookEdit (state, value) {
+      state.notebookEdit = value
     }
   },
   getters: {
@@ -160,6 +164,9 @@ const panel = {
     },
     getHomeLoading (state, value) {
       return state.homeLoading
+    },
+    getNotebookEdit (state, value) {
+      return state.notebookEdit
     }
   },
   actions: {

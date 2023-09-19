@@ -30,6 +30,7 @@
             value-key="chartType"
             @change="chartTypeChange">
             <el-option
+              v-show="from!=='notebook'||item.id==='text'"
               v-for="item in chartTypeList"
               :key="item.id"
               :disabled="item.id==='group' && !!chartConfig.groupId"
@@ -62,6 +63,7 @@
             popper-class="right-box-select-top prevent-clickoutside"
             size="small"
             @change="editorTypeChange"
+            :disabled="from==='notebook'"
           >
             <el-option :label="$t('dashboard.dashboard.chartForm.richText')" value="richText"></el-option>
             <el-option :label="$t('dashboard.dashboard.chartForm.markDown')" value="markdown"></el-option>
@@ -69,58 +71,6 @@
         </el-form-item>
       </div>
       <div class="form-items--half-width-group" v-if="!isGroup(chartConfig.type)">
-        <!--width-->
-        <el-form-item
-          :label="$t('dashboard.dashboard.chartForm.width')"
-          class="form-item--half-width"
-          prop="span">
-          <el-select
-            id="chart-box-span"
-            v-model="chartConfig.span"
-            :disabled="chartConfig.type === 'group'"
-            placeholder=""
-            popper-class="right-box-select-top prevent-clickoutside"
-            size="small"
-            value-key="chartSpan"
-            @change="change"
-          >
-            <el-option
-              v-for="item in spanList"
-              :key="item"
-              :label="'span-' + item"
-              :value="item">
-              <span class="panel-dropdown-label-txt" > span-{{item}}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-        <!--height-->
-        <el-form-item
-          :label="$t('dashboard.dashboard.chartForm.high')"
-          class="form-item--half-width"
-          prop="height">
-          <!-- 由px改为span -->
-          <el-select
-            id="chart-box-height"
-            v-model="chartConfig.height"
-            :disabled="chartConfig.type === 'group'"
-            placeholder=""
-            popper-class="right-box-select-top prevent-clickoutside"
-            size="small"
-            value-key="chartSpan"
-            @change="change"
-          >
-            <el-option
-              v-for="item in spanList"
-              :key="item"
-              :label="'span-' + item"
-              :value="item"
-            >
-              <span class="panel-dropdown-label-txt" > span-{{item}}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-
         <!-- timeType -->
         <el-form-item
           :label="$t('dashboard.dashboard.chartForm.timeType')"
@@ -426,7 +376,7 @@ export default {
   },
   methods: {
     editorTypeChange () {
-      this.chartConfig.param.text = ''
+      this.chartConfig.param.text = undefined
       this.change()
     },
     init () {

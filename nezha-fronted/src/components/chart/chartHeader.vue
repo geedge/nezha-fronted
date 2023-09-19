@@ -58,45 +58,58 @@
            <i class="nz-icon nz-icon-info-normal tool__icon"></i>
         </el-tooltip>
       </span>
-      <span v-if="chartInfo.type=='group'&&!chartInfo.repeatIndex&&from!=='integration'" class="chart-header__tool" @click="addChartGroup">
-        <!-- <el-tooltip :content="$t('button.add')" effect="light" placement="top" > -->
-           <i class="nz-icon nz-icon-plus tool__icon" :title="$t('tip.add')"></i>
-        <!-- </el-tooltip> -->
-      </span>
-      <span class="chart-header__tool" @click="refreshChart">
-        <div :title="$t('dashboard.refresh')" effect="light" placement="top">
-           <i class="nz-icon nz-icon-replay tool__icon"></i>
-        </div>
-      </span>
-      <span v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.type!=='group' && showTool" class="chart-header__tool" @click="showFullscreen">
-        <div :title="$t('dashboard.screen')" effect="light" placement="top">
-           <i class="nz-icon nz-icon-maxview tool__icon"></i>
-        </div>
-      </span>
-      <span class="chart-header__tool" v-if="!chartInfo.repeatIndex && from!=='integration' && showTool">
-        <el-dropdown v-clickoutside="clickos" v-has="['main_edit','main_delete','main_add']" trigger="click">
-          <i class="el-icon-more tool__icon" @click.stop="dropdownMenuShow = !dropdownMenuShow" :title="$t('overall.more')"></i>
-          <el-dropdown-menu style="display: none" class="temp-dropdown"></el-dropdown-menu>
-          <ul v-show="dropdownMenuShow" slot="dropdown" class="el-dropdown-menu nz-chart-dropdown">
-            <li class="el-dropdown-menu__item" v-has="'main_edit'" @click="editChart">
-              <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i>
-              <span>{{$t('overall.edit')}}</span>
-            </li>
-            <li v-has="'main_add'" class="el-dropdown-menu__item" @click="duplicate">
-              <i class="el-icon-copy-document" style="font-size: 16px;"></i>
-              <span>{{$t('overall.duplicate')}}</span>
-            </li>
-             <li v-has="'main_delete'" class="el-dropdown-menu__item" @click="removeChart">
-              <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>
-              <span>{{$t('overall.delete')}}</span>
-            </li>
-            <li v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.pid" v-has="'main_edit'" class="el-dropdown-menu__item" @click="sync">
-              <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>
-              <span>{{$t('overall.syncChart')}}</span>
-            </li>
-          </ul>
-        </el-dropdown>
-      </span>
+      <template v-if="from!=='notebook'">
+        <span v-if="chartInfo.type=='group'&&!chartInfo.repeatIndex&&from!=='integration'" class="chart-header__tool" @click="addChartGroup">
+          <!-- <el-tooltip :content="$t('button.add')" effect="light" placement="top" > -->
+            <i class="nz-icon nz-icon-plus tool__icon" :title="$t('tip.add')"></i>
+          <!-- </el-tooltip> -->
+        </span>
+        <span class="chart-header__tool" @click="refreshChart">
+          <div :title="$t('dashboard.refresh')" effect="light" placement="top">
+            <i class="nz-icon nz-icon-replay tool__icon"></i>
+          </div>
+        </span>
+        <span v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.type!=='group' && showTool" class="chart-header__tool" @click="showFullscreen">
+          <div :title="$t('dashboard.screen')" effect="light" placement="top">
+            <i class="nz-icon nz-icon-maxview tool__icon"></i>
+          </div>
+        </span>
+        <span class="chart-header__tool" v-if="!chartInfo.repeatIndex && from!=='integration' && showTool">
+          <el-dropdown v-clickoutside="clickos" v-has="['main_edit','main_delete','main_add']" trigger="click">
+            <i class="el-icon-more tool__icon" @click.stop="dropdownMenuShow = !dropdownMenuShow" :title="$t('overall.more')"></i>
+            <el-dropdown-menu style="display: none" class="temp-dropdown"></el-dropdown-menu>
+            <ul v-show="dropdownMenuShow" slot="dropdown" class="el-dropdown-menu nz-chart-dropdown">
+              <li class="el-dropdown-menu__item" v-has="'main_edit'" @click="editChart">
+                <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i>
+                <span>{{$t('overall.edit')}}</span>
+              </li>
+              <li v-has="'main_add'" class="el-dropdown-menu__item" @click="duplicate">
+                <i class="el-icon-copy-document" style="font-size: 16px;"></i>
+                <span>{{$t('overall.duplicate')}}</span>
+              </li>
+              <li v-has="'main_delete'" class="el-dropdown-menu__item" @click="removeChart">
+                <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>
+                <span>{{$t('overall.delete')}}</span>
+              </li>
+              <li v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.pid" v-has="'main_edit'" class="el-dropdown-menu__item" @click="sync">
+                <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>
+                <span>{{$t('overall.syncChart')}}</span>
+              </li>
+            </ul>
+          </el-dropdown>
+        </span>
+      </template>
+      <template v-else-if="notebookEdit">
+        <span class="chart-header__tool" @click="duplicate">
+          <i class="nz-icon nz-icon-override" style="font-size: 16px;"></i>
+        </span>
+        <span class="chart-header__tool" @click="removeChart">
+          <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>
+        </span>
+        <span class="chart-header__tool" @click="editChart">
+          <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i>
+        </span>
+      </template>
     </div>
   </div>
 </template>

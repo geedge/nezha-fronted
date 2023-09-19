@@ -17,15 +17,17 @@
       <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px" @submit.native.prevent>
         <el-form-item :label='$t("overall.name")' prop="name">
           <div style="display:flex;align-items:center">
-            <el-input style="flex:1;margin-right:10px" maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
-            <!-- 显示头部 -->
-            <div class="choose-header-btn" v-if="editChart.param&&editChart.param.showHeader!==0" @click="switchHeader(0)" :title="$t('overall.visible')">
-              <i class="nz-icon nz-icon-mimakejian"></i>
-            </div>
-            <!-- 隐藏头部 -->
-            <div class="choose-header-btn" v-else @click="switchHeader(1)" :title="$t('overall.invisible')">
-              <i class="nz-icon nz-icon-mimabukejian"></i>
-            </div>
+            <el-input style="flex:1;" maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
+            <template v-if="from !=='notebook'">
+              <!-- 显示头部 -->
+              <div class="choose-header-btn margin-l-10" v-if="editChart.param&&editChart.param.showHeader!==0" @click="switchHeader(0)" :title="$t('overall.visible')">
+                <i class="nz-icon nz-icon-mimakejian"></i>
+              </div>
+              <!-- 隐藏头部 -->
+              <div class="choose-header-btn margin-l-10" v-else @click="switchHeader(1)" :title="$t('overall.invisible')">
+                <i class="nz-icon nz-icon-mimabukejian"></i>
+              </div>
+            </template>
           </div>
         </el-form-item>
 
@@ -33,7 +35,7 @@
         <!--panel-->
         <el-form-item
           class="form-item--half-width"
-          v-if="showPanel.type !== fromRoute.project && showPanel.type !== fromRoute.asset && showPanel.type !== fromRoute.endpoint && showPanel.type !== fromRoute.model"
+          v-if="showPanel.type !== fromRoute.project && showPanel.type !== fromRoute.asset && showPanel.type !== fromRoute.endpoint && showPanel.type !== fromRoute.model&&from !=='notebook'"
           :label="$t('overall.dashboard')"
           prop="panelName"
         >
@@ -49,7 +51,7 @@
           </select-panel>
         </el-form-item>
         <!--group-->
-        <el-form-item :label="$t('dashboard.dashboard.chartForm.group')" class="form-item--half-width" prop="group">
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.group')" class="form-item--half-width" prop="group" v-if="from !=='notebook'">
           <el-select id="chart-box-group" v-model="editChart.groupId" :disabled="editChart.type==='group'" clearable placeholder="" popper-class="right-box-select-top prevent-clickoutside el-option-width303" size="small" value-key="chartType">
             <el-option v-for="item in groupArr" :key="item.id" :label="item.name" :value="item.id">
               <span class="panel-dropdown-label-txt" >{{item.name}}</span>
@@ -61,7 +63,7 @@
         <el-form-item :label="$t('overall.remark')">
           <el-input  maxlength="256" show-word-limit v-model="editChart.remark" size="small" :rows="2" type="textarea"/>
         </el-form-item>
-        <!--remark-->
+        <!--link-->
         <el-form-item :label="$t('overall.link')" v-if="editChart.param">
           <el-input  maxlength="256" show-word-limit v-model="editChart.param.link" size="small" :rows="2" type="textarea"/>
         </el-form-item>
@@ -72,16 +74,16 @@
         </div>
         <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange" type="card">
           <el-tab-pane :label="$t('overall.metrics')" name="metrics">
-            <chart-config :variables="variables" ref="childrenFrommetrics" :type="'metrics'" v-if="editChart.datasource == 'metrics'" :params.sync="editChart" @change="editChartChange"/>
+            <chart-config :from="from" :variables="variables" ref="childrenFrommetrics" :type="'metrics'" v-if="editChart.datasource == 'metrics'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
-          <el-tab-pane :label="$t('overall.logs')" name="logs">
-            <chart-config :variables="variables" ref="childrenFromlogs" :type="'log'" v-if="editChart.datasource == 'logs'" :params.sync="editChart" @change="editChartChange" class="datasource-log"/>
+          <el-tab-pane :label="$t('overall.logs')" name="logs" :disabled="from==='notebook'">
+            <chart-config :from="from" :variables="variables" ref="childrenFromlogs" :type="'log'" v-if="editChart.datasource == 'logs'" :params.sync="editChart" @change="editChartChange" class="datasource-log"/>
           </el-tab-pane>
           <el-tab-pane :label="$t('overall.system')" name="system">
-            <system-chart-config :variables="variables" ref="childrenFromsystem" v-if="editChart.datasource == 'system'" :params.sync="editChart" @change="editChartChange"/>
+            <system-chart-config :from="from" :variables="variables" ref="childrenFromsystem" v-if="editChart.datasource == 'system'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
           <el-tab-pane :label="$t('overall.misc')" name="misc">
-            <other-chart-config :variables="variables" ref="childrenFrommisc" v-if="editChart.datasource == 'misc'" :params.sync="editChart" @change="editChartChange"/>
+            <other-chart-config :from="from" :variables="variables" ref="childrenFrommisc" v-if="editChart.datasource == 'misc'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -268,10 +270,6 @@ export default {
           params.x = 0
           params.y = 999
         }
-        if (!params.x && !params.y && this.from === 'chartTemp') { // chartTemp 新增 在第一位
-          params.x = 0
-          params.y = 0
-        }
         if (isNaN(params.y) && isNaN(params.y) && params.groupId) { // group 内的坐标需要单独计算
           params.x = 0
           params.y = 999
@@ -295,6 +293,10 @@ export default {
         }
         if (params.datasource === 'system' && params.param.datasource[0].filter) {
           params.param.datasource[0].filter = params.param.datasource[0].filter.filter(item => item.value)
+        }
+        if (this.from === 'notebook') {
+          self.$emit('on-create-success', params)
+          return
         }
         if (params.id) { // 修改
           this.$put('visual/dashboard/chart', params).then(response => {
@@ -380,8 +382,8 @@ export default {
       if (this.editChart.datasource == 'metrics') {
         this.editChart = {
           ...this.editChart,
-          span: 4,
-          height: 4,
+          span: 6,
+          height: 2,
           unit: 2,
           type: 'line',
           elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }],
@@ -423,8 +425,8 @@ export default {
       if (this.editChart.datasource == 'logs') {
         this.editChart = {
           ...this.editChart,
-          span: 4,
-          height: 4,
+          span: 6,
+          height: 2,
           unit: 2,
           type: 'log',
           elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }],
@@ -450,8 +452,8 @@ export default {
       if (this.editChart.datasource == 'system') {
         this.editChart = {
           ...this.editChart,
-          span: 4,
-          height: 4,
+          span: 6,
+          height: 2,
           unit: 2,
           type: 'stat',
           param: {
@@ -490,11 +492,33 @@ export default {
         }
         delete this.editChart.elements
       }
-      if (this.editChart.datasource == 'misc') {
+      if (this.editChart.datasource == 'misc' && this.from === 'notebook') {
         this.editChart = {
           ...this.editChart,
-          span: 4,
+          span: 12,
           height: 4,
+          type: 'text',
+          param: {
+            text: '',
+            enable: {
+              visibility: false
+            },
+            showHeader: this.editChart.param.showHeader,
+            visibility: {
+              varName: '',
+              operator: 'equal',
+              varValue: '',
+              result: 'show'
+            },
+            editorType: 'markdown'
+          }
+        }
+        delete this.editChart.elements
+      } else if (this.editChart.datasource == 'misc') {
+        this.editChart = {
+          ...this.editChart,
+          span: 6,
+          height: 2,
           type: 'url',
           param: {
             enable: {
@@ -514,6 +538,9 @@ export default {
           }
         }
         delete this.editChart.elements
+      }
+      if (this.from === 'notebook') {
+        this.editChart.span = 12
       }
     },
     editChartChange (newEditChart) {
@@ -629,6 +656,49 @@ export default {
               }
             })
           }
+
+          if (!obj.param.dataLink) {
+            obj.param.dataLink = []
+          }
+          if ((obj.type === 'line' || obj.type === 'area' || obj.type === 'point')) {
+            if (!obj.param.rightYAxis) {
+              obj.param.rightYAxis = {
+                elementNames: [],
+                style: 'line',
+                unit: 2,
+                label: '',
+                min: undefined,
+                max: undefined
+              }
+            }
+            if (!obj.param.option) {
+              obj.param.option = this.lineOption
+            }
+          }
+          if (obj.type == 'table') {
+            const arr = obj.param.indexs ? obj.param.indexs.split(',') : []
+            obj.param.tags = arr.map((item) => {
+              return {
+                text: item,
+                tiClasses: ['ti-valid']
+              }
+            })
+            if (!obj.param.tableOptions) {
+              obj.param.tableOptions = {
+                showTableHeader: 'enabled',
+                pagination: 'enabled',
+                defaultSortColumn: null,
+                defaultSort: null
+              }
+            }
+          }
+          if (obj.type === 'stat') {
+            if (!obj.param.sparklineMode) { obj.param.sparklineMode = 'none' }
+            if (!obj.param.comparison) { obj.param.comparison = 'none' }
+          }
+          if (obj.type == 'text' && !obj.param.editorType) {
+            obj.param.editorType = 'richText'
+          }
         }
         if (obj.elements && obj.elements.length) {
           obj.elements.forEach((item, index) => {
@@ -637,21 +707,6 @@ export default {
             delete item.buildIn
             delete item.chartId
           })
-        }
-        if ((obj.type === 'line' || obj.type === 'area' || obj.type === 'point')) {
-          if (!obj.param.rightYAxis) {
-            obj.param.rightYAxis = {
-              elementNames: [],
-              style: 'line',
-              unit: 2,
-              label: '',
-              min: undefined,
-              max: undefined
-            }
-          }
-          if (!obj.param.option) {
-            obj.param.option = this.lineOption
-          }
         }
         this.editChart = this.$lodash.cloneDeep(obj)
         this.oldData = this.$lodash.cloneDeep(obj)

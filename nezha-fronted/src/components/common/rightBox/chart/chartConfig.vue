@@ -202,58 +202,6 @@
             @change="change"/>
         </el-form-item>
 
-        <!--width-->
-        <el-form-item
-          :label="$t('dashboard.dashboard.chartForm.width')"
-          class="form-item--half-width"
-          prop="span">
-          <el-select
-            id="chart-box-span"
-            v-model="chartConfig.span"
-            :disabled="chartConfig.type === 'group'"
-            placeholder=""
-            popper-class="right-box-select-top prevent-clickoutside"
-            size="small"
-            value-key="chartSpan"
-            @change="change"
-          >
-            <el-option
-              v-for="item in spanList"
-              :key="item"
-              :label="'span-' + item"
-              :value="item">
-              <span class="panel-dropdown-label-txt" > span-{{item}}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-        <!--height-->
-        <el-form-item
-          :label="$t('dashboard.dashboard.chartForm.high')"
-          class="form-item--half-width"
-          prop="height">
-          <!-- 由px改为span -->
-          <el-select
-            id="chart-box-height"
-            v-model="chartConfig.height"
-            :disabled="chartConfig.type === 'group'"
-            placeholder=""
-            popper-class="right-box-select-top prevent-clickoutside"
-            size="small"
-            value-key="chartSpan"
-            @change="change"
-          >
-            <el-option
-              v-for="item in spanList"
-              :key="item"
-              :label="'span-' + item"
-              :value="item"
-            >
-              <span class="panel-dropdown-label-txt" > span-{{item}}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-
         <!--stack-->
         <el-form-item
           :label="$t('dashboard.dashboard.chartForm.stack')"

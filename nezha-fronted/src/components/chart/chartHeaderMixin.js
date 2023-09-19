@@ -124,6 +124,9 @@ export default {
       }
       this.chartInfo.modifiedName = str
       return str
+    },
+    notebookEdit () { // 是否是编辑状态
+      return this.$store.getters.getNotebookEdit
     }
   },
   watch: {

@@ -87,7 +87,7 @@ export default {
             }
 
             this.$refs[dataList].$refs.searchInput.sreach_num++
-            this.$refs[dataList].$refs.searchInput.searchLabelList = this.$refs.dataList.$refs.searchInput.searchLabelList.filter(item => searchLabel.label !== item.label)
+            this.$refs[dataList].$refs.searchInput.searchLabelList = this.$refs[dataList].$refs.searchInput.searchLabelList.filter(item => searchLabel.label !== item.label)
           }
         })
         if (this.orderBy) {

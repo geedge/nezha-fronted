@@ -1,6 +1,14 @@
 <template>
   <!-- chart外层箱子 -->
-  <div :class="{'panel-chart--fullscreen': isFullscreen}" class="panel-chart" :id="isFullscreen ? ('chart-screen-' + chartInfo.id ) : ('chart-local-' + chartInfo.id)"  v-my-loading="loading">
+  <div
+    :class="{
+      'panel-chart--fullscreen': isFullscreen,
+      'panel-chart-notebook':from==='notebook'&&notebookEdit&&!isExportHtml
+    }"
+    class="panel-chart"
+    :id="isFullscreen ? ('chart-screen-' + chartInfo.id ) : ('chart-local-' + chartInfo.id)"
+    v-my-loading="loading"
+  >
     <!-- title和工具栏，支持浮动 -->
     <chart-header
       v-if="!isFullscreen&&showHeader"
@@ -23,7 +31,7 @@
       @groupShow="groupShow"
       @showFullscreen="showFullscreen"
     ></chart-header>
-<!--    全屏的header-->
+    <!-- 全屏的header -->
     <chart-screen-header
       v-if="isFullscreen"
       :is-group="isGroup(chartInfo.type)"
@@ -63,6 +71,18 @@
       :showAllData="showAllData"
       v-if="(!isGroup(chartInfo.type) || !chartInfo.param.collapse) && snapshotShow"
     ></chart>
+    <div class="noteboook-chart-addWrap" v-if="from==='notebook'&&!isExportHtml">
+      <el-tooltip :content="$t('notebook.addchart')" effect="light" placement="bottom">
+        <div class="noteboook-chart-add addBefore">
+          <i class="nz-icon nz-icon-plus" @click="addNotebook({position:'before',y:chartInfo.y})"></i>
+        </div>
+      </el-tooltip>
+      <el-tooltip :content="$t('notebook.addchart')" effect="light" placement="top">
+        <div class="noteboook-chart-add addAfter">
+          <i class="nz-icon nz-icon-plus" @click="addNotebook({position:'after',y:chartInfo.y})"></i>
+        </div>
+      </el-tooltip>
+    </div>
   </div>
 </template>
 
@@ -148,10 +168,16 @@ export default {
     },
     variablesArr () {
       return this.$store.getters.getVariablesArr
+    },
+    notebookEdit () { // 是否是编辑状态
+      return this.$store.getters.getNotebookEdit
     }
   },
   methods: {
     isGroup,
+    addNotebook (position) {
+      bus.$emit('addNotebook', position)
+    },
     variablesHandle (searchTime) {
       this.setGlobalVariablesValue(searchTime)
       this.myVariables = []
@@ -524,7 +550,7 @@ export default {
                 this.chartData = [this.chartInfo.param.topo]
               }
               if (isRefresh) {
-                let dom = this.$refs.chart.$refs['chart' + this.chartInfo.id]
+                const dom = this.$refs.chart.$refs['chart' + this.chartInfo.id]
                 if (dom) {
                   dom.refresh([startTime, endTime])
                 }

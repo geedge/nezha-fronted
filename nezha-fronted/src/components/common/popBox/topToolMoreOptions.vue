@@ -283,10 +283,6 @@ export default {
   },
   computed: {
     language () { return this.$store.getters.getLanguage },
-    // 判断是否是dashboard
-    isDashboard () {
-      return this.exportUrl === '/visual/dashboard/export'
-    },
     // asset，endpoint dashboard导出选项不支持 all data
     assetOrEndpoint () {
       return this.paramsType === 'asset' || this.paramsType === 'endpoint'
@@ -749,10 +745,6 @@ export default {
 
       if (this.assetOrEndpoint || this.isTopo) {
         this.importBox.record = 'current'
-      }
-      // isDashboard 只支持JSON
-      if (this.isDashboard) {
-        this.importBox.format = 3
       }
       if (this.onlyJson) {
         this.importBox.format = 3

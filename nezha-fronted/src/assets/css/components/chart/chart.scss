@@ -754,6 +754,7 @@
 }
 .opacityItem{
   opacity: 0;
+  pointer-events: none;
 }
 .hiddenItem{
   box-shadow: $--chart-shadow;
@@ -871,5 +872,49 @@
   }
   .chart-canvas-tooltip{
     height: auto !important;
+  }
+}
+
+.noteboook-chart-addWrap{
+  position: absolute;
+  top:-20px;
+  bottom: -20px;
+  width: 20px;
+  left: -20px;
+  visibility: hidden;
+  &:hover{
+    visibility: visible;
+  }
+  .noteboook-chart-add{
+    right: 5px;
+    cursor: pointer;
+    position: absolute;
+    font-size: 18px;
+    color: $--color-text-secondary;
+    &:hover{
+      color: $--color-primary;
+    }
+    &.addBefore{
+      top: 20px;
+      transform: translateY(-50%);
+    }
+    &.addAfter{
+      bottom: 20px;
+      transform: translateY(50%);
+    }
+  }
+}
+
+.notebook-detail{
+  .chart-header:hover{
+    background: transparent !important;
+  }
+}
+.panel-chart-notebook{
+  &:hover{
+    border-color: $--color-primary;
+    .noteboook-chart-addWrap{
+      visibility: visible;
+    }
   }
 }

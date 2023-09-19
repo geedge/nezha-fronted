@@ -80,12 +80,15 @@
         <!-- <issueTab v-if="from === fromRoute.issue && targetTab === 'issue'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></issueTab> -->
         <!--Discovery Tab-->
         <discovery-tab v-if="from === fromRoute.assetDiscovery && targetTab === 'assetDiscoveryTab'" :from="from" :obj="obj"  :tabs="tabs.discovery" @changeTab="changeTab" :targetTab.sync="targetTab"></discovery-tab>
+        <!-- notebook Tab -->
+        <notebook-tab @getTableData="getTableData" v-if="from === fromRoute.notebook && targetTab === 'notebookTab'" :from="from" :obj="obj"  :tabs="tabs.notebook" @changeTab="changeTab" :targetTab.sync="targetTab"></notebook-tab>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 import cabinetTab from './tabs/cabinetTab'
 import alertMessageTab from './tabs/alertMessageTab'
 import alertMessageTabNew from './tabs/alertMessageTabNew'
@@ -116,7 +119,7 @@ import rolesTab from '@/components/common/bottomBox/tabs/rolesTab'
 import discoveryTab from '@/components/common/bottomBox/tabs/discoveryTab'
 import IpDetails from '@/components/common/bottomBox/tabs/IpDetails'
 import recordRuleEvalLog from '@/components/common/bottomBox/tabs/recordRuleEvalLog'
-import routerPathParams from '@/components/common/mixin/routerPathParams'
+import notebookTab from '@/components/common/bottomBox/tabs/notebookTab'
 
 export default {
   name: 'bottomBox',
@@ -150,7 +153,8 @@ export default {
     discoveryTab,
     commentsBottomTab,
     vsysBottomTab,
-    rolesTab
+    rolesTab,
+    notebookTab
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -322,6 +326,9 @@ export default {
         ],
         issue: [
           // { prop: 'issue', name: this.$t('overall.issue'), active: true }
+        ],
+        notebook: [
+          { prop: 'notebookTab', name: this.$t('overall.notebook'), active: true }
         ]
       }
     }

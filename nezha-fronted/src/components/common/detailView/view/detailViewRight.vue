@@ -44,11 +44,14 @@
        <alertRuleEvalLog v-if="from === fromRoute.alertRule && targetTab === 'evalLog'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab.sync="targetTab"></alertRuleEvalLog>
        <!--model 下滑-->
       <asset-tab :showTitle="false" v-if="(from === fromRoute.model) && targetTab === 'asset'" :tabs="tabs.model" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab="targetTab"></asset-tab>
+      <!-- notebook Tab -->
+      <notebook-tab @getTableData="getTableData" :showTitle="false" v-if="from === fromRoute.notebook && targetTab === 'notebookTab'" :from="from" :obj="obj"  :tabs="tabs.notebook" @changeTab="changeTab" :targetTab.sync="targetTab"></notebook-tab>
     </div>
   </div>
 </template>
 
 <script>
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 import cabinetTab from '@/components/common/bottomBox/tabs/cabinetTab'
 import alertMessageTab from '@/components/common/bottomBox/tabs/alertMessageTab'
 import alertMessageTabNew from '@/components/common/bottomBox/tabs/alertMessageTabNew'
@@ -71,7 +74,7 @@ import LogBottomTab from '@/components/common/bottomBox/tabs/logBottomTab'
 import processBottomTab from '@/components/common/bottomBox/tabs/processBottomTab'
 import networkBottomTab from '@/components/common/bottomBox/tabs/networkBottomTab'
 import detailRightTop from './detailRightTop/detailRightTop'
-import routerPathParams from '@/components/common/mixin/routerPathParams'
+import notebookTab from '@/components/common/bottomBox/tabs/notebookTab'
 
 export default {
   name: 'detailViewRight',
@@ -97,7 +100,8 @@ export default {
     processBottomTab,
     networkBottomTab,
     commentsBottomTab,
-    vsysBottomTab
+    vsysBottomTab,
+    notebookTab
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -205,8 +209,10 @@ export default {
             { prop: 'asset', name: this.$t('asset.asset'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }
           ]
-        }
-
+        },
+        notebook: [
+          { prop: 'notebookTab', name: this.$t('overall.notebook'), active: true }
+        ]
       }
     }
   },
@@ -318,6 +324,8 @@ export default {
         this.targetTab = 'cmdTab'
       } else if (this.from === fromRoute.user) {
         this.targetTab = 'operationLogTab'
+      } else if (this.from === fromRoute.notebook) {
+        this.targetTab = 'notebookTab'
       }
       this.updatePath(this.$route.query, this.$route.path, 'bottomBox')
     }

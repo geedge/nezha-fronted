@@ -234,9 +234,9 @@ export default {
         id: '',
         name: '',
         type: 'line',
-        span: 4,
+        span: 6,
         datasource: 'metrics',
-        height: 4,
+        height: 2,
         unit: 2,
         param: {
           stack: 0,
@@ -621,26 +621,9 @@ export default {
         if (this.chart.type === 'group' && !this.chart.param.collapse == undefined) {
           this.chart.param.collapse = false
         }
-        if (this.chart.type === 'stat') {
-          if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }
-          if (!this.chart.param.comparison) { this.chart.param.comparison = 'none' }
-        }
-        if (!this.chart.param.dataLink) {
-          this.chart.param.dataLink = []
-        }
-        if (this.chart.type == 'table') {
-          if (!this.chart.param.tableOptions) {
-            this.chart.param.tableOptions = {
-              showTableHeader: 'enabled',
-              pagination: 'enabled',
-              defaultSortColumn: null,
-              defaultSort: null
-            }
-          }
-        }
-        if (this.chart.type == 'text' && !this.chart.param.editorType) {
-          this.chart.param.editorType = 'richText'
-        }
+        setTimeout(() => {
+          this.$refs.addChartModal.isStable = 'stable'
+        })
       } else {
         this.rightBox.loading = true
         this.$get('visual/dashboard/chart/' + data.id).then(res => {
@@ -660,33 +643,6 @@ export default {
             }
             if (this.chart.type === 'group' && !this.chart.param.collapse == undefined) {
               this.chart.param.collapse = false
-            }
-            if (this.chart.type === 'stat') {
-              if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }
-              if (!this.chart.param.comparison) { this.chart.param.comparison = 'none' }
-            }
-            if (!this.chart.param.dataLink) {
-              this.chart.param.dataLink = []
-            }
-            if (this.chart.type == 'table') {
-              const arr = this.chart.param.indexs ? this.chart.param.indexs.split(',') : []
-              this.chart.param.tags = arr.map((item) => {
-                return {
-                  text: item,
-                  tiClasses: ['ti-valid']
-                }
-              })
-              if (!this.chart.param.tableOptions) {
-                this.chart.param.tableOptions = {
-                  showTableHeader: 'enabled',
-                  pagination: 'enabled',
-                  defaultSortColumn: null,
-                  defaultSort: null
-                }
-              }
-            }
-            if (this.chart.type == 'text' && !this.chart.param.editorType) {
-              this.chart.param.editorType = 'richText'
             }
             setTimeout(() => {
               this.$refs.addChartModal.isStable = 'stable'
@@ -819,7 +775,7 @@ export default {
     /* 图表相关操作--end */
     /* 时间条件查询--start */
     // 选择日期变化
-    dateChange (route) {
+    dateChange (timeRange) {
       clearTopology()
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
@@ -834,7 +790,7 @@ export default {
         nowTimeType: this.nowTimeType
       })
       // 选择时间范围时更新路由
-      if (route) {
+      if (timeRange) {
         const param = { ...this.$route.query }
         param.nowTimeType = JSON.stringify(this.nowTimeType)
         param.searchTime = JSON.stringify(this.searchTime)

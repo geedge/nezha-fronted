@@ -19,7 +19,8 @@ export default {
       default: () => {
         return []
       }
-    }
+    },
+    from: { type: String }
   },
   data () {
     return {

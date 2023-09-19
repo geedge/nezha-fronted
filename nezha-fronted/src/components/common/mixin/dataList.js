@@ -438,7 +438,7 @@ export default {
       if (!tableTitle || !this.tableId) {
         return
       }
-      const preferenceTableTitle = tableHeaders || tableTitle
+      const preferenceTableTitle = (tableHeaders && tableHeaders.length) ? tableHeaders : tableTitle
       if (tableTitle) {
         // 先根据本地缓存中的prop进行排序
         tableTitle.sort(function (a, b) {

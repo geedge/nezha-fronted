@@ -25,7 +25,9 @@ export default {
     }
   },
   mounted () {
-    this.text = this.editData
+    if (this.editData) {
+      this.text = this.editData
+    }
     if (this.language == 'en') {
       VueMarkdownEditor.lang.use('en-US', enUS)
     } else {
