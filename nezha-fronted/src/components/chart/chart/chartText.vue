@@ -14,7 +14,8 @@ export default {
   name: 'chart-text',
   props: {
     chartInfo: {},
-    chartData: {}
+    chartData: {},
+    from: String
   },
   data () {
     return {

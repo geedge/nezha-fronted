@@ -35,6 +35,7 @@
           export-file-name="notebook"
           export-url="/visual/notebook/export"
           import-url="/visual/notebook/import"
+          :only-json="true"
           @afterImport="getTableData"
           v-has="['role_add','role_edit']"
         >
@@ -101,6 +102,7 @@
           export-file-name="notebook"
           export-url="/visual/notebook/export"
           import-url="/visual/notebook/import"
+          :only-json="true"
           @afterImport="getTableData"
           v-has="['role_add','role_edit','role_delete']"
         >

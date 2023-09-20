@@ -32,7 +32,7 @@
               <div @click="download('markdown')">{{$t('notebook.downloadAs',{format:'markdown'})}}</div>
             </el-dropdown-item>
             <el-dropdown-item v-has="'dashboard_view'">
-              <div @click="download('html')">{{$t('notebook.downloadAs',{format:'html'})}}</div>
+              <div @click="downloadJson()">{{$t('notebook.downloadNotebook')}} JSON</div>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -93,6 +93,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import bus from '../../../../libs/bus'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
@@ -510,6 +511,41 @@ export default {
     download (type) {
       this.showPanel.format = type
       this.snapshotVisible = true
+    },
+    downloadJson () {
+      const params = {
+        format: 3,
+        ids: this.obj.id
+      }
+      axios.get('/visual/notebook/export', { responseType: 'blob', params: params }).then(res => {
+        if (window.navigator.msSaveOrOpenBlob) {
+          // 兼容ie11
+          const blobObject = new Blob([res.data])
+          window.navigator.msSaveOrOpenBlob(blobObject, this.obj.name)
+        } else {
+          const url = URL.createObjectURL(new Blob([res.data]))
+          const a = document.createElement('a')
+          document.body.appendChild(a) // 此处增加了将创建的添加到body当中
+          a.href = url
+          a.download = this.obj.name
+          a.target = '_blank'
+          a.click()
+          a.remove() // 将a标签移除
+        }
+      }, error => {
+        const $self = this
+        const reader = new FileReader()
+        reader.onload = function (event) {
+          const responseText = reader.result
+          const exception = JSON.parse(responseText)
+          if (exception.message) {
+            $self.$message.error(exception.message)
+          } else {
+            console.error(error)
+          }
+        }
+        reader.readAsText(error.response.data)
+      })
     },
     // 获取数据,用在子页面
     getData () {
