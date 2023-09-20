@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "37448064",
+      "name": "Notebook",
+      "font_class": "Notebook",
+      "unicode": "e803",
+      "unicode_decimal": 59395
+    },
+    {
       "icon_id": "37390892",
       "name": "Doughnut chart",
       "font_class": "a-Doughnutchart",

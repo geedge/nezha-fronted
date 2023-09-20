@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <v-md-editor v-model="text" @change="textChange" mode="edit" height="390px" :leftToolbar="leftToolbar" right-toolbar="" class="markdownEditor"></v-md-editor>
-  </div>
+  <v-md-editor v-model="text" @change="textChange" mode="edit" height="390px" :leftToolbar="leftToolbar" right-toolbar="" class="markdownEditor"></v-md-editor>
 </template>
 
 <script>

@@ -511,7 +511,8 @@ export default {
               varValue: '',
               result: 'show'
             },
-            editorType: 'markdown'
+            editorType: 'markdown',
+            isEdit: true
           }
         }
         delete this.editChart.elements
