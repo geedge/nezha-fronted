@@ -18,6 +18,14 @@
     background: $--color-primary;
     border: none;
   }
+  .notebook-datasource-tab{
+    .el-tabs__nav{
+      width: 100%;
+      > div{
+        width: 33.33%;
+      }
+    }
+  }
 }
 .right-box__container{
   .chart-config{

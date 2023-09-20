@@ -18,7 +18,7 @@
       <template v-slot:top-tool-left>
       </template>
       <template v-slot:top-tool-right>
-        <button id="asset-create-asset" v-has="'role_add'" :title="$t('asset.createAsset')" class="top-tool-btn" @click.stop="add">
+        <button id="asset-create-asset" v-has="'notebook_add'" :title="$t('asset.createAsset')" class="top-tool-btn" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
        <top-tool-more-options
@@ -37,7 +37,7 @@
           import-url="/visual/notebook/import"
           :only-json="true"
           @afterImport="getTableData"
-          v-has="['role_add','role_edit']"
+          v-has="['notebook_add','notebook_edit']"
         >
         </top-tool-more-options>
       </template>
@@ -86,7 +86,7 @@
       @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
-        <button v-has="'role_add'" :title="$t('overall.createDatacenter')" class="top-tool-btn margin-r-10" type="button" @click="add">
+        <button v-has="'notebook_add'" :title="$t('overall.createDatacenter')" class="top-tool-btn margin-r-10" type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
        <top-tool-more-options
@@ -104,7 +104,7 @@
           import-url="/visual/notebook/import"
           :only-json="true"
           @afterImport="getTableData"
-          v-has="['role_add','role_edit','role_delete']"
+          v-has="['notebook_add','notebook_edit','notebook_delete']"
         >
           <template v-slot:before>
             <div>
@@ -118,7 +118,7 @@
                   :type="'link'"
                   :title="$t('overall.batchDel')"
                   id="account-list-batch-delete"
-                  v-has="'role_delete'"
+                  v-has="'notebook_delete'"
                   :delete-objs="batchDeleteObjs"
                   api="visual/notebook"
                   @after="getTableData"

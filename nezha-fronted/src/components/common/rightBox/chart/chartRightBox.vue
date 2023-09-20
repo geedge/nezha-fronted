@@ -72,17 +72,17 @@
         <div class="form__sub-title">
           <span>{{$t('dashboard.dashboard.chartForm.dataConfig')}}</span>
         </div>
-        <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange" type="card">
+        <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange" type="card" :class="{'notebook-datasource-tab':from==='notebook'}">
           <el-tab-pane :label="$t('overall.metrics')" name="metrics">
             <chart-config :from="from" :variables="variables" ref="childrenFrommetrics" :type="'metrics'" v-if="editChart.datasource == 'metrics'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
-          <el-tab-pane :label="$t('overall.logs')" name="logs" :disabled="from==='notebook'">
+          <el-tab-pane :label="$t('overall.logs')" name="logs">
             <chart-config :from="from" :variables="variables" ref="childrenFromlogs" :type="'log'" v-if="editChart.datasource == 'logs'" :params.sync="editChart" @change="editChartChange" class="datasource-log"/>
           </el-tab-pane>
           <el-tab-pane :label="$t('overall.system')" name="system">
             <system-chart-config :from="from" :variables="variables" ref="childrenFromsystem" v-if="editChart.datasource == 'system'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
-          <el-tab-pane :label="$t('overall.misc')" name="misc">
+          <el-tab-pane :label="$t('overall.misc')" name="misc" v-if="from!=='notebook'">
             <other-chart-config :from="from" :variables="variables" ref="childrenFrommisc" v-if="editChart.datasource == 'misc'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
         </el-tabs>
@@ -424,29 +424,73 @@ export default {
         }
       }
       if (this.editChart.datasource == 'logs') {
-        this.editChart = {
-          ...this.editChart,
-          span: 6,
-          height: 2,
-          unit: 2,
-          type: 'log',
-          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }],
-          param: {
-            enable: {
-              thresholds: false,
-              legend: true,
-              valueMapping: false,
-              visibility: false
-            },
-            limit: 100,
-            showHeader: this.editChart.param.showHeader,
-            visibility: {
-              varName: '',
-              operator: 'equal',
-              varValue: '',
-              result: 'show'
-            },
-            dataLink: []
+        if (this.from === 'notebook') {
+          this.editChart = {
+            ...this.editChart,
+            span: 6,
+            height: 2,
+            unit: 2,
+            type: 'line',
+            elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }],
+            param: {
+              stack: 0,
+              nullType: 'null',
+              legend: { placement: 'bottom', values: [] },
+              enable: {
+                thresholds: false,
+                legend: true,
+                valueMapping: false,
+                visibility: false
+              },
+              thresholds: [{ id: s8(), value: undefined, color: '#eeeeeeff' }],
+              showHeader: this.editChart.param.showHeader,
+              visibility: {
+                varName: '',
+                operator: 'equal',
+                varValue: '',
+                result: 'show'
+              },
+              rightYAxis: {
+                elementNames: [],
+                style: 'line',
+                unit: 2,
+                label: '',
+                min: undefined,
+                max: undefined
+              },
+              dataLink: [],
+              tooltip: {
+                mode: 'all',
+                sort: 'none'
+              },
+              option: this.lineOption
+            }
+          }
+        } else {
+          this.editChart = {
+            ...this.editChart,
+            span: 6,
+            height: 2,
+            unit: 2,
+            type: 'log',
+            elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }],
+            param: {
+              enable: {
+                thresholds: false,
+                legend: true,
+                valueMapping: false,
+                visibility: false
+              },
+              limit: 100,
+              showHeader: this.editChart.param.showHeader,
+              visibility: {
+                varName: '',
+                operator: 'equal',
+                varValue: '',
+                result: 'show'
+              },
+              dataLink: []
+            }
           }
         }
       }
@@ -493,30 +537,7 @@ export default {
         }
         delete this.editChart.elements
       }
-      if (this.editChart.datasource == 'misc' && this.from === 'notebook') {
-        this.editChart = {
-          ...this.editChart,
-          span: 12,
-          height: 4,
-          type: 'text',
-          param: {
-            text: '',
-            enable: {
-              visibility: false
-            },
-            showHeader: this.editChart.param.showHeader,
-            visibility: {
-              varName: '',
-              operator: 'equal',
-              varValue: '',
-              result: 'show'
-            },
-            editorType: 'markdown',
-            isEdit: true
-          }
-        }
-        delete this.editChart.elements
-      } else if (this.editChart.datasource == 'misc') {
+      if (this.editChart.datasource == 'misc') {
         this.editChart = {
           ...this.editChart,
           span: 6,

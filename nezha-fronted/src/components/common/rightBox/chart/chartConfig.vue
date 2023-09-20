@@ -141,6 +141,7 @@
             value-key="chartType"
             @change="chartTypeChange">
             <el-option
+              v-show="from!=='notebook'||item.id!=='log'"
               v-for="item in chartTypeList"
               :key="item.id"
               :disabled="item.id==='group' && chartConfig.isGroup"

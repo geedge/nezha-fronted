@@ -1,7 +1,7 @@
 <template>
   <div class="mt-10 rich-text-container" v-cloak style="height: 100%;width: 100%;">
     <div class="notebook-editor" v-if="from==='notebook'&&chartInfo.param.isEdit" >
-      <markdownEditor :edit-data="chartInfo.param.text" @textChange="textChange"></markdownEditor>
+      <markdownEditor :edit-data="text" @textChange="textChange"></markdownEditor>
       <div class="notebook-editor-btn">
         <button class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-10" @click="cancel">
           <span>{{$t('overall.cancel')}}</span>
@@ -37,19 +37,24 @@ export default {
       text: ''
     }
   },
+  created () {
+    if (this.from === 'notebook') {
+      this.chartInfo.param.oldText = this.text
+    }
+  },
   methods: {
     save () {
+      this.chartInfo.param.oldText = this.chartInfo.param.text
       this.chartInfo.param.isEdit = false
     },
     cancel () {
+      this.chartInfo.param.text = this.chartInfo.param.oldText
       this.chartInfo.param.isEdit = false
     },
     textChange (val) {
-      console.log(val)
+      this.chartInfo.param.text = val
     },
-    resize () {
-
-    }
+    resize () {}
   },
   watch: {
     chartInfo: {

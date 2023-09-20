@@ -1,3 +1,4 @@
+import bus from '@/libs/bus'
 export default {
   props: {
     chartInfo: Object,
@@ -51,6 +52,10 @@ export default {
       this.$emit('refresh')
     },
     editChart () {
+      if (this.chartInfo.type === 'text' && this.from === 'notebook') {
+        this.$set(this.chartInfo.param, 'isEdit', true)
+        return
+      }
       // this.$emit('edit-chart', this.chartInfo)
       this.$store.dispatch('dispatchEditChart', {
         chart: this.chartInfo,
@@ -66,6 +71,10 @@ export default {
       this.dropdownMenuShow = false
     },
     duplicate () {
+      if (this.chartInfo.type === 'text' && this.from === 'notebook') {
+        bus.$emit('copyChartText', this.chartInfo)
+        return
+      }
       const obj = this.$lodash.cloneDeep(this.chartInfo)
       obj.elements = obj.oldElements
       delete obj.oldElements

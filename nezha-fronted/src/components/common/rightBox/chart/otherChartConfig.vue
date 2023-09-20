@@ -30,7 +30,6 @@
             value-key="chartType"
             @change="chartTypeChange">
             <el-option
-              v-show="from!=='notebook'||item.id==='text'"
               v-for="item in chartTypeList"
               :key="item.id"
               :disabled="item.id==='group' && !!chartConfig.groupId"
@@ -63,7 +62,6 @@
             popper-class="right-box-select-top prevent-clickoutside"
             size="small"
             @change="editorTypeChange"
-            :disabled="from==='notebook'"
           >
             <el-option :label="$t('dashboard.dashboard.chartForm.richText')" value="richText"></el-option>
             <el-option :label="$t('dashboard.dashboard.chartForm.markDown')" value="markdown"></el-option>
@@ -98,7 +96,7 @@
         </el-form-item>
       </div>
       <!--content-->
-      <div v-if="contentShow(chartConfig.type)&&from!=='notebook'" class="form__sub-title">
+      <div v-if="contentShow(chartConfig.type)" class="form__sub-title">
         <span>{{$t('dashboard.dashboard.chartForm.content')}}</span>
         <span style="cursor: pointer" v-if="isDiagram(chartConfig.type)"><i class="nz-icon nz-icon-edit" @click="topologyDialogChange(true)"></i></span>
       </div>
@@ -130,7 +128,7 @@
         :isChart="true"
       />
       <!--text-->
-      <el-form-item v-if="isText(chartConfig.type)&&from!=='notebook'" :rules="{ required: true,  message: $t('validate.required'), trigger: 'change' }" prop="param.text">
+      <el-form-item v-if="isText(chartConfig.type)" :rules="{ required: true,  message: $t('validate.required'), trigger: 'change' }" prop="param.text">
         <markdownEditor v-if="chartConfig.param.editorType==='markdown'" :edit-data="chartConfig.param.text" @textChange="textChange"></markdownEditor>
         <rich-text-editor v-else ref="richTextEditor" :edit-data="chartConfig.param.text" @textChange="textChange"></rich-text-editor>
       </el-form-item>

@@ -20,18 +20,18 @@
           <span>{{$t('notebook.done')}}</span>
         </button>
         <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :show-locked="true" :use-chart-unit="false" :sign="'notebook' + obj.id"></pick-time>
-        <el-dropdown v-has="['dashboard_view']" trigger="click" size="medium" class="nz-el-dropdown">
+        <el-dropdown v-has="['notebook_view']" trigger="click" size="medium" class="nz-el-dropdown">
           <button class="top-tool-btn" :title="$t('overall.download')">
             <i class="nz-icon nz-icon-download1"></i>
           </button>
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top nz-el-dropdown-menu">
-            <el-dropdown-item v-has="'dashboard_view'">
+            <el-dropdown-item v-has="'notebook_view'">
               <div @click="download('pdf')">{{$t('notebook.downloadAs',{format:'PDF'})}}</div>
             </el-dropdown-item>
-            <el-dropdown-item v-has="'dashboard_view'">
+            <el-dropdown-item v-has="'notebook_view'">
               <div @click="download('html')">{{$t('notebook.downloadAs',{format:'markdown'})}}</div>
             </el-dropdown-item>
-            <el-dropdown-item v-has="'dashboard_view'">
+            <el-dropdown-item v-has="'notebook_view'">
               <div @click="downloadJson()">{{$t('notebook.downloadNotebook')}} JSON</div>
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -93,6 +93,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import axios from 'axios'
 import bus from '../../../../libs/bus'
 import subDataListMixin from '@/components/common/mixin/subDataList'
@@ -168,6 +169,12 @@ export default {
   },
   methods: {
     done () {
+      this.$refs.notebookList.copyDataList.forEach(item => {
+        if (item.type === 'text') {
+          Vue.delete(item.param, 'isEdit')
+          Vue.delete(item.param, 'oldText')
+        }
+      })
       let charts = this.$lodash.cloneDeep(this.$refs.notebookList.copyDataList)
       charts = charts.filter(item => item.name !== 'groupTemp')
       const params = {
@@ -215,6 +222,14 @@ export default {
     },
     addNotebook (position) {
       this.addChartBefore({ type: 'line', datasource: 'metrics', position })
+    },
+    copyChartText (data) {
+      const chart = JSON.parse(JSON.stringify(data))
+      chart.y = chart.y + 0.01
+      chart.id = this.getMaxId(this.$refs.notebookList.copyDataList) + 1
+      chart.param.isEdit = false
+      this.$refs.notebookList.copyDataList.push(chart)
+      this.$refs.notebookList.onScroll(this.scrollbarWrap.scrollTop)
     },
     // 编辑图表信息,打开编辑弹窗
     editChart (data, copy) {
@@ -282,8 +297,10 @@ export default {
       })
     },
     addText () {
+      const timestamp = Math.floor(new Date().getTime() / 1000)
+      const name = `text-[${timestamp}]`
       const chart = {
-        name: '',
+        name,
         type: 'text',
         unit: 2,
         datasource: 'misc',
@@ -473,10 +490,10 @@ export default {
       return param
     },
     addChartBefore (chart) {
-      // if (chart.type === 'text') {
-      //   this.addText()
-      //   return false
-      // }
+      if (chart.type === 'text') {
+        this.addText()
+        return false
+      }
       this.$store.dispatch('dispatchEditChart', {
         chart: chart,
         type: 'add'
@@ -617,6 +634,7 @@ export default {
     this.scrollbarWrap = this.$refs.scrollbar
     this.scrollbarWrap.addEventListener('scroll', this.onScroll)
     bus.$on('addNotebook', this.addNotebook)
+    bus.$on('copyChartText', this.copyChartText)
   },
   beforeDestroy () {
     this.$store.dispatch('dispatchPanelTime', {
@@ -627,6 +645,7 @@ export default {
       this.scrollbarWrap.removeEventListener('scroll', this.onScroll)
     }
     bus.$off('addNotebook', this.addNotebook)
+    bus.$off('copyChartText', this.copyChartText)
   },
   watch: {
     obj: {
@@ -647,6 +666,7 @@ export default {
       immediate: false,
       deep: true,
       handler (n) {
+        console.log(n)
         if (n) {
           this.disposeChart()
         } else {
