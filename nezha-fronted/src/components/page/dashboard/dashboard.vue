@@ -153,7 +153,7 @@
       <dashboardTempBox v-if="rightBox.dashboardTemp.show" :from="fromRoute.dashboard" @close="closeDashboardTempBox"></dashboardTempBox>
     </transition>
     <!-- 快照进度 -->
-    <snapshotProgress v-if="snapshotVisible" :showPanel="showPanel" :searchTime="searchTime" :snapshotVisible.sync="snapshotVisible"></snapshotProgress>
+    <snapshotProgress v-if="snapshotVisible" :showPanel="showPanel" :searchTime="searchTime" :snapshotVisible.sync="snapshotVisible" api="dashboard"></snapshotProgress>
   </div>
 </template>
 

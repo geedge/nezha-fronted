@@ -75,7 +75,8 @@ export default {
     snapshotVisible: {
       type: Boolean,
       default: false
-    }
+    },
+    api: String
   },
   data () {
     return {
@@ -99,14 +100,18 @@ export default {
         }
       })
       const params = {
-        format: 'html',
-        dashboardId: this.showPanel.id,
+        format: this.showPanel.format || 'html',
         start: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[0])),
-        end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[1])),
-        vars: vars
+        end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[1]))
+      }
+      if (this.api === 'dashboard') {
+        params.dashboardId = this.showPanel.id
+        params.vars = vars
+      } else {
+        params.id = this.showPanel.id
       }
       // 创建任务
-      const res = await this.$post('/visual/dashboard/snapshot/task', params)
+      const res = await this.$post(`/visual/${this.api}/snapshot/task`, params)
       if (res.code === 200) {
         // 定时获取运行时间
         this.timer = createWorker(() => {
@@ -124,7 +129,7 @@ export default {
       this.task = setInterval(async () => {
         if (this.process < 100) {
           try {
-            const res = await this.$get('/visual/dashboard/snapshot/result/' + this.tid)
+            const res = await this.$get(`/visual/${this.api}/snapshot/result/` + this.tid)
             this.total = res.data.taskId.total
             this.done = res.data.taskId.done
             this.process = parseFloat(res.data.taskId.process)
@@ -140,7 +145,7 @@ export default {
     downloadSnapshot () {
       let total = 10
       let loaded = 0
-      this.$get('/visual/dashboard/snapshot/download/' + this.tid, {}, {
+      this.$get(`/visual/${this.api}/snapshot/download/` + this.tid, {}, {
         onDownloadProgress: function (progressEvent) {
           // 处理原生进度事件
           total = progressEvent.total
@@ -165,13 +170,13 @@ export default {
         if (window.navigator.msSaveOrOpenBlob) {
           // 兼容ie11
           const blobObject = new Blob([res])
-          window.navigator.msSaveOrOpenBlob(blobObject, fileName + '.html')
+          window.navigator.msSaveOrOpenBlob(blobObject, fileName + '.' + (this.showPanel.format || 'html'))
         } else {
           const blob = new Blob([res])
           const link = document.createElement('a')
           const href = window.URL.createObjectURL(blob) // 下载链接
           link.href = href
-          link.download = fileName + '.html' // 下载后文件名
+          link.download = fileName + '.' + (this.showPanel.format || 'html') // 下载后文件名
           document.body.appendChild(link)
           link.click() // 点击下载
           document.body.removeChild(link) // 下载完成移除元素
@@ -217,7 +222,7 @@ export default {
   beforeDestroy () {
     this.clearTimer()
     if (this.tid) {
-      this.$get('/visual/dashboard/snapshot/cancel/' + this.tid)
+      this.$get(`/visual/${this.api}/snapshot/cancel/` + this.tid)
     }
   }
 }

@@ -32,7 +32,7 @@
               <div @click="download('markdown')">{{$t('notebook.downloadAs',{format:'markdown'})}}</div>
             </el-dropdown-item>
             <el-dropdown-item v-has="'dashboard_view'">
-              <div @click="download('json')">{{$t('notebook.downloadNotebook')}} JSON</div>
+              <div @click="download('html')">{{$t('notebook.downloadAs',{format:'html'})}}</div>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -88,7 +88,7 @@
     </transition>
 
     <!-- 快照进度 -->
-    <snapshotProgress v-if="snapshotVisible" :showPanel="showPanel" :searchTime="searchTime" :snapshotVisible.sync="snapshotVisible"></snapshotProgress>
+    <snapshotProgress v-if="snapshotVisible" :showPanel="showPanel" :searchTime="searchTime" :snapshotVisible.sync="snapshotVisible" api="notebook"></snapshotProgress>
   </div>
 </template>
 
@@ -245,6 +245,8 @@ export default {
       const index = this.$refs.notebookList.copyDataList.findIndex(item => item.id == chart.id)
       this.$refs.notebookList.copyDataList.splice(index, 1)
       this.$refs.notebookList.onScroll(this.scrollbarWrap.scrollTop)
+      this.chart = {}
+      this.$store.dispatch('clearPanel')
     },
     /* 图表相关操作--start */
     addChart (chart) {
@@ -277,6 +279,22 @@ export default {
       this.$nextTick(() => {
         this.$refs.addChartModal.isStable = 'stable'
       })
+    },
+    addText () {
+      const chart = {
+        name: '',
+        type: 'text',
+        unit: 2,
+        datasource: 'misc',
+        span: 12,
+        height: 4,
+        w: 12,
+        h: 4,
+        x: 0,
+        y: this.getMaxY(this.$refs.notebookList.copyDataList),
+        param: this.newChart('text')
+      }
+      this.createSuccess(chart)
     },
     getMaxId (arr) { // 获取当前列表最大的id
       if (!arr.length) {
@@ -446,13 +464,18 @@ export default {
               varValue: '',
               result: 'show'
             },
-            editorType: 'markdown'
+            editorType: 'markdown',
+            isEdit: true
           }
           break
       }
       return param
     },
     addChartBefore (chart) {
+      // if (chart.type === 'text') {
+      //   this.addText()
+      //   return false
+      // }
       this.$store.dispatch('dispatchEditChart', {
         chart: chart,
         type: 'add'
@@ -485,7 +508,8 @@ export default {
       this.$store.commit('setNotebookEdit', true)
     },
     download (type) {
-      console.log(type)
+      this.showPanel.format = type
+      this.snapshotVisible = true
     },
     // 获取数据,用在子页面
     getData () {

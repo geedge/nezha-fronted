@@ -70,6 +70,7 @@
         :globalVariables="globalVariables"
       ></chart-url>
       <chart-text
+        :from="from"
         :ref="'chart' + chartInfo.id"
         v-if="isText(chartInfo.type)"
         :chart-data="chartData"

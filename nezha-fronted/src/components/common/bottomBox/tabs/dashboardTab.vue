@@ -134,7 +134,7 @@
       <chart-temp-box v-if="rightBox.chartTemp.show" :from="from" :obj="chart" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @on-create-success="createSuccess"></chart-temp-box>
     </transition>
     <!-- 快照进度 -->
-    <snapshotProgress v-if="snapshotVisible" :showPanel="showPanel" :searchTime="searchTime" :snapshotVisible.sync="snapshotVisible"></snapshotProgress>
+    <snapshotProgress v-if="snapshotVisible" :showPanel="showPanel" :searchTime="searchTime" :snapshotVisible.sync="snapshotVisible" api="dashboard"></snapshotProgress>
   </div>
 </template>
 

@@ -13,8 +13,11 @@
 
             <div style="display: flex;flex-direction: column">
 <!--              <i class="nz-icon nz-icon-arrow-down"/>-->
-              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right" v-if="!dataJson.type"> {{dataJson.dashboard.data.name}} </div>
-              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right" v-if="dataJson.type"> Explore </div>
+              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right">
+                <span v-if="dataJson.type==='dashboard'">{{dataJson.dashboard.data.name}}</span>
+                <span v-else-if="dataJson.type==='notebook'">{{dataJson.notebook.data.name}}</span>
+                <span v-else>Explore</span>
+              </div>
               <span>  {{dateFormat(dataJson.start * 1000)}} - {{dateFormat(dataJson.end * 1000)}} ({{dataJson.timezone}})</span>
             </div>
           </div>
@@ -47,6 +50,22 @@
             >
             </exploreItem>
           </div>
+
+          <div v-if="dataJson.type==='notebook'" ref="scrollbar" class="notebook-scrollWrap" style='background: #fffffe; height: calc(100% - 72px);'>
+            <div class="notebook-content">
+              <notebook-list
+                ref="notebookList"
+                :from="'notebook'"
+                :data-list="dataJson.charts.data.list"
+                :dataJson = "dataJson.chartsData"
+                :is-export-html="true"
+                :time-range="searchTime"
+                :nowTimeType="nowTimeType"
+              >
+              </notebook-list>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -58,6 +77,7 @@
 <script>
 import chartList from '@/components/chart/chartList.vue'
 import exploreItem from '@/components/page/dashboard/explore/exploreItemHtml'
+import notebookList from '@/components/page/notebook/notebookList.vue'
 import moment from 'moment-timezone'
 import { loadI18n } from '@/components/common/i18n'
 import i18nData from '@/entrance/exportHtml/i18nData'
@@ -74,7 +94,8 @@ export default {
   },
   components: {
     chartList: chartList,
-    exploreItem
+    exploreItem,
+    notebookList
   },
   created () {
     this.$i18n.locale = this.dataJson.language
