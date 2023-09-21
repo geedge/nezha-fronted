@@ -70,6 +70,10 @@ export default {
       })
       this.dropdownMenuShow = false
     },
+    downloadCSV () {
+      this.$emit('downloadCSV')
+      this.dropdownMenuShow = false
+    },
     duplicate () {
       if (this.chartInfo.type === 'text' && this.from === 'notebook') {
         bus.$emit('copyChartText', this.chartInfo)
@@ -99,6 +103,37 @@ export default {
     },
     unitChange (val) {
       this.$emit('unitChange', val)
+    },
+    showDownloadCsv (type) {
+
+      switch (type) {
+        case 'line' :
+        case 'area' :
+        case 'point' :
+          return true
+          break
+        case 'stat' :
+        case 'hexagon':
+        case 'bar' :
+        case 'pie' :
+        case 'doughnut' :
+        case 'rose' :
+        case 'bubble' :
+        case 'funnel' :
+        case 'rank' :
+        case 'sankey' :
+        case 'gauge' :
+        case 'treemap' :
+          // case 'log' :
+          // case 'diagram' :
+          // case 'url':
+          // case 'clock':
+          return true
+        case 'table' :
+          return true
+        default:
+          return false
+      }
     }
   },
   computed: {

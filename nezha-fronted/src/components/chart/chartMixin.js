@@ -1,6 +1,6 @@
 import lodash from 'lodash'
 import * as echarts from 'echarts'
-import { getMetricTypeValue } from '@/components/common/js/tools'
+import { getMetricTypeValue, formatScientificNotation } from '@/components/common/js/tools'
 import { getChart, getMousePoint, setChart } from '@/components/common/js/common'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import chartDataFormat from '@/components/chart/chartDataFormat'
@@ -9,7 +9,6 @@ import {
   chartTimeSeriesAreaOption,
   chartTimeSeriesScatterOption
 } from './chart/options/chartTimeSeries'
-import { tooltip } from 'leaflet'
 export default {
   data () {
     return {
@@ -486,6 +485,150 @@ export default {
         window.location.href = url
       }
       this.clickout()
+    },
+    beforeDownloadCSV (chart) {
+      let csv = ''
+      switch (chart.type) {
+        case 'line' :
+        case 'area' :
+        case 'point' :
+          csv = this.convertTimeSertesToCSV(chart)
+          break
+        case 'stat' :
+        case 'hexagon':
+        case 'bar' :
+        case 'pie' :
+        case 'doughnut' :
+        case 'rose' :
+        case 'bubble' :
+        case 'funnel' :
+        case 'rank' :
+        case 'sankey' :
+        case 'gauge' :
+        case 'treemap' :
+        // case 'log' :
+        // case 'diagram' :
+        // case 'url':
+        // case 'clock':
+          csv = this.convertOtherToCSV(chart)
+          break
+        case 'table' :
+          csv = this.convertTableToCSV(chart)
+          break
+        default:
+      }
+      this.downloadCSV(chart, csv)
+    },
+    downloadCSV (chart, csv) {
+      // 首先处理json格式 再根据不同type 导出
+      if (window.navigator.msSaveOrOpenBlob) {
+        // 兼容ie11
+        const blobObject = new Blob([csv])
+        window.navigator.msSaveOrOpenBlob(blobObject, chart.name + '.csv')
+      } else {
+        const blob = new Blob([csv])
+        const link = document.createElement('a')
+        const href = window.URL.createObjectURL(blob) // 下载链接
+        link.href = href
+        link.download = chart.name + '.csv' // 下载后文件名
+        document.body.appendChild(link)
+        link.click() // 点击下载
+        document.body.removeChild(link) // 下载完成移除元素
+        window.URL.revokeObjectURL(href) // 释放blob对象
+      }
+    },
+    convertTimeSertesToCSV (chartInfo) {
+      const data = this.series
+      let csv = 'time,legend,value\n'
+      data.forEach((item, index) => {
+        item.data.forEach(value => {
+          let val = formatScientificNotation(value[1], this.$lodash.get(chartInfo, 'param.decimals', 2))
+          let unit = ''
+          if (item.yAxisIndex) {
+            unit = chartDataFormat.getUnit(this.$lodash.get(chartInfo, 'param.rightYAxis.unit', 2))
+          } else {
+            unit = chartDataFormat.getUnit(this.$lodash.get(chartInfo, 'unit', 2))
+          }
+          val = unit.compute(val, index, -1, chartInfo.param.decimals || 2)
+          csv += `${this.momentTz(value[0] * 1000)},${this.legends[index].alias},${val}\n`
+        })
+      })
+      return csv
+    },
+    convertOtherToCSV (chartInfo) {
+      let csv = 'legend,value\n'
+      let keyByData = ''
+      let legend = 'legend'
+      switch (chartInfo.type) {
+        case 'stat' :
+          keyByData = 'statData'
+          break
+        case 'hexagon':
+          keyByData = 'HexagonData'
+          break
+        case 'bar' :
+          legend = 'alias'
+          keyByData = 'series[0].data'
+          break
+        case 'pie' :
+          legend = 'alias'
+          keyByData = 'doughnutData'
+          break
+        case 'doughnut' :
+          legend = 'alias'
+          keyByData = 'doughnutData'
+          break
+        case 'rose' :
+          legend = 'alias'
+          keyByData = 'roseData'
+          break
+        case 'bubble' :
+          legend = 'alias'
+          keyByData = 'bubbleData'
+          break
+        case 'funnel' :
+          legend = 'alias'
+          keyByData = 'funnelData'
+          break
+        case 'rank' :
+          legend = 'alias'
+          keyByData = 'rankData'
+          break
+        case 'sankey' :
+          legend = 'alias'
+          keyByData = 'linksData'
+          break
+        case 'gauge' :
+          legend = 'alias'
+          keyByData = 'gaugeData'
+          break
+        case 'treemap' :
+          legend = 'alias'
+          keyByData = 'series[0].data'
+          break
+      }
+      if (!keyByData) {
+        return
+      }
+      this.$lodash.get(this, keyByData, []).forEach(item => {
+        csv += `${item[legend]},${item.showValue}\n`
+      })
+      return csv
+    },
+    convertTableToCSV (chartInfo) {
+      let csv = ''
+      csv = this.columns.map(item => item.title).join(',')
+      csv += '\n'
+      this.oldTableData.forEach(item => {
+        let arr = []
+        this.columns.forEach(column => {
+          arr.push(item.display[column.title + 'display'].display)
+        })
+        arr = arr.join(',')
+        csv += arr
+        csv += '\n'
+      })
+      return csv
     }
   },
   watch: {
@@ -518,6 +661,7 @@ export default {
   },
   created () {
     this.chartId = `${this.chartInfo.id}${this.isFullscreen ? '-fullscreen' : ''}`
+    // this.downloadCSV()
   },
   beforeDestroy () {
     try {

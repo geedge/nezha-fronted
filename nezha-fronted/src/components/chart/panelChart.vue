@@ -28,6 +28,7 @@
       @refresh="refresh"
       @sync="chartSync"
       :showTool="showTool"
+      @downloadCSV="beforeDownloadCSV"
       @groupShow="groupShow"
       @showFullscreen="showFullscreen"
     ></chart-header>
@@ -920,6 +921,9 @@ export default {
         // 发送数据
         xhr.send()
       })
+    },
+    beforeDownloadCSV () {
+      this.$refs.chart && this.$refs.chart.$refs['chart' + this.chartInfo.id].beforeDownloadCSV(this.chartInfo)
     }
   },
   watch: {

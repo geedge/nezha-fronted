@@ -108,6 +108,7 @@ export default {
               ...data.metric,
               legend: legend.alias
             },
+            alias: legend.alias,
             expressionIndex: expressionIndex
           }
           if (data.metric[chartInfo.param.sourceLabel] && data.metric[chartInfo.param.targetLabel]) {
