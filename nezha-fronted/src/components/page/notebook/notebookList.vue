@@ -202,7 +202,7 @@ export default {
             this.onScroll()
           } else {
             setTimeout(() => {
-              window.dataJson.AllChartDataload = true
+              window.dataJson.AllChartDataLoad = true
             }, 1000)
             this.onScroll(999999)
           }
