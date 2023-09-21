@@ -538,13 +538,13 @@ export default {
         if (window.navigator.msSaveOrOpenBlob) {
           // 兼容ie11
           const blobObject = new Blob([res.data])
-          window.navigator.msSaveOrOpenBlob(blobObject, this.obj.name)
+          window.navigator.msSaveOrOpenBlob(blobObject, this.obj.name + '.json')
         } else {
           const url = URL.createObjectURL(new Blob([res.data]))
           const a = document.createElement('a')
           document.body.appendChild(a) // 此处增加了将创建的添加到body当中
           a.href = url
-          a.download = this.obj.name
+          a.download = this.obj.name + '.json'
           a.target = '_blank'
           a.click()
           a.remove() // 将a标签移除

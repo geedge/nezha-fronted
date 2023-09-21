@@ -201,6 +201,9 @@ export default {
           if (!this.isExportHtml) {
             this.onScroll()
           } else {
+            setTimeout(() => {
+              window.dataJson.AllChartDataload = true
+            }, 1000)
             this.onScroll(999999)
           }
           setTimeout(() => {

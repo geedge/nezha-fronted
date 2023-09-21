@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import bus from '@/libs/bus'
 
 function create (f) {
@@ -145,34 +146,26 @@ export default {
     downloadSnapshot () {
       let total = 10
       let loaded = 0
-      this.$get(`/visual/${this.api}/snapshot/download/` + this.tid, {}, {
+      axios.get(`/visual/${this.api}/snapshot/download/` + this.tid, {
+        responseType: 'blob',
         onDownloadProgress: function (progressEvent) {
           // 处理原生进度事件
           total = progressEvent.total
           loaded = progressEvent.loaded
         }
       }).then(res => {
-        const self = this
         const fileName = this.showPanel.name
-        if (res.type == 'application/json') {
-          const reader = new FileReader() // 创建一个FileReader实例
-          reader.readAsText(res, 'utf-8') // 读取文件,结果用字符串形式表示
-          reader.onload = function () { // 读取完成后,**获取reader.result**
-            const { msg } = JSON.parse(reader.result)
-            self.$message.error(msg) // 弹出错误提示
-          }
-          return
-        }
         if (loaded < total) {
-          this.$message.error(res.msg || res.error || res || this.$t('NetWork Error'))
+          this.$message.error(res.msg || res.error || this.$t('NetWork Error'))
+          this.prevent_opt.import = false
           return
         }
         if (window.navigator.msSaveOrOpenBlob) {
           // 兼容ie11
-          const blobObject = new Blob([res])
+          const blobObject = new Blob([res.data])
           window.navigator.msSaveOrOpenBlob(blobObject, fileName + '.' + (this.showPanel.format || 'html'))
         } else {
-          const blob = new Blob([res])
+          const blob = new Blob([res.data])
           const link = document.createElement('a')
           const href = window.URL.createObjectURL(blob) // 下载链接
           link.href = href
@@ -184,8 +177,20 @@ export default {
         }
         this.prevent_opt.import = false
         this.$emit('update:snapshotVisible', false)
-      }, (res) => {
-        this.$message.error(res.msg || res.error)
+      }, error => {
+        const $self = this
+        const reader = new FileReader()
+        reader.onload = function (event) {
+          const responseText = reader.result
+          const exception = JSON.parse(responseText)
+          if (exception.message) {
+            $self.$message.error(exception.message)
+          } else {
+            console.error(error)
+          }
+        }
+        reader.readAsText(error.response.data)
+        this.prevent_opt.import = false
       })
     },
     // 关闭定时器 取消任务
