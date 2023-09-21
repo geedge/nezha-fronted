@@ -44,12 +44,12 @@ export default {
   },
   methods: {
     save () {
-      this.chartInfo.param.oldText = this.chartInfo.param.text
       this.chartInfo.param.isEdit = false
+      this.chartInfo.param.oldText = this.chartInfo.param.text
     },
     cancel () {
-      this.chartInfo.param.text = this.chartInfo.param.oldText
       this.chartInfo.param.isEdit = false
+      this.chartInfo.param.text = this.chartInfo.param.oldText
     },
     textChange (val) {
       this.chartInfo.param.text = val

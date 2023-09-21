@@ -93,7 +93,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import axios from 'axios'
 import bus from '../../../../libs/bus'
 import subDataListMixin from '@/components/common/mixin/subDataList'
@@ -171,12 +170,17 @@ export default {
     done () {
       this.$refs.notebookList.copyDataList.forEach(item => {
         if (item.type === 'text') {
-          Vue.delete(item.param, 'isEdit')
-          Vue.delete(item.param, 'oldText')
+          this.$set(item.param, 'isEdit', false)
         }
       })
       let charts = this.$lodash.cloneDeep(this.$refs.notebookList.copyDataList)
       charts = charts.filter(item => item.name !== 'groupTemp')
+      charts.forEach(item => {
+        if (item.type === 'text') {
+          delete item.param.isEdit
+          delete item.param.oldText
+        }
+      })
       const params = {
         name: this.notebookName,
         charts
@@ -666,7 +670,6 @@ export default {
       immediate: false,
       deep: true,
       handler (n) {
-        console.log(n)
         if (n) {
           this.disposeChart()
         } else {

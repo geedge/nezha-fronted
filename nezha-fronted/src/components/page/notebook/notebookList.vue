@@ -175,7 +175,7 @@ export default {
         this.firstInit = true
         const cloneDataList = this.$lodash.cloneDeep(n)
         const tempList = cloneDataList.map((item, index) => {
-          const height = item.height || ''
+          const height = item.h || item.height
           return {
             ...item,
             i: item.id,
