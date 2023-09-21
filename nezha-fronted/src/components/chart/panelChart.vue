@@ -525,7 +525,7 @@ export default {
               if (isRefresh) {
                 let dom = this.$refs.chart.$refs['chart' + this.chartInfo.id]
                 if (dom) {
-                  dom.refresh([startTime, endTime])
+                  dom.refresh([startTime * 1000, endTime * 1000])
                 }
               }
             }

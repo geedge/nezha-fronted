@@ -71,7 +71,6 @@ export default {
       this.$refs.diagram.resize()
     },
     refresh (timeRange) {
-      console.log(timeRange)
       this.timeRange = timeRange
       this.reload(true)
     }
