@@ -731,6 +731,12 @@ export default {
             delete item.chartId
           })
         }
+        if (obj.param && (!obj.param.tooltip || !obj.param.tooltip.mode)) {
+          obj.param.tooltip = {
+            mode: 'all',
+            sort: 'none'
+          }
+        }
         this.editChart = this.$lodash.cloneDeep(obj)
         this.oldData = this.$lodash.cloneDeep(obj)
         if (this.stableTime) {
