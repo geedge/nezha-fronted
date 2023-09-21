@@ -325,28 +325,34 @@ export default {
       }, 200)
     },
     keydown (event) {
-      // 监听按键按下事件
-      // 判断是否按下了shift键
-      if (event.shiftKey) {
-        // 如果按下了shift键，则启用Echarts的dataZoom功能
-        getChart(this.chartId).setOption({
-          dataZoom: [{
-            disabled: false
-          }]
-        })
-      }
+      clearTimeout(this.timer1)
+      this.timer1 = setTimeout(() => {
+        // 监听按键按下事件
+        // 判断是否按下了shift键
+        if (event.shiftKey) {
+          // 如果按下了shift键，则启用Echarts的dataZoom功能
+          getChart(this.chartId).setOption({
+            dataZoom: [{
+              disabled: false
+            }]
+          })
+        }
+      }, 50)
     },
     keyup (event) {
-      // 监听按键松开事件
-      // 判断是否释放了shift键
-      if (!event.shiftKey) {
-        // 如果释放了shift键，则禁用Echarts的dataZoom功能
-        getChart(this.chartId).setOption({
-          dataZoom: [{
-            disabled: true
-          }]
-        })
-      }
+      clearTimeout(this.timer2)
+      this.timer2 = setTimeout(() => {
+        // 监听按键松开事件
+        // 判断是否释放了shift键
+        if (!event.shiftKey) {
+          // 如果释放了shift键，则禁用Echarts的dataZoom功能
+          getChart(this.chartId).setOption({
+            dataZoom: [{
+              disabled: true
+            }]
+          })
+        }
+      }, 50)
     },
     xAxisLabelFormatter (minTime, maxTime) {
       const self = this
