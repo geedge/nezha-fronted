@@ -45,7 +45,6 @@ export default {
         if (isRefresh) {
           this.$get('/visual/dashboard/chart/' + this.chartInfo.id).then(response => {
             res.data = JSON.parse(response.data.param)
-            console.log(res.data)
             this.topoInit(res)
             this.chartInfo.param.topo = res.data.topo
             this.$refs.diagram && this.$refs.diagram.reload()

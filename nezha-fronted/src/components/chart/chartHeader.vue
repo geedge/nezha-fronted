@@ -91,6 +91,10 @@
                 <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>
                 <span>{{$t('overall.delete')}}</span>
               </li>
+              <li v-has="'main_add'" class="el-dropdown-menu__item" @click="downloadCSV" v-if="showDownloadCsv(chartInfo.type)">
+                <i class="nz-icon nz-icon-download1" style="font-size: 16px;"></i>
+                <span>{{$t('overall.downloadCSV')}}</span>
+              </li>
               <li v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.pid" v-has="'main_edit'" class="el-dropdown-menu__item" @click="sync">
                 <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>
                 <span>{{$t('overall.syncChart')}}</span>
