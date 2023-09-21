@@ -439,18 +439,18 @@ export default {
             const arrNow = arr.slice(0, previousIndex)
             const arrPrevious = arr.slice(previousIndex)
             if (sortBy === 'asc') {
-              arrNow.sort((a, b) => a.data[1] - b.data[1])
-              arrPrevious.sort((a, b) => a.data[1] - b.data[1])
+              arrNow.sort((a, b) => a.value[1] - b.value[1])
+              arrPrevious.sort((a, b) => a.value[1] - b.value[1])
             } else if (sortBy === 'desc') {
-              arrNow.sort((a, b) => b.data[1] - a.data[1])
-              arrPrevious.sort((a, b) => b.data[1] - a.data[1])
+              arrNow.sort((a, b) => b.value[1] - a.value[1])
+              arrPrevious.sort((a, b) => b.value[1] - a.value[1])
             }
             arr = [...arrNow, ...arrPrevious]
           } else {
             if (sortBy === 'asc') {
-              arr.sort((a, b) => a.data[1] - b.data[1])
+              arr.sort((a, b) => a.value[1] - b.value[1])
             } else if (sortBy === 'desc') {
-              arr.sort((a, b) => b.data[1] - a.data[1])
+              arr.sort((a, b) => b.value[1] - a.value[1])
             }
           }
 
