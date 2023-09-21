@@ -186,7 +186,6 @@ export default {
         const lastScrapeDuration = date.lastScrapeDuration || ''
         const health = date.health || ''
         const healthOther = date.healthOther || ''
-        console.log(healthOther)
         const lastError = date.lastError || ''
         const asset = date.asset
         const cpu = date.cpu

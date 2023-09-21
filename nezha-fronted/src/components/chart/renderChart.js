@@ -92,7 +92,6 @@ export default {
           delete chartOption.yAxis[1].max
         }
       }
-      console.log(chartOption)
       return chartOption
     },
     getMinMaxFromData (originalDatas, chartUnit = 2, params) {

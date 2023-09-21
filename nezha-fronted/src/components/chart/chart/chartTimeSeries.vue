@@ -179,7 +179,6 @@ export default {
 
       const styleOption = this.$lodash.get(this.chartInfo, 'param.option', {})
       chartOption.series.forEach(item => {
-        console.log(item.lineStyle)
         if (item.lineStyle && styleOption.lineWidth != undefined) {
           item.lineStyle.width = styleOption.lineWidth
         } else if (item.lineStyle) {

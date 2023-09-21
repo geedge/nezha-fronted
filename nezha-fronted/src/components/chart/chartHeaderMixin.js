@@ -65,6 +65,10 @@ export default {
       })
       this.dropdownMenuShow = false
     },
+    downloadCSV () {
+      this.$emit('downloadCSV')
+      this.dropdownMenuShow = false
+    },
     duplicate () {
       const obj = this.$lodash.cloneDeep(this.chartInfo)
       obj.elements = obj.oldElements
@@ -90,6 +94,37 @@ export default {
     },
     unitChange (val) {
       this.$emit('unitChange', val)
+    },
+    showDownloadCsv (type) {
+
+      switch (type) {
+        case 'line' :
+        case 'area' :
+        case 'point' :
+          return true
+          break
+        case 'stat' :
+        case 'hexagon':
+        case 'bar' :
+        case 'pie' :
+        case 'doughnut' :
+        case 'rose' :
+        case 'bubble' :
+        case 'funnel' :
+        case 'rank' :
+        case 'sankey' :
+        case 'gauge' :
+        case 'treemap' :
+          // case 'log' :
+          // case 'diagram' :
+          // case 'url':
+          // case 'clock':
+          return true
+        case 'table' :
+          return true
+        default:
+          return false
+      }
     }
   },
   computed: {
