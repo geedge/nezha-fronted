@@ -5,7 +5,7 @@
     class="nz-chart__component nz-chart__component--time-series" @mouseenter="mouseEnterChart"
     @mouseleave="mouseLeaveChart"
   >
-    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" :class="{'chart-cursor-default':!dataLink.length}"></div>
+    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" :class="{'chart-cursor-default':!(dataLink.length || chartInfo.datasource === 'metrics' || chartInfo.datasource === 'logs')}"></div>
     <chart-legend
       v-if="hasLegend"
       :chart-data="chartData"
@@ -28,6 +28,12 @@
       </div>
       <!-- dataLink -->
       <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <!-- 复制表达式 -->
+        <div class="chart-dataLink-item select-series" v-if="chartInfo.datasource==='metrics'||chartInfo.datasource==='logs'" @click="copyExpr">
+          <i class="nz-icon nz-icon-override"></i>
+          <span v-if="chartInfo.datasource==='metrics'">{{$t('overall.copy')}} PromQL</span>
+          <span v-else>{{$t('overall.copy')}} LogQL</span>
+        </div>
         <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
@@ -119,7 +125,7 @@ export default {
         }
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
-        if (this.isInit && this.dataLink.length) {
+        if (this.isInit && (this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs')) {
           myChart.on('click', this.chartClick)
           myChart.on('mousedown', (params) => {
             if (this.tooltip.dataLinkShow && params.dataIndex) {
@@ -237,7 +243,7 @@ export default {
       this.datalinkPosition(e)
     },
     clickout () {
-      if (this.dataLink.length) {
+      if ((this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') && this.tooltip.dataLinkShow) {
         this.tooltip.show = false
         this.tooltip.dataLinkShow = false
         const option = {

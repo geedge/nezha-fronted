@@ -26,6 +26,12 @@
       <div v-html="tooltip.tooltipHtml"></div>
       <!-- dataLink -->
       <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <!-- 复制表达式 -->
+        <div class="chart-dataLink-item select-series" v-if="chartInfo.datasource==='metrics'||chartInfo.datasource==='logs'" @click="copyExpr">
+          <i class="nz-icon nz-icon-override"></i>
+          <span v-if="chartInfo.datasource==='metrics'">{{$t('overall.copy')}} PromQL</span>
+          <span v-else>{{$t('overall.copy')}} LogQL</span>
+        </div>
         <!-- 只有一条数据时显示 -->
         <div class="chart-dataLink-item select-series" v-if="isGrey.filter(value => value === false).length==1" @click="showAllSeries">
           <i class="nz-icon nz-icon-a-Showallseries"></i>
