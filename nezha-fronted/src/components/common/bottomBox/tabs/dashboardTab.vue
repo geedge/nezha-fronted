@@ -251,7 +251,6 @@ export default {
             max: undefined
           },
           dataLink: [],
-          option: undefined
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
         panel: '',

@@ -173,9 +173,6 @@ export default {
     panelChart
   },
   computed: {
-    lineOption () {
-      return this.nzDefaultConfig.option
-    },
     chartLastPosition () {
       return this.$store.getters.getChartLastPosition
     },
@@ -412,7 +409,6 @@ export default {
               max: undefined
             },
             dataLink: [],
-            option: this.lineOption
           }
         }
       }
@@ -644,9 +640,6 @@ export default {
               min: undefined,
               max: undefined
             }
-          }
-          if (!obj.param.option) {
-            obj.param.option = this.lineOption
           }
         }
         this.editChart = this.$lodash.cloneDeep(obj)

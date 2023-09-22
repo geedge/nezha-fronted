@@ -177,18 +177,11 @@ export default {
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
 
-      const styleOption = this.$lodash.get(this.chartInfo, 'param.option', {})
       chartOption.series.forEach(item => {
-        if (item.lineStyle && styleOption.lineWidth != undefined) {
-          item.lineStyle.width = styleOption.lineWidth
-        } else if (item.lineStyle) {
+        if (item.lineStyle) {
           item.lineStyle.width = this.lineOption.lineWidth
         }
-        if (styleOption.pointSize != undefined) {
-          item.symbolSize = styleOption.pointSize
-        } else {
-          item.symbolSize = this.lineOption.pointSize
-        }
+        item.symbolSize = this.lineOption.pointSize
       })
 
       this.isGrey = this.legends.map(() => false)
