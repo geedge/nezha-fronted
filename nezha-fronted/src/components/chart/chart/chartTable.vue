@@ -33,7 +33,7 @@
             }"
             class="value-mapping-table"
             :title="showValueMapping(scope.row,col.title, col)"
-            :class="{'chart-cursor-pointer':dataLink.length}"
+            :class="{'chart-cursor-pointer':(dataLink.length || chartInfo.datasource === 'metrics' || chartInfo.datasource === 'logs')}"
             @click="chartClick($event,col,scope.row)"
             @mousedown="chartMousedown($event)"
           >
@@ -42,7 +42,7 @@
             </template>
             {{showValueMapping(scope.row,col.title, col)}}
           </div>
-          <div v-else class="value-mapping-table"  :title="scope.row.display[col.title + 'display'].display"  :class="{'chart-cursor-pointer':dataLink.length}" @click="chartClick($event,col,scope.row)" @mousedown="chartMousedown($event)">
+          <div v-else class="value-mapping-table"  :title="scope.row.display[col.title + 'display'].display"  :class="{'chart-cursor-pointer':(dataLink.length || chartInfo.datasource === 'metrics' || chartInfo.datasource === 'logs')}" @click="chartClick($event,col,scope.row)" @mousedown="chartMousedown($event)">
             {{scope.row.display[col.title + 'display'].display}}
           </div>
         </template>
@@ -68,6 +68,12 @@
       </div>
       <!-- dataLink -->
       <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <!-- 复制表达式 -->
+        <div class="chart-dataLink-item select-series" v-if="chartInfo.datasource==='metrics'||chartInfo.datasource==='logs'" @click="copyExpr">
+          <i class="nz-icon nz-icon-override"></i>
+          <span v-if="chartInfo.datasource==='metrics'">{{$t('overall.copy')}} PromQL</span>
+          <span v-else>{{$t('overall.copy')}} LogQL</span>
+        </div>
         <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
@@ -488,7 +494,7 @@ export default {
       })
     },
     chartClick (e, col, row) {
-      if (this.dataLink.length) {
+      if (this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') {
         // 对象扁平化
         let flattenedObject
         for (const key in row) {
@@ -513,12 +519,12 @@ export default {
       }
     },
     chartMousedown (e) {
-      if (this.dataLink.length && this.tooltip.dataLinkShow) {
+      if (this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') {
         e.stopPropagation()
       }
     },
     clickout () {
-      if (this.dataLink.length && this.tooltip.dataLinkShow) {
+      if ((this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') && this.tooltip.dataLinkShow) {
         this.tooltip.show = false
         this.tooltip.dataLinkShow = false
       }

@@ -4,7 +4,7 @@
     ref="rose-chart-box"
     class="nz-chart__component"
   >
-    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" :class="{'chart-cursor-default':!dataLink.length}" style="overflow: hidden;"></div>
+    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" :class="{'chart-cursor-default':!(dataLink.length || chartInfo.datasource === 'metrics' || chartInfo.datasource === 'logs')}" style="overflow: hidden;"></div>
 
     <chart-legend
       v-if="hasLegend"
@@ -35,6 +35,12 @@
       </div>
       <!-- dataLink -->
       <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <!-- 复制表达式 -->
+        <div class="chart-dataLink-item select-series" v-if="chartInfo.datasource==='metrics'||chartInfo.datasource==='logs'" @click="copyExpr">
+          <i class="nz-icon nz-icon-override"></i>
+          <span v-if="chartInfo.datasource==='metrics'">{{$t('overall.copy')}} PromQL</span>
+          <span v-else>{{$t('overall.copy')}} LogQL</span>
+        </div>
         <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
@@ -454,7 +460,7 @@ export default {
       })
     },
     chartClick (e, data) {
-      if (this.dataLink.length) {
+      if (this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') {
         this.tooltip.title = data.data.alias
         this.tooltip.value = data.data.mapping && data.data.mapping.display ? this.handleDisplay(data.data.mapping.display, { ...data.data.labels, value: data.data.showValue }) : data.data.showValue
         this.tooltip.mapping = data.data.mapping
@@ -466,12 +472,12 @@ export default {
       }
     },
     chartMousedown (e) {
-      if (this.dataLink.length && this.tooltip.dataLinkShow) {
+      if (this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') {
         e.stopPropagation()
       }
     },
     clickout () {
-      if (this.dataLink.length && this.tooltip.dataLinkShow) {
+      if ((this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') && this.tooltip.dataLinkShow) {
         this.tooltip.show = false
         this.tooltip.dataLinkShow = false
       }

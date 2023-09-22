@@ -486,6 +486,13 @@ export default {
       }
       this.clickout()
     },
+    copyExpr () {
+      const expr = this.chartInfo.elements[this.tooltip.metric.expressionIndex].expression || ''
+      this.$copyText(expr).then(() => {
+        this.$message.success({ message: this.$t('overall.copySuccess') })
+        this.clickout()
+      })
+    },
     beforeDownloadCSV (chart) {
       let csv = ''
       switch (chart.type) {
