@@ -272,7 +272,6 @@ export default {
             mode: 'all',
             sort: 'none'
           },
-          option: undefined
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0, step: undefined }],
         panel: '',

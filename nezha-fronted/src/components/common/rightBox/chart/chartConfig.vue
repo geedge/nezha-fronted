@@ -403,44 +403,6 @@
         </el-form-item>
       </div>
 
-      <!-- option  -->
-      <div v-if="isTimeSeries(chartConfig.type)">
-        <div class="form__sub-title">
-          <span>{{$t('dashboard.dashboard.chartForm.option')}}</span>
-        </div>
-        <div
-          class="form-items--half-width-group"
-        >
-          <!--lineWidth-->
-          <el-form-item
-            v-if="chartConfig.type!=='point'"
-            :label="$t('dashboard.dashboard.chartForm.lineWidth')"
-            class="form-item--half-width"
-            prop="param.option.lineWidth"
-            >
-            <el-input-number
-              size="small"
-              :controls="false"
-              @change="change"
-              show-word-limit
-              v-model="chartConfig.param.option.lineWidth"/>
-          </el-form-item>
-          <!--pointSize-->
-          <el-form-item
-            :label="$t('dashboard.dashboard.chartForm.pointSize')"
-            class="form-item--half-width"
-            prop="param.option.pointSize"
-            >
-            <el-input-number
-              size="small"
-              :controls="false"
-              @change="change"
-              show-word-limit
-              v-model="chartConfig.param.option.pointSize"/>
-          </el-form-item>
-        </div>
-      </div>
-
       <!-- Right Y Axis   -->
       <div v-if="isTimeSeries(chartConfig.type)">
         <div class="form__sub-title">
@@ -1356,9 +1318,6 @@ export default {
   computed: {
     minStep () {
       return this.nzDefaultConfig.minStep
-    },
-    lineOption () {
-      return this.nzDefaultConfig.option
     }
   },
   data () {
@@ -1459,8 +1418,7 @@ export default {
             tooltip: {
               mode: 'all',
               sort: 'none'
-            },
-            option: this.lineOption
+            }
           }
           this.$nextTick(() => {
             this.chartConfig.param.thresholds.push({ value: undefined, color: randomcolor() })

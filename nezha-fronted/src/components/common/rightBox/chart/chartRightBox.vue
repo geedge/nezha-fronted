@@ -175,9 +175,6 @@ export default {
     panelChart
   },
   computed: {
-    lineOption () {
-      return this.nzDefaultConfig.option
-    },
     chartLastPosition () {
       return this.$store.getters.getChartLastPosition
     },
@@ -418,8 +415,7 @@ export default {
             tooltip: {
               mode: 'all',
               sort: 'none'
-            },
-            option: this.lineOption
+            }
           }
         }
       }
@@ -462,8 +458,7 @@ export default {
               tooltip: {
                 mode: 'all',
                 sort: 'none'
-              },
-              option: this.lineOption
+              }
             }
           }
         } else {
@@ -694,8 +689,11 @@ export default {
                 max: undefined
               }
             }
-            if (!obj.param.option) {
-              obj.param.option = this.lineOption
+            if (!obj.param.tooltip || !obj.param.tooltip.mode) {
+              obj.param.tooltip = {
+                mode: 'all',
+                sort: 'none'
+              }
             }
           }
           if (obj.type == 'table') {
@@ -730,12 +728,6 @@ export default {
             delete item.buildIn
             delete item.chartId
           })
-        }
-        if (obj.param && (!obj.param.tooltip || !obj.param.tooltip.mode)) {
-          obj.param.tooltip = {
-            mode: 'all',
-            sort: 'none'
-          }
         }
         this.editChart = this.$lodash.cloneDeep(obj)
         this.oldData = this.$lodash.cloneDeep(obj)
