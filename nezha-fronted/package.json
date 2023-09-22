@@ -45,6 +45,7 @@
     "caniuse-lite": "^1.0.30001412",
     "codemirror-promql": "^0.19.0",
     "css-minimizer-webpack-plugin": "^1.0.0",
+    "csv-string": "^4.1.1",
     "cytoscape": "^3.15.2",
     "d3": "^6.7.0",
     "d3-hexbin": "^0.2.2",
