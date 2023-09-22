@@ -72,7 +72,8 @@ export default {
       servicesTableData: [],
       ringTableData: [],
       readyTableData: '',
-      loading: false
+      loading: false,
+      fromBottom: true
     }
   },
   mounted () {
