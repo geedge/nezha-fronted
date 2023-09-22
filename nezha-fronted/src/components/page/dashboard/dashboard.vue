@@ -266,10 +266,6 @@ export default {
             min: undefined,
             max: undefined
           },
-          option: {
-            lineWidth: 2,
-            pointSize: 8
-          }
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
         panel: '',
@@ -632,12 +628,6 @@ export default {
               max: undefined
             }
           }
-          if (!this.chart.param.option) {
-            this.chart.param.option = {
-              lineWidth: 2,
-              pointSize: 8
-            }
-          }
         }
         if (this.chart.type === 'stat') {
           if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }
@@ -672,12 +662,6 @@ export default {
                   label: '',
                   min: undefined,
                   max: undefined
-                }
-              }
-              if (!this.chart.param.option) {
-                this.chart.param.option = {
-                  lineWidth: 2,
-                  pointSize: 8
                 }
               }
             }

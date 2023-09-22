@@ -402,10 +402,6 @@ export default {
               label: '',
               min: undefined,
               max: undefined
-            },
-            option: {
-              lineWidth: 2,
-              pointSize: 8
             }
           }
         }
