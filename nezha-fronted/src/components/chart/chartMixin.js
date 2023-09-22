@@ -9,6 +9,7 @@ import {
   chartTimeSeriesAreaOption,
   chartTimeSeriesScatterOption
 } from './chart/options/chartTimeSeries'
+import * as CSV from 'csv-string';
 export default {
   data () {
     return {
@@ -552,13 +553,13 @@ export default {
             unit = chartDataFormat.getUnit(this.$lodash.get(chartInfo, 'unit', 2))
           }
           val = unit.compute(val, index, -1, chartInfo.param.decimals || 2)
-          csv += `"${this.momentTz(value[0] * 1000)}",${this.yasuo(this.legends[index].alias)},"${val}"\n`
+          csv += `"${this.momentTz(value[0] * 1000)}","${this.yasuo(this.legends[index].alias)}","${val}"\n`
         })
       })
       return csv
     },
     yasuo (str) {
-      return JSON.stringify(str)
+      return str.replace(/\"/g, '\"\"')
     },
     convertOtherToCSV (chartInfo) {
       let csv = '"legend","value"\n'
@@ -616,18 +617,18 @@ export default {
         return
       }
       this.$lodash.get(this, keyByData, []).forEach(item => {
-        csv += `${this.yasuo(item[legend])},"${item.showValue}"\n`
+        csv += `"${this.yasuo(item[legend])}","${item.showValue}"\n`
       })
       return csv
     },
     convertTableToCSV (chartInfo) {
       let csv = ''
-      csv = this.columns.map(item => JSON.stringify(item.title)).join(',')
+      csv = this.columns.map(item => '"' + this.yasuo(item.title) + '"').join(',')
       csv += '\n'
       this.oldTableData.forEach(item => {
         let arr = []
         this.columns.forEach(column => {
-          arr.push(`${this.yasuo(item.display[column.title + 'display'].display)}`)
+          arr.push(`"${this.yasuo(item.display[column.title + 'display'].display)}"`)
         })
         arr = arr.join(',')
         csv += arr
