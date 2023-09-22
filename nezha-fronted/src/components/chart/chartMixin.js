@@ -525,6 +525,7 @@ export default {
         // 兼容ie11
         const blobObject = new Blob([csv])
         window.navigator.msSaveOrOpenBlob(blobObject, chart.name + '.csv')
+        this.$message.success(this.$t('tip.downloadSuccess'))
       } else {
         const blob = new Blob([csv])
         const link = document.createElement('a')
@@ -535,11 +536,12 @@ export default {
         link.click() // 点击下载
         document.body.removeChild(link) // 下载完成移除元素
         window.URL.revokeObjectURL(href) // 释放blob对象
+        this.$message.success(this.$t('tip.downloadSuccess'))
       }
     },
     convertTimeSertesToCSV (chartInfo) {
       const data = this.series
-      let csv = 'time,legend,value\n'
+      let csv = '"time","legend","value"\n'
       data.forEach((item, index) => {
         item.data.forEach(value => {
           let val = formatScientificNotation(value[1], this.$lodash.get(chartInfo, 'param.decimals', 2))
@@ -550,13 +552,16 @@ export default {
             unit = chartDataFormat.getUnit(this.$lodash.get(chartInfo, 'unit', 2))
           }
           val = unit.compute(val, index, -1, chartInfo.param.decimals || 2)
-          csv += `${this.momentTz(value[0] * 1000)},${this.legends[index].alias},${val}\n`
+          csv += `"${this.momentTz(value[0] * 1000)}",${this.yasuo(this.legends[index].alias)},"${val}"\n`
         })
       })
       return csv
     },
+    yasuo (str) {
+      return JSON.stringify(str)
+    },
     convertOtherToCSV (chartInfo) {
-      let csv = 'legend,value\n'
+      let csv = '"legend","value"\n'
       let keyByData = ''
       let legend = 'legend'
       switch (chartInfo.type) {
@@ -611,18 +616,18 @@ export default {
         return
       }
       this.$lodash.get(this, keyByData, []).forEach(item => {
-        csv += `${item[legend]},${item.showValue}\n`
+        csv += `${this.yasuo(item[legend])},"${item.showValue}"\n`
       })
       return csv
     },
     convertTableToCSV (chartInfo) {
       let csv = ''
-      csv = this.columns.map(item => item.title).join(',')
+      csv = this.columns.map(item => JSON.stringify(item.title)).join(',')
       csv += '\n'
       this.oldTableData.forEach(item => {
         let arr = []
         this.columns.forEach(column => {
-          arr.push(item.display[column.title + 'display'].display)
+          arr.push(`${this.yasuo(item.display[column.title + 'display'].display)}`)
         })
         arr = arr.join(',')
         csv += arr
