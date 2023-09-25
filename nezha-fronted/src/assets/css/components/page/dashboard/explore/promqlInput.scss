@@ -197,6 +197,11 @@
     position: relative;
     .input-box {
       flex: 1;
+      position: relative;
+    }
+    .input-box-log {
+      flex: unset;
+      width: calc(100% - 292px);
     }
   }
 }

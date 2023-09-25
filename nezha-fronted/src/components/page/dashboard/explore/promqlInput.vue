@@ -74,6 +74,7 @@
         <div
           v-if="plugins.indexOf('metric-input') > -1"
           class="input-box"
+          :class="type == 'log' ? 'input-box-log' : ''"
           @click="dropDownVisible = false"
         >
           <div

@@ -88,7 +88,7 @@ export default {
           __range_ms: { text: '1000', value: 1000 },
           __range_s: { text: '1', value: 1 },
           __range: { text: '1s', value: '1s' }
-        },
+        }
       },
       monacoEditorHeight: 30,
       templateSrv: ''
@@ -107,11 +107,13 @@ export default {
       }
     },
     handleMount (editor) {
-      // const dom = this.$refs.monacoEditor.$el
-      // const el = dom.getElementsByClassName('view-lines')
-      // if (el && el[0]) {
-      //   el[0].addEventListener('DOMNodeInserted', this.heightChange)
-      // }
+      setTimeout(() => {
+        const dom = this.$refs.monacoEditor.$el
+        const el = dom.getElementsByClassName('view-lines')
+        if (this.monacoEditorHeight !== el[0].offsetHeight) {
+          this.monacoEditorHeight = el[0].offsetHeight
+        }
+      }, 100)
     },
     handelBeforeMount (monaco) {
       const LANG_ID = 'logql'
@@ -133,7 +135,7 @@ export default {
           rules: [
             { token: 'predefined', foreground: '#FF6600' },
             { token: 'operator', foreground: '#009966' },
-            { token: 'tag', foreground: '#006699' }
+            { token: 'tag', foreground: '#FF6600' }
           ]
         })
         monaco.languages.registerCompletionItemProvider('logql', {
@@ -193,9 +195,9 @@ export default {
           range,
           command: item.triggerOnInsert
             ? {
-              id: 'editor.action.triggerSuggest',
-              title: ''
-            }
+                id: 'editor.action.triggerSuggest',
+                title: ''
+              }
             : undefined
         }))
         return { suggestions }

@@ -4202,10 +4202,22 @@ export default {
           await this.queryTableData()
           this.queryChartData()
           this.storeHistory()
+          this.postHistory()
         } else {
+          const promiseArr = []
+          this.expressions.forEach((item, index) => {
+            if (item != '' && this.promqlKeys[index].state) {
+              promiseArr.push(this.$get('/logs/loki/api/v1/format_query', { query: item }))
+            } else {
+              promiseArr.push('')
+            }
+          })
+          Promise.all(promiseArr).then(res => {
+            console.log(res)
+          })
           this.queryLogData()
+          this.postHistory()
         }
-        this.postHistory()
       }
       this.updatePath()
     },
