@@ -169,16 +169,7 @@ export default {
             // 判断如果是面积图 颜色设为渐变色
             if (s.areaStyle && this.colorList.length) {
               s.areaStyle = {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  {
-                    offset: 0,
-                    color: this.hexToRgb(this.colorList[colorIndex], 0.1)
-                  },
-                  {
-                    offset: 1,
-                    color: this.hexToRgb(this.colorList[colorIndex], 1)
-                  }
-                ])
+                opacity: 0.1
               }
             }
             series.push(s)
@@ -486,6 +477,13 @@ export default {
         window.location.href = url
       }
       this.clickout()
+    },
+    copyExpr () {
+      const expr = this.chartInfo.elements[this.tooltip.metric.expressionIndex].expression || ''
+      this.$copyText(expr).then(() => {
+        this.$message.success({ message: this.$t('overall.copySuccess') })
+        this.clickout()
+      })
     },
     beforeDownloadCSV (chart) {
       let csv = ''
