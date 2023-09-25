@@ -551,7 +551,14 @@ export default {
             unit = chartDataFormat.getUnit(this.$lodash.get(chartInfo, 'unit', 2))
           }
           val = unit.compute(val, index, -1, chartInfo.param.decimals || 2)
-          csv += `"${this.momentTz(value[0] * 1000)}","${this.yasuo(this.legends[index].alias)}","${val}"\n`
+          let legend = this.yasuo(this.legends[index].alias)
+          try {
+            val = val.trim()
+            legend = legend.trim()
+          } catch (e) {
+            console.log(e)
+          }
+          csv += `"${this.momentTz(value[0] * 1000)}","${legend}","${val}"\n`
         })
       })
       return csv
@@ -615,7 +622,15 @@ export default {
         return
       }
       this.$lodash.get(this, keyByData, []).forEach(item => {
-        csv += `"${this.yasuo(item[legend])}","${item.showValue}"\n`
+        let val = item.showValue
+        let legend = this.yasuo(item[legend])
+        try {
+          val = val.trim()
+          legend = legend.trim()
+        } catch (e) {
+          console.log(e)
+        }
+        csv += `"${legend}","${val}"\n`
       })
       return csv
     },
@@ -626,7 +641,13 @@ export default {
       this.oldTableData.forEach(item => {
         let arr = []
         this.columns.forEach(column => {
-          arr.push(`"${this.yasuo(item.display[column.title + 'display'].display)}"`)
+          let val = this.yasuo(item.display[column.title + 'display'].display)
+          try {
+            val = val.trim()
+          } catch (e) {
+            console.log(e)
+          }
+          arr.push(`"${val}"`)
         })
         arr = arr.join(',')
         csv += arr
