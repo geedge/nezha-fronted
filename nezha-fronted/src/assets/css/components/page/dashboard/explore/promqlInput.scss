@@ -177,6 +177,12 @@
   .el-col .el-col-24 .metric-selector-input-box{
 
   }
+  .lines-content {
+    //height: auto !important;
+    //width: 100% !important;
+    //position: unset !important;
+    top: 5px !important;
+  }
 }
 .topo-page {
   .promqlInput {

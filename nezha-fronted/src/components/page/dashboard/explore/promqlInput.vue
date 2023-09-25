@@ -86,20 +86,38 @@
           class="not-fixed-height no-resize no-close"
           >
           </div> -->
-          <el-input
-            v-if="type == 'log'"
-            :id="inputId"
-            v-model="expressionList[index]"
-            size="small" :rows="1"
-            autosize
-            class="not-fixed-height no-resize"
-            type="textarea"
-            show-word-limit maxlength="256"
-            @input="metricKeyDown"
-            @keyup.enter.native="expressionChange"
-            ref="elInput"
-          >
-          </el-input>
+<!--          <el-input-->
+<!--            v-if="type == 'log'"-->
+<!--            :id="inputId"-->
+<!--            v-model="expressionList[index]"-->
+<!--            size="small" :rows="1"-->
+<!--            autosize-->
+<!--            class="not-fixed-height no-resize"-->
+<!--            type="textarea"-->
+<!--            show-word-limit maxlength="256"-->
+<!--            @input="metricKeyDown"-->
+<!--            @keyup.enter.native="expressionChange"-->
+<!--            ref="elInput"-->
+<!--          >-->
+<!--          </el-input>-->
+          <div>
+            <MonacoEditor
+              v-if="type == 'log'"
+              v-model="expressionList[index]"
+              theme="nz"
+              class="not-fixed-height no-resize"
+              ref="monacoEditor"
+              style="border: 1px solid #dedede;"
+              :style="{
+                height: monacoEditorHeight + 'px'
+              }"
+              language="logql"
+              :options="MONACO_EDITOR_OPTIONS"
+              @editorWillMount="handelBeforeMount"
+              @editorDidMount="handleMount"
+              @change="expressionChange"
+            />
+          </div>
 
           <div v-if="errorMsg" class="append-msg error" style="position: absolute">
             <span>{{ errorMsg }}</span>
@@ -459,11 +477,15 @@ import {
   closeBracketsKeymap
 } from '@codemirror/autocomplete'
 import exploreHistory from '@/components/page/dashboard/explore/histoyrComponent/exploreHistory'
+import MonacoEditor from 'vue-monaco'
+import logqlMixin from '@/components/page/dashboard/explore/logql/logqlMixin'
 export default {
   name: 'promqlInput',
+  mixins: [logqlMixin],
   components: {
     selectAlertSilence,
-    exploreHistory
+    exploreHistory,
+    MonacoEditor
   },
   props: {
     index: { type: Number },
@@ -884,6 +906,11 @@ export default {
       }
     },
     expressionChange: function () {
+      if (this.$refs.monacoEditor) {
+        setTimeout(() => {
+          this.heightChange()
+        }, 100)
+      }
       this.$emit('change')
     },
     setError: function (errMsg) {
