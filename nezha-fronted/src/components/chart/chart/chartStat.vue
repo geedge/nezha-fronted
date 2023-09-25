@@ -399,16 +399,8 @@ export default {
         }]
         if (this.chartInfo.param.sparklineMode === 'area') {
           chartOption.series[0].areaStyle = {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: this.hexToRgb(color, 0.1)
-              },
-              {
-                offset: 1,
-                color: this.hexToRgb(color, 1)
-              }
-            ])
+            color: color,
+            opacity: 0.1
           }
         }
         chartOption.yAxis.max = this.maxValue
