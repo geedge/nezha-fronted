@@ -9,7 +9,7 @@ import {
   chartTimeSeriesAreaOption,
   chartTimeSeriesScatterOption
 } from './chart/options/chartTimeSeries'
-import * as CSV from 'csv-string';
+import * as CSV from 'csv-string'
 export default {
   data () {
     return {
@@ -169,16 +169,7 @@ export default {
             // 判断如果是面积图 颜色设为渐变色
             if (s.areaStyle && this.colorList.length) {
               s.areaStyle = {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  {
-                    offset: 0,
-                    color: this.hexToRgb(this.colorList[colorIndex], 0.1)
-                  },
-                  {
-                    offset: 1,
-                    color: this.hexToRgb(this.colorList[colorIndex], 1)
-                  }
-                ])
+                opacity: 0.1
               }
             }
             series.push(s)
