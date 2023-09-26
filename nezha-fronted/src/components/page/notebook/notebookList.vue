@@ -1,36 +1,26 @@
 <template>
   <div class="notebook-list">
-    <grid-layout
-      v-if="gridLayoutShow"
-      ref="layout"
-      :class="firstInit ? 'no-animation' : ''"
-      :col-num="12"
-      :is-draggable="notebookEdit"
-      :is-resizable="notebookEdit"
-      :layout.sync="copyDataList"
-      :margin="[20, 20]"
-      :vertical-compact="true"
-      :use-css-transforms="false"
+    <draggable
+      v-model="copyDataList"
+      :scroll-sensitivity="300"
+      :options="{
+        dragClass:'drag-chart-class',
+        fallbackClass:'fallback-class',
+        forceFallback:false,
+        ghostClass:'chart-ghost',
+        chosenClass:'choose-class',
+        scroll:true,
+        filter: '.drag-disabled',
+        animation: 150,
+        handle: '.chart-header'
+      }"
+      :disabled="!notebookEdit"
     >
-      <grid-item
+      <div
+        class="panel-chart-wrap"
+        :class="{'text-chart-wrap':item.type==='text'}"
         v-for="item in copyDataList"
-        :key="item.id"
-        :h="item.h"
-        :i="item.i"
-        :w="item.w"
-        :x="item.x"
-        :y="item.y"
-        :min-w="12"
-        :static="item.static"
-        :class="{
-          'opacityItem': item.static,
-        }"
-        :ref="'grid-item' + item.id"
-        dragAllowFrom=".chart-header"
-        dragIgnoreFrom=".chart-header__tools"
-        @resized="resizedEvent"
-        @moved="movedEvent"
-      >
+        :key="item.id">
         <panel-chart
           :from="from"
           :variablesInit="true"
@@ -40,16 +30,14 @@
           :isExportHtml="isExportHtml"
           :dataJson="dataJson"
         ></panel-chart>
-      </grid-item>
-    </grid-layout>
+      </div>
+    </draggable>
   </div>
 </template>
 
 <script>
-import GridLayout from '@/components/chart/chart/grid/GridLayout'
-import GridItem from '@/components/chart/chart/grid/GridItem'
+import draggable from 'vuedraggable'
 import panelChart from '@/components/chart/panelChart'
-import groupData from '@/components/chart/tempGroup'
 import { lineChartMove } from '@/components/common/js/common'
 export default {
   name: 'notebookList',
@@ -73,8 +61,7 @@ export default {
     }
   },
   components: {
-    GridLayout: GridLayout,
-    GridItem: GridItem,
+    draggable,
     panelChart
   },
   computed: {
@@ -129,13 +116,12 @@ export default {
       }
       this.scrollTopTimer = setTimeout(() => {
         this.copyDataList.forEach(item => {
-          if (!this.$refs['grid-item' + item.id] || !this.$refs['grid-item' + item.id][0]) {
+          if (!this.$refs['chart' + item.id] || !this.$refs['chart' + item.id][0]) {
             return
           }
-          const dom = this.$refs['grid-item' + item.id][0].$el
+          const dom = this.$refs['chart' + item.id][0].$el
           if (dom) {
-            let top = dom.style.top
-            top = Number(top.substring(0, top.length - 2))
+            const top = dom.offsetTop
             if (item.loaded) {
               return
             }
@@ -175,25 +161,10 @@ export default {
         this.firstInit = true
         const cloneDataList = this.$lodash.cloneDeep(n)
         const tempList = cloneDataList.map((item, index) => {
-          const height = item.h || item.height
           return {
             ...item,
-            i: item.id,
-            w: 12,
-            h: height || 4,
-            x: item.x || 0,
-            y: item.y || 0
+            i: item.id
           }
-        })
-        // 添加占位元素 防止向上塌陷
-        tempList.push({
-          ...groupData,
-          i: -2,
-          w: 12,
-          h: 0,
-          x: 0,
-          y: 0,
-          static: true
         })
         this.$nextTick(() => {
           this.copyDataList = this.$lodash.cloneDeep(tempList)

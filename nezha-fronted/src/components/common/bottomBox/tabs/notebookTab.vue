@@ -212,14 +212,24 @@ export default {
     createSuccess (chart) {
       delete chart.panelName
       chart.loaded = false
-      if (chart.id) {
+      if (chart.id) { // 编辑
         const index = this.$refs.notebookList.copyDataList.findIndex(item => item.id == chart.id)
         this.$refs.notebookList.copyDataList.splice(index, 1, chart)
-      } else {
+      } else { // 新增
         const id = this.getMaxId(this.$refs.notebookList.copyDataList) + 1
         chart.id = id
-        chart.i = id
-        this.$refs.notebookList.copyDataList.push(chart)
+        if (chart.position) {
+          const index = this.$refs.notebookList.copyDataList.findIndex(item => item.id == chart.position.id)
+          if (chart.position.position === 'before') { // 向前追加
+            delete chart.position
+            this.$refs.notebookList.copyDataList.splice(index, 0, chart)
+          } else { // 向后追加
+            delete chart.position
+            this.$refs.notebookList.copyDataList.splice(index + 1, 0, chart)
+          }
+        } else {
+          this.$refs.notebookList.copyDataList.push(chart)
+        }
       }
       this.$refs.notebookList.onScroll(this.scrollbarWrap.scrollTop)
       this.$store.dispatch('clearPanel')
@@ -229,17 +239,16 @@ export default {
     },
     copyChartText (data) {
       const chart = JSON.parse(JSON.stringify(data))
-      chart.y = chart.y + 0.01
-      chart.id = this.getMaxId(this.$refs.notebookList.copyDataList) + 1
       chart.param.isEdit = false
-      this.$refs.notebookList.copyDataList.push(chart)
-      this.$refs.notebookList.onScroll(this.scrollbarWrap.scrollTop)
+      chart.position = { position: 'after', id: chart.id }
+      delete chart.id
+      this.createSuccess(chart)
     },
     // 编辑图表信息,打开编辑弹窗
     editChart (data, copy) {
       if (copy) {
         this.chart = JSON.parse(JSON.stringify(data))
-        this.chart.y = this.chart.y + 0.01
+        this.chart.position = { position: 'after', id: data.id }
         this.chart.panelName = this.showPanel.name
         this.chart.id = ''
         this.chart.elements.forEach((item) => {
@@ -275,23 +284,9 @@ export default {
         type: chart.type,
         unit: 2,
         datasource: chart.datasource,
-        span: 12,
-        height: 4,
-        w: 12,
-        h: 4,
-        x: 0,
-        y: 0,
         param: this.newChart(chart.type)
       }
-      if (chart.position) {
-        if (chart.position.position === 'before') {
-          this.chart.y = chart.position.y - 0.01
-        } else {
-          this.chart.y = chart.position.y + 0.01
-        }
-      } else {
-        this.chart.y = this.getMaxY(this.$refs.notebookList.copyDataList)
-      }
+      this.chart.position = chart.position
       if (this.chart.datasource === 'metrics') {
         this.chart.elements = [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }]
       }
@@ -308,12 +303,6 @@ export default {
         type: 'text',
         unit: 2,
         datasource: 'misc',
-        span: 12,
-        height: 4,
-        w: 12,
-        h: 4,
-        x: 0,
-        y: this.getMaxY(this.$refs.notebookList.copyDataList),
         param: this.newChart('text')
       }
       this.createSuccess(chart)
@@ -326,15 +315,6 @@ export default {
         return (prev.id > current.id) ? prev : current
       })
       return Math.max(maxElement.id, 1)
-    },
-    getMaxY (arr) { // 获取当前列表最大的y
-      if (!arr.length) {
-        return 0
-      }
-      const maxElement = arr.reduce(function (prev, current) {
-        return (prev.y > current.y) ? prev : current
-      })
-      return maxElement.y
     },
     newChart (type) {
       let param = {}

@@ -88,9 +88,25 @@
     }
   }
   .notebook-list{
+    padding: 20px;
+    padding-top: 0;
     height: auto;
+    .panel-chart-wrap{
+      height: 300px !important;
+      margin-top: 20px;
+      background: $--background-color-empty;
+      .panel-chart{
+        box-sizing: border-box;
+      }
+    }
     .panel-chart.my-loading-parent--relative{
       height: 100% !important;
+    }
+    .text-chart-wrap{
+      height: auto !important;
+      .v-md-editor-preview{
+        padding: 0;
+      }
     }
     .no-data{
       text-align: center;
@@ -110,7 +126,8 @@
       padding: 10px;
       padding-top: 0;
       .markdownEditor {
-        height: 100% !important;
+        height: auto !important;
+        min-height: 250px !important;
       }
       .notebook-editor-btn{
         height: 41px;

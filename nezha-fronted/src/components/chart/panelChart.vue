@@ -3,7 +3,7 @@
   <div
     :class="{
       'panel-chart--fullscreen': isFullscreen,
-      'panel-chart-notebook':from==='notebook'&&notebookEdit&&!isExportHtml
+      'panel-chart-notebook':from==='notebook'&&notebookEdit&&!isExportHtml,
     }"
     class="panel-chart"
     :id="isFullscreen ? ('chart-screen-' + chartInfo.id ) : ('chart-local-' + chartInfo.id)"
@@ -75,12 +75,12 @@
     <div class="noteboook-chart-addWrap" v-if="from==='notebook'&&!isExportHtml">
       <el-tooltip :content="$t('notebook.addchart')" effect="light" placement="bottom">
         <div class="noteboook-chart-add addBefore">
-          <i class="nz-icon nz-icon-plus" @click="addNotebook({position:'before',y:chartInfo.y})"></i>
+          <i class="nz-icon nz-icon-plus" @click="addNotebook({position:'before',id:chartInfo.id})"></i>
         </div>
       </el-tooltip>
       <el-tooltip :content="$t('notebook.addchart')" effect="light" placement="top">
         <div class="noteboook-chart-add addAfter">
-          <i class="nz-icon nz-icon-plus" @click="addNotebook({position:'after',y:chartInfo.y})"></i>
+          <i class="nz-icon nz-icon-plus" @click="addNotebook({position:'after',id:chartInfo.id})"></i>
         </div>
       </el-tooltip>
     </div>

@@ -911,6 +911,9 @@
   }
 }
 .panel-chart-notebook{
+  .chart-header{
+    cursor: move;
+  }
   &:hover{
     border-color: $--color-primary;
     .noteboook-chart-addWrap{
