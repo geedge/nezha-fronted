@@ -6704,7 +6704,8 @@ const i18nData = {
     cassandra_ClientMetrics_RequestsSizeByIpDistribution_75thPercentile: '75% of the request size in the IP distribution.',
     clickhouse_asynchronous_metrics_network_receive_bytes_virbr0_nic: ' The number of bytes received over the network interface. This is a system-wide metric which includes all processes on the host, not just the clickhouse server',
     elasticsearch_cluster_health_indices_number_of_replicas: 'The total number of active replicas in the cluster',
-    zookeeper_avg_read_final_proc_time_ms: 'Read final processing time average'
+    zookeeper_avg_read_final_proc_time_ms: 'Read final processing time average',
+    'overall.copy': 'Copy'
   },
   zh: {
     'config.menus.editI18n': '编辑 I18N',
@@ -13411,7 +13412,8 @@ const i18nData = {
     cassandra_ClientMetrics_RequestsSizeByIpDistribution_75thPercentile: 'IP分布中75％大小的请求大小。',
     clickhouse_asynchronous_metrics_network_receive_bytes_virbr0_nic: '通过网络接口接收的字节数。这是一个系统范围的度量，它包括主机上的所有进程，而不仅仅是clickhouse服务器',
     elasticsearch_cluster_health_indices_number_of_replicas: '集群中活跃副本的总数',
-    zookeeper_avg_read_final_proc_time_ms: '读取最终处理时间平均值'
+    zookeeper_avg_read_final_proc_time_ms: '读取最终处理时间平均值',
+    'overall.copy': '复制'
   }
 }
 export default i18nData
