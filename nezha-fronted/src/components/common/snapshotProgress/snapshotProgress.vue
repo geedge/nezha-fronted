@@ -187,6 +187,7 @@ export default {
             $self.$message.error(exception.message)
           } else {
             console.error(error)
+            $self.$message.error(error)
           }
         }
         reader.readAsText(error.response.data)
