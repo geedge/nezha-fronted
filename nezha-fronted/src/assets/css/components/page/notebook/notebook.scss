@@ -107,6 +107,16 @@
       .v-md-editor-preview{
         padding: 0;
       }
+      .text-content{
+        .el-scrollbar__wrap{
+          margin-right: 0 !important;
+          margin-bottom: 0 !important;
+          overflow: hidden !important;
+        }
+        .el-scrollbar__bar{
+          display: none;
+        }
+      }
     }
     .no-data{
       text-align: center;

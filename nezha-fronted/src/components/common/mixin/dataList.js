@@ -146,10 +146,19 @@ export default {
           this.tableData = response.data.list
           const globalSearchId = this.$store.getters.getGlobalSearchId
           let detailViewRightObj = ''
-          if (globalSearchId) {
-            detailViewRightObj = this.tableData.find(item => item.id === globalSearchId)
+          if (this.tableId === 'notebookTable' && this.detailType === 'view') { // 防止详情视图编辑后切换到别的数据
+            const obj = this.tableData.find(item => item.id === this.detailViewRightObj.id)
+            if (obj) {
+              detailViewRightObj = obj
+            } else {
+              detailViewRightObj = this.tableData[0]
+            }
           } else {
-            detailViewRightObj = this.tableData[0]
+            if (globalSearchId) {
+              detailViewRightObj = this.tableData.find(item => item.id === globalSearchId)
+            } else {
+              detailViewRightObj = this.tableData[0]
+            }
           }
           this.detailViewRightObj = this.$lodash.cloneDeep(detailViewRightObj)
           this.pageObj.total = response.data.total
