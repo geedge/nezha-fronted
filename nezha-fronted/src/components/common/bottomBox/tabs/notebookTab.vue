@@ -630,6 +630,7 @@ export default {
     }
     bus.$off('addNotebook', this.addNotebook)
     bus.$off('copyChartText', this.copyChartText)
+    this.$store.commit('setNotebookEdit', false)
   },
   watch: {
     obj: {

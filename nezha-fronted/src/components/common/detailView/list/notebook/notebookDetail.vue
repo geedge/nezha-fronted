@@ -87,6 +87,10 @@ export default {
     }
   },
   methods: {
+    detailViewRightShow (item) {
+      this.$store.commit('setNotebookEdit', false)
+      this.$emit('detailViewRightShow', item)
+    },
     // label 鼠标划入
     labelHover (item, type, loading, e) {
       if (e) {
