@@ -59,7 +59,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     .el-dropdown-menu__item.nz-dropdown-menu__item-hover{
       flex-shrink: 0;
     }

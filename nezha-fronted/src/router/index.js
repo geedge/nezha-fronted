@@ -243,6 +243,9 @@ export default new Router({
         {
           path: '/notebook',
           component: resolve => require(['@/components/page/notebook/notebook'], resolve)
+        }, {
+          path: '/uPlot',
+          component: resolve => require(['@/components/page/uPlot'], resolve)
         }
       ]
     },

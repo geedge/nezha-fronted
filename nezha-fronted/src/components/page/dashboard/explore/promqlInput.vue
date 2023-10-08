@@ -290,18 +290,36 @@
                 ref="elInput"
 
             ></div> -->
-               <el-input
-                v-model="expressionList[index]"
-                v-if="type === 'log'"
-                @input="metricKeyDown"
-                autosize
-                type="textarea"
-                :maxlength="styleType === 3 ? 512 : 4096"
-                show-word-limit
-                size="small" :rows="1"
-                class="not-fixed-height no-resize"
-                ref="elInput"
-              ></el-input>
+<!--               <el-input-->
+<!--                v-model="expressionList[index]"-->
+<!--                v-if="type === 'log'"-->
+<!--                @input="metricKeyDown"-->
+<!--                autosize-->
+<!--                type="textarea"-->
+<!--                :maxlength="styleType === 3 ? 512 : 4096"-->
+<!--                show-word-limit-->
+<!--                size="small" :rows="1"-->
+<!--                class="not-fixed-height no-resize"-->
+<!--                ref="elInput"-->
+<!--              ></el-input>-->
+              <div>
+                <MonacoEditor
+                  v-if="type == 'log'"
+                  v-model="expressionList[index]"
+                  theme="nz"
+                  class="not-fixed-height no-resize"
+                  ref="monacoEditor"
+                  style="border: 1px solid #dedede;"
+                  :style="{
+                    height: monacoEditorHeight + 'px'
+                  }"
+                  language="logql"
+                  :options="MONACO_EDITOR_OPTIONS"
+                  @editorWillMount="handelBeforeMount"
+                  @editorDidMount="handleMount"
+                  @change="expressionChange"
+                />
+              </div>
             </div>
             <div class="append-msg error" v-if="errorMsg">
               <span>{{ errorMsg }}</span>

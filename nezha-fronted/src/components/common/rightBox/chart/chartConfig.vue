@@ -90,7 +90,7 @@
                   :ref="'promql-'+(index-1)"
                   :showRemove="false"
                   :styleType="2"
-                  @change="expressionChange"
+                  @change="expressionChange(index - 1)"
                   @removeExpression="removeExpression"
                 ></promql-input>
               </el-form-item>

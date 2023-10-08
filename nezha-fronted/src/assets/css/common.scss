@@ -510,7 +510,7 @@ textarea {
 .document-copy-block {
   display: flex;
   flex-wrap: nowrap;
-  justify-content: start;
+  justify-content: flex-start;
 }
 .document-copy-text{
   margin-right: 10px;

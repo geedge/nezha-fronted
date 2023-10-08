@@ -35,7 +35,7 @@ const baseConfig = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
-      },{
+      }, {
         test: /\.less$/,
         use: [
           'vue-style-loader',
@@ -59,20 +59,13 @@ const baseConfig = {
           resolve('test'),
           resolve('node_modules/element-ui/packages/scrollbar'),
           resolve('node_modules/@interactjs'),
-          resolve('node_modules/vue-grid-layout')
+          resolve('node_modules/vue-grid-layout'),
+          resolve('node_modules/pl-table/package'),
+          resolve('node_modules/uplot'),
         ],
         exclude: '/node_modules/',
         options: {
-          presets: [
-            ['env', {
-              modules: false,
-              targets: {
-                browsers: ['> 1%', 'last 2 versions', 'not ie <= 8']
-              }
-            }],
-            'stage-2'
-          ],
-          plugins: ['transform-vue-jsx', 'transform-runtime']
+          presets: ['@babel/preset-env', '@babel/preset-react']
         }
       },
       {
@@ -153,7 +146,7 @@ if (arg === 'html' || devStart === 'dev:html') {
       resolve('src/components/common/project'),
       resolve('src/components/common/rightBox'),
       resolve('src/components/common/table'),
-      resolve('src/components/common/v-selectpagenew'),
+      resolve('src/components/common/v-selectpagenew')
       // resolve('src/components/page')
     ],
     loader: 'url-loader',
@@ -179,4 +172,7 @@ if (arg === 'html' || devStart === 'dev:html') {
     }
   })
 }
-module.exports = { ...baseConfig }
+module.exports = {
+  ...baseConfig,
+  // transpileDependencies: ['uplot']
+}

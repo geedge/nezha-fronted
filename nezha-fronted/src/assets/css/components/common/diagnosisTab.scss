@@ -20,7 +20,7 @@
             color:$--color-text-regular;
             .dialog-header-l{
                 display: flex;
-                justify-content: start;
+                justify-content: flex-start;
                 align-items: center;
                 i.nz-icon{
                     width: 70px;
@@ -106,11 +106,11 @@
                                     padding-right: 0;
                                 }
                             }
-                        } 
+                        }
                         &:nth-last-of-type(1){
                             td{
                                 border-color: transparent;
-                            } 
+                            }
                         }
                     }
                 }

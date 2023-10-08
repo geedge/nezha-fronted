@@ -316,7 +316,7 @@ export default {
       }
       this.change()
     },
-    expressionChange: function () {
+    expressionChange: function (index) {
       if (this.expressions.length) {
         this.chartConfig.elements = []
         this.expressions.forEach((expr, i) => {
@@ -336,6 +336,7 @@ export default {
       } else {
         this.chartConfig.elements = []
       }
+      this.$refs.chartForm.validate('elements.' + (index) + '.expression')
       this.change()
     },
     switchExpression (index, flag) {
