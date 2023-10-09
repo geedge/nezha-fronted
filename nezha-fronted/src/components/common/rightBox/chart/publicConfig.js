@@ -329,14 +329,15 @@ export default {
               name: this.expressionName[i],
               state: this.expressionsShow[i].state,
               orderNum: i,
-              step: this.expressionsShow[i].step
+              step: this.expressionsShow[i].step,
+              queryType: this.expressionsShow[i].queryType,
             })
           }
         })
       } else {
         this.chartConfig.elements = []
       }
-      this.$refs.chartForm.validate('elements.' + (index) + '.expression')
+      this.$refs.chartForm?.clearValidate('elements.' + (index) + '.expression')
       this.change()
     },
     switchExpression (index, flag) {
@@ -412,7 +413,8 @@ export default {
           legend: '',
           elementId: '',
           state: 1,
-          step: undefined
+          step: undefined,
+          queryType: 'range'
         })
         this.expressionChange()
       } else {
@@ -427,7 +429,8 @@ export default {
           elementId: item.id,
           legend: item.legend,
           state: item.state,
-          step: item.step
+          step: item.step,
+          queryType: item.queryType
         })
       }
     },

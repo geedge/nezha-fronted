@@ -384,7 +384,7 @@ export default {
           height: 2,
           unit: 2,
           type: 'line',
-          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }],
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined, queryType: 'range' }],
           param: {
             stack: 0,
             nullType: 'null',
@@ -427,7 +427,7 @@ export default {
             height: 2,
             unit: 2,
             type: 'line',
-            elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }],
+            elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined, queryType: 'range' }],
             param: {
               stack: 0,
               nullType: 'null',
@@ -468,7 +468,7 @@ export default {
             height: 2,
             unit: 2,
             type: 'log',
-            elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }],
+            elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined, queryType: 'range' }],
             param: {
               enable: {
                 thresholds: false,
@@ -610,6 +610,14 @@ export default {
       immediate: true,
       handler (n) {
         const obj = JSON.parse(JSON.stringify(n))
+        console.log(obj)
+        if (obj && obj.elements) {
+          obj.elements.forEach((item)=>{
+            if (!item.queryType) {
+              item.queryType = 'range'
+            }
+          })
+        }
         if (obj.param && !obj.param.valueMapping) {
           obj.param.valueMapping = []
         }

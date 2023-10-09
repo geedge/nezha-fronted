@@ -65,7 +65,7 @@ const baseConfig = {
         ],
         exclude: '/node_modules/',
         options: {
-          presets: ['@babel/preset-env', '@babel/preset-react']
+          presets: ['@babel/preset-env', '@vue/babel-preset-jsx']
         }
       },
       {

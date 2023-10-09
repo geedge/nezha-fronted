@@ -95,24 +95,44 @@
                 ></promql-input>
               </el-form-item>
               <el-row style="margin-top: 18px;display: flex">
-                <el-col class="legend-title">
-                  <span class="legend-title__span">{{$t('dashboard.dashboard.chartForm.legend')}}&nbsp;</span>
-                  <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
-                    <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div>
-                    <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div> -->
-                    <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
-                  </el-popover>
-                </el-col>
-                <el-col style="flex: 1">
-                  <el-input maxlength="512" size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
-                </el-col>
-                <el-col class="legend-title" style="margin-left: 10px">
-                  <span class="legend-title__span">{{$t('overall.step')}}&nbsp;</span>
-                </el-col>
-                <el-col style="flex: 1">
-                  <el-input-number @change="expressionChange" v-model="expressionsShow[index-1].step" size="small" :min="minStep" :precision="0" :controls="false" class="append_unit" :placeholder="$t('overall.auto')" :data-unit="$t('overall.seconds')">
-                  </el-input-number>
-                </el-col>
+                <div style="width: 310px;flex-shrink: 0">
+                  <div class="legend-title-new">
+                    <span class="legend-title__span">{{$t('dashboard.dashboard.chartForm.legend')}}&nbsp;</span>
+                    <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
+                      <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div>
+                      <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div> -->
+                      <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                    </el-popover>
+                  </div>
+                  <div>
+                    <el-input maxlength="512" size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
+                  </div>
+                </div>
+                <div style="margin-left: 10px;">
+                  <div class="legend-title-new" style="width: 55px">
+                    <span class="legend-title__span">{{$t('overall.type')}}&nbsp;</span>
+                    <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
+                      <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div>
+                      <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div> -->
+                      <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                    </el-popover>
+                  </div>
+                  <div style="flex: 1">
+                    <el-select size="small" v-model="expressionsShow[index-1].queryType">
+                      <el-option :label="'range'" :value="'range'">range</el-option>
+                      <el-option :label="'instant'" :value="'instant'">instant</el-option>
+                    </el-select>
+                  </div>
+                </div>
+                <div style="margin-left: 10px;">
+                  <div class="legend-title-new" style="margin-left: 10px;width: 55px">
+                    <span class="legend-title__span">{{$t('overall.step')}}&nbsp;</span>
+                  </div>
+                  <div style="flex: 1">
+                    <el-input-number @change="expressionChange" v-model="expressionsShow[index-1].step" size="small" :min="minStep" :precision="0" :controls="false" class="append_unit" :placeholder="$t('overall.auto')" :data-unit="$t('overall.seconds')">
+                    </el-input-number>
+                  </div>
+                </div>
               </el-row>
             </el-row>
           </transition>
