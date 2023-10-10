@@ -11,7 +11,7 @@
           <div v-if="panelData.length === 0" class="top-tool-left" style="margin-left: 10px;">
             <button id="dashboard-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" v-has="'main_add'" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("overall.addDashboard")}}</button>
           </div>
-          <template v-else>
+          <template v-if="panelData.length">
             <div class="top-tool-left" style="cursor: pointer;">
               <select-dashboard
                 ref="selectDashboard"
