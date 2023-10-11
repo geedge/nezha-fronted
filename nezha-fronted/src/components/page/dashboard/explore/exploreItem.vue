@@ -84,7 +84,7 @@
               :index="index-1"
               :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable', 'history']"
               :styleType="1"
-              type="metric"
+              type="metrics"
               @enableExpression="enableExpression"
               @addExpression="addExpression"
               @copyExpression="copyExpression"

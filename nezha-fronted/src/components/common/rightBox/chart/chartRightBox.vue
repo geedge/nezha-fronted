@@ -13,7 +13,7 @@
     </div>
 
     <!-- begin--表单-->
-    <div class="right-box-form-box right-box__container chart-right-box">
+    <div class="right-box-form-box right-box__container chart-right-box" @scroll="rightBoxScroll">
       <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px" @submit.native.prevent>
         <el-form-item :label='$t("overall.name")' prop="name">
           <div style="display:flex;align-items:center">
@@ -384,7 +384,7 @@ export default {
           height: 2,
           unit: 2,
           type: 'line',
-          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined, queryType: 'range' }],
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined, queryType: 1 }],
           param: {
             stack: 0,
             nullType: 'null',
@@ -427,7 +427,7 @@ export default {
             height: 2,
             unit: 2,
             type: 'line',
-            elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined, queryType: 'range' }],
+            elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined, queryType: 1 }],
             param: {
               stack: 0,
               nullType: 'null',
@@ -468,7 +468,7 @@ export default {
             height: 2,
             unit: 2,
             type: 'log',
-            elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined, queryType: 'range' }],
+            elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined, queryType: 1 }],
             param: {
               enable: {
                 thresholds: false,
@@ -586,6 +586,12 @@ export default {
         }, 200)
       }
       this.previewShow = show
+    },
+    rightBoxScroll: bus.debounce(function () {
+      this.hideQueryPrompt()
+    }, 300),
+    hideQueryPrompt () {
+      this.$refs['childrenFrom' + this.editChart.datasource]?.hideQueryPromptShow()
     }
   },
   created () {
@@ -611,9 +617,9 @@ export default {
       handler (n) {
         const obj = JSON.parse(JSON.stringify(n))
         if (obj && obj.elements) {
-          obj.elements.forEach((item)=>{
+          obj.elements.forEach((item) => {
             if (!item.queryType) {
-              item.queryType = 'range'
+              item.queryType = 1
             }
           })
         }

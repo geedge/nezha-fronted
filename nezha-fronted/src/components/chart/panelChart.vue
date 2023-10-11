@@ -310,7 +310,15 @@ export default {
               if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
                 return chartTempData
               }
-              let query = `${urlPre}/api/v1/query_range?start=${startTime}&end=${endTime}&step=${myStep}`
+              console.log(element.queryType)
+              let queryStr = 'query_range'
+              let query = ''
+              if (element.queryType == 1) {
+                queryStr = 'query_instant'
+                query = `${urlPre}/api/v1/${queryStr}?time=${endTime}`
+              } else {
+                query = `${urlPre}/api/v1/${queryStr}?start=${startTime}&end=${endTime}&step=${myStep}`
+              }
               if (isTimeSeries(this.chartInfo.type)) {
                 let nullType = this.chartInfo.param.nullType || 'null'
                 nullType = (nullType === 'connected' ? 'null' : nullType)

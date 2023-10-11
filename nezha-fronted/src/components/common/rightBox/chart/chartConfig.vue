@@ -123,9 +123,9 @@
                     </el-popover>
                   </div>
                   <div style="flex: 1">
-                    <el-select size="small" v-model="expressionsShow[index-1].queryType">
-                      <el-option :label="'Range'" :value="'range'">Range</el-option>
-                      <el-option :label="'Instant'" :value="'instant'">Instant</el-option>
+                    <el-select size="small" v-model="expressionsShow[index-1].queryType" @change="expressionChange">
+                      <el-option :label="'Range'" :value="1">Range</el-option>
+                      <el-option :label="'Instant'" :value="2">Instant</el-option>
                     </el-select>
                   </div>
                 </div>
@@ -135,7 +135,7 @@
                   </div>
                   <div style="flex: 1">
                     <el-input-number
-                      :disabled="expressionsShow[index-1].queryType === 'instant'"
+                      :disabled="expressionsShow[index-1].queryType == 2"
                       @change="expressionChange"
                       v-model="expressionsShow[index-1].step"
                       size="small"
@@ -1664,6 +1664,11 @@ export default {
     onEnd () {
       this.change()
       document.body.classList.remove('isDrag')
+    },
+    hideQueryPromptShow () {
+      this.expressions.forEach((item, index) => {
+        this.$refs['promql-' + (index)][0]?.hideQueryPromptShow()
+      })
     }
   },
   created () {

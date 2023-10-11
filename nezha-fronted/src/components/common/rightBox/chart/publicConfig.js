@@ -414,7 +414,7 @@ export default {
           elementId: '',
           state: 1,
           step: undefined,
-          queryType: 'range'
+          queryType: 1
         })
         this.expressionChange()
       } else {

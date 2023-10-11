@@ -1,6 +1,6 @@
 <template>
   <div class="promqlInput" :class=" errorMsg || appendMsg ? 'mb10' : ''">
-    <div class="query-row" style="position: relative">
+    <div class="query-row" ref="queryRow" style="position: relative">
       <!--explore页面的样式-->
       <template v-if="styleType == 1">
         <div
@@ -16,24 +16,6 @@
             style="padding-right: 24px;box-sizing: border-box"
           >
           </div>
-          <!-- <div id='editor'
-          class="not-fixed-height no-resize no-close"
-          >
-          </div> -->
-<!--          <el-input-->
-<!--            v-if="type == 'log'"-->
-<!--            :id="inputId"-->
-<!--            v-model="expressionList[index]"-->
-<!--            size="small" :rows="1"-->
-<!--            autosize-->
-<!--            class="not-fixed-height no-resize"-->
-<!--            type="textarea"-->
-<!--            show-word-limit maxlength="256"-->
-<!--            @input="metricKeyDown"-->
-<!--            @keyup.enter.native="expressionChange"-->
-<!--            ref="elInput"-->
-<!--          >-->
-<!--          </el-input>-->
           <div class="zy" style="position: relative;overflow-x: hidden;display: block;border: 1px solid #dedede;width: 100%"  v-if="type == 'log'">
             <MonacoEditor
               v-if="type == 'log'"
@@ -60,7 +42,7 @@
             <span>{{ appendMsg }}</span>
           </div>
           <i class="nz-icon nz-icon-alert-list" style="position: absolute;top: 4px; right: 6px" @click="queryPromptShowChange"/>
-          <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" class="no-style-class" @selectMetric="selectMetric"/>
+          <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" :type="type" :width="queryPromptWidth" :position="queryPromptPosition" class="no-style-class" @selectMetric="selectMetric"/>
         </div>
 
         <div class="top-tool-btn-group">
@@ -136,23 +118,6 @@
               style="padding-right: 24px;box-sizing: border-box"
             >
             </div>
-            <!-- <div id="editor"
-            class="not-fixed-height no-resize no-close"
-                ref="elInput"
-
-            ></div> -->
-<!--               <el-input-->
-<!--                v-model="expressionList[index]"-->
-<!--                v-if="type === 'log'"-->
-<!--                @input="metricKeyDown"-->
-<!--                autosize-->
-<!--                type="textarea"-->
-<!--                :maxlength="styleType === 3 ? 512 : 4096"-->
-<!--                show-word-limit-->
-<!--                size="small" :rows="1"-->
-<!--                class="not-fixed-height no-resize"-->
-<!--                ref="elInput"-->
-<!--              ></el-input>-->
               <div class="zy" style="position: relative;overflow-x: hidden;display: block;border: 1px solid #dedede;width: 100%"  v-if="type == 'log'">
                 <MonacoEditor
                   v-if="type == 'log'"
@@ -180,7 +145,7 @@
             </div>
           </el-col>
           <i class="nz-icon nz-icon-alert-list" style="position: absolute;top: -5px; right: 15px" @click="queryPromptShowChange"/>
-          <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" class="no-style-class" @selectMetric="selectMetric"/>
+          <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" :type="type" :width="queryPromptWidth" :position="queryPromptPosition" class="no-style-class" @selectMetric="selectMetric"/>
         </el-row>
       </template>
     </div>
@@ -350,9 +315,9 @@ import {
 } from '@codemirror/autocomplete'
 import exploreHistory from '@/components/page/dashboard/explore/histoyrComponent/exploreHistory'
 import MonacoEditor from '@/components/page/dashboard/explore/MonacoVue/vue-monaco'
-import queryPrompt from "@/components/page/dashboard/explore/queryPrompt/queryPrompt";
+import queryPrompt from '@/components/page/dashboard/explore/queryPrompt/queryPrompt'
 import logqlMixin from '@/components/page/dashboard/explore/logql/logqlMixin'
-import bus from "@/libs/bus";
+import bus from '@/libs/bus'
 export default {
   name: 'promqlInput',
   mixins: [logqlMixin],
@@ -431,9 +396,10 @@ export default {
       firstInit: true,
       historyshow: false,
       queryPromptShow: false,
+      queryPromptWidth: 0,
       queryPromptPosition: {
-        top:0,
-        left:0,
+        top: 0,
+        left: 0
       }
     }
   },
@@ -477,6 +443,9 @@ export default {
         return { emitPath: false }
       }
     }
+    // width () {
+    //   return
+    // }
   },
   mounted () {
     if (!this.fromFatherData && this.type !== 'log') {
@@ -1111,10 +1080,24 @@ export default {
       this.queryPromptShow = false
     },
     setPosition () {
-      this.queryPromptPosition = {
-        top: 0,
-        left: 0
+      this.queryPromptWidth = this.$refs.queryRow.offsetWidth
+      const position = this.$refs.queryRow.getBoundingClientRect() // 定位元素位置
+      const windowWidth = window.innerWidth// 窗口宽度
+      const windowHeight = window.innerHeight// 窗口高度
+      const boxHeight = 400
+      const parentHeight = 40
+      let top = 0
+      const left = position.left
+      if (position.top + parentHeight + boxHeight > windowHeight - 100) {
+        top = position.top - boxHeight - 10
+      } else {
+        top = position.top + parentHeight
       }
+      this.queryPromptPosition = {
+        top: top,
+        left: left
+      }
+      console.log(position, this.queryPromptWidth)
     },
     selectMetric (item) {
       if (!item.id) {

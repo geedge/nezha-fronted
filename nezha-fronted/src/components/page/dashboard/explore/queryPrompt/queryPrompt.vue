@@ -1,9 +1,18 @@
 <template>
-  <div class="explore-history-box query-prompt-box"   v-clickoutside="hideMe" v-my-loading="firstLoading">
+  <div
+    class="explore-history-box query-prompt-box"
+    v-clickoutside="hideMe"
+    v-my-loading="firstLoading"
+    :style="{
+      width: width + 'px',
+      top: position.top + 'px',
+      left: position.left + 'px'
+    }"
+  >
     <div class="explore-history-box-header">
-      <span class="header-text">{{ type === 'metric' ? $t('overall.metric') : $t('dashboard.dashboard.chartForm.typeVal.log.label')}}</span>
+      <span class="header-text">{{ type !== 'log' ? $t('overall.metric') : 'Label browser'}}</span>
       <el-input
-        v-if="type === 'metric'"
+        v-if="type !== 'log'"
         class="header-search"
         size="mini"
         v-model="searchStr"
@@ -12,7 +21,7 @@
         suffix-icon="nz-icon nz-icon-search"
       />
     </div>
-    <div v-if="type === 'metric'" class="query-prompt-metric">
+    <div v-if="type !== 'log'" class="query-prompt-metric">
       <div class="explore-history-box-content-header">
         <div class="query-prompt-name text-ellipsis query-prompt-content-text">Name</div>
         <div class="query-prompt-type text-ellipsis query-prompt-content-text">Type</div>
@@ -52,6 +61,9 @@
         <div class="table-no-data__title">{{$t('overall.noDataAvailable')}}</div>
       </div>
     </div>
+    <div v-if="type === 'log'"  class="query-prompt-log">
+
+    </div>
   </div>
 </template>
 
@@ -65,6 +77,19 @@ export default {
     type: {
       type: String,
       default: 'metric'
+    },
+    width: {
+      type: Number,
+      default: 626
+    },
+    position: {
+      type: Object,
+      default () {
+        return {
+          top: 0,
+          left: 0
+        }
+      }
     }
   },
   data () {
@@ -89,7 +114,7 @@ export default {
   },
   methods: {
     init () {
-      if (this.type === 'metric') {
+      if (this.type === 'metric' || this.type === 'metrics') {
         this.metricInit()
       }
       if (this.type === 'log') {

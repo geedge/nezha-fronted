@@ -273,7 +273,7 @@ export default {
             sort: 'none'
           },
         },
-        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0, step: undefined, queryType: 'range' }],
+        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0, step: undefined, queryType: 1 }],
         panel: '',
         sync: 0,
         remark: '',
