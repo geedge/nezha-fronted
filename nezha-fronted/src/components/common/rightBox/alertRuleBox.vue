@@ -915,7 +915,6 @@ export default {
       this.$refs.alertRuleForm.validate((blooen, object) => {
         Object.keys(object).forEach(item => {
           const keyArr = item.split('.')
-          console.log(keyArr)
           if (keyArr.length >= 4) {
             this.editAlertRule[keyArr[0]][keyArr[1]][keyArr[2]].error = true
           }

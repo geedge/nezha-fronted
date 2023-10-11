@@ -503,16 +503,11 @@ function getErrorNode (tree, text, cursorPos) {
   // to account for this situation, we "move" the cursor position back,
   // so that there are no spaces between the end-of-expression and the cursor
   const trimRightTextLen = text.trimEnd().length
-  console.log(trimRightTextLen)
   const pos = trimRightTextLen < cursorPos ? trimRightTextLen : cursorPos
-  console.log(pos)
   const cur = tree.cursorAt(pos)
-  console.log(cur)
   do {
     if (cur.from === pos && cur.to === pos) {
       const { node } = cur
-      console.log(node)
-      console.log(node.type.isError)
       if (node.type.isError) {
         return node
       }
@@ -532,15 +527,13 @@ export function getSituation (text, pos) {
   }
 
   const tree = parser.parse(text)
-  console.log(tree)
   // if the tree contains error, it is very probable that
   // our node is one of those error nodes.
   // also, if there are errors, the node lezer finds us,
   // might not be the best node.
   // so first we check if there is an error node at the cursor position
   const maybeErrorNode = getErrorNode(tree, text, pos)
-  console.log(maybeErrorNode)
-  const cur =  maybeErrorNode.cursor().cursorAt(pos)
+  const cur = maybeErrorNode.cursor().cursorAt(pos)
 
   const currentNode = cur.node
 

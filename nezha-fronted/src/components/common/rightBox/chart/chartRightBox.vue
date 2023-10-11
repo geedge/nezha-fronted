@@ -610,7 +610,6 @@ export default {
       immediate: true,
       handler (n) {
         const obj = JSON.parse(JSON.stringify(n))
-        console.log(obj)
         if (obj && obj.elements) {
           obj.elements.forEach((item)=>{
             if (!item.queryType) {

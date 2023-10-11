@@ -35,13 +35,16 @@
           :key="expressionsShow[index-1].id"
         >
           <div class="chart-title chart-title-config">
-            <span class="chart-title-content el-form-item" :class="{
-              'is-error' : expressionsShow[index-1].error,
-              'hide-input': expressionsShow[index-1].hideInput
-            }">
+            <span
+              class="chart-title-content el-form-item"
+              :class="{
+                'is-error' : expressionsShow[index-1].error,
+                'hide-input': expressionsShow[index-1].hideInput
+              }"
+            >
               <i class="nz-icon nz-icon-arrow-down" :class="expressionsShow[index-1].show?'':'is-active'" @click.stop="showExpression(index)"></i>
               <el-input
-                style="width: 120px"
+                style="width: 90px"
                 @mousedown.stop
                 v-model="expressionName[index-1]"
                 size="small"
@@ -50,7 +53,10 @@
                 @focus.stop="showInput(index-1,false)"
                 @blur="showInput(index-1,true)"
               />
-              <div v-if="expressionsShow[index-1].error"  class="el-form-item__error" style="top: 10px;left: 164px"> {{expressionsShow[index-1].error}}</div>
+              <div v-if="expressionsShow[index-1].error" class="el-form-item__error" style="top: 30px;left: 25px">{{expressionsShow[index-1].error}}</div>
+              <div class="text-ellipsis" style="flex-shrink: 0;width: calc(100% - 310px)" v-if="!expressionsShow[index-1].show" :title="expressions[index - 1]">
+                {{expressions[index - 1]}}
+              </div>
             </span>
             <span>
               <!-- 显示隐藏 -->
@@ -79,7 +85,6 @@
               <el-form-item :prop="'elements.' + (index -1) + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}">
                 <promql-input
                   :from-father-data="true"
-                  :metricOptionsParent="metricOptions"
                   :expression-list="expressions"
                   :id="'promqlKeys' + [index-1]"
                   :index="index-1"
@@ -108,7 +113,7 @@
                     <el-input maxlength="512" size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
                   </div>
                 </div>
-                <div style="margin-left: 10px;">
+                <div style="margin-left: 10px;" v-if="'metrics' === promqlType">
                   <div class="legend-title-new" style="width: 55px">
                     <span class="legend-title__span">{{$t('overall.type')}}&nbsp;</span>
                     <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
@@ -119,8 +124,8 @@
                   </div>
                   <div style="flex: 1">
                     <el-select size="small" v-model="expressionsShow[index-1].queryType">
-                      <el-option :label="'range'" :value="'range'">range</el-option>
-                      <el-option :label="'instant'" :value="'instant'">instant</el-option>
+                      <el-option :label="'Range'" :value="'range'">Range</el-option>
+                      <el-option :label="'Instant'" :value="'instant'">Instant</el-option>
                     </el-select>
                   </div>
                 </div>
@@ -129,7 +134,17 @@
                     <span class="legend-title__span">{{$t('overall.step')}}&nbsp;</span>
                   </div>
                   <div style="flex: 1">
-                    <el-input-number @change="expressionChange" v-model="expressionsShow[index-1].step" size="small" :min="minStep" :precision="0" :controls="false" class="append_unit" :placeholder="$t('overall.auto')" :data-unit="$t('overall.seconds')">
+                    <el-input-number
+                      :disabled="expressionsShow[index-1].queryType === 'instant'"
+                      @change="expressionChange"
+                      v-model="expressionsShow[index-1].step"
+                      size="small"
+                      :min="minStep"
+                      :precision="0"
+                      :controls="false"
+                      class="append_unit"
+                      :placeholder="$t('overall.auto')"
+                      :data-unit="$t('overall.seconds')">
                     </el-input-number>
                   </div>
                 </div>
@@ -1303,7 +1318,7 @@
 <script>
 import promqlInput from '@/components/page/dashboard/explore/promqlInput'
 import nezhaColor from '@/components/common/nezhaColor'
-import promqlInputMixin from '@/components/common/mixin/promqlInput'
+// import promqlInputMixin from '@/components/common/mixin/promqlInput'
 import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import VueTagsInput from '@johmun/vue-tags-input'
@@ -1334,7 +1349,7 @@ export default {
       }
     }
   },
-  mixins: [promqlInputMixin, publicConfig, chartTypeShow],
+  mixins: [publicConfig, chartTypeShow],
   computed: {
     minStep () {
       return this.nzDefaultConfig.minStep

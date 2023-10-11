@@ -1096,9 +1096,7 @@ export default {
     // 时间选择器设置默认时间范围
     setDefaultTimeRange () {
       this.$nextTick(() => {
-        console.log(this.$route.query.searchTime)
         if (this.$route.query.searchTime) return
-        console.log(213123213)
         let nowTimeType = this.$lodash.cloneDeep(this.timeData[3])
         const defaultTimeRange = this.$lodash.get(this.showPanel, 'param.defaultTimeRange')
         if (defaultTimeRange) {

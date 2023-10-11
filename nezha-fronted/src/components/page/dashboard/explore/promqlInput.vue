@@ -1,76 +1,8 @@
 <template>
   <div class="promqlInput" :class=" errorMsg || appendMsg ? 'mb10' : ''">
-    <div class="query-row">
+    <div class="query-row" style="position: relative">
       <!--explore页面的样式-->
       <template v-if="styleType == 1">
-        <div v-if="plugins.indexOf('metric-selector') > -1">
-          <el-dropdown class="metric-selector">
-            <el-dropdown-menu style="display: none"></el-dropdown-menu>
-            <button
-              class="top-tool-btn top-tool-btn--text"
-              type="button"
-              @click="toggleDropdown"
-            >
-              {{
-                type === "log" ? $t("overall.logLabels") : $t("overall.metric")
-              }}
-              <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px"></i>
-            </button>
-            <el-cascader-panel
-              v-show="dropDownVisible"
-              ref="metricSelector"
-              slot="dropdown"
-              v-model="cascaderValue"
-              v-clickoutside="closeDropdown"
-              v-my-loading="tempBoxShowLoading"
-              :options="metricOptions"
-              v-if="type !== 'log'"
-              :props="cascaderProps"
-              @change="metricChangeNew"
-              style="margin-top: 5px"
-            >
-              <template slot-scope="{ node, data }">
-                <div
-                  :class="[
-                    'nz-cascade',
-                    data.temp && !data.child ? 'nz-cascade-temp' : '',
-                    data.more ? 'cascader-panel-more' : '',
-                  ]"
-                  @click="
-                    () => {
-                      lazyLoad(node, data);
-                    }
-                  "
-                  :title="data.label"
-                >
-                  <i class="nz-icon nz-icon-template2"></i>
-                  {{ data.label }}
-                  <i v-if="data.more" class="nz-icon nz-icon-arrow-down"></i>
-                </div>
-              </template>
-            </el-cascader-panel>
-            <el-cascader-panel
-              v-else
-              v-show="dropDownVisible"
-              ref="metricSelector"
-              slot="dropdown"
-              v-model="cascaderValue"
-              v-clickoutside="closeDropdown"
-              v-my-loading="tempBoxShowLoading"
-              :loading="loading"
-              :props="cascaderProps"
-              @change="logLabelChange"
-              style="margin-top: 5px"
-            >
-              <template slot-scope="{ node, data }">
-                <div :title="data.label" class="nz-cascade">
-                  {{ data.label }}
-                </div>
-              </template>
-            </el-cascader-panel>
-          </el-dropdown>
-        </div>
-
         <div
           v-if="plugins.indexOf('metric-input') > -1"
           class="input-box"
@@ -81,6 +13,7 @@
             :id="pqid + 'editor'+index"
             v-if="type !== 'log'"
             class="not-fixed-height no-resize no-close"
+            style="padding-right: 24px;box-sizing: border-box"
           >
           </div>
           <!-- <div id='editor'
@@ -101,14 +34,14 @@
 <!--            ref="elInput"-->
 <!--          >-->
 <!--          </el-input>-->
-          <div>
+          <div class="zy" style="position: relative;overflow-x: hidden;display: block;border: 1px solid #dedede;width: 100%"  v-if="type == 'log'">
             <MonacoEditor
               v-if="type == 'log'"
               v-model="expressionList[index]"
               theme="nz"
               class="not-fixed-height no-resize"
               ref="monacoEditor"
-              style="border: 1px solid #dedede;"
+              style="width: calc(100% - 24px)"
               :style="{
                 height: monacoEditorHeight + 'px'
               }"
@@ -126,6 +59,8 @@
           <div v-if="appendMsg" class="append-msg error" style="position: absolute">
             <span>{{ appendMsg }}</span>
           </div>
+          <i class="nz-icon nz-icon-alert-list" style="position: absolute;top: 4px; right: 6px" @click="queryPromptShowChange"/>
+          <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" class="no-style-class" @selectMetric="selectMetric"/>
         </div>
 
         <div class="top-tool-btn-group">
@@ -183,93 +118,8 @@
           style="width: 100%"
         >
           <el-col
-            :class="[
-              plugins.indexOf('metric-selector') > -1
-                ? 'metric-selector-title'
-                : 'metric-null-title',
-            ]"
-          >
-            <el-dropdown
-              class="metric-selector"
-              style="width: 100%"
-              v-if="plugins.indexOf('metric-selector') > -1"
-            >
-              <el-dropdown-menu style="display: none"></el-dropdown-menu>
-              <span
-                :class="{ 'expr-title': projectRightBox }"
-                style="cursor: pointer;width: 100%;display: inline-block"
-                @click="toggleDropdown"
-                >{{
-                  type === "log"
-                    ? $t("overall.logLabels")
-                    : $t("overall.metric")
-                }}<i
-                  class="nz-icon nz-icon-arrow-down"
-                  style="
-                    font-size: 14px;
-                    -webkit-transform: scale(0.75);
-                    display: inline-block;
-                  "
-                ></i
-              ></span>
-              <el-cascader-panel
-                v-my-loading="tempBoxShowLoading"
-                v-show="dropDownVisible"
-                v-clickoutside="closeDropdown"
-                v-model="cascaderValue"
-                style="text-align: left; margin-top: 5px"
-                slot="dropdown"
-                ref="metricSelector"
-                v-if="type !== 'log'"
-                :props="{ emitPath: false }"
-                :options="metricOptions"
-                @change="metricChangeNew"
-              >
-                <template slot-scope="{ node, data }">
-                  <div
-                    :class="[
-                      'nz-cascade',
-                      data.temp && !data.child ? 'nz-cascade-temp' : '',
-                      data.more ? 'cascader-panel-more' : '',
-                    ]"
-                    @click="
-                      () => {
-                        lazyLoad(node, data);
-                      }
-                    "
-                    :title="data.label"
-                  >
-                    <i class="nz-icon nz-icon-template2"></i>
-                    {{ data.label }}
-                    <i v-if="data.more" class="nz-icon nz-icon-arrow-down"></i>
-                  </div>
-                </template>
-              </el-cascader-panel>
-              <el-cascader-panel
-                v-else
-                v-show="dropDownVisible"
-                ref="metricSelector"
-                slot="dropdown"
-                v-model="cascaderValue"
-                v-clickoutside="closeDropdown"
-                v-my-loading="tempBoxShowLoading"
-                :loading="loading"
-                :props="cascaderProps"
-                @change="logLabelChange"
-              >
-                <template slot-scope="{ node, data }">
-                  <div :title="data.label" class="nz-cascade">
-                    {{ data.label }}
-                  </div>
-                </template>
-              </el-cascader-panel>
-            </el-dropdown>
-          </el-col>
-          <el-col
             :class="
-              plugins.indexOf('metric-selector') > -1
-                ? 'metric-selector-input-box'
-                : 'metric-null-input-box'
+              'metric-null-input-box'
             "
             :style="{ height: '100%' }"
           >
@@ -283,6 +133,7 @@
               :id="pqid + 'editor'+index"
               v-if="type !== 'log'"
               class="not-fixed-height no-resize no-close"
+              style="padding-right: 24px;box-sizing: border-box"
             >
             </div>
             <!-- <div id="editor"
@@ -302,14 +153,14 @@
 <!--                class="not-fixed-height no-resize"-->
 <!--                ref="elInput"-->
 <!--              ></el-input>-->
-              <div>
+              <div class="zy" style="position: relative;overflow-x: hidden;display: block;border: 1px solid #dedede;width: 100%"  v-if="type == 'log'">
                 <MonacoEditor
                   v-if="type == 'log'"
                   v-model="expressionList[index]"
                   theme="nz"
                   class="not-fixed-height no-resize"
                   ref="monacoEditor"
-                  style="border: 1px solid #dedede;"
+                  style="width: calc(100% - 24px)"
                   :style="{
                     height: monacoEditorHeight + 'px'
                   }"
@@ -328,6 +179,8 @@
               <span>{{ appendMsg }}</span>
             </div>
           </el-col>
+          <i class="nz-icon nz-icon-alert-list" style="position: absolute;top: -5px; right: 15px" @click="queryPromptShowChange"/>
+          <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" class="no-style-class" @selectMetric="selectMetric"/>
         </el-row>
       </template>
     </div>
@@ -496,15 +349,18 @@ import {
   closeBracketsKeymap
 } from '@codemirror/autocomplete'
 import exploreHistory from '@/components/page/dashboard/explore/histoyrComponent/exploreHistory'
-import MonacoEditor from 'vue-monaco'
+import MonacoEditor from '@/components/page/dashboard/explore/MonacoVue/vue-monaco'
+import queryPrompt from "@/components/page/dashboard/explore/queryPrompt/queryPrompt";
 import logqlMixin from '@/components/page/dashboard/explore/logql/logqlMixin'
+import bus from "@/libs/bus";
 export default {
   name: 'promqlInput',
   mixins: [logqlMixin],
   components: {
     selectAlertSilence,
     exploreHistory,
-    MonacoEditor
+    MonacoEditor,
+    queryPrompt
   },
   props: {
     index: { type: Number },
@@ -548,6 +404,7 @@ export default {
   data () {
     return {
       oldcCodeLength: '',
+      showPrompt: false,
       newView: null,
       codeMirrorValue: [],
       dropDownVisible: false,
@@ -572,7 +429,12 @@ export default {
       tempBoxId: {},
       loading: false,
       firstInit: true,
-      historyshow: false
+      historyshow: false,
+      queryPromptShow: false,
+      queryPromptPosition: {
+        top:0,
+        left:0,
+      }
     }
   },
   computed: {
@@ -755,7 +617,7 @@ export default {
         self.newView.dispatch(
           self.newView.state.update({
             effects: dynamicConfigCompartment.reconfigure(dynamicConfig),
-            changes: { from, to, insert: self.codeMirrorValue[self.index] }
+            changes: { from: 0, to, insert: self.codeMirrorValue[self.index] }
           })
         )
       }
@@ -1238,6 +1100,51 @@ export default {
     },
     showHistoryBox (flag) {
       this.historyshow = flag
+    },
+    queryPromptShowChange: bus.debounce(function (val) {
+      if (!this.queryPromptShow) {
+        this.setPosition()
+      }
+      this.queryPromptShow = !this.queryPromptShow
+    }, 100),
+    hideQueryPromptShow () {
+      this.queryPromptShow = false
+    },
+    setPosition () {
+      this.queryPromptPosition = {
+        top: 0,
+        left: 0
+      }
+    },
+    selectMetric (item) {
+      if (!item.id) {
+        this.metricChangeNew(item.name)
+      } else if (item.id) {
+        this.dropDownVisible = false
+        this.$get('/expression/tmpl/' + item.id).then(res => {
+          if (res.code === 200) {
+            if (!res.data.vars || !res.data.vars.length) {
+              this.metricChange(item.expression)
+              this.initCodeMirror()
+              return
+            }
+            res.data.vars.forEach(item => {
+              res.data[item] = ''
+              const arr = item.split('.')
+              const keyword = arr[0].toLowerCase()
+              this.getAllOptins(keyword, keyword + 'Option')
+            })
+            this.tempBox = {
+              ...this.tempBox,
+              ...res.data
+            }
+
+            setTimeout(() => {
+              this.tempBoxShow = true
+            }, 100)
+          }
+        })
+      }
     }
   },
   watch: {
