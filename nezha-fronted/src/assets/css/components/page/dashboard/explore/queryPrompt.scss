@@ -23,4 +23,31 @@
     box-sizing: border-box;
     padding: 10px 0 10px 10px
   }
+  .query-prompt-log {
+    padding: 20px 0 20px 20px;
+    .query-prompt-log-content {
+      height: 210px;
+      border: 1px solid $--border-color-light;
+      border-radius: 2px;
+      display: flex;
+      .query-prompt-log-content-left {
+        border-right: 1px solid $--border-color-light;
+        width: 34%;
+        max-width: 300px;
+        box-sizing: border-box;
+        height: 100%;
+        overflow-y: auto;
+        .log-content-left-label {
+          height: 32px;
+          line-height: 32px;
+          text-transform: capitalize;
+        }
+      }
+      .query-prompt-log-content-right {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+    }
+  }
 }

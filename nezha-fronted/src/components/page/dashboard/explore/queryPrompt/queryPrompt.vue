@@ -61,14 +61,31 @@
         <div class="table-no-data__title">{{$t('overall.noDataAvailable')}}</div>
       </div>
     </div>
-    <div v-if="type === 'log'"  class="query-prompt-log">
+    <div v-if="type === 'log'"  class="query-prompt-log" v-my-loading="logLoading">
+      <div>1.Select label names and values</div>
+      <div class="query-prompt-log-content" style="">
+        <div class="query-prompt-log-content-left">
+          <div v-for="item in logLabels" :key="item" class="log-content-left-label">
+            {{item}}
+          </div>
+        </div>
+        <div class="query-prompt-log-content-right">
+          <div v-for="item in logValues">
 
+          </div>
+        </div>
+      </div>
+      <div>2.Resulting selector</div>
+      <div class="query-prompt-log-final">
+        {{logFinalStr}}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import bus from '@/libs/bus'
+import { get } from '@/http'
 
 export default {
   name: 'queryPrompt',
@@ -106,7 +123,13 @@ export default {
         pageNo: 1,
         pageSize: 20,
         total: 0
-      }
+      },
+      logFinalStr: {},
+      logLabels: [],
+      logLabelsShow: '',
+      logValues: [],
+      selectLogLabels: {},
+      logLoading: false
     }
   },
   mounted () {
@@ -189,7 +212,34 @@ export default {
       return arr
     },
     logInit () {
-
+      this.logLoading = true
+      this.$get('/logs/loki/api/v1/labels').then(res => {
+        if (res.code === 200) {
+          this.logLabels = res.data
+          this.logLabelsShow = this.logLabels[0]
+          this.getLogLabelsValues(this.logLabels[0])
+        } else {
+          this.$message.error(res.msg || res.error)
+        }
+      })
+    },
+    getLogLabelsValues (labels) {
+      this.logLoading = true
+      this.logValues = []
+      this.$get(`/logs/loki/api/v1/label/${labels}/values`).then(res => {
+        this.logLoading = false
+        if (res.data) {
+          const nodes = res.data.sort().map(d => ({
+            value: d,
+            label: d,
+            leaf: true
+          }))
+          this.logValues = nodes
+        } else {
+          this.logValues = []
+        }
+        console.log(this.logValues)
+      })
     },
     hideMe () {
       this.$emit('close')

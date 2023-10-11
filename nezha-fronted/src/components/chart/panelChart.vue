@@ -310,10 +310,9 @@ export default {
               if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
                 return chartTempData
               }
-              console.log(element.queryType)
               let queryStr = 'query_range'
               let query = ''
-              if (element.queryType == 1) {
+              if (element.queryType == 2) {
                 queryStr = 'query_instant'
                 query = `${urlPre}/api/v1/${queryStr}?time=${endTime}`
               } else {
