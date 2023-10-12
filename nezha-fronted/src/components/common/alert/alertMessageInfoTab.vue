@@ -148,7 +148,7 @@ export default {
             key: 'detail',
             label: this.$t('overall.detail')
           }]
-          if (n.assetId) {
+          if (n.assetId && n.assetId !== -1) {
             this.cardNames.push(
               {
                 key: 'asset',
