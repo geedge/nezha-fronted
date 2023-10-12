@@ -8,8 +8,8 @@
       </div>
       <div class="main-container">
         <div class="top-tools panel-top-tools" :class="showTopLine? 'panel-top-tools-bottom' : ''">
-          <div v-if="panelData.length === 0" class="top-tool-left" style="margin-left: 10px;">
-            <button v-if="panelData.length === 0" id="dashboard-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" v-has="'main_add'" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("overall.addDashboard")}}</button>
+          <div v-show="panelData.length === 0" class="top-tool-left" >
+            <button style="margin-left: 10px;" v-if="panelData.length === 0" id="dashboard-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" v-has="'main_add'" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("overall.addDashboard")}}</button>
           </div>
           <div  v-if="panelData.length" class="top-tool-left" style="cursor: pointer;">
             <select-dashboard
