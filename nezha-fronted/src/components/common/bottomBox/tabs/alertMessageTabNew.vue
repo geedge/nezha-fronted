@@ -183,6 +183,7 @@ export default {
   },
   data () {
     return {
+      orderBy: 'id',
       stateOptions: alertMessageConstant.states,
       url: 'alert/message',
       urlNew: 'alert/message/query',
