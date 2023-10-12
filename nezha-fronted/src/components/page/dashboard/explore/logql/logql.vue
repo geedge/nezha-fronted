@@ -209,7 +209,6 @@ export default {
       const self = this
       const word = model.getWordAtPosition(position)
       const INSERT_AS_SNIPPET_ENUM_VALUE = 4
-      console.log(monaco.Range.fromPositions(position))
       const range = monaco.Range.fromPositions(position)
       // documentation says `position` will be "adjusted" in `getOffsetAt`
       // i don't know what that means, to be sure i clone it
@@ -218,9 +217,7 @@ export default {
         lineNumber: position.lineNumber
       }
       const offset = model.getOffsetAt(positionClone)
-      console.log(offset)
       const situation = getSituation(model.getValue(), offset)
-      console.log(situation)
       const completionsPromise = situation != null ? Promise.resolve([]) : Promise.resolve([])
       return completionsPromise.then((items) => {
         // monaco by default alphabetically orders the items.
@@ -376,7 +373,6 @@ export default {
       }
     },
     lookupFormatVariable (name, match, scopedVars, sceneObject) {
-      console.log(name, match, scopedVars, sceneObject)
       return null
     }
   }

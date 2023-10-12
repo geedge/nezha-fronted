@@ -448,7 +448,6 @@
           },
 
           debug: (value) => {
-            console.log(value)
           }
         }
       }

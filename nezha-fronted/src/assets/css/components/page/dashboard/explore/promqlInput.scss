@@ -35,6 +35,12 @@
 
       }
     }
+    .nz-icon-alert-list {
+      cursor: pointer;
+    }
+    .nz-icon-alert-list:hover{
+      color: $--color-primary;
+    }
   }
 
   .input-box .append-msg {
@@ -180,8 +186,11 @@
   .lines-content {
     //height: auto !important;
     //width: 100% !important;
-    //position: unset !important;
-    top: 5px !important;
+    //position: relative !important;
+    ////top: 5px !important;
+    //.view-lines {
+    //  width: 100% !important;
+    //}
   }
 }
 .topo-page {
@@ -201,7 +210,7 @@
     }
     .input-box-log {
       flex: unset;
-      width: calc(100% - 292px);
+      width: calc(100% - 190px);
     }
   }
 }

@@ -1010,6 +1010,7 @@ export default {
           }
         })
       }
+      searchLabel.body = encodeURIComponent(JSON.stringify(this.searchLabel.body))
       this.$set(searchLabel, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
       this.exportExcel('alert/message/export', { ...searchLabel, state: this.state })
       this.closeDialog()
@@ -1032,6 +1033,7 @@ export default {
           }
         })
       }
+      temp.body = encodeURIComponent(JSON.stringify(this.searchLabel.body))
       this.$set(temp, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
       this.exportExcel('alert/message/export', { ...temp, state: this.state })
       this.closeDialog()
@@ -1175,6 +1177,7 @@ export default {
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
       params.ids = this.batchDeleteObjs.map(item => item.id).join(',')
+      params.body = encodeURIComponent(JSON.stringify(this.searchLabel.body))
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
     },

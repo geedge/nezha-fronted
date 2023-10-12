@@ -84,7 +84,7 @@
               :index="index-1"
               :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable', 'history']"
               :styleType="1"
-              type="metric"
+              type="metrics"
               @enableExpression="enableExpression"
               @addExpression="addExpression"
               @copyExpression="copyExpression"
@@ -3656,7 +3656,13 @@ export default {
     parsePromQL () {},
     onScroll: bus.debounce(function () {
       this.showTopBtn = this.scrollbarWrap.scrollTop > 50
+      this.hideQueryPrompt()
     }, 300),
+    hideQueryPrompt () {
+      this.expressions.forEach((item, index) => {
+        this.$refs['promql-' + (index)][0]?.hideQueryPromptShow()
+      })
+    },
     toTop (wrap) {
       let currentTop = wrap.scrollTop
       const interval = currentTop / 10
@@ -4426,7 +4432,6 @@ export default {
         item.queryValue = this.expressions[index]
         return item
       })
-      console.log(arr, this.lastHistory)
       this.lastHistory.forEach((item) => {
         const findItem = arr.find(history => history.id == item.id)
         if (findItem && findItem.queryValue !== item.value) {

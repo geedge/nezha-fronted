@@ -87,10 +87,10 @@ export default {
       this.total = 0
       this.getExploreHistory()
     },
-    loadNextData () {
+    loadNextData: bus.debounce(function (val) {
       this.pageObj.pageNo++
       this.getExploreHistory()
-    },
+    }, 300),
     changeSearchStr: bus.debounce(function (val) {
       this.init()
     }, 300),

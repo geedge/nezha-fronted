@@ -61,12 +61,28 @@ const baseConfig = {
           resolve('node_modules/@interactjs'),
           resolve('node_modules/vue-grid-layout'),
           resolve('node_modules/pl-table/package'),
-          resolve('node_modules/uplot'),
+          resolve('node_modules/uplot')
         ],
         exclude: '/node_modules/',
         options: {
-          presets: ['@babel/preset-env', '@babel/preset-react']
+          presets: ['@babel/preset-env', '@vue/babel-preset-jsx']
         }
+      },
+      {
+        test: /\.ts$/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env']
+            }
+          },
+          'ts-loader'
+        ],
+        include: [
+          resolve('node_modules/monaco-editor')
+        ],
+        exclude: /node_modules/
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -173,6 +189,6 @@ if (arg === 'html' || devStart === 'dev:html') {
   })
 }
 module.exports = {
-  ...baseConfig,
+  ...baseConfig
   // transpileDependencies: ['uplot']
 }

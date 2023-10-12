@@ -11,7 +11,7 @@
           <div v-if="panelData.length === 0" class="top-tool-left" style="margin-left: 10px;">
             <button id="dashboard-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" v-has="'main_add'" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("overall.addDashboard")}}</button>
           </div>
-          <template v-else>
+          <template v-if="panelData.length">
             <div class="top-tool-left" style="cursor: pointer;">
               <select-dashboard
                 ref="selectDashboard"
@@ -273,7 +273,7 @@ export default {
             sort: 'none'
           },
         },
-        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0, step: undefined }],
+        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0, step: undefined, queryType: 1 }],
         panel: '',
         sync: 0,
         remark: '',
@@ -1096,9 +1096,7 @@ export default {
     // 时间选择器设置默认时间范围
     setDefaultTimeRange () {
       this.$nextTick(() => {
-        console.log(this.$route.query.searchTime)
         if (this.$route.query.searchTime) return
-        console.log(213123213)
         let nowTimeType = this.$lodash.cloneDeep(this.timeData[3])
         const defaultTimeRange = this.$lodash.get(this.showPanel, 'param.defaultTimeRange')
         if (defaultTimeRange) {

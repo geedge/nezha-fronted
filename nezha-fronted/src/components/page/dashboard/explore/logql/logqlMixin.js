@@ -26,16 +26,18 @@ export default {
         padding: {
           // these numbers were picked so that visually this matches the previous version
           // of the query-editor the best
-          top: 10,
+          top: 5,
           bottom: 5
         },
+        wrappingStrategy: 'advanced',
         renderLineHighlight: 'none',
         scrollbar: {
-          // vertical: 'hidden',
-          verticalScrollbarSize: 8, // used as "padding-right"
+          vertical: 'hidden',
+          verticalScrollbarSize: 0, // used as "padding-right"
           horizontal: 'hidden',
           horizontalScrollbarSize: 0
         },
+        scrollBeyondLastColumn: 0,
         scrollBeyondLastLine: false,
         suggest: {
           showWords: true,
@@ -81,6 +83,7 @@ export default {
         },
         suggestFontSize: 12,
         wordWrap: 'on',
+        wordWrapColumn: 1,
         placeHolderScopedVars: {
           __interval: { text: '1s', value: '1s' },
           __auto: { text: '1s', value: '1s' },
@@ -113,6 +116,7 @@ export default {
         if (this.monacoEditorHeight !== el[0].offsetHeight) {
           this.monacoEditorHeight = el[0].offsetHeight
         }
+        editor?.layout()
       }, 100)
     },
     handelBeforeMount (monaco) {
@@ -120,7 +124,6 @@ export default {
       const self = this
       if (!window.LANGUAGE_SETUP_STARTED) {
         window.LANGUAGE_SETUP_STARTED = true
-        // console.log(monaco)
         monaco.languages.register({ id: LANG_ID })
         monaco.languages.setLanguageConfiguration(LANG_ID, languageConfiguration)
         monaco.languages.setMonarchTokensProvider(LANG_ID, monarchlanguage)
@@ -142,7 +145,6 @@ export default {
           provideCompletionItems: (model, position) => {
             const suggestions = [
               ...monarchlanguage.keywords.map(k => {
-                // console.log(k)
                 return {
                   label: k,
                   kind: monaco.languages.CompletionItemKind.Keyword,
@@ -156,9 +158,7 @@ export default {
       }
     },
     nzSuggest (model, position) {
-      // console.log(model, position)
       const suggestions = []
-      // console.log(parser.parse(this.code))
       return suggestions
     },
     suggest (model, position) {
@@ -166,7 +166,6 @@ export default {
       const self = this
       const word = model.getWordAtPosition(position)
       const INSERT_AS_SNIPPET_ENUM_VALUE = 4
-      console.log(monaco.Range.fromPositions(position))
       const range = monaco.Range.fromPositions(position)
       // documentation says `position` will be "adjusted" in `getOffsetAt`
       // i don't know what that means, to be sure i clone it
@@ -175,9 +174,7 @@ export default {
         lineNumber: position.lineNumber
       }
       const offset = model.getOffsetAt(positionClone)
-      console.log(offset)
       const situation = getSituation(model.getValue(), offset)
-      console.log(situation)
       const completionsPromise = situation != null ? Promise.resolve([]) : Promise.resolve([])
       return completionsPromise.then((items) => {
         // monaco by default alphabetically orders the items.
@@ -333,7 +330,6 @@ export default {
       }
     },
     lookupFormatVariable (name, match, scopedVars, sceneObject) {
-      console.log(name, match, scopedVars, sceneObject)
       return null
     }
   },
