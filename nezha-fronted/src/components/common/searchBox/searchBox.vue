@@ -94,6 +94,7 @@
            load: valueListLoad,
            hasMore: (valueShow && valueList.length)&&(valueListInfo.total > valueList.length),
         }"
+        @mousedown="mousedownSearchBox"
       >
         <div class="search-key" v-if="keyShow && searchList.length" v-my-loading="keywordLoad">
           <div v-for="(item, index) in searchList" @click="selectKey(item)" @mouseenter="selectIndex = index" :key="index" class="search-item" :ref="'search-item' + index" :class="{'search-item-select': index === selectIndex}">
@@ -128,7 +129,7 @@
           {{$t('overall.noDataAvailable')}}
         </div>
       </div>
-      <div class="search-item-title">{{$t('searchBox.enterNext')}}</div>
+      <div class="search-item-title"  @mousedown="mousedownSearchBox">{{$t('searchBox.enterNext')}}</div>
     </el-popover>
     <span class="nz-icon-search-box">
       <i class="nz-icon nz-icon-search" @click="emitSearch"/>
@@ -907,7 +908,7 @@ export default {
           this.oldSearchStr = ''
         }
         this.visible = false
-        this.$refs.searchStr.blur()
+        this.$refs.searchStr && this.$refs.searchStr.blur()
         this.$emit('search', obj)
       })
     }, 100),
@@ -1038,7 +1039,7 @@ export default {
     inputEnd () { // 光标最后一位
       const ele = this.$refs.searchStr.$el
       const obj = ele.getElementsByClassName('el-input__inner')[0]
-      obj.focus()
+      this.$refs.searchStr.focus()
       const len = obj.value.length
       if (document.selection) {
         const sel = obj.createTextRange()
@@ -1212,6 +1213,9 @@ export default {
         return arr.find(enumItem => enumItem.value === item).label
       })
       return value
+    },
+    mousedownSearchBox (event) {
+      event.preventDefault()
     }
   },
   watch: {
