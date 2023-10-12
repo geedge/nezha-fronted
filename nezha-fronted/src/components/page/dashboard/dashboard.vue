@@ -11,91 +11,89 @@
           <div v-if="panelData.length === 0" class="top-tool-left" style="margin-left: 10px;">
             <button id="dashboard-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" v-has="'main_add'" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("overall.addDashboard")}}</button>
           </div>
-          <template v-if="panelData.length">
-            <div class="top-tool-left" style="cursor: pointer;">
-              <select-dashboard
-                ref="selectDashboard"
-                :panel-data="panelData"
-                :panel-lock="panelLock"
-                :placement="'bottom-start'"
-                :show-panel="showPanel"
-                class="selectDashboard"
-                @deletePanel="del"
-                @editPanel="edit"
-                @selectDashboard="panelChange"
-                @startPlay="startPlay"
-                >
-                <template v-slot:trigger>
-                  <div class="selectDashboard-select">
-                    <i style="color: #BEBEBE" class="el-icon-menu"></i>
-                    <span :title="showPanel.name  + ' (' + (showPanel.chartNum || 0) +' charts)' " class="show-panel-name">{{showPanel.name||$t('overall.notFound')}}</span>
-                    <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred===1" class="nz-icon nz-icon-a-xingzhuang2" :title ="$t('overall.starred')"></i>
-                    <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang" :title ="$t('overall.unstarred')"></i>
-                    <i class="el-icon-arrow-down"></i>
-                  </div>
-                </template>
-                <!-- 按钮插槽 -->
-                <template slot="button">
+          <div  v-if="panelData.length" class="top-tool-left" style="cursor: pointer;">
+            <select-dashboard
+              ref="selectDashboard"
+              :panel-data="panelData"
+              :panel-lock="panelLock"
+              :placement="'bottom-start'"
+              :show-panel="showPanel"
+              class="selectDashboard"
+              @deletePanel="del"
+              @editPanel="edit"
+              @selectDashboard="panelChange"
+              @startPlay="startPlay"
+            >
+              <template v-slot:trigger>
+                <div class="selectDashboard-select">
+                  <i style="color: #BEBEBE" class="el-icon-menu"></i>
+                  <span :title="showPanel.name  + ' (' + (showPanel.chartNum || 0) +' charts)' " class="show-panel-name">{{showPanel.name||$t('overall.notFound')}}</span>
+                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred===1" class="nz-icon nz-icon-a-xingzhuang2" :title ="$t('overall.starred')"></i>
+                  <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang" :title ="$t('overall.unstarred')"></i>
+                  <i class="el-icon-arrow-down"></i>
+                </div>
+              </template>
+              <!-- 按钮插槽 -->
+              <template slot="button">
                   <span class="dashboard-select-add" v-has="'main_add'" :title='$t("overall.addDashboard")' @click="toAdd">
                     <i class="nz-icon nz-icon-create-square"></i>&nbsp;{{$t('overall.addDashboard')}}
                   </span>
-                  <!-- 通过dashboard模板创建 -->
-                  <span v-has="'main_add'" @click="addByTemplate" :title='$t("dashboard.dashboard.addByTemplate")' class="dashboard-addBy-template">
+                <!-- 通过dashboard模板创建 -->
+                <span v-has="'main_add'" @click="addByTemplate" :title='$t("dashboard.dashboard.addByTemplate")' class="dashboard-addBy-template">
                     <i class="nz-icon nz-icon-template1"></i>
                   </span>
-                </template>
-              </select-dashboard>
-            </div>
+              </template>
+            </select-dashboard>
+          </div>
 
-            <div class="top-tool-right">
-              <!-- 仪表盘轮播 -->
-              <playlist v-if="playListControls" :playlistObj="playlistObj" :panelData="panelData" @stopPlaylist="stopPlaylist" @changePlay="panelChange"></playlist>
+          <div v-if="panelData.length" class="top-tool-right">
+            <!-- 仪表盘轮播 -->
+            <playlist v-if="playListControls" :playlistObj="playlistObj" :panelData="panelData" @stopPlaylist="stopPlaylist" @changePlay="panelChange"></playlist>
 
-              <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :show-locked="true"  class="margin-r-10" :sign="showPanel.id" :from="fromRoute.dashboard"></pick-time>
+            <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :show-locked="true"  class="margin-r-10" :sign="showPanel.id" :from="fromRoute.dashboard"></pick-time>
 
-              <template v-if="!playListControls">
-                <!-- 切换查看模式 -->
-                <button class="top-tool-btn view-mode" :title="$t('overall.viewMode')" @click="cycle">
-                  <i class="nz-icon nz-icon-moshiqiehuan"></i>
-                </button>
+            <template v-if="!playListControls">
+              <!-- 切换查看模式 -->
+              <button class="top-tool-btn view-mode" :title="$t('overall.viewMode')" @click="cycle">
+                <i class="nz-icon nz-icon-moshiqiehuan"></i>
+              </button>
 
-                <!-- 新增图表 -->
-                <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" type="button" @click="addChartBefore">
-                  <i class="nz-icon-create-square nz-icon"></i>
-                </button>
+              <!-- 新增图表 -->
+              <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" type="button" @click="addChartBefore">
+                <i class="nz-icon-create-square nz-icon"></i>
+              </button>
 
               <top-tool-more-options
-                  :delete-objs="batchDeleteObjs"
-                  ref="topTool"
-                  id="panel"
-                  :params="filter"
-                  :permissions="{
+                :delete-objs="batchDeleteObjs"
+                ref="topTool"
+                id="panel"
+                :params="filter"
+                :permissions="{
                     import: 'main_add',
                     export: 'main_edit'
                   }"
-                  :paramsType="'dashboard'"
-                  class="top-tool-export"
-                  export-file-name="chart"
-                  export-url="/visual/dashboard/export"
-                  import-url="/visual/dashboard/import"
-                  :only-json="true"
-                  @export="exportType"
-                  @afterImport="afterImport"
-                >
-                  <template v-slot:before>
-                    <el-dropdown-item v-has="'main_edit'">
-                      <div id="panel-lock" @click="$store.dispatch('dispatchPanelLock',{flag:!panelLock})"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t('overall.locked') : $t('overall.unlocked')}}</div>
-                    </el-dropdown-item>
-                  </template>
-                  <template v-slot:after>
-                    <el-dropdown-item v-has="'dashboard_view'">
-                      <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
-                    </el-dropdown-item>
-                  </template>
-                </top-tool-more-options>
-              </template>
-            </div>
-          </template>
+                :paramsType="'dashboard'"
+                class="top-tool-export"
+                export-file-name="chart"
+                export-url="/visual/dashboard/export"
+                import-url="/visual/dashboard/import"
+                :only-json="true"
+                @export="exportType"
+                @afterImport="afterImport"
+              >
+                <template v-slot:before>
+                  <el-dropdown-item v-has="'main_edit'">
+                    <div id="panel-lock" @click="$store.dispatch('dispatchPanelLock',{flag:!panelLock})"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t('overall.locked') : $t('overall.unlocked')}}</div>
+                  </el-dropdown-item>
+                </template>
+                <template v-slot:after>
+                  <el-dropdown-item v-has="'dashboard_view'">
+                    <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
+                  </el-dropdown-item>
+                </template>
+              </top-tool-more-options>
+            </template>
+          </div>
         </div>
         <div id="tableList" class="table-list" style='overflow-y: unset'>
           <div class="table-list-box">
