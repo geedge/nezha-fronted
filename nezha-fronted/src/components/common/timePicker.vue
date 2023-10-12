@@ -585,6 +585,7 @@ export default {
             end = this.momentSetDay(noTime, 7, 'YYYY-MM-DD')
           }
           start += ' 00:00:00'
+          end = end + ' 23:59:59'
           start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
           end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
         }
