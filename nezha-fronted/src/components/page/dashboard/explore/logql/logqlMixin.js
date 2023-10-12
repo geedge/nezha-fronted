@@ -8,7 +8,7 @@ export default {
       LANGUAGE_SETUP_STARTED: false,
       parser,
       MONACO_EDITOR_OPTIONS: {
-        automaticLayout: true,
+        automaticLayout: false,
         formatOnType: true,
         formatOnPaste: true,
         codeLens: false,
@@ -79,7 +79,6 @@ export default {
            * Enabling this might have a severe performance impact.
            * Defaults to true.
            */
-          automaticLayout: true
         },
         suggestFontSize: 12,
         wordWrap: 'on',

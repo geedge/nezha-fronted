@@ -10,6 +10,7 @@
   transform: unset;
   z-index: 11;
   max-height: 400px;
+  font-size: 14px;
   .explore-history-box-header {
     padding-left: 20px;
   }
@@ -24,12 +25,18 @@
     padding: 10px 0 10px 10px
   }
   .query-prompt-log {
-    padding: 20px 0 20px 20px;
+    padding: 0 20px 10px 20px;
+    color: $--color-text-primary;
+    .query-prompt-log-title {
+      margin: 5px 0 10px 0;
+    }
     .query-prompt-log-content {
-      height: 210px;
+      height: 220px;
       border: 1px solid $--border-color-light;
       border-radius: 2px;
       display: flex;
+      color: $--color-text-regular;
+      margin-bottom: 5px;
       .query-prompt-log-content-left {
         border-right: 1px solid $--border-color-light;
         width: 34%;
@@ -37,17 +44,103 @@
         box-sizing: border-box;
         height: 100%;
         overflow-y: auto;
-        .log-content-left-label {
-          height: 32px;
-          line-height: 32px;
-          text-transform: capitalize;
+      }
+      .log-content-left-label, .log-content-right-value{
+        height: 32px;
+        line-height: 32px;
+        text-transform: capitalize;
+        box-sizing: border-box;
+        padding: 0 8px 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .log-content-left-label-text {
+          max-width: calc(100% - 36px);
+          min-width: calc(100% - 50px);
         }
+        .log-content-left-label-text.is-select {
+          color: $--color-primary;
+        }
+        .label-badge {
+          min-width: 16px;
+          height: 16px;
+          display: inline-block;
+          background: $--color-primary;
+          color: #ffffff;
+          font-size: 12px;
+          padding: 2px;
+          border-radius: 10px;
+          text-align: center;
+          line-height: 16px;
+          margin-right: 5px;
+        }
+      }
+      .log-content-left-label:hover, .log-content-right-value:hover{
+        background: $--table-row-hover-background-color;
       }
       .query-prompt-log-content-right {
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
+        .log-content-right-value {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          .log-content-right-value-text {
+            width: 100%;
+          }
+          .nz-icon{
+            width: 24px;
+            display: none;
+            color: $--color-primary;
+          }
+        }
+        .log-content-right-value.is-select{
+          background: $--table-row-hover-background-color;
+          .log-content-right-value-text {
+            width: calc(100% - 24);
+          }
+          .nz-icon{
+            display: inline-block;
+          }
+        }
       }
     }
+    .query-prompt-log-final {
+      height: 30px;
+      flex-shrink: 0;
+      border: 1px solid $--border-color-light;
+      border-radius: 2px;
+      line-height: 30px;
+      font-size: 14px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      .query-prompt-log-final-box {
+        display: inline-block;
+        width: calc(100% - 24px);
+        height: 100%;
+        .nz-icon{
+          display: none;
+          vertical-align: middle;
+        }
+      }
+      .query-prompt-log-final-text {
+        display: inline-block;
+        max-width: 100%;
+        vertical-align: middle;
+      }
+
+    }
+    .query-prompt-log-final:hover {
+      .query-prompt-log-final-text {
+        display: inline-block;
+        max-width: calc(100% - 24px);
+      }
+      .nz-icon{
+        display: inline-block;
+      }
+    }
+
   }
 }
