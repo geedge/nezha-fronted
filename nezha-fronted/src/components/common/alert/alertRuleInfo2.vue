@@ -8,7 +8,7 @@
         {{alertRuleData && alertRuleData.name ? alertRuleData.name : '--'}}
       </div>
     </div>
-    <div class="alert-label-nfo" >
+    <div class="alert-label-info" >
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
         <div class="alert-label-value">{{alertRuleData.id ? alertRuleData.id : '--'}}</div>

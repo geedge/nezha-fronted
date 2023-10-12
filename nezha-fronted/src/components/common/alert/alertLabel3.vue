@@ -812,9 +812,7 @@ export default {
           if (!res.data) {
             return
           }
-          const alertDaysData = res.data.result
-            ? res.data.result[0].values
-            : []
+          const alertDaysData = res.data.result ? res.data.result[0].values : []
           const newWeekDays = JSON.parse(JSON.stringify(weekDays))
           alertDaysData.forEach((item) => {
             item.values.forEach((time) => {

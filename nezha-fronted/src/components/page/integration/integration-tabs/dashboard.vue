@@ -18,7 +18,6 @@
             <chart-list
               ref="chartList"
               :variablesInit="variablesInit"
-              :timeRange="time"
               name="dashboard"
               :dashboardId="showPanel.id"
               :data-list="dataList"
@@ -28,6 +27,7 @@
               :time-range="searchTime"
               :showTool="false"
               :loading="chartListLoading"
+              :chartDetailInfo="chartDetailInfo"
             ></chart-list>
           </div>
         </div>
@@ -70,7 +70,8 @@ export default {
     from: {
       type: String,
       default: fromRoute.integration
-    }
+    },
+    chartDetailInfo: Object
   },
   computed: {
     chartRightBoxShow () {
@@ -164,7 +165,15 @@ export default {
     },
     // 公用操作
     getTableData () {
-      this.$get('visual/dashboard', { type: this.urlType, ids: this.tempId }).then(response => {
+      const param = {
+        type: this.urlType,
+        ids: this.tempId
+      }
+      if (this.urlType === 'asset') {
+        param.link = this.tempId
+        delete param.ids
+      }
+      this.$get('visual/dashboard', param).then(response => {
         if (response.code === 200) {
           this.panelData = response.data.list
           if (this.panelData.length > 0) {

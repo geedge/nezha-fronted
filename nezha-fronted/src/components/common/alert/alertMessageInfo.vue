@@ -26,7 +26,6 @@
         <div class="info-box-left-top">
           <chart
             ref="chart"
-            :globalVariables="globalVariables"
             v-if="chartInfo.alertRule && chartInfo.alertRule.type !== 3"
             :chart-data="chartData"
             :chart-info="chartInfo"
@@ -47,7 +46,10 @@
           class="alert-message-info-tab"
           :time="time"
           :noData="tabNoData"
-          :infoData="infoData" />
+          :infoData="infoData"
+          :now-time="nowTime"
+          :loading="tabLoading"
+          />
       </div>
       <div class="info-box-right">
         <alertMessageInfoTimeLine :info-data="chartInfo" :time="time"/>
@@ -68,11 +70,9 @@ import logsData from '@/components/chart/logsData'
 import lodash from 'lodash'
 import alertMessageInfoTab from '@/components/common/alert/alertMessageInfoTab'
 import alertMessageInfoTimeLine from '@/components/common/alert/alertMessageInfoTimeLine'
-import globalVariablesMixin from '@/components/common/mixin/globalVariables'
 import { lineChartMove } from '@/components/common/js/common'
 export default {
   name: 'alertMessageInfo',
-  mixins: [globalVariablesMixin],
   components: {
     alertMessageInfoTab,
     chart,
@@ -91,6 +91,9 @@ export default {
     showHeader: {
       type: Boolean,
       default: true
+    },
+    nowTime: {
+      type: String
     }
   },
   data () {
@@ -109,7 +112,8 @@ export default {
       tabNoData: false,
       timeLineNoData: false,
       time: [],
-      stateOptions: alertMessageConstant.states
+      stateOptions: alertMessageConstant.states,
+      tabLoading: true
     }
   },
   computed: {
@@ -130,7 +134,6 @@ export default {
       const step = bus.getStep(startTime, endTime)
       startTime = this.$stringTimeParseToUnix(startTime)
       endTime = this.$stringTimeParseToUnix(endTime)
-      this.setGlobalVariablesValue([filter.start_time, filter.end_time])
       const elements = this.chartInfo.elements || []
       if (multipleTime.length) {
         const minusTime = (new Date(bus.formateTimeToTime(filter.start_time)).getTime() - new Date(bus.formateTimeToTime(multipleTime[0])).getTime())
@@ -328,13 +331,16 @@ export default {
     },
     getAlertMessageInfo () {
       this.tabNoData = false
+      this.tabLoading = true
       this.$get('/alert/message/' + this.chartInfo.id).then(res => {
         if (res.code === 200) {
           this.infoData = res.data
           this.infoData.alertRule = this.currentMsg.alertRule
           this.tabNoData = false
+          this.tabLoading = false
         } else {
           this.tabNoData = true
+          this.tabLoading = false
         }
       })
     }

@@ -90,7 +90,7 @@
       class="nz-dialog chart-fullscreen"
       destroy-on-close
       fullscreen
-      :modal-append-to-body="false"
+      append-to-body
     >
       <alertMessageInfo
         :ref="'chart-fullscreen' + chartInfo.id"
@@ -103,9 +103,13 @@
         @showFullscreen="showFullscreen"
       ></alertMessageInfo>
     </el-dialog>
-    <el-dialog class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"
-               :visible.sync="dialogShowText"
-               width="96%"  @close="dialogShowText = false" :modal-append-to-body="false">
+    <el-dialog
+      class="nz-dialog table-chart-dialog"
+      :title="$t('alert.config.trbShot')"
+      :visible.sync="dialogShowText"
+      width="96%"
+      @close="dialogShowText = false"
+      :modal-append-to-body="false">
       <div slot="title">
         <span class="nz-dialog-title">{{$t('alert.config.trbShot')}}</span>
       </div>

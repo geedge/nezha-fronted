@@ -1,30 +1,53 @@
 <template>
   <div>
-    <el-tabs v-model="activeName" type="card" v-if="!nodata">
+    <div class="alert-message-info-tool">
+      <button class="top-tool-btn" v-if="activeName==='asset'" @click="snapshot">
+        <i class="nz-icon nz-icon-kuaizhao" style="fontSize:16px;"></i>
+      </button>
+      <el-dropdown trigger="click" size="small" class="nz-el-dropdown" v-if="infoData.alertRule&&infoData.alertRule.param.dataLink.length">
+        <button class="top-tool-btn  margin-l-10">
+          <i class="nz-icon nz-icon-wailian"></i>
+        </button>
+        <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top nz-el-dropdown-menu">
+          <el-dropdown-item v-for="(item,index) in infoData.alertRule.param.dataLink" :key="index">
+            <div @click="linkClick(item)" class="alert-message-dataLink">
+              <i class="nz-icon nz-icon-link"></i>
+              <span>{{item.title}}</span>
+            </div>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
+    <el-tabs v-model="activeName" v-if="!nodata">
       <el-tab-pane v-for="item in cardNames" :label="item.label" :name="item.key" :key="item.key">
         <div v-if="item.key === 'detail' && activeName === 'detail'">
-          <alert-message-info-detail :info-data="infoData"/>
+          <alert-message-info-detail v-my-loading="loading" :info-data="infoData" :now-time="nowTime"/>
+          <ul class="messgae-info-list">
+            <alertDetail
+              v-for="(item,index) in detailArr" :key="index"
+              :id="infoData[item.key].id"
+              :severity-data="severityData"
+              :that="findData2(item.key)"
+              :type="item.key"
+            />
+          </ul>
         </div>
-<!--        <div v-else-if="item.key === 'dashboard' && activeName === 'dashboard'" class="alert-message-info-dashboard">-->
-<!--          <dashboard :temp-id="infoData.alertRule.dashboardId" :showImport="false" :showName="false" :url-type="'dashboard'" :time="timeRange" class="message-info-dashboard" :from="fromRoute.dashboard"></dashboard>-->
-<!--        </div>-->
-        <div v-else-if="(activeName === item.key) && infoData[item.key]" class="no-position-alert-label">
-<!--          <searchItemInfo :obj="findData(item.key)" :severityData="severityData" :fa-loading="false"></searchItemInfo>-->
-          <alertLabel
-            class="alert"
-            v-if="item.key !=='alertRule'"
-            :id="infoData[item.key].id"
-            :that="findData2(item.key)"
-            :alertTableDialog="true"
-            :type="item.key"/>
-          <alertRuleInfo
-            class="alert"
-            v-else
-            :id="infoData[item.key].id"
-            :severity-data="severityData"
-            :that="findData2(item.key)"
-          />
+        <div v-else-if="item.key === 'asset' && activeName === 'asset'" class="alert-message-info-dashboard">
+          <dashboard
+            ref="dashboard"
+            :temp-id="infoData.assetId"
+            :showImport="false"
+            :showName="false"
+            :url-type="'asset'"
+            :time="timeRange"
+            :from="fromRoute.alertMessage"
+            :chartDetailInfo="infoData.asset"
+            class="message-info-dashboard">
+          </dashboard>
         </div>
+        <!-- <div v-else-if="item.key === 'dashboard' && activeName === 'dashboard'" class="alert-message-info-dashboard">
+          <dashboard :temp-id="infoData.alertRule.dashboardId" :showImport="false" :showName="false" :url-type="'dashboard'" :time="timeRange" class="message-info-dashboard" :from="fromRoute.dashboard"></dashboard>
+        </div> -->
         <div v-else-if="item.key === 'trbShot' && activeName === 'trbShot'">
           <div class="rich-text-editor" v-html="infoData.alertRule.trbShot" v-if="infoData.alertRule.trbShot"></div>
         </div>
@@ -36,25 +59,25 @@
       </svg>
       <div class="table-no-data__title">No results found</div>
     </div>
+    <!-- 快照进度 -->
+    <snapshotProgress v-if="snapshotVisible" :showPanel="showPanel" :searchTime="timeRange" :snapshotVisible.sync="snapshotVisible" api="dashboard"></snapshotProgress>
   </div>
 </template>
 
 <script>
 import alertMessageInfoDetail from '@/components/common/alert/alertMessageInfoDetail'
-import searchItemInfo from '@/components/common/globalSearch/searchItemInfo'
-import alertLabel from '@/components/common/alert/alertLabel3'
-import alertRuleInfo from '@/components/common/alert/alertRuleInfo2'
+import alertDetail from '@/components/common/alert/alertDetail'
 import dashboard from '@/components/page/integration/integration-tabs/dashboard'
 import { fromRoute } from '@/components/common/js/constants'
+import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
 // import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'alertMessageInfoTab',
   components: {
     alertMessageInfoDetail,
-    searchItemInfo,
-    alertLabel,
-    alertRuleInfo,
-    dashboard
+    alertDetail,
+    dashboard,
+    snapshotProgress // 快照进度
   },
   // mixins: [alertLabelMixin],
   props: {
@@ -65,7 +88,11 @@ export default {
       type: Boolean,
       default: false
     },
-    time: {}
+    time: {},
+    nowTime: {
+      type: String
+    },
+    loading: Boolean
   },
   computed: {
     severityData () {
@@ -90,16 +117,19 @@ export default {
         key: 'asset',
         label: this.$t('asset.asset')
       }, {
-        key: 'endpoint',
-        label: this.$t('asset.endpoint')
+        key: 'project',
+        label: this.$t('project.project.projectName')
       }, {
         key: 'module',
         label: this.$t('overall.module')
       }, {
-        key: 'project',
-        label: this.$t('project.project.projectName')
+        key: 'endpoint',
+        label: this.$t('asset.endpoint')
       }],
-      timeRange: []
+      detailArr: [],
+      timeRange: [],
+      snapshotVisible: false,
+      showPanel: {}
     }
   },
   watch: {
@@ -107,15 +137,25 @@ export default {
       immediate: true,
       handler (n) {
         if (n) {
+          if (n.alertRule && !n.alertRule.param) {
+            n.alertRule.param = {
+              dataLink: []
+            }
+          } else if (n.alertRule) {
+            n.alertRule.param = JSON.parse(n.alertRule.param)
+          }
           this.cardNames = [{
             key: 'detail',
             label: this.$t('overall.detail')
           }]
-          this.sysArr.forEach(item => {
-            if (n[item.key]) {
-              this.cardNames.push(item)
-            }
-          })
+          if (n.assetId) {
+            this.cardNames.push(
+              {
+                key: 'asset',
+                label: this.$t('asset.assetDashboard')
+              }
+            )
+          }
           // && n.alertRule.dashboardId
           // n.alertRule && (n.alertRule.dashboardId = 101534)
           // if (n.alertRule && n.alertRule.dashboardId && n.alertRule.dashboardId != -1) {
@@ -131,6 +171,13 @@ export default {
               label: this.$t('alert.config.trbShot')
             })
           }
+
+          this.detailArr = []
+          this.sysArr.forEach(item => {
+            if (n[item.key]) {
+              this.detailArr.push(item)
+            }
+          })
         }
       }
     },
@@ -138,7 +185,7 @@ export default {
       immediate: true,
       handler (n) {
         if (n && n.length) {
-          this.timeRange = [n[0] * 1000, n[1] * 1000]
+          this.timeRange = [this.timeFormate(n[0] * 1000), this.timeFormate(n[1] * 1000)]
         }
       }
     }
@@ -147,6 +194,18 @@ export default {
 
   },
   methods: {
+    snapshot () {
+      this.showPanel = this.$refs.dashboard[0].showPanel
+      this.snapshotVisible = true
+    },
+    linkClick (data) {
+      console.log(data)
+      if (data.openIn === 'newTab') {
+        window.open(data.url)
+      } else {
+        window.location.href = data.url
+      }
+    },
     findData (key) {
       if (key) {
         const obj = {

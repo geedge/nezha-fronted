@@ -5,7 +5,7 @@
       width="472px"
       :title="$t('overall.snapshoot')"
       destroy-on-close
-      :modal-append-to-body="false"
+      append-to-body
       :close-on-click-modal="false"
       :visible.sync="visible"
       @close="closeDialog"

@@ -145,7 +145,7 @@
       class="nz-dialog chart-fullscreen"
       destroy-on-close
       fullscreen
-      :modal-append-to-body="false"
+      append-to-body
     >
       <alertMessageInfo
         :ref="'chart-fullscreen' + chartInfo.id"
@@ -156,6 +156,7 @@
         :is-fullscreen="true"
         :time-range="searchTimeDialog"
         @showFullscreen="showFullscreen"
+        :now-time="nowTime"
       ></alertMessageInfo>
     </el-dialog>
     <!--全屏-->
@@ -643,11 +644,6 @@ export default {
           }).filter(item => item.value)
         }
         chartInfo.elements && (chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\r|\n+/g, ''))
-      }
-
-      // 设置dataLink
-      if (this.currentMsg.alertRule.param) {
-        chartInfo.param.dataLink = JSON.parse(this.currentMsg.alertRule.param).dataLink
       }
 
       chartInfo.id = this.currentMsg.id
