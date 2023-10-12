@@ -123,6 +123,7 @@ export default {
   data () {
     return {
       // 详情相关
+      orderBy: 'id',
       fromRoute: fromRoute,
       graphShow: false,
       chartDatas: [],
