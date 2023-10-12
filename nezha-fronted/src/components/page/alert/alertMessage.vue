@@ -214,7 +214,7 @@ export default {
   mixins: [dataListMixin, routerPathParams],
   data () {
     return {
-      orderBy: 'id',
+      orderBy: '-id',
       chartLoading: false,
       chartInfo: {},
       alertMessageNzTableHeightOffset: 242,
