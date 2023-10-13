@@ -73,7 +73,7 @@ export default {
   watch: {
   },
   created () {
-    this.queryMetrics()
+    // this.queryMetrics()
   },
   beforeDestroy () {
     this.$store.commit('setMetricsList', [])

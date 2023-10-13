@@ -1,6 +1,6 @@
 <template>
   <div class="explore list-page" :class="'nz-explore-' + tabIndex" style="position:relative;">
-    <div class="main-list">
+    <div class="right-box__container main-list">
       <div class="main-container explore-split-box" ref="exploreScrollbar" @mouseenter="tableHover = true" @mouseleave="tableHover = false">
         <!-- 关闭按钮 -->
         <div v-if="closable" class="explore-close">
@@ -28,7 +28,7 @@
           <div class="top-tool-right">
             <button v-if="!closable" class="top-tool-btn top-tool-btn--text margin-r-10" style="cursor: pointer;" type="button" @click="split">
               {{$t('overall.split')}}</button>
-            <pick-time id="explore" ref="pickTime" v-model="filterTime" :class="{'margin-r-10': showMetrics}" :refresh-data-func="expressionChange" @unitChange="chartUnitChange">
+            <pick-time id="explore" ref="pickTime" v-model="filterTime" :class="{'margin-r-10': showMetrics}" :refresh-data-func="getExpression" @unitChange="chartUnitChange">
              <!-- <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template> -->
               <template slot="added-text">{{$t('overall.query')}}</template>
             </pick-time>
@@ -69,49 +69,154 @@
             </el-dropdown>
           </div>
         </div>
-        <div id="explore-promql-box" class="top-tools" style="padding-top: 0; flex-wrap: wrap">
-          <template v-if="showMetrics">
-            <promql-input
-              :from-father-data="true"
-              :metricOptionsParent="metricOptions"
-              v-for="index of promqlKeys.length"
-              :id="promqlKeys[index-1].id"
-              :pqid="promqlKeys[index-1].id"
-              :key="promqlKeys[index-1].id"
-              :ref="'promql-'+(index-1)"
-              :expression-list="expressions"
-              :state="promqlKeys[index-1].state"
-              :index="index-1"
-              :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable', 'history']"
-              :styleType="1"
-              type="metrics"
-              @enableExpression="enableExpression"
-              @addExpression="addExpression"
-              @copyExpression="copyExpression"
-              @removeExpression="removeExpression"
-              @resetExpression="resetExpression"
-            ></promql-input>
-          </template>
-          <template v-else>
-            <promql-input
-              v-for="index of promqlKeys.length"
-              :id="promqlKeys[index-1].id"
-              :pqid="promqlKeys[index-1].id"
-              :key="promqlKeys[index-1].id"
-              :ref="'promql-'+(index-1)"
-              :expression-list="expressions"
-              :state="promqlKeys[index-1].state"
-              :index="index-1"
-              :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable', 'history']"
-              :styleType="1"
-              type="log"
-              @enableExpression="enableExpression"
-              @addExpression="addExpression"
-              @copyExpression="copyExpression"
-              @removeExpression="removeExpression"
-              @resetExpression="resetExpression"
-            ></promql-input>
-          </template>
+        <div id="explore-promql-box" class="top-tools chart-config" style="padding-top: 0; flex-wrap: wrap">
+          <div class="metrics-input-box" style="width: 100%">
+            <draggable
+              v-model="promqlKeys"
+              @start="start"
+              @end="end"
+              :scroll-sensitivity="150"
+              :options="{
+              dragClass:'drag-chart-class',
+              fallbackClass:'fallback-class',
+              forceFallback:true,
+              ghostClass:'chart-ghost',
+              chosenClass:'choose-class',
+              scroll:true,
+              filter: '.drag-disabled',
+              animation: 150,
+              handle: '.drag-sort'
+          }">
+              <el-row
+                class="element-item form-row-item thresholds-from-item"
+                style="margin-bottom: 10px !important"
+                v-for="index of promqlKeys.length"
+                v-if="expressionsShow[index-1]"
+                :key="expressionsShow[index-1].id"
+              >
+                <div class="chart-title chart-title-config">
+            <span
+              class="chart-title-content el-form-item"
+              :class="{
+                'is-error' : expressionsShow[index-1].error,
+                'hide-input': expressionsShow[index-1].hideInput
+              }"
+            >
+              <i class="nz-icon nz-icon-arrow-down" :class="expressionsShow[index-1].show?'':'is-active'" @click.stop="showExpression(index)"></i>
+              <el-input
+                style="width: 90px"
+                @mousedown.stop
+                v-model="expressionName[index-1]"
+                size="small"
+                @input="(val)=>{expressionNameInput(val,index-1)}"
+                @change="expressionNameChange(index-1)"
+                @focus.stop="showInput(index-1,false)"
+                @blur="showInput(index-1,true)"
+              />
+              <div v-if="expressionsShow[index-1].error" class="el-form-item__error" style="top: 30px;left: 25px">{{expressionsShow[index-1].error}}</div>
+              <div class="text-ellipsis" style="flex-shrink: 0;width: calc(100% - 310px)" v-if="!expressionsShow[index-1].show" :title="expressions[index - 1]">
+                {{expressions[index - 1]}}
+              </div>
+            </span>
+                  <span>
+              <!-- 显示隐藏 -->
+              <span v-if="expressionsShow[index-1].state === 1" @click="()=>{switchExpression(index - 1,1)}" :title="$t('overall.visible')" style="margin-right: 5px;padding-left: 10px">
+                <i class="nz-icon nz-icon-mimakejian"></i>
+              </span>
+              <span v-else @click="()=>{switchExpression(index - 1,0)}" :title="$t('overall.invisible')" style="margin-right: 5px;padding-left: 10px">
+                <i class="nz-icon nz-icon-mimabukejian"></i>
+              </span>
+              <span @click="()=>{addExpression()}" style="margin-right: 5px" :title="$t('tip.add')">
+                <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
+              </span>
+              <span @click="copyExpression(index - 1)" style="margin-right: 5px" :title="$t('overall.duplicate')">
+                <i class="nz-icon nz-icon-override"></i>
+              </span>
+              <span @click="removeExpression(index - 1)" class="nz-icon-minus-medium" style="margin-right: 5px" :title="$t('overall.delete')">
+                <i class="nz-icon nz-icon-minus"></i>
+              </span>
+              <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.dashboard.chartForm.sort')">
+                <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
+              </span>
+            </span>
+                </div>
+                <transition name="el-zoom-in-top">
+                  <el-row v-show="expressionsShow[index-1].show">
+                    <promql-input
+                      :from-father-data="true"
+                      :metricOptionsParent="metricOptions"
+                      :id="promqlKeys[index-1].id"
+                      :pqid="promqlKeys[index-1].id"
+                      :key="promqlKeys[index-1].id"
+                      :ref="'promql-'+(index-1)"
+                      :expression-list="expressions"
+                      :state="promqlKeys[index-1].state"
+                      :index="index-1"
+                      :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable', 'history']"
+                      :styleType="1"
+                      :type="promqlType"
+                      @enableExpression="enableExpression"
+                      @addExpression="addExpression"
+                      @copyExpression="copyExpression"
+                      @removeExpression="removeExpression"
+                      @resetExpression="resetExpression"
+                    ></promql-input>
+                    <el-row style="margin-top: 18px;display: flex">
+                      <div style="min-width: 310px;flex-shrink: 0;width: 50%">
+                        <div class="legend-title-new">
+                          <span class="legend-title__span">{{$t('dashboard.dashboard.chartForm.legend')}}&nbsp;</span>
+                          <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
+                            <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div>
+                            <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div> -->
+                            <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                          </el-popover>
+                        </div>
+                        <div>
+                          <el-input maxlength="512" size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
+                        </div>
+                      </div>
+                      <div style="margin-left: 10px;width: 25%; flex: 1" v-if="showMetrics">
+                        <div class="legend-title-new" style="width: 55px">
+                          <span class="legend-title__span">{{$t('overall.type')}}&nbsp;</span>
+                          <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
+                            <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div>
+                            <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div> -->
+                            <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                          </el-popover>
+                        </div>
+                        <div style="flex: 1">
+                          <el-select size="small" v-model="expressionsShow[index-1].queryType" @change="expressionChange" style="width: 100%;">
+                            <el-option :label="'Range'" :value="1">Range</el-option>
+                            <el-option :label="'Instant'" :value="2">Instant</el-option>
+                          </el-select>
+                        </div>
+                      </div>
+                      <div style="margin-left: 10px;width: 25%;flex: 1">
+                        <div class="legend-title-new" style="margin-left: 10px;width: 55px">
+                          <span class="legend-title__span">{{$t('overall.step')}}&nbsp;</span>
+                        </div>
+                        <div style="flex: 1">
+                          <el-input-number
+                            style="width: 100%;"
+                            :disabled="expressionsShow[index-1].queryType == 2"
+                            @change="expressionChange"
+                            v-model="expressionsShow[index-1].step"
+                            size="small"
+                            :min="minStep"
+                            :precision="0"
+                            :controls="false"
+                            class="append_unit"
+                            :placeholder="$t('overall.auto')"
+                            :data-unit="$t('overall.seconds')">
+                          </el-input-number>
+                        </div>
+                      </div>
+                    </el-row>
+                  </el-row>
+                </transition>
+              </el-row>
+            </draggable>
+          </div>
         </div>
         <div style="position: relative;z-index: 1;height: auto; padding: 0 20px 10px;">
           <el-collapse v-show="!showIntroduce" v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
@@ -3527,8 +3632,10 @@ import chartDataFormat from '../../../chart/chartDataFormat'
 import logTab from './logTab'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
+import exploreItemMixin from '@/components/page/dashboard/explore/exploreItemMixin'
 import copy from '@/components/common/copy'
 import './promqlparser/wasm_exec.js'
+import draggable from 'vuedraggable'
 
 export default {
   name: 'exploreItem',
@@ -3537,13 +3644,14 @@ export default {
     chartRightBox,
     chart,
     logTab,
-    copy
+    copy,
+    draggable
   },
   props: {
     tabIndex: Number,
     closable: Boolean
   },
-  mixins: [promqlInputMixin],
+  mixins: [promqlInputMixin, exploreItemMixin],
   data () {
     return {
       chartLoading: false,
@@ -3625,6 +3733,7 @@ export default {
     }
   },
   async created () {
+    this.init()
     this.getPanelData()
     this.resetExpression()
     // this.getExploreHistory()
@@ -3723,7 +3832,7 @@ export default {
     chartUnitChange (unit) {
       this.chartUnit = unit
       this.$nextTick(() => {
-        this.expressionChange()
+        this.getExpression()
       })
     },
     exportLog ({ limit, descending }) {
@@ -4178,7 +4287,7 @@ export default {
       const rowData = { element: temp, colorElement: colorTemp, expandElement: expandTemp }
       return rowData
     },
-    async expressionChange () {
+    async getExpression () {
       if (this.$refs.pickTime) {
         const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
@@ -4262,8 +4371,9 @@ export default {
             }
           }
         })
+        this.init()
         setTimeout(() => {
-          this.expressionChange()
+          this.getExpression()
         }, 200)
       }
     },
@@ -4384,36 +4494,11 @@ export default {
       }
       this.updatePath()
     },
-    addExpression (index) {
-      this.expressions.splice(index + 1, 0, '')
-      this.promqlKeys.splice(index + 1, 0, {
-        id: getUUID(),
-        state: 1
-      })
-      this.promqlCount++
-    },
-    copyExpression (index) {
-      this.expressions.push(this.expressions[index])
-      this.promqlKeys.push({
-        id: getUUID(),
-        state: 1
-      })
-      this.promqlCount++
-    },
-    removeExpression (index) {
-      if (this.promqlCount > 1) {
-        this.expressions.splice(index, 1)
-        this.promqlKeys.splice(index, 1)
-        this.promqlCount--
-      }
-    },
     resetExpression () {
       this.expressions = ['']
-      this.promqlKeys = [{
-        id: getUUID(),
-        state: 1
-      }]
+      this.promqlKeys = []
       this.promqlCount = 1
+      this.init()
     },
     changeChartVisible () {
       this.chartVisible = !this.chartVisible
@@ -4666,9 +4751,22 @@ export default {
       }, () => {
         this.$message.error('123')
       })
+    },
+    start () {
+
+    },
+    end () {
+
     }
   },
   computed: {
+    promqlType () {
+      const type = this.showMetrics ? 'metric' : 'log'
+      return type
+    },
+    minStep () {
+      return this.nzDefaultConfig.minStep
+    },
     language () {
       return this.$store.getters.getLanguage
     },
