@@ -489,7 +489,7 @@ export default {
       }
     },
     chartMousedown (e) {
-      if (this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') {
+      if ((this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') && this.tooltip.dataLinkShow) {
         e.stopPropagation()
       }
     },
