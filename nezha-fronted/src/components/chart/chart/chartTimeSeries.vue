@@ -180,6 +180,7 @@ export default {
         chartOption.grid.top = 70
         chartOption.toolbox.top = 20
       }
+
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
 
@@ -204,6 +205,23 @@ export default {
       chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime, maxTime)// 需转为毫秒
       chartOption.tooltip.formatter = this.tooltipFormatter(this.chartInfo.param.stack)
       chartOption.tooltip.position = this.tooltipPosition
+      if (this.isFullscreen) {
+        chartOption.grid.bottom = 50
+        chartOption.dataZoom = [
+          {
+            type: 'inside',
+            start: 0,
+            end: 100,
+            zoomOnMouseWheel: 'shift'
+          },
+          {
+            start: 0,
+            end: 100,
+            bottom: 15,
+            labelFormatter: this.xAxisLabelFormatter(minTime, maxTime)
+          }
+        ]
+      }
       if (navigator.userAgent.match(/Mobi/i) ||
         navigator.userAgent.match(/Android/i) ||
         navigator.userAgent.match(/iPhone/i)) {
@@ -312,11 +330,13 @@ export default {
             this.tooltip.activeIndex = undefined
           })
 
-          // 修复echarts bug(dataZoom设置为inside 未按住shift 页面无法滚动)
-          // 监听按键按下事件
-          document.addEventListener('keydown', this.keydown)
-          // 监听按键松开事件
-          document.addEventListener('keyup', this.keyup)
+          if (!this.isFullscreen) {
+            // 修复echarts bug(dataZoom设置为inside 未按住shift 页面无法滚动)
+            // 监听按键按下事件
+            document.addEventListener('keydown', this.keydown)
+            // 监听按键松开事件
+            document.addEventListener('keyup', this.keyup)
+          }
         }
         this.chartLoading = false
         this.isInit = false
@@ -391,8 +411,7 @@ export default {
             return str
           }
         } else {
-          return [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('/') + '\n' +
-            [hour, minute].join(':')
+          return [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('/') + '\n' + [hour, minute].join(':')
         }
       }
     },
