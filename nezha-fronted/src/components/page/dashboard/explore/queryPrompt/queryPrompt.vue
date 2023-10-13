@@ -62,22 +62,43 @@
       </div>
     </div>
     <div v-if="type === 'log'"  class="query-prompt-log" v-my-loading="logLoading">
-      <div>1.Select label names and values</div>
+      <div class="query-prompt-log-title">1.Select label names and values</div>
       <div class="query-prompt-log-content" style="">
         <div class="query-prompt-log-content-left">
-          <div v-for="item in logLabels" :key="item" class="log-content-left-label">
-            {{item}}
+          <div v-for="item in logLabels" :key="item" class="log-content-left-label" @click="getLogLabelsValues(item)">
+            <div class="log-content-left-label-text text-ellipsis" :class="activeLabel === item ? 'is-select':''" :title="item">
+              {{item}}
+            </div>
+            <span style="display: flex;align-items: center">
+              <div
+                class="label-badge"
+                v-if="selectLogLabels[item] && selectLogLabels[item].length"
+              >{{selectLogLabels[item].length}}</div>
+              <i class="nz-icon nz-icon-arrow-right6" />
+            </span>
           </div>
         </div>
         <div class="query-prompt-log-content-right">
-          <div v-for="item in logValues">
-
+          <div
+            v-for="(item, index) in logValues"
+            :key="index"
+            class="log-content-right-value"
+            :class="selectLogLabels[item.type] && selectLogLabels[item.type].indexOf(item.value) !== -1 ? 'is-select' : ''"
+            @click="selectValue(item)">
+            <div class="log-content-right-value-text text-ellipsis" :title="item.value">
+              {{item.value}}
+            </div>
+           <i class="nz-icon nz-icon-check"/>
           </div>
         </div>
       </div>
-      <div>2.Resulting selector</div>
+      <div class="query-prompt-log-title">2.Resulting selector</div>
       <div class="query-prompt-log-final">
-        {{logFinalStr}}
+        <div class="query-prompt-log-final-box">
+          <div class="query-prompt-log-final-text text-ellipsis" :title="logFinalStr">{{logFinalStr}}</div>
+          <i class=" query-prompt-content-icon nz-icon nz-icon-override" @click.stop="copyItem(logFinalStr)"></i>
+        </div>
+        <i class=" query-prompt-content-icon nz-icon nz-icon-huiche" @click.stop="selectLog"></i>
       </div>
     </div>
   </div>
@@ -124,12 +145,13 @@ export default {
         pageSize: 20,
         total: 0
       },
-      logFinalStr: {},
+      logFinalStr: '{}',
       logLabels: [],
       logLabelsShow: '',
       logValues: [],
       selectLogLabels: {},
-      logLoading: false
+      logLoading: false,
+      activeLabel: ''
     }
   },
   mounted () {
@@ -226,12 +248,14 @@ export default {
     getLogLabelsValues (labels) {
       this.logLoading = true
       this.logValues = []
+      this.activeLabel = labels
       this.$get(`/logs/loki/api/v1/label/${labels}/values`).then(res => {
         this.logLoading = false
         if (res.data) {
           const nodes = res.data.sort().map(d => ({
             value: d,
             label: d,
+            type: labels,
             leaf: true
           }))
           this.logValues = nodes
@@ -240,6 +264,47 @@ export default {
         }
         console.log(this.logValues)
       })
+    },
+    selectValue (obj) {
+      const key = obj.type
+      if (this.selectLogLabels[key]) {
+        const index = this.selectLogLabels[key].indexOf(obj.value)
+        if (index !== -1) {
+          this.selectLogLabels[key].splice(index, 1)
+          if (!this.selectLogLabels[key].length) {
+            delete this.selectLogLabels[key]
+          }
+        } else {
+          this.selectLogLabels[key].push(obj.value)
+        }
+      } else {
+        this.selectLogLabels[key] = [obj.value]
+      }
+      this.$forceUpdate()
+      this.renderLogQl()
+    },
+    renderLogQl () {
+      let str = '{'
+      Object.keys(this.selectLogLabels).forEach(key => {
+        str += key
+        if (this.selectLogLabels[key].length === 1) {
+          str += '="'
+          str += this.selectLogLabels[key][0]
+          str += '"'
+        } else {
+          str += '=~"'
+          this.selectLogLabels[key].forEach(item => {
+            str += this.$lodash.escapeRegExp(item)
+            str += '|'
+          })
+          str = str.slice(0, -1)
+          str += '"'
+        }
+        str += ','
+      })
+      str = str.slice(0, -1)
+      str += '}'
+      this.logFinalStr = str
     },
     hideMe () {
       this.$emit('close')
@@ -269,6 +334,10 @@ export default {
     },
     selectMetric (item) {
       this.$emit('selectMetric', item)
+      this.hideMe()
+    },
+    selectLog () {
+      this.$emit('selectLog', this.logFinalStr)
       this.hideMe()
     },
     copyItem (value) {

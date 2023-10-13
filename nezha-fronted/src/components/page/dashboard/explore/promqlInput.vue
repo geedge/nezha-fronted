@@ -42,7 +42,7 @@
             <span>{{ appendMsg }}</span>
           </div>
           <i class="nz-icon nz-icon-alert-list" style="position: absolute;top: 4px; right: 6px" @click="queryPromptShowChange"/>
-          <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" :type="type" :width="queryPromptWidth" :position="queryPromptPosition" class="no-style-class" @selectMetric="selectMetric"/>
+          <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" :type="type" :width="queryPromptWidth" :position="queryPromptPosition" class="no-style-class" @selectMetric="selectMetric" @selectLog="selectLog"/>
         </div>
 
         <div class="top-tool-btn-group">
@@ -145,7 +145,7 @@
             </div>
           </el-col>
           <i class="nz-icon nz-icon-alert-list" style="position: absolute;top: -5px; right: 15px" @click="queryPromptShowChange"/>
-          <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" :type="type" :width="queryPromptWidth" :position="queryPromptPosition" class="no-style-class" @selectMetric="selectMetric"/>
+          <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" :type="type" :width="queryPromptWidth" :position="queryPromptPosition" class="no-style-class" @selectMetric="selectMetric" @selectLog="selectLog"/>
         </el-row>
       </template>
     </div>
@@ -1128,6 +1128,15 @@ export default {
           }
         })
       }
+    },
+    selectLog (str) {
+      if (!str || str.length === 0) return
+      this.expressionList[this.index] = str
+      this.codeMirrorValue[this.index] = str
+      this.dropDownVisible = false
+      this.$emit('change', str)
+      this.$forceUpdate()
+      this.cascaderValue = ''
     }
   },
   watch: {
