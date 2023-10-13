@@ -29,7 +29,7 @@
               <div @click="download('pdf')">{{$t('notebook.downloadAs',{format:'PDF'})}}</div>
             </el-dropdown-item>
             <el-dropdown-item v-has="'notebook_view'">
-              <div @click="download('html')">{{$t('notebook.downloadAs',{format:'markdown'})}}</div>
+              <div @click="download('markdown')">{{$t('notebook.downloadAs',{format:'markdown'})}}</div>
             </el-dropdown-item>
             <el-dropdown-item v-has="'notebook_view'">
               <div @click="downloadJson()">{{$t('notebook.downloadNotebook')}} JSON</div>
