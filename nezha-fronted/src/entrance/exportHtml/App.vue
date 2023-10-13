@@ -163,5 +163,8 @@ export default {
     body {
       height: auto !important;
     }
+    .panel-chart-wrap{
+      page-break-inside: avoid;
+    }
   }
 </style>

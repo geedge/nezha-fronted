@@ -18,7 +18,10 @@
     >
       <div
         class="panel-chart-wrap"
-        :class="{'text-chart-wrap':item.type==='text'}"
+        :class="{
+          'text-chart-wrap':item.type==='text',
+          'table-chart-wrap':item.type==='table'
+        }"
         v-for="item in copyDataList"
         :key="item.id">
         <panel-chart

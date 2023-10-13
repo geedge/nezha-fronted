@@ -4,7 +4,7 @@
       ref="dataTable"
       class="chart-table"
       :data="tableData"
-      :height="'100%'"
+      :height="from==='notebook'?undefined:'100%'"
       :width="'100%'"
       border
       @sort-change="tableDataSort"
@@ -92,6 +92,9 @@ import lodash from 'lodash'
 export default {
   name: 'chart-table',
   mixins: [chartMixin, chartFormat],
+  props: {
+    from: String
+  },
   data () {
     return {
       tableData: [],
@@ -116,7 +119,7 @@ export default {
       }
     },
     showPagination () {
-      if (this.chartInfo.param.tableOptions && this.chartInfo.param.tableOptions.pagination === 'disabled') {
+      if ((this.chartInfo.param.tableOptions && this.chartInfo.param.tableOptions.pagination === 'disabled') || this.from === 'notebook') {
         return false
       } else {
         return true
@@ -141,10 +144,15 @@ export default {
     // 设置默认排序
     setDefaultSort () {
       const columns = this.chartInfo.param.columns
-      const defaultSortColumn = lodash.get(this, 'chartInfo.param.tableOptions.defaultSortColumn', columns[0].title)
-      const defaultSort = lodash.get(this, 'chartInfo.param.tableOptions.defaultSort', 'asc')
-      const order = defaultSort === 'asc' ? 'ascending' : 'descending'
-      this.$refs.dataTable.sort(defaultSortColumn, order)
+      if (columns.length) {
+        let defaultSortColumn = lodash.get(this, 'chartInfo.param.tableOptions.defaultSortColumn', undefined)
+        if (!defaultSortColumn) {
+          defaultSortColumn = columns[0].title
+        }
+        const defaultSort = lodash.get(this, 'chartInfo.param.tableOptions.defaultSort', 'asc')
+        const order = defaultSort === 'asc' ? 'ascending' : 'descending'
+        this.$refs.dataTable.sort(defaultSortColumn, order)
+      }
     },
     // 设置pageSize
     setPageSize () {

@@ -510,6 +510,7 @@
               popper-class="right-box-select-top prevent-clickoutside"
               size="small"
               @change="change"
+              :disabled="from==='notebook'"
               >
               <el-option :label="$t('overall.enabled')" value="enabled"></el-option>
               <el-option :label="$t('overall.disabled')" value="disabled"></el-option>
@@ -1192,6 +1193,9 @@ export default {
               defaultSort: null
             },
             dataLink: this.chartConfig.param.dataLink
+          }
+          if (this.from === 'notebook') {
+            this.chartConfig.param.tableOptions.pagination = 'disabled'
           }
           break
       }

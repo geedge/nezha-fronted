@@ -118,6 +118,18 @@
         }
       }
     }
+    .table-chart-wrap{
+      height: auto !important;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      .panel-chart{
+        flex: 1;
+        .tabel-chart-box{
+          height: auto !important;
+        }
+      }
+    }
     .no-data{
       text-align: center;
       position: absolute;

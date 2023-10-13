@@ -557,9 +557,6 @@ export default {
         }
         delete this.editChart.elements
       }
-      if (this.from === 'notebook') {
-        this.editChart.span = 12
-      }
     },
     editChartChange (newEditChart) {
       this.editChart = {
@@ -724,6 +721,9 @@ export default {
                 defaultSortColumn: null,
                 defaultSort: null
               }
+            }
+            if (this.from === 'notebook') {
+              obj.param.tableOptions.pagination = 'disabled'
             }
           }
           if (obj.type === 'stat') {
