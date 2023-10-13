@@ -126,6 +126,9 @@
               <span v-else @click="()=>{switchExpression(index - 1,0)}" :title="$t('overall.invisible')" style="margin-right: 5px;padding-left: 10px">
                 <i class="nz-icon nz-icon-mimabukejian"></i>
               </span>
+              <span @click="()=>{showHistoryBox(index - 1)}" style="margin-right: 5px" :title="$t('overall.history')">
+                <i class="nz-icon nz-icon-time" style="fontSize:16px"></i>
+              </span>
               <span @click="()=>{addExpression()}" style="margin-right: 5px" :title="$t('tip.add')">
                 <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
               </span>
@@ -140,7 +143,7 @@
               </span>
             </span>
                 </div>
-                <transition name="el-zoom-in-top">
+<!--                <transition name="el-zoom-in-top">-->
                   <el-row v-show="expressionsShow[index-1].show">
                     <promql-input
                       :from-father-data="true"
@@ -185,7 +188,7 @@
                           </el-popover>
                         </div>
                         <div style="flex: 1">
-                          <el-select size="small" v-model="expressionsShow[index-1].queryType" @change="expressionChange" style="width: 100%;">
+                          <el-select size="small" v-model="expressionsShow[index-1].queryType" @change="queryTypeChange(index - 1)" style="width: 100%;">
                             <el-option :label="'Range'" :value="1">Range</el-option>
                             <el-option :label="'Instant'" :value="2">Instant</el-option>
                           </el-select>
@@ -205,15 +208,14 @@
                             :min="minStep"
                             :precision="0"
                             :controls="false"
-                            class="append_unit"
                             :placeholder="$t('overall.auto')"
-                            :data-unit="$t('overall.seconds')">
+                          >
                           </el-input-number>
                         </div>
                       </div>
                     </el-row>
                   </el-row>
-                </transition>
+<!--                </transition>-->
               </el-row>
             </draggable>
           </div>
@@ -3892,6 +3894,7 @@ export default {
           this.saveDisabled = false
         }
         axios.all(requestArr).then(res => {
+          this.postHistory()
           this.chartLoading = false
           const errorRowIndex = []
           res.forEach((r, i) => {
@@ -4007,8 +4010,11 @@ export default {
                 legendName = queryExpression[index]
               }
               seriesItem.name = legendName + '-' + index
+              const tagKeysArr = Object.keys(result.metric)
+              // console.log(queryExpression[index], this.expressions[index], tagKeysArr)
+              const legendAlias = this.handleLegendAlias(legendName, this.promqlKeys[promqlInputIndexs[index]].legend, tagKeysArr)
               series.push(seriesItem)
-              legend.push({ name: seriesItem.name, alias: legendName, isGray: false })
+              legend.push({ name: seriesItem.name, alias: legendAlias, isGray: false })
             })
 
             this.$refs['promql-' + promqlIndex][0].setError('')
@@ -4035,10 +4041,17 @@ export default {
         // 过滤掉state为0的元素
         this.expressions.forEach((item, index) => {
           if (item != '' && this.promqlKeys[index].state && !this.promqlKeys[index].matrix) {
-            const step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
+            let step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
+            if (this.promqlKeys[index].step) {
+              step = this.promqlKeys[index].step
+            }
             promqlInputIndexs.push(index)
             queryExpression.push(item)
-            requestArr.push(this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&step=' + step + '&nullType=null'))
+            if (this.promqlKeys[index].queryType === 2) {
+              requestArr.push(this.$get('/prom/api/v1/query_instant?query=' + encodeURIComponent(item) + '&time=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))))
+            } else {
+              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&step=' + step + '&nullType=null'))
+            }
           }
         })
         if (requestArr.length > 0) {
@@ -4100,8 +4113,11 @@ export default {
                     legendName = queryExpression[index]
                   }
                   seriesItem.name = legendName + '-' + index
+                  const tagKeysArr = Object.keys(result.metric)
+                  // console.log(queryExpression[index], this.expressions[index], tagKeysArr)
+                  const legendAlias = this.handleLegendAlias(legendName, this.promqlKeys[promqlInputIndexs[index]].legend, tagKeysArr)
                   series.push(seriesItem)
-                  legend.push({ name: seriesItem.name, alias: legendName, isGray: false })
+                  legend.push({ name: seriesItem.name, alias: legendAlias, isGray: false })
                 })
 
                 this.$refs['promql-' + promqlIndex][0].setError('')
@@ -4255,6 +4271,50 @@ export default {
         this.tools.loading = false
       }
     },
+    handleLegendAlias (legend, aliasExpression, params) { // 处理别名
+      const self = this
+      const myParams = JSON.parse(JSON.stringify(params))
+      myParams.$labels = JSON.parse(JSON.stringify(params))
+      myParams.$value = myParams.value
+      // if (this.from !== 'meta2dTooltip') {
+      //   aliasExpression = this.globalVariablesReplace(aliasExpression)
+      // }
+      if (/\{\{.+\}\}/.test(aliasExpression)) {
+        const labelValue = aliasExpression.replace(/(\{\{.+?\}\})/g, function (i) {
+          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
+          if (!legend) {
+            return label
+          }
+          let value = null
+          if (params && self.$lodash.get(myParams, label)) {
+            value = self.$lodash.get(myParams, label)
+          }
+          if (label) {
+            const reg = new RegExp(label + '=".+?"', 'g')
+            if (reg.test(legend)) {
+              const ans = legend.match(reg)
+              let find = ''
+              ans.forEach(item => {
+                const index = legend.indexOf(item)
+                if (legend[index - 1] !== '_') {
+                  find = item
+                }
+              })
+              value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
+            }
+          }
+          return value || ''
+        })
+        return labelValue
+      } else {
+        if (!aliasExpression) {
+          return legend
+          // let result =legend.substr(legend.indexOf('"') + 1,legend.lastIndexOf('"') - legend.indexOf('"') - 1);
+          // return result
+        }
+        return aliasExpression
+      }
+    },
     handlerRowData (data) {
       const metric = this.$lodash.cloneDeep(data)
       const metricName = metric.__name__ || ''
@@ -4322,7 +4382,7 @@ export default {
           const promiseArr = []
           this.expressions.forEach((item, index) => {
             if (item != '' && this.promqlKeys[index].state) {
-              promiseArr.push(this.$get('/logs/loki/api/v1/format_query', { query: item }))
+              promiseArr.push(this.$get('logs/loki/api/v1/format_query', { query: item }))
             } else {
               promiseArr.push('')
             }
@@ -4331,7 +4391,6 @@ export default {
             console.log(res)
           })
           this.queryLogData()
-          this.postHistory()
         }
       }
       this.updatePath()
@@ -4362,13 +4421,10 @@ export default {
         this.promqlCount = data.queries.length
         data.queries.forEach((item, index) => {
           this.$set(this.expressions, index, item.expr)
-          if (this.promqlKeys[index]) {
-            this.promqlKeys[index].state = item.state
-          } else {
-            this.promqlKeys[index] = {
-              id: getUUID(),
-              state: item.state
-            }
+          this.promqlKeys[index] = {
+            ...item,
+            id: getUUID(),
+            state: item.state
           }
         })
         this.init()

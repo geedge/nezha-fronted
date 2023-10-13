@@ -289,12 +289,12 @@ export default {
         str += key
         if (this.selectLogLabels[key].length === 1) {
           str += '="'
-          str += this.selectLogLabels[key][0]
+          str += this.escapeLabelValueInExactSelector(this.selectLogLabels[key][0])
           str += '"'
         } else {
           str += '=~"'
           this.selectLogLabels[key].forEach(item => {
-            str += this.$lodash.escapeRegExp(item)
+            str += this.escapeLabelValueInRegexSelector(item)
             str += '|'
           })
           str = str.slice(0, -1)
@@ -344,6 +344,16 @@ export default {
       this.$copyText(value).then(() => {
         this.$message.success({ message: this.$t('overall.copySuccess') })
       })
+    },
+    escapeLabelValueInExactSelector (labelValue) {
+      return labelValue.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/"/g, '\\"')
+    },
+    escapeLabelValueInRegexSelector (labelValue) {
+      return this.escapeLabelValueInExactSelector(this.escapeLokiRegexp(labelValue))
+    },
+    escapeLokiRegexp (value) {
+      const RE2_METACHARACTERS = /[*+?()|\\.\[\]{}^$]/g
+      return value.replace(RE2_METACHARACTERS, '\\$&')
     }
   }
 }

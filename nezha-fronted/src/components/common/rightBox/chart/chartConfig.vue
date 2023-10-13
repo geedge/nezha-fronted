@@ -80,7 +80,7 @@
               </span>
             </span>
           </div>
-          <transition name="el-zoom-in-top">
+<!--          <transition name="el-zoom-in-top">-->
             <el-row v-show="expressionsShow[index-1].show">
               <el-form-item :prop="'elements.' + (index -1) + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}">
                 <promql-input
@@ -123,7 +123,7 @@
                     </el-popover>
                   </div>
                   <div style="flex: 1">
-                    <el-select size="small" v-model="expressionsShow[index-1].queryType" @change="expressionChange">
+                    <el-select size="small" v-model="expressionsShow[index-1].queryType" @change="queryTypeChange(index - 1)">
                       <el-option :label="'Range'" :value="1">Range</el-option>
                       <el-option :label="'Instant'" :value="2">Instant</el-option>
                     </el-select>
@@ -150,7 +150,7 @@
                 </div>
               </el-row>
             </el-row>
-          </transition>
+<!--          </transition>-->
         </el-row>
         </draggable>
       </div>

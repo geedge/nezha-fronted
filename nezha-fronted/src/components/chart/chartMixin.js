@@ -219,6 +219,7 @@ export default {
       if (chartInfo.elements) {
         if (chartInfo.elements[expressionIndex]) {
           alias = alias + this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend, tagKeysArr)
+          console.log(alias, this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend, tagKeysArr), legend, chartInfo.elements[expressionIndex].legend, tagKeysArr)
         }
         if (!alias) {
           alias = chartInfo.elements[expressionIndex].expression || ''

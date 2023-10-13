@@ -336,13 +336,17 @@ export default {
               state: this.expressionsShow[i].state,
               orderNum: i,
               step: this.expressionsShow[i].step,
-              queryType: this.expressionsShow[i].queryType,
+              queryType: this.expressionsShow[i].queryType
             })
           }
         })
       } else {
         this.promqlKeys = []
       }
+    },
+    queryTypeChange (index) {
+      this.expressionsShow[index].step = undefined
+      this.expressionChange()
     },
     switchExpression (index, flag) {
       if (flag === 1) {
@@ -463,5 +467,10 @@ export default {
       this.expressionsShow[index - 1].show = !this.expressionsShow[index - 1].show
       this.$set(this.expressionsShow, index - 1, this.expressionsShow[index - 1])
     },
+    showHistoryBox (index) {
+      console.log(this.$refs['promql-' + (index)])
+      const historyshow = this.$refs['promql-' + (index)][0]?.historyshow
+      this.$refs['promql-' + (index)][0]?.showHistoryBox(!historyshow)
+    }
   }
 }

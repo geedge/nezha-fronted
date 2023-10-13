@@ -6,7 +6,7 @@
         <div
           v-if="plugins.indexOf('metric-input') > -1"
           class="input-box"
-          :class="type == 'log' ? 'input-box-log' : ''"
+          style="margin-right: 0;"
           @click="dropDownVisible = false"
         >
           <div
@@ -41,52 +41,8 @@
           <div v-if="appendMsg" class="append-msg error" style="position: absolute">
             <span>{{ appendMsg }}</span>
           </div>
-          <i class="nz-icon nz-icon-alert-list" style="position: absolute;top: 4px; right: 6px" @click="queryPromptShowChange"/>
+          <i class="nz-icon nz-icon-sousuoliebiao" style="position: absolute; right: 6px" @click="queryPromptShowChange"/>
           <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" :type="type" :width="queryPromptWidth" :position="queryPromptPosition" class="no-style-class" @selectMetric="selectMetric" @selectLog="selectLog"/>
-        </div>
-
-        <div class="top-tool-btn-group">
-          <button
-            v-if="plugins.indexOf('enable') > -1"
-            class="top-tool-btn"
-            :title="state?$t('overall.enabled'):$t('profile.close')"
-            @click="enableExpression"
-          >
-            <i  v-if="state" class="nz-icon nz-icon-mimakejian"></i>
-            <i v-else class="nz-icon nz-icon-mimabukejian" style="fontSize:16px"></i>
-          </button>
-          <button
-            v-if="plugins.indexOf('history') > -1"
-            class="top-tool-btn"
-            :title="$t('overall.history')"
-            @click.stop="showHistoryBox(!historyshow)"
-          >
-            <i class="nz-icon nz-icon-time" style="fontSize:16px"></i>
-          </button>
-          <button
-            v-if="plugins.indexOf('add') > -1"
-            class="top-tool-btn"
-            :title="$t('tip.add')"
-            @click="addExpression"
-          >
-            <i class="nz-icon nz-icon-plus"></i>
-          </button>
-          <button
-            v-if="plugins.indexOf('copy') > -1"
-            class="top-tool-btn"
-            @click="copyExpression"
-            :title="$t('overall.duplicate')"
-          >
-            <i class="nz-icon nz-icon-override"></i>
-          </button>
-          <button
-            v-if="plugins.indexOf('remove') > -1"
-            class="top-tool-btn"
-            @click="removeExpression"
-            :title="$t('overall.delete')"
-          >
-            <i class="nz-icon nz-icon-minus"></i>
-          </button>
         </div>
         <explore-history v-if="historyshow" :type="type" @close="showHistoryBox(false)" @selectHistory="selectHistory"/>
       </template>
@@ -144,7 +100,7 @@
               <span>{{ appendMsg }}</span>
             </div>
           </el-col>
-          <i class="nz-icon nz-icon-alert-list" style="position: absolute;right: 15px;height: 24px; width: 24px;line-height: 24px;top: 3px;" @click="queryPromptShowChange"/>
+          <i class="nz-icon nz-icon-sousuoliebiao" style="position: absolute;right: 15px;height: 24px; width: 24px;line-height: 24px;" @click="queryPromptShowChange"/>
           <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" :type="type" :width="queryPromptWidth" :position="queryPromptPosition" class="no-style-class" @selectMetric="selectMetric" @selectLog="selectLog"/>
         </el-row>
       </template>
@@ -1085,8 +1041,9 @@ export default {
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
       const boxHeight = 400
-      const parentHeight = 40
+      const parentHeight = this.$refs.queryRow.offsetHeight + 10
       let top = 0
+      console.log()
       const left = position.left
       if (position.top + parentHeight + boxHeight > windowHeight - 100) {
         top = position.top - boxHeight - 10

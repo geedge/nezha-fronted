@@ -340,6 +340,10 @@ export default {
       this.$refs.chartForm?.clearValidate('elements.' + (index) + '.expression')
       this.change()
     },
+    queryTypeChange (index) {
+      this.expressionsShow[index].step = undefined
+      this.expressionChange(index)
+    },
     switchExpression (index, flag) {
       if (flag === 1) {
         this.$set(this.expressionsShow[index], 'state', 0)

@@ -178,6 +178,7 @@ export default {
     },
     selectHistory (item) {
       this.$emit('selectHistory', item.queryValue)
+      this.hideMe()
     }
   }
 }

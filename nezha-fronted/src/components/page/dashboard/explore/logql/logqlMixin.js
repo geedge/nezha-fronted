@@ -8,7 +8,7 @@ export default {
       LANGUAGE_SETUP_STARTED: false,
       parser,
       MONACO_EDITOR_OPTIONS: {
-        automaticLayout: false,
+        automaticLayout: true,
         formatOnType: true,
         formatOnPaste: true,
         codeLens: false,

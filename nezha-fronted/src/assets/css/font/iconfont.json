@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "37668864",
+      "name": "搜索列表",
+      "font_class": "sousuoliebiao",
+      "unicode": "e804",
+      "unicode_decimal": 59396
+    },
+    {
       "icon_id": "37448064",
       "name": "Notebook",
       "font_class": "Notebook",

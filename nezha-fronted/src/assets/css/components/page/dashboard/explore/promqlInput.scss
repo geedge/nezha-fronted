@@ -35,10 +35,12 @@
 
       }
     }
-    .nz-icon-alert-list {
+    .nz-icon-sousuoliebiao {
       cursor: pointer;
+      top: 50%;
+      transform: translateY(-50%);
     }
-    .nz-icon-alert-list:hover{
+    .nz-icon-sousuoliebiao:hover{
       color: $--color-primary;
     }
   }
