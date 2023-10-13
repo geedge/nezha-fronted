@@ -144,7 +144,7 @@
               <span>{{ appendMsg }}</span>
             </div>
           </el-col>
-          <i class="nz-icon nz-icon-alert-list" style="position: absolute;top: -5px; right: 15px" @click="queryPromptShowChange"/>
+          <i class="nz-icon nz-icon-alert-list" style="position: absolute;right: 15px;height: 24px; width: 24px;line-height: 24px;top: 3px;" @click="queryPromptShowChange"/>
           <queryPrompt v-if="queryPromptShow" @close="queryPromptShowChange" :type="type" :width="queryPromptWidth" :position="queryPromptPosition" class="no-style-class" @selectMetric="selectMetric" @selectLog="selectLog"/>
         </el-row>
       </template>
