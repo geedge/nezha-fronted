@@ -189,8 +189,8 @@
                         </div>
                         <div style="flex: 1">
                           <el-select size="small" v-model="expressionsShow[index-1].queryType" @change="queryTypeChange(index - 1)" style="width: 100%;">
-                            <el-option :label="'Range'" :value="1">Range</el-option>
-                            <el-option :label="'Instant'" :value="2">Instant</el-option>
+                            <el-option :label="$t('dashboard.dashboard.chartForm.valMapping.range')" :value="1">{{$t('dashboard.dashboard.chartForm.valMapping.range')}}</el-option>
+                            <el-option :label="$t('overall.instant')" :value="2">{{$t('overall.instant')}}</el-option>
                           </el-select>
                         </div>
                       </div>
@@ -4039,18 +4039,19 @@ export default {
         const promqlInputIndexs = []
         const queryExpression = []
         // 过滤掉state为0的元素
+        let step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
         this.expressions.forEach((item, index) => {
           if (item != '' && this.promqlKeys[index].state && !this.promqlKeys[index].matrix) {
-            let step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
+            let queryStep = step
             if (this.promqlKeys[index].step) {
-              step = this.promqlKeys[index].step
+              queryStep = this.promqlKeys[index].step + 's'
             }
             promqlInputIndexs.push(index)
             queryExpression.push(item)
             if (this.promqlKeys[index].queryType === 2) {
               requestArr.push(this.$get('/prom/api/v1/query_instant?query=' + encodeURIComponent(item) + '&time=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))))
             } else {
-              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&step=' + step + '&nullType=null'))
+              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&step=' + queryStep + '&nullType=null'))
             }
           }
         })

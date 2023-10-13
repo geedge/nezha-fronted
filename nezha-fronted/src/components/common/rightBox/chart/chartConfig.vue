@@ -124,8 +124,8 @@
                   </div>
                   <div style="flex: 1">
                     <el-select size="small" v-model="expressionsShow[index-1].queryType" @change="queryTypeChange(index - 1)">
-                      <el-option :label="'Range'" :value="1">Range</el-option>
-                      <el-option :label="'Instant'" :value="2">Instant</el-option>
+                      <el-option :label="$t('dashboard.dashboard.chartForm.valMapping.range')" :value="1">{{$t('dashboard.dashboard.chartForm.valMapping.range')}}</el-option>
+                      <el-option :label="$t('overall.instant')" :value="2">{{$t('overall.instant')}}</el-option>
                     </el-select>
                   </div>
                 </div>
@@ -142,9 +142,8 @@
                       :min="minStep"
                       :precision="0"
                       :controls="false"
-                      class="append_unit"
                       :placeholder="$t('overall.auto')"
-                      :data-unit="$t('overall.seconds')">
+                    >
                     </el-input-number>
                   </div>
                 </div>

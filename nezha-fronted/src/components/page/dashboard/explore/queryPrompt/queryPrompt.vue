@@ -23,9 +23,9 @@
     </div>
     <div v-if="type !== 'log'" class="query-prompt-metric">
       <div class="explore-history-box-content-header">
-        <div class="query-prompt-name text-ellipsis query-prompt-content-text">Name</div>
-        <div class="query-prompt-type text-ellipsis query-prompt-content-text">Type</div>
-        <div class="query-prompt-remark text-ellipsis query-prompt-content-text">Description</div>
+        <div class="query-prompt-name text-ellipsis query-prompt-content-text">{{$t('overall.name')}}</div>
+        <div class="query-prompt-type text-ellipsis query-prompt-content-text">{{$t('overall.type')}}</div>
+        <div class="query-prompt-remark text-ellipsis query-prompt-content-text">{{$t('overall.remark')}}</div>
       </div>
       <div
         class="explore-history-box-content"
@@ -62,7 +62,7 @@
       </div>
     </div>
     <div v-if="type === 'log'"  class="query-prompt-log" v-my-loading="logLoading">
-      <div class="query-prompt-log-title">1.Select label names and values</div>
+      <div class="query-prompt-log-title">{{$t('queryPrompt.logTitle1')}}</div>
       <div class="query-prompt-log-content" style="">
         <div class="query-prompt-log-content-left">
           <div v-for="item in logLabels" :key="item" class="log-content-left-label" @click="getLogLabelsValues(item)">
@@ -92,7 +92,7 @@
           </div>
         </div>
       </div>
-      <div class="query-prompt-log-title">2.Resulting selector</div>
+      <div class="query-prompt-log-title">{{$t('queryPrompt.logTitle2')}}</div>
       <div class="query-prompt-log-final">
         <div class="query-prompt-log-final-box">
           <div class="query-prompt-log-final-text text-ellipsis" :title="logFinalStr">{{logFinalStr}}</div>

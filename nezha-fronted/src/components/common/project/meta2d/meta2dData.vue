@@ -127,17 +127,53 @@
                     ></promql-input>
                   </div>
                   <el-row style="margin-top: 18px;display: flex">
-                    <el-col class="legend-title">
-                      <span class="legend-title__span">{{$t('dashboard.dashboard.chartForm.legend')}}&nbsp;</span>
-                      <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
-                        <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div>
-                        <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div> -->
-                        <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
-                      </el-popover>
-                    </el-col>
-                    <el-col style="flex: 1">
-                      <el-input maxlength="512" show-word-limit size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
-                    </el-col>
+                    <div style="width: 310px;flex-shrink: 0">
+                      <div class="legend-title-new">
+                        <span class="legend-title__span">{{$t('dashboard.dashboard.chartForm.legend')}}&nbsp;</span>
+                        <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
+                          <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div>
+                          <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div> -->
+                          <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                        </el-popover>
+                      </div>
+                      <div>
+                        <el-input maxlength="512" size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
+                      </div>
+                    </div>
+                    <div style="margin-left: 10px;" v-if="'metrics' === promqlType">
+                      <div class="legend-title-new" style="width: 55px">
+                        <span class="legend-title__span">{{$t('overall.type')}}&nbsp;</span>
+                        <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
+                          <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div>
+                          <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div> -->
+                          <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                        </el-popover>
+                      </div>
+                      <div style="flex: 1">
+                        <el-select size="small" v-model="expressionsShow[index-1].queryType" @change="queryTypeChange(index - 1)">
+                          <el-option :label="$t('dashboard.dashboard.chartForm.valMapping.range')" :value="1">{{$t('dashboard.dashboard.chartForm.valMapping.range')}}</el-option>
+                          <el-option :label="$t('overall.instant')" :value="2">{{$t('overall.instant')}}</el-option>
+                        </el-select>
+                      </div>
+                    </div>
+                    <div style="margin-left: 10px;">
+                      <div class="legend-title-new" style="margin-left: 10px;width: 55px">
+                        <span class="legend-title__span">{{$t('overall.step')}}&nbsp;</span>
+                      </div>
+                      <div style="flex: 1">
+                        <el-input-number
+                          :disabled="expressionsShow[index-1].queryType == 2"
+                          @change="expressionChange"
+                          v-model="expressionsShow[index-1].step"
+                          size="small"
+                          :min="minStep"
+                          :precision="0"
+                          :controls="false"
+                          :placeholder="$t('overall.auto')"
+                          >
+                        </el-input-number>
+                      </div>
+                    </div>
                   </el-row>
                   <el-row style="margin-top: 18px;display: flex">
                     <div class="form-row-item">
@@ -287,6 +323,11 @@ export default {
       ]
     }
   },
+  computed : {
+    minStep () {
+      return this.nzDefaultConfig.minStep
+    }
+  },
   mounted () {
     this.init()
   },
@@ -304,13 +345,19 @@ export default {
             statistic: this.expressionsShow[i].statistic || 'last',
             name: this.expressionName[i],
             state: this.expressionsShow[i].state,
-            orderNum: i
+            orderNum: i,
+            step: this.expressionsShow[i].step || undefined,
+            queryType: this.expressionsShow[i].queryType || 1,
           })
         })
       } else {
         this.elements = []
       }
       this.change()
+    },
+    queryTypeChange (index) {
+      this.expressionsShow[index].step = undefined
+      this.expressionChange(index)
     },
     switchExpression (index, flag) {
       if (flag === 1) {
@@ -379,7 +426,9 @@ export default {
           unit: 1,
           statistic: 'last',
           elementId: '',
-          state: 1
+          state: 1,
+          step: undefined,
+          queryType: 1,
         })
         this.expressionChange()
       } else {
@@ -394,7 +443,9 @@ export default {
           legend: item.legend,
           unit: item.unit || 1,
           statistic: item.statistic || 'last',
-          state: item.state
+          state: item.state,
+          step: item.step || undefined,
+          queryType: item.queryType || 1,
         })
       }
     },

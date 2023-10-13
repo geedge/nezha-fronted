@@ -30,6 +30,7 @@ export default {
       getTopology(this.meta2dId)._setValue(node)
     },
     getQueryValues (elements, startTime, endTime) {
+      console.log(startTime, endTime)
       this.meta2dLoading = true
       return new Promise(resolve => {
         const step = bus.getStep(startTime, endTime)
@@ -39,7 +40,16 @@ export default {
         elements = elements.filter(item => item.state && item.expression)
         const requests = elements.map((element) => {
           // query_range
-          let query = `${urlPre}/api/v1/query_range?start=${startTime}&end=${endTime}&step=${step}`
+          let queryStep = step
+          if (element.step) {
+            queryStep = element.step + 's'
+          }
+          let query = ''
+          if (element.queryType === 2) {
+            query = `${urlPre}/api/v1/query_instant?time=${endTime}`
+          } else {
+            query = `${urlPre}/api/v1/query_range?start=${startTime}&end=${endTime}&step=${queryStep}`
+          }
           query += `&nullType=${'null'}`
           if (element.filter) {
             query += `&filter=${element.filter}`
