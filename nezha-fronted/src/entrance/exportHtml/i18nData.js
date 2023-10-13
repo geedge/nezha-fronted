@@ -10279,7 +10279,7 @@ const i18nData = {
     memcached_delete_misses: '缺失键的删除次数',
     elasticsearch_thread_pool_warmer_queue: 'warmer线程池执行程序拒绝的任务数',
     cassandra_TableMetrics_BytesValidated_Count: '验证期间读取的字节数的直方图。',
-    'project.topology.rule': '摄取查询器',
+    'project.topology.rule': '标尺',
     'batch.prepare': '是否删除这{dataLength}条数据？',
     mertic_nolistening_msg: 'Mertic：端口无服务监听',
     'config.system.basic.assetPingSwith': '资产Ping开关',
