@@ -54,6 +54,27 @@ export default {
       },
       activities: [
         {
+          timestamp: 'Release 23.10 - Oct 2023',
+          content: [{
+            chinese: '[FEATURE] 笔记本功能允许您将多种图表组合起来，以构建可共享的、数据丰富的文档。使用笔记本，您可以对事件进行故障排除，创建事后分析，并构建运行手册',
+            english: '[FEATURE] The notebook feature allows you to combine multiple charts to build shareable, data-rich documents. Using notebooks, you can troubleshoot incidents, create postmortems, and build runbooks'
+          }, {
+            chinese: '[FEATURE] 系统备份功能允许您将系统的配置保存到磁盘，以便在需要的时候恢复数据',
+            english: '[FEATURE] The backup feature allows you to save the system configuration to disk so you can recover the configuration when needed'
+          }, {
+            chinese: '[FEATURE] 通过软件资产管理功能可以集中管理软件资产，统计软件的使用情况',
+            english: '[FEATURE] The software asset management feature can centrally manage software assets and count software usage'
+          }, {
+            chinese: '[ENHANCEMENT] 告警消息详情页面增加显示相关资产仪表板并支持快照导出',
+            english: '[ENHANCEMENT] The alarm message details page now displays the related asset dashboard and supports snapshot export'
+          }, {
+            chinese: '[ENHANCEMENT] 时序图表优化用户体验',
+            english: '[ENHANCEMENT] Time series charts optimize user experience'
+          }, {
+            chinese: '[ENHANCEMENT] 探索日志数据支持查看上下文',
+            english: '[ENHANCEMENT] Exploring log data supports viewing context'
+          }]
+        }, {
           timestamp: 'Release 23.07 - Jul 2023',
           content: [{
             chinese: '[FEATURE] 新增资产发现功能',
