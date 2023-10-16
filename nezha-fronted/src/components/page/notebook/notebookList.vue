@@ -101,16 +101,6 @@ export default {
         this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].getChartData(refreshData)
       })
     },
-    resizedEvent (i, newH, newW, newHPx, newWPx) {
-      // TODO 重新渲染图表，向后端发送put请求
-      setTimeout(() => {
-        this.$refs['chart' + i][0].resize()
-        this.onScroll(this.scrollTop)
-      }, 100)
-    },
-    movedEvent (i, newX, newY) {
-      this.onScroll(this.scrollTop)
-    },
     onScroll (scrollTop = 0) {
       const self = this
       if (this.scrollTopTimer) {
@@ -165,8 +155,7 @@ export default {
         const cloneDataList = this.$lodash.cloneDeep(n)
         const tempList = cloneDataList.map((item, index) => {
           return {
-            ...item,
-            i: item.id
+            ...item
           }
         })
         this.$nextTick(() => {
