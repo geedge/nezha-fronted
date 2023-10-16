@@ -22,10 +22,11 @@
       :series="series"
       :is-fullscreen="isFullscreen"
     ></chart-legend>
-    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
-      <div v-html="tooltip.tooltipHtml"></div>
+    <!-- toolbox -->
+    <div :id="`chart-toolbox-${chartId}`" class="chart-canvas-tooltip no-style-class chart-toolbox" :style="{left:toolbox.x+'px',top:toolbox.y+'px'}" v-if="toolbox.show" v-clickoutside="clickout">
+      <div v-html="toolbox.tooltipHtml"></div>
       <!-- dataLink -->
-      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+      <div class="chart-dataLink-list">
         <!-- 复制表达式 -->
         <div class="chart-dataLink-item select-series" v-if="chartInfo.datasource==='metrics'||chartInfo.datasource==='logs'" @click="copyExpr">
           <i class="nz-icon nz-icon-override"></i>
@@ -85,14 +86,13 @@ export default {
       hasRightYAxis: false,
       chartLoading: false,
       cursorDefault: false,
-      tooltip: {
+      toolbox: {
         x: 0,
         y: 0,
         title: 0,
         value: 0,
         mapping: {},
         show: false,
-        dataLinkShow: '',
         metric: {},
         activeIndex: undefined,
         clickIndex: undefined
@@ -282,12 +282,6 @@ export default {
           })
 
           myChart.on('click', this.chartClick)
-          myChart.on('mousedown', (params) => {
-            if (this.tooltip.dataLinkShow) {
-              const e = params.event.event
-              e.stopPropagation()
-            }
-          })
           // 鼠标滑过当前symbol 改变样式
           myChart.on('mousemove', (params) => {
             this.cursorDefault = false
@@ -317,7 +311,7 @@ export default {
                 }
               )
             }
-            this.tooltip.activeIndex = params.seriesIndex
+            this.toolbox.activeIndex = params.seriesIndex
           })
           myChart.on('mouseout', (params) => {
             const option = myChart.getOption()
@@ -332,7 +326,7 @@ export default {
               })
               myChart.setOption({ series })
             }
-            this.tooltip.activeIndex = undefined
+            this.toolbox.activeIndex = undefined
           })
 
           if (!this.isFullscreen) {
@@ -559,7 +553,7 @@ export default {
 
             // 鼠标悬浮 series data symbol 时，tooltip 中相应的legend 高亮显示
             str += `
-            <div class="${(self.tooltip.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}" title="${seriesName}">
+            <div class="${(self.toolbox.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}" title="${seriesName}">
               <div class="row__label">
                 <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${seriesName}</span>
@@ -660,25 +654,25 @@ export default {
         this.hasRightYAxis = true
       }
     },
-    datalinkPosition (e) {
+    toolboxPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
       this.$nextTick(() => {
-        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        const box = document.getElementById(`chart-toolbox-${this.chartId}`)
         const left = e.pageX - this.$refs['timeSeries-chart-box'].getBoundingClientRect().left
         const top = e.pageY - this.$refs['timeSeries-chart-box'].getBoundingClientRect().top
         if (box) {
           const boxWidth = box.offsetWidth
           const boxHeight = box.offsetHeight
           if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-            this.tooltip.x = left + 15
+            this.toolbox.x = left + 15
           } else {
-            this.tooltip.x = left - boxWidth - 15
+            this.toolbox.x = left - boxWidth - 15
           }
           if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
-            this.tooltip.y = top + 15
+            this.toolbox.y = top + 15
           } else {
-            this.tooltip.y = top - boxHeight - 10
+            this.toolbox.y = top - boxHeight - 10
           }
         }
       })
@@ -688,17 +682,9 @@ export default {
       if (this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }
-      const option = {
-        tooltip: {
-          extraCssText: 'z-index:99999999;visibility:hidden;transition:none;',
-          hideDelay: 0
-        }
-      }
-      getChart(this.chartId).setOption(option)
       getChart(this.chartId).dispatchAction({
         type: 'hideTip'
       })
-      // 生成dataLink tooltip
       const nameArr = params.seriesName.split('-')
       if (nameArr.length > 1) {
         nameArr.splice(nameArr.length - 1, 1)
@@ -731,7 +717,7 @@ export default {
         className = 'yAxis-icon nz-icon nz-icon-youzongzhou'
       }
       const color = this.colorList[params.seriesIndex]
-      this.tooltip.tooltipHtml = `
+      this.toolbox.tooltipHtml = `
         <div class="nz-chart__tooltip">
           <div class="tooltip-title" style="margin-bottom: 5px">${bus.timeFormate(tData)}</div>
           <div class="tooltip__row">
@@ -745,33 +731,27 @@ export default {
           </div>
         </div>
         `
-      this.tooltip.show = true
-      this.tooltip.dataLinkShow = true
-      this.tooltip.metric.labels = this.series[params.seriesIndex].labels
-      this.tooltip.metric.expressionIndex = this.series[params.seriesIndex].expressionIndex
-      this.tooltip.clickIndex = params.seriesIndex
+      this.toolbox.show = true
+      this.toolbox.metric.labels = this.series[params.seriesIndex].labels
+      this.toolbox.metric.expressionIndex = this.series[params.seriesIndex].expressionIndex
+      this.toolbox.clickIndex = params.seriesIndex
       const e = params.event.event
-      this.datalinkPosition(e)
+      this.toolboxPosition(e)
       if (this.isConnect !== 'none') {
         echarts.connect('timeSeriesGroup')
       }
     },
     clickout () {
-      this.tooltip.show = false
-      this.tooltip.dataLinkShow = false
-      const option = {
-        tooltip: {
-          extraCssText: 'z-index:99999999;visibility:visible;'
-        }
+      if (this.toolbox.show) {
+        this.toolbox.show = false
       }
-      getChart(this.chartId).setOption(option)
     },
     showSelectedSeries () {
       if (this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }
       this.legends.forEach((item, index) => {
-        if (index == this.tooltip.clickIndex) {
+        if (index == this.toolbox.clickIndex) {
           getChart(this.chartId).dispatchAction({
             type: 'legendSelect',
             name: item.name
@@ -783,7 +763,7 @@ export default {
           })
         }
       })
-      this.isGrey = this.isGrey.map((g, i) => i !== this.tooltip.clickIndex)
+      this.isGrey = this.isGrey.map((g, i) => i !== this.toolbox.clickIndex)
       this.$refs.legend.isGrey = this.isGrey
 
       // 点击后 处理Y轴的刻度边的

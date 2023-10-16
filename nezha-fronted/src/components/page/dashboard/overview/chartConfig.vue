@@ -76,14 +76,15 @@ const commonOption = {
   tooltip: {
     trigger: 'axis',
     confine: false,
-    extraCssText: 'z-index:1000;',
+    extraCssText: 'z-index:99999999;',
     backgroundColor: 'rgba(221,228,237,1)',
     borderColor: 'rgba(221,228,237,1)',
     textStyle: { color: '#000' },
     axisPointer: {
       snap: false,
       animation: false
-    }
+    },
+    hideDelay: 0
     // formatter:null,
     // position:null,
   },

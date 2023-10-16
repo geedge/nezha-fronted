@@ -23,9 +23,9 @@
       </div>
     </div>
 
-    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-expolre-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
-      <div v-html="tooltip.tooltipHtml"></div>
-      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+    <div :id="`chart-toolbox-${chartId}`" class="chart-expolre-tooltip no-style-class chart-toolbox" :style="{left:toolbox.x+'px',top:toolbox.y+'px'}" v-if="toolbox.show" v-clickoutside="clickout">
+      <div v-html="toolbox.tooltipHtml"></div>
+      <div class="chart-dataLink-list">
         <!-- 只有一条数据时显示 -->
         <div class="chart-dataLink-item" v-if="legend.filter(value => value.isGray === false).length==1" @click="showAllSeries">
           <i class="nz-icon nz-icon-a-Showallseries"></i>
@@ -83,14 +83,13 @@ export default {
       chartDot: 2,
       theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light',
       cursorDefault: false,
-      tooltip: {
+      toolbox: {
         x: 0,
         y: 0,
         title: 0,
         value: 0,
         mapping: {},
         show: false,
-        dataLinkShow: '',
         metric: {},
         activeIndex: undefined,
         clickIndex: undefined
@@ -263,12 +262,6 @@ export default {
         })
 
         this.chart.on('click', this.chartClick)
-        this.chart.on('mousedown', (params) => {
-          if (this.tooltip.dataLinkShow) {
-            const e = params.event.event
-            e.stopPropagation()
-          }
-        })
 
         // 鼠标滑过当前symbol 改变样式
         this.chart.on('mousemove', (params) => {
@@ -290,7 +283,7 @@ export default {
               dataIndex: params.dataIndex
             }
           )
-          this.tooltip.activeIndex = params.seriesIndex
+          this.toolbox.activeIndex = params.seriesIndex
         })
         this.chart.on('mouseout', (params) => {
           const option = this.chart.getOption()
@@ -303,7 +296,7 @@ export default {
             })
           })
           this.chart.setOption({ series })
-          this.tooltip.activeIndex = undefined
+          this.toolbox.activeIndex = undefined
         })
       }
 
@@ -549,7 +542,7 @@ export default {
         showFlag = showFlag || item.value[1]
         if (!isNaN(item.value[1] + '')) {
           const val = Number(item.value[1])
-          str += `<div class="${(this.tooltip.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}">`
+          str += `<div class="${(this.toolbox.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}">`
           str += `<div class="row__label">
                     <span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>
                     <span>${alias || item.seriesName}</span>
@@ -723,9 +716,9 @@ export default {
         oldDot
       }
     },
-    datalinkPosition (e) {
+    toolboxPosition (e) {
       this.$nextTick(() => {
-        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        const box = document.getElementById(`chart-toolbox-${this.chartId}`)
         const left = e.pageX - this.$refs.chartRoom.getBoundingClientRect().left
         const top = e.pageY - this.$refs.chartRoom.getBoundingClientRect().top
         if (box) {
@@ -734,22 +727,15 @@ export default {
           const parent = chartDom.parentElement
           const parClientWidth = parent.clientWidth// 可视宽度
           if ((parClientWidth - left - 20) >= boxWidth) { // 说明鼠标在左边放不下提示框
-            this.tooltip.x = left + 10
+            this.toolbox.x = left + 10
           } else {
-            this.tooltip.x = left - boxWidth
+            this.toolbox.x = left - boxWidth
           }
-          this.tooltip.y = top + 10
+          this.toolbox.y = top + 10
         }
       })
     },
     chartClick (params) {
-      const option = {
-        tooltip: {
-          extraCssText: 'z-index:1000;visibility:hidden;transition:none;',
-          hideDelay: 0
-        }
-      }
-      this.chart.setOption(option)
       this.chart.dispatchAction({
         type: 'hideTip'
       })
@@ -770,7 +756,7 @@ export default {
       }
       const val = formatScientificNotation(params.value[1], paramsDot)
       const color = this.colors[params.seriesIndex]
-      this.tooltip.tooltipHtml = `
+      this.toolbox.tooltipHtml = `
         <div class="nz-chart__tooltip">
           <div class="tooltip-title" style="margin-bottom: 5px">${bus.timeFormate(tData)}</div>
           <div class="tooltip__row">
@@ -784,25 +770,17 @@ export default {
           </div>
         </div>
         `
-      this.tooltip.show = true
-      this.tooltip.dataLinkShow = true
-      this.tooltip.clickIndex = params.seriesIndex
+      this.toolbox.show = true
+      this.toolbox.clickIndex = params.seriesIndex
       const e = params.event.event
-      this.datalinkPosition(e)
+      this.toolboxPosition(e)
     },
     clickout () {
-      this.tooltip.show = false
-      this.tooltip.dataLinkShow = false
-      const option = {
-        tooltip: {
-          extraCssText: 'z-index:1000;visibility:visible;'
-        }
-      }
-      this.chart.setOption(option)
+      this.toolbox.show = false
     },
     showSelectedSeries () {
       this.legend.forEach((item, index) => {
-        if (index == this.tooltip.clickIndex) {
+        if (index == this.toolbox.clickIndex) {
           this.chart.dispatchAction({
             type: 'legendSelect',
             name: item.name
@@ -818,7 +796,7 @@ export default {
       this.legend = this.legend.map((item, index) => {
         return {
           ...item,
-          isGray: index !== this.tooltip.clickIndex
+          isGray: index !== this.toolbox.clickIndex
         }
       })
       this.clickout()

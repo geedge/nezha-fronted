@@ -21,7 +21,8 @@ const chartTreemapOption = {
         formatUtil.encodeHTML(treePath.join('/')) +
         '</div>'
       ].join('')
-    }
+    },
+    hideDelay: 0
   },
   series: [
     {
