@@ -130,7 +130,7 @@ export default {
       if (this.isChart && this.timeRange) {
         startTime = this.timeRange[0]
         endTime = this.timeRange[1]
-      } else if (this.filterTime) {
+      } else if (this.filterTime && this.filterTime.length) {
         startTime = this.momentStrToTimestamp(this.filterTime[0])
         endTime = this.momentStrToTimestamp(this.filterTime[1])
       }
