@@ -176,6 +176,10 @@ export default {
       let charts = this.$lodash.cloneDeep(this.$refs.notebookList.copyDataList)
       charts = charts.filter(item => item.name !== 'groupTemp')
       charts.forEach(item => {
+        delete item.x
+        delete item.y
+        delete item.modifiedName
+        delete item.oldElements
         if (item.type === 'text') {
           delete item.param.isEdit
           delete item.param.oldText

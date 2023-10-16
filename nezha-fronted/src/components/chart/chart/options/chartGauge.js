@@ -7,7 +7,8 @@ const chartGaugeOption = {
     z: 9,
     animation: false,
     appendToBody: true,
-    className: 'chart-gauge'
+    className: 'chart-gauge',
+    hideDelay: 0
   },
   legend: {
     show: false

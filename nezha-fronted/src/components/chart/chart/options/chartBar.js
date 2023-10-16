@@ -7,7 +7,8 @@ const chartBarOption = {
     z: 9,
     animation: false,
     appendToBody: true,
-    className: 'chart-bar'
+    className: 'chart-bar',
+    hideDelay: 0
   },
   legend: {
     show: false
