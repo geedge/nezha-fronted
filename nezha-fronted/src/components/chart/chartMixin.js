@@ -31,8 +31,15 @@ export default {
         title: 0,
         value: 0,
         mapping: {},
+        show: false
+      },
+      toolbox: {
+        x: 0,
+        y: 0,
+        title: 0,
+        value: 0,
+        mapping: {},
         show: false,
-        dataLinkShow: '',
         metric: {}
       }
     }
@@ -465,10 +472,10 @@ export default {
     linkClick (data) {
       const url = data.url.replace(/(\{\{.+?\}\})/g, (match) => {
         const label = match.substr(match.indexOf('{{') + 2, match.indexOf('}}') - match.indexOf('{{') - 2)
-        if (this.tooltip.metric.labels[label]) {
-          return this.tooltip.metric.labels[label]
+        if (this.toolbox.metric.labels[label]) {
+          return this.toolbox.metric.labels[label]
         } else {
-          return this.chartInfo.elements[this.tooltip.metric.expressionIndex].expression || ''
+          return this.chartInfo.elements[this.toolbox.metric.expressionIndex].expression || ''
         }
       })
       if (data.openIn === 'newTab') {
@@ -479,7 +486,7 @@ export default {
       this.clickout()
     },
     copyExpr () {
-      const expr = this.chartInfo.elements[this.tooltip.metric.expressionIndex].expression || ''
+      const expr = this.chartInfo.elements[this.toolbox.metric.expressionIndex].expression || ''
       this.$copyText(expr).then(() => {
         this.$message.success({ message: this.$t('overall.copySuccess') })
         this.clickout()

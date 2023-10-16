@@ -46,7 +46,8 @@ export const chartTimeSeriesLineOption = {
       label: {
         show: false
       }
-    }
+    },
+    hideDelay: 0
   },
   dataZoom: [
     {
