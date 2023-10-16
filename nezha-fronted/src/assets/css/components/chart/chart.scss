@@ -683,10 +683,10 @@
   }
 }
 
-.chart-dataLink-tooltip{
+.chart-toolbox{
   position: absolute !important;
   padding-bottom: 2px !important;
-  z-index: 999999999;
+  z-index: 9999;
   pointer-events: auto;
   .chart-dataLink-list{
     width: calc(100% + 20px);
