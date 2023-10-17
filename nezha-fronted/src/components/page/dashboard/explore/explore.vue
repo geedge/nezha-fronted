@@ -1,7 +1,7 @@
 <template>
   <div class="explores">
     <explore-item
-      v-for="item in exploreItems"
+      v-for="(item, index) in exploreItems"
       ref="exploreItem"
       :key="item"
       :closable="closable"

@@ -249,8 +249,12 @@ export default {
   mounted () {
   },
   methods: {
-    closeRightBox () {
+    closeRightBox (refresh) {
       this.rightBox.show = false
+      if (refresh) {
+        const  findItem  = this.tableData.find(item=> item.ip ===  this.object.manageIp)
+        findItem.imported = 1
+      }
     },
     async uploadAsset (row) {
       this.object = this.newObject()

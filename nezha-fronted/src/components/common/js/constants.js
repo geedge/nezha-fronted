@@ -424,6 +424,8 @@ export const fromRoute = {
   assetType: 'assetType',
   assetState: 'assetState',
   assetLabel: 'assetLabel',
+  softwareAsset: 'softwareAsset',
+  softwareType: 'softwareType',
   assetDiscovery: 'assetDiscovery',
   user: 'user',
   agent: 'agent',

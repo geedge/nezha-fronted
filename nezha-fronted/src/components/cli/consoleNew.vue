@@ -183,10 +183,13 @@ export default {
       if (userInfo) {
         this.waterMarkText = `${userInfo.username}(${userInfo.name})`
       }
+      if (!baseUrl.endsWith('/')) {
+        baseUrl += '/'
+      }
       if (this.terminal.type === 'asset') {
-        url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.term.cols + '&rows=' + this.term.rows + '&token=' + token + '&assetId=' + this.terminal.assetId + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
+        url = baseUrl + 'terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.term.cols + '&rows=' + this.term.rows + '&token=' + token + '&assetId=' + this.terminal.assetId + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
       } else if (this.terminal.type === 'custom') {
-        url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.term.cols + '&rows=' + this.term.rows + '&token=' + token + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
+        url = baseUrl + 'terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.term.cols + '&rows=' + this.term.rows + '&token=' + token + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
         Object.keys(this.terminal.custom).forEach(key => {
           if (this.terminal.custom[key]) {
             url += '&' + key + '=' + this.terminal.custom[key]
@@ -250,8 +253,6 @@ export default {
       // 关闭
       this.terminalSocket.onclose = () => {
         this.terminal.isLogin = false
-        // 报错sorry的，还没来得及看信息就关闭
-        // this.$emit("closeConsole",this.terminal.name);//
         this.term && (this.term.options.disableStdin = true)
       }
 

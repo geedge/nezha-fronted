@@ -328,7 +328,8 @@ export default {
         this.expressions.forEach((expr, i) => {
           if (this.expressionsShow[i]) {
             this.promqlKeys.push({
-              id: this.expressionsShow[i].elementId,
+              elementId: this.expressionsShow[i].elementId,
+              id: this.expressionsShow[i].id,
               expression: expr,
               type: 'expert',
               legend: this.expressionsShow[i].legend,

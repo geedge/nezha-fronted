@@ -224,12 +224,12 @@
           <el-collapse v-show="!showIntroduce" v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
             <!--metric-->
             <template v-if="showMetrics">
-              <el-collapse-item v-if="!allMatrix" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+              <el-collapse-item v-if="!allMatrix && showChart" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
                 <div class="chart-room">
                   <chart ref="exploreChart" :unit="chartUnit" :timeRange="filterTime"></chart>
                 </div>
               </el-collapse-item>
-              <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
+              <el-collapse-item class="el-collapse-item__height" name="2" title="Table" v-if="showTable">
                 <div slot="title" class="explore-table-title">
                   <span>{{tableMode==='table'?$t('dashboard.dashboard.chartForm.typeVal.table.label'):$t('explore.row')}}</span>
                   <!-- 判断是否折叠 -->
@@ -3731,7 +3731,9 @@ export default {
       rowData: [],
       metricsHistory: [],
       logsHistory: [],
-      lastHistory: []
+      lastHistory: [],
+      showChart: false,
+      showTable: false,
     }
   },
   async created () {
@@ -4041,7 +4043,7 @@ export default {
         // 过滤掉state为0的元素
         let step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
         this.expressions.forEach((item, index) => {
-          if (item != '' && this.promqlKeys[index].state && !this.promqlKeys[index].matrix) {
+          if (item != '' && this.promqlKeys[index].state && !this.promqlKeys[index].matrix && this.promqlKeys[index].queryType == 1) {
             let queryStep = step
             if (this.promqlKeys[index].step) {
               queryStep = this.promqlKeys[index].step + 's'
@@ -4051,6 +4053,7 @@ export default {
             if (this.promqlKeys[index].queryType === 2) {
               requestArr.push(this.$get('/prom/api/v1/query_instant?query=' + encodeURIComponent(item) + '&time=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))))
             } else {
+              this.showChart = true
               requestArr.push(this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&step=' + queryStep + '&nullType=null'))
             }
           }
@@ -4132,13 +4135,13 @@ export default {
                 }
               }
             })
-
-            this.$refs.exploreChart.setLegend(legend)
-            this.$refs.exploreChart.setRandomColors(series.length)
+            this.series = series
+            this.$refs.exploreChart?.setLegend(legend)
+            this.$refs.exploreChart?.setRandomColors(series.length)
             if (!series.length) {
               series = ''
             }
-            this.$refs.exploreChart.setSeries(series)
+            this.$refs.exploreChart?.setSeries(series)
             this.defaultChartVisible = true
           }
           this.$refs.exploreChart && this.$refs.exploreChart.endLoading()
@@ -4146,13 +4149,17 @@ export default {
       }
     },
     async queryTableData () {
+      console.log(this.expressions)
       this.tools.loading = true
       if (this.expressions.length > 0) {
         const requestArr = []
         this.expressions.forEach((item, index) => {
           // 过滤掉state为0的元素
-          if (item !== '' && this.promqlKeys[index].state) {
-            requestArr.push(this.$get('/prom/api/v1/query?query=' + encodeURIComponent(item)))
+          console.log(this.promqlKeys[index].queryType)
+          if (item !== '' && this.promqlKeys[index].state && this.promqlKeys[index].queryType == 2) {
+            // requestArr.push(this.$get('/prom/api/v1/query?query=' + encodeURIComponent(item)))
+            this.showTable = true
+            requestArr.push(this.$get('/prom/api/v1/query_instant?query=' + encodeURIComponent(item) + '&time=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))))
           }
         })
         if (requestArr.length > 0) {
@@ -4168,7 +4175,7 @@ export default {
           this.tableTitle = []
           this.tools.customTableTitle = []
 
-          this.allMatrix = res.every(d => d.data.resultType === 'matrix')
+          // this.allMatrix = res.every(d => d.data.resultType === 'matrix')
 
           res.forEach((response, index) => {
             if (response.data && response.status === 'success') {
@@ -4176,21 +4183,10 @@ export default {
               this.promqlKeys[index].matrix = response.data.resultType === 'matrix'
               let data = response.data.result
               if (data) {
-                if (data.length && !Array.isArray(data[0].value) && response.data.resultType !== 'matrix') {
-                  data = [{
-                    metric: {},
-                    value: data
-                  }]
-                }
                 data.forEach((result, i) => {
                   const metrics = Object.assign({}, result.metric)
-                  if (response.data.resultType === 'matrix') {
-                    this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.values[0][1], null, 2))
-                    this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000)))
-                  } else {
-                    this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.value[1], null, 2))
-                    this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.value[0] * 1000)))
-                  }
+                  this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.values[0][1], null, 2))
+                  this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000)))
                   for (const key in metrics) {
                     const label = {
                       label: key,
@@ -4204,37 +4200,28 @@ export default {
                       tLabels.push(label)
                     }
                   }
-                  if (response.data.resultType === 'matrix') {
-                    result.values.forEach(item => {
-                      tData.push({
-                        ...metrics,
-                        ['value#' + index]: chartDataFormat.getUnit(this.chartUnit || 2).compute(item[1], null, 2),
-                        time: bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000))
-                      })
+                  result.values.forEach(item => {
+                    tData.push({
+                      ...metrics,
+                      ['value#' + index]: chartDataFormat.getUnit(this.chartUnit || 2).compute(item[1], null, 2),
+                      time: bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000))
                     })
-                  } else {
-                    tData.push(metrics)
-                  }
+                  })
 
                   // 处理row模式数据
                   const rowData = this.handlerRowData(result.metric)
                   rowData.value = metrics['value#' + index]
                   // matrix 类型数据
-                  if (response.data.resultType === 'matrix') {
-                    rowData.valueList = result.values.map((item, index) => {
-                      const obj = {}
-                      obj.value = chartDataFormat.getUnit(this.chartUnit || 2).compute(item[1], null, 2)
-                      obj.timestamp = '@' + item[0]
-                      obj.time = bus.timeFormate(bus.computeTimezone(item[0] * 1000))
-                      if (index) { // 与前一个数据间隔
-                        obj.interval = '+' + parseInt(item[0] - result.values[index - 1][0]).toString()
-                      }
-                      return obj
-                    })
-                  } else {
-                    rowData.timestamp = '@' + result.value[0]
-                    rowData.time = bus.timeFormate(bus.computeTimezone(result.value[0] * 1000))
-                  }
+                  rowData.valueList = result.values.map((item, index) => {
+                    const obj = {}
+                    obj.value = chartDataFormat.getUnit(this.chartUnit || 2).compute(item[1], null, 2)
+                    obj.timestamp = '@' + item[0]
+                    obj.time = bus.timeFormate(bus.computeTimezone(item[0] * 1000))
+                    if (index) { // 与前一个数据间隔
+                      obj.interval = '+' + parseInt(item[0] - result.values[index - 1][0]).toString()
+                    }
+                    return obj
+                  })
                   this.rowData.push(rowData)
                 })
               }
@@ -4375,6 +4362,8 @@ export default {
         if (error) { return }
         if (this.showMetrics) {
           this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
+          this.showChart = false
+          this.showTable = false
           await this.queryTableData()
           this.queryChartData()
           this.storeHistory()
