@@ -138,6 +138,8 @@ export default {
         params.moduleIds = this.obj.id
       } else if (this.from === fromRoute.asset) {
         params.assetIds = this.obj.id
+      } else if (this.from === fromRoute.softwareAsset) {
+        params.softwareAssetIds = this.obj.id
       }
       this.$get(this.url, params).then(response => {
         this.tools.loading = false

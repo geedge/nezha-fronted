@@ -233,6 +233,7 @@ export default {
       // this.$store.commit('addConsole', consoleParam)
     },
     getTableData (params) {
+      let url  = this.url
       if (params && Object.keys(params).length > 0) {
         for (const key in params) {
           this.$set(this.searchLabel, key, params[key])
@@ -249,9 +250,12 @@ export default {
         this.$set(this.searchLabel, 'modelIds', this.obj.id)
       } else if (this.from === fromRoute.dc) {
         this.$set(this.searchLabel, 'dcIds', this.obj.id)
+      } else if (this.from === fromRoute.softwareType) {
+        url = '/asset/software'
+        this.$set(this.searchLabel, 'typeIds', this.obj.id)
       }
       this.tools.loading = true
-      this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
+      this.$get(url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {

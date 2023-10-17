@@ -82,6 +82,10 @@
         <discovery-tab v-if="from === fromRoute.assetDiscovery && targetTab === 'assetDiscoveryTab'" :from="from" :obj="obj"  :tabs="tabs.discovery" @changeTab="changeTab" :targetTab.sync="targetTab"></discovery-tab>
         <!-- notebook Tab -->
         <notebook-tab @getTableData="getTableData" v-if="from === fromRoute.notebook && targetTab === 'notebookTab'" :from="from" :obj="obj"  :tabs="tabs.notebook" @changeTab="changeTab" :targetTab.sync="targetTab"></notebook-tab>
+        <!--softwareAsset列表的tab-->
+        <endpointTabNew v-if="from === fromRoute.softwareAsset && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.softwareAssetTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
+        <!--model 下滑-->
+        <asset-tab v-if="(from === fromRoute.softwareType) && targetTab === 'asset'" :tabs="tabs.softwareType" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></asset-tab>
       </div>
     </div>
   </div>
@@ -241,6 +245,11 @@ export default {
             { prop: 'moduleAlertMessage', name: this.$t('overall.alert') }
           ]
         },
+        softwareAsset: {
+          softwareAssetTabTitle: [
+            { prop: 'endpoint', name: this.$t('asset.endpoint') },
+          ]
+        },
         endpoint: {
           endpointTabTitle: [
             { prop: 'dashboardTab', name: this.$t('overall.dashboard') },
@@ -266,6 +275,9 @@ export default {
           ]
         },
         model: [
+          { prop: 'asset', name: this.$t('asset.asset'), active: true }
+        ],
+        softwareType: [
           { prop: 'asset', name: this.$t('asset.asset'), active: true }
         ],
         dc: {
