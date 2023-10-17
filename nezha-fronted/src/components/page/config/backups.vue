@@ -60,8 +60,8 @@ import nzDataList from '@/components/common/table/nzDataList'
 import backupsTable from '@/components/common/table/settings/backupsTable'
 import backupsBox from '@/components/common/rightBox/administration/backupsBox'
 import bus from '@/libs/bus'
-import dataListMixin from "@/components/common/mixin/dataList";
-import routerPathParams from "@/components/common/mixin/routerPathParams";
+import dataListMixin from '@/components/common/mixin/dataList'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export default {
   name: 'backups',
@@ -97,7 +97,8 @@ export default {
         // }
       ],
       rightBoxshow: false,
-      isRefresh: ''
+      isRefresh: '',
+      fromBottom: true
     }
   },
   provide () {
