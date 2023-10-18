@@ -16,11 +16,11 @@
             <span slot="title">{{$t(menu.i18n)}}</span>
           </template>
           <template v-for="(secondMenu, secondIndex) in menu.children">
-            <el-submenu v-if="secondMenu.children && secondMenu.children.length > 0" :key="secondIndex" :index="`${index}-${secondIndex}`">
+            <el-submenu v-if="secondMenu.children && secondMenu.children.length > 0" :key="secondIndex" :index="`${index}-${secondIndex}`" class="secondMenu">
               <span slot="title" class="data-column__span">{{$t(secondMenu.i18n)}}</span>
-              <el-menu-item v-for="(thirdMenu, thirdIndex) in secondMenu.children" :key="`${index}-${secondIndex}-${thirdIndex}`" :index="thirdMenu.route">{{$t(thirdMenu.i18n)}}</el-menu-item>
+              <el-menu-item v-for="(thirdMenu, thirdIndex) in secondMenu.children" :key="`${index}-${secondIndex}-${thirdIndex}`" :index="thirdMenu.route" class="thirdMenu">{{$t(thirdMenu.i18n)}}</el-menu-item>
             </el-submenu>
-            <el-menu-item v-else :key="secondIndex" :index="secondMenu.route">{{$t(secondMenu.i18n)}}</el-menu-item>
+            <el-menu-item v-else :key="secondIndex" :index="secondMenu.route" class="secondMenu">{{$t(secondMenu.i18n)}}</el-menu-item>
           </template>
         </el-submenu>
         <el-menu-item v-else :key="index" :index="menu.route">
@@ -42,13 +42,13 @@
           <span>{{$t('overall.collapseSidebar')}}</span>
         </div>
       </template>
-      <i class="collapse-icon nz-icon nz-icon-drop-down"></i>
+      <i class="collapse-icon el-icon-s-fold"></i>
     </div>
   </div>
 </template>
 
 <script>
-import imgUrl from '@/assets/img/logo1-2.png'
+import imgUrl from '@/assets/img/logo.svg'
 export default {
   name: 'leftMenu',
   props: {
