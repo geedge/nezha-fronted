@@ -84,8 +84,8 @@
         <notebook-tab @getTableData="getTableData" v-if="from === fromRoute.notebook && targetTab === 'notebookTab'" :from="from" :obj="obj"  :tabs="tabs.notebook" @changeTab="changeTab" :targetTab.sync="targetTab"></notebook-tab>
         <!--softwareAsset列表的tab-->
         <endpointTabNew v-if="from === fromRoute.softwareAsset && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.softwareAsset.softwareAssetTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
-        <!--model 下滑-->
-        <asset-tab v-if="(from === fromRoute.softwareType) && targetTab === 'asset'" :tabs="tabs.softwareType" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></asset-tab>
+        <!--softwareType 下滑-->
+        <softwareAsset v-if="(from === fromRoute.softwareType) && targetTab === 'softwareAsset'" :tabs="tabs.softwareType" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></softwareAsset>
       </div>
     </div>
   </div>
@@ -124,6 +124,7 @@ import discoveryTab from '@/components/common/bottomBox/tabs/discoveryTab'
 import IpDetails from '@/components/common/bottomBox/tabs/IpDetails'
 import recordRuleEvalLog from '@/components/common/bottomBox/tabs/recordRuleEvalLog'
 import notebookTab from '@/components/common/bottomBox/tabs/notebookTab'
+import softwareAsset from '@/components/common/bottomBox/tabs/softwareAsset'
 
 export default {
   name: 'bottomBox',
@@ -158,7 +159,8 @@ export default {
     commentsBottomTab,
     vsysBottomTab,
     rolesTab,
-    notebookTab
+    notebookTab,
+    softwareAsset
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -278,7 +280,7 @@ export default {
           { prop: 'asset', name: this.$t('asset.asset'), active: true }
         ],
         softwareType: [
-          { prop: 'asset', name: this.$t('asset.asset'), active: true }
+          { prop: 'softwareAsset', name: this.$t('softwareAsset.text'), active: true }
         ],
         dc: {
           cabinet: [

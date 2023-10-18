@@ -146,6 +146,30 @@ export default {
           {
             value: 'logout',
             label: i18n.t('overall.signOut')
+          },
+          {
+            value: 'cancel',
+            label: i18n.t('operationlog.cancel')
+          },
+          {
+            value: 'upload',
+            label: i18n.t('overall.upload')
+          },
+          {
+            value: 'download',
+            label: i18n.t('overall.download')
+          },
+          {
+            value: 'createTask',
+            label: i18n.t('operationlog.createTask')
+          },
+          {
+            value: 'sync',
+            label: i18n.t('operationlog.sync')
+          },
+          {
+            value: 'diagnosis',
+            label: i18n.t('overall.diagnosis')
           }
         ],
         alertMessageState: [
