@@ -83,7 +83,7 @@
         <!-- notebook Tab -->
         <notebook-tab @getTableData="getTableData" v-if="from === fromRoute.notebook && targetTab === 'notebookTab'" :from="from" :obj="obj"  :tabs="tabs.notebook" @changeTab="changeTab" :targetTab.sync="targetTab"></notebook-tab>
         <!--softwareAsset列表的tab-->
-        <endpointTabNew v-if="from === fromRoute.softwareAsset && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.softwareAssetTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
+        <endpointTabNew v-if="from === fromRoute.softwareAsset && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.softwareAsset.softwareAssetTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
         <!--model 下滑-->
         <asset-tab v-if="(from === fromRoute.softwareType) && targetTab === 'asset'" :tabs="tabs.softwareType" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></asset-tab>
       </div>
