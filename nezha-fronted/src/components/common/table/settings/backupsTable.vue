@@ -101,7 +101,7 @@
       </el-input>
       <div slot="footer">
         <button class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-10" @click="closeBackup">{{$t("overall.cancel")}}</button>
-        <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="backupConfirm">{{$t('backup.backup')}}</button>
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" :class="{'nz-btn-disabled':!backupForm.remark}" :disabled="!backupForm.remark" @click="backupConfirm">{{$t('backup.backup')}}</button>
       </div>
     </el-dialog>
     <!-- restore -->
@@ -130,7 +130,9 @@
         </p>
       </div>
       <p class="backup-text">{{$t('backup.enterPassword')}}</p>
-      <el-input :placeholder="$t('login.pin')" v-model="restoreForm.pin" show-password size="small"></el-input>
+      <el-input ref="myInput" :placeholder="$t('login.pin')" v-model="restoreForm.pin" size="small" :type="showPassword?'text':'password'">
+        <i slot="suffix" class="el-input__icon nz-icon" :class="showPassword?'nz-icon-mimakejian':'nz-icon-mimabukejian'" @click="changePassType"></i>
+      </el-input>
       <div class="backup-tip">
         <i class="nz-icon nz-icon-jinggao1"></i>
         <div>
@@ -172,7 +174,8 @@ export default {
       backupDialog: false,
       backupForm: {
         remark: ''
-      }
+      },
+      showPassword: false
       // tableData: [
       //   {
       //     retention: '',
@@ -197,6 +200,14 @@ export default {
   computed: {},
 
   methods: {
+    changePassType () {
+      this.showPassword = !this.showPassword
+      if (this.restoreForm.pin) {
+        this.$nextTick(() => {
+          this.$refs.myInput.focus()
+        })
+      }
+    },
     changeType (item) {
       if (item == 1) {
         return this.$t('backup.only')
@@ -253,6 +264,7 @@ export default {
         pin: '',
         file: {}
       }
+      this.showPassword = false
     },
     restore (row) {
       this.restoreDialog = true
