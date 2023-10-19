@@ -8,6 +8,7 @@
         :data="tableData"
         border
         from="backups"
+        :hideDelete="true"
       >
         <template v-slot="slotProps">
           <backups-table
@@ -80,7 +81,7 @@ export default {
         { label: this.$t('config.assetLabel.date'), prop: 'time', minwidth: 228 },
         { label: this.$t('backup.File'), prop: 'fileName', minwidth: 363 },
         { label: this.$t('backup.size'), prop: 'size', minwidth: 306 },
-        { label: this.$t('overall.remark'), prop: 'Description', minwidth: 569 }
+        { label: this.$t('overall.remark'), prop: 'remark', minwidth: 569 }
       ],
       tableData: [
         {

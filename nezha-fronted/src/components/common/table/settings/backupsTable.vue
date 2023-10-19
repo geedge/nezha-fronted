@@ -32,6 +32,7 @@
             {{ scope.row.size ? getNum(scope.row.size) : "" }}
           </span>
           <span v-if="item.prop === 'fileName'"> {{ scope.row.fileName }} </span>
+          <span v-if="item.prop === 'remark'"> {{ scope.row.remark }} </span>
         </template>
       </el-table-column>
       <el-table-column :resizable="false" fixed="right"
@@ -57,7 +58,7 @@
               </div>
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
                 <el-dropdown-item v-has="'backup_restore'" :command="['restore', scope.row]"><i class="nz-icon-shujubeifenhuifu nz-icon"></i><span>{{$t('backup.recovery')}}</span></el-dropdown-item>
-                <el-dropdown-item v-has="'backup_del'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true,from:'backups'}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+                <el-dropdown-item v-has="'backup_del'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true,from:'backup'}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -73,28 +74,73 @@
           <div v-else>&nbsp;</div>
         </template>
     </el-table>
-
+    <!-- backup -->
     <el-dialog
-      class="nz-dialog snapshot-dialog"
-      width="472px"
-      :title='$t("deleteButton.confirm")'
+      class="backup-dialog"
+      width="580px"
+      :title='$t("config.backup")'
+      destroy-on-close
+      :modal-append-to-body="false"
+      :visible.sync="backupDialog"
+      @close="closeBackup"
+    >
+      <div class="backup-tip">
+        <i class="nz-icon nz-icon-jinggao"></i>
+        <div>
+          <p>{{$t('backup.backupData')}}</p>
+          <p>{{$t('backup.backupWait')}}</p>
+        </div>
+      </div>
+      <p class="backup-text" style="margin-top:20px;margin-bottom:6px;">{{$t('overall.remark')}}</p>
+      <el-input
+        v-model="backupForm.remark"
+        maxlength="256"
+        size="small"
+        show-word-limit
+        type="textarea">
+      </el-input>
+      <div slot="footer">
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-10" @click="closeBackup">{{$t("overall.cancel")}}</button>
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="backupConfirm">{{$t('backup.backup')}}</button>
+      </div>
+    </el-dialog>
+    <!-- restore -->
+    <el-dialog
+      class="backup-dialog"
+      width="580px"
+      :title='$t("backup.confirmRecovery")'
       destroy-on-close
       :modal-append-to-body="false"
       :visible.sync="restoreDialog"
+      @close="closeRestore"
     >
-      <div style="display: flex; align-items: center">
-        <div style="width: 100px;flex-shrink: 1;text-transform: capitalize">{{$t('login.pin')}}</div>
-        <el-input v-model="restoreForm.pin" size="small" style="flex: 1"/>
+      <p class="backup-text">{{$t('backup.restorePoint')}}</p>
+      <div class="backup-pre">
+        <p>
+          <span>{{$t('overall.time')}}：</span>
+          <span>{{utcTimeToTimezoneStr(restoreForm.file.time)}}</span>
+        </p>
+        <p>
+          <span>{{$t('backup.File')}}：</span>
+          <span>{{restoreForm.file.fileName}}</span>
+        </p>
+        <p>
+          <span>{{$t('overall.remark')}}：</span>
+          <span>{{restoreForm.file.remark}}</span>
+        </p>
+      </div>
+      <p class="backup-text">{{$t('backup.enterPassword')}}</p>
+      <el-input :placeholder="$t('login.pin')" v-model="restoreForm.pin" show-password size="small"></el-input>
+      <div class="backup-tip">
+        <i class="nz-icon nz-icon-jinggao1"></i>
+        <div>
+          <p>{{$t('backup.restoreData')}}</p>
+          <p>{{$t('backup.restoreRestart')}}</p>
+        </div>
       </div>
       <div slot="footer">
-        <div class="el-message-box__btns">
-          <button class="nz-btn el-button el-button--small el-button--default" @click="closeDialog">
-            <span>{{$t('overall.cancel')}}</span>
-          </button>
-          <button class="nz-btn el-button--small nz-btn-style-normal" :class="{'nz-btn-disabled': prevent_opt.save}" :disabled="prevent_opt.save" @click="restoreConfirm">
-            <span style="text-transform:Capitalize">{{$t('backup.recovery')}}</span>
-          </button>
-        </div>
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-10" @click="closeRestore">{{$t("overall.cancel")}}</button>
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" :class="{'nz-btn-disabled': prevent_opt.save||!restoreForm.pin}" :disabled="prevent_opt.save||!restoreForm.pin" @click="restoreConfirm">{{$t('backup.recovery')}}</button>
       </div>
     </el-dialog>
   </div>
@@ -121,7 +167,11 @@ export default {
       restoreDialog: false,
       restoreForm: {
         pin: '',
-        filename: ''
+        file: {}
+      },
+      backupDialog: false,
+      backupForm: {
+        remark: ''
       }
       // tableData: [
       //   {
@@ -158,11 +208,37 @@ export default {
         return this.$t('backup.Monthly')
       }
     },
+    backupConfirm () {
+      this.$store.dispatch('dispatchHomeLoading', true)
+      this.$post('/sys/backup', this.backupForm).then((res) => {
+        this.$store.dispatch('dispatchHomeLoading', false)
+        if (res.code == 200) {
+          this.$message.success(this.$t('backup.backupNow'))
+          bus.$emit('backupNow')
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+      this.closeBackup()
+    },
+    closeBackup () {
+      this.backupDialog = false
+      this.backupForm = {
+        remark: ''
+      }
+    },
+    backupNow () {
+      this.backupDialog = true
+    },
     restoreConfirm () {
       this.prevent_opt.save = true
-      put('/sys/backup/restore', this.restoreForm).then(res => {
+      const param = {
+        pin: this.restoreForm.pin,
+        filename: this.restoreForm.file.fileName
+      }
+      put('/sys/backup/restore', param).then(res => {
         if (res.code == 200) {
-          this.closeDialog()
+          this.closeRestore()
           this.$emit('getTableData', 'recent')
           this.$message.success(this.$t('backup.recoverySuccess'))
         } else {
@@ -171,16 +247,16 @@ export default {
         this.prevent_opt.save = false
       })
     },
-    closeDialog () {
+    closeRestore () {
       this.restoreDialog = false
       this.restoreForm = {
         pin: '',
-        filename: ''
+        file: {}
       }
     },
     restore (row) {
       this.restoreDialog = true
-      this.restoreForm.filename = row.fileName
+      this.restoreForm.file = row
     },
     changeDate (item) {
       const time = this.utcTimeToTimezoneStr(item)
@@ -190,31 +266,18 @@ export default {
     getNum (item) {
       return bus.getNumStr(item)
     },
-    backupNow (item) {
-      this.$store.dispatch('dispatchHomeLoading', true)
-      this.$post('/sys/backup').then((res) => {
-        this.$store.dispatch('dispatchHomeLoading', false)
-        if (res.code == 200) {
-          this.$message.success(this.$t('backup.backupNow'))
-          bus.$emit('backupNow')
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    },
     edit () {
       this.$emit('edit', this.tableData[0])
     },
-    tableOperation ([command, row]) {
+    tableOperation ([command, row, param]) {
       switch (command) {
-        case 'delete': {
-          this.$set(row, 'name', row.fileName)
-          if (this.singleDelete.length === 0) {
-            this.singleDelete.push(row)
-          } else {
-            this.singleDelete = []
-            this.singleDelete.push(row)
-          }
+        case 'delete-rel': {
+          row.name = row.fileName
+          this.$store.dispatch('deleteTableRel', {
+            row: row,
+            url: '/sys/backup',
+            ...param
+          })
           break
         }
         case 'restore': {

@@ -166,7 +166,8 @@ export default {
     },
     nzTableHeightOffset: Number,
     searchRight: Boolean,
-    operationRecord: Boolean
+    operationRecord: Boolean,
+    hideDelete: Boolean
   },
   computed: {
     nzTableHeight () {
@@ -325,6 +326,9 @@ export default {
     },
     showDeleteTableRel (n) {
       if (n) {
+        if (this.hideDelete) {
+          return false
+        }
         this.delTableRelRow(this.deleteTableRel.url, this.deleteTableRel.row, this.deleteTableRel.forceDeleteShow, this.deleteTableRel.single, this.deleteTableRel.deleteTitle, this.deleteTableRel.from)
       }
     },

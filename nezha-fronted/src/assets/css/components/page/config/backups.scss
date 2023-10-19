@@ -209,3 +209,92 @@
     color: $--color-text-regular;
   }
 }
+
+.backup-dialog{
+  .el-dialog__header{
+    padding: 16px 20px;
+    .el-dialog__title{
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+  .el-dialog__body{
+    padding: 20px;
+    padding-top: 10px;
+    .backup-text{
+      font-family: PingFangSC-Regular;
+      font-size: 14px;
+      color: $--color-text-primary;
+      line-height: 20px;
+      font-weight: 400;
+    }
+    .backup-pre{
+      opacity: 0.9;
+      background: $--pre-background-color;
+      border: 1px solid $--border-color-light;
+      border-radius: 2px;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      margin-top: 8px;
+      margin-bottom: 22px;
+      p{
+        margin-top: 6px;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: $--color-text-primary;
+        line-height: 20px;
+        font-weight: 400;
+        display: flex;
+        span:first-of-type{
+          color: $--color-text-regular;
+        }
+        span:last-of-type{
+          flex: 1;
+        }
+      }
+      p:first-of-type{
+        margin-top: 0;
+      }
+    }
+    .el-input{
+      width: 348px;
+      margin-top: 8px;
+      margin-bottom: 20px;
+    }
+    .backup-tip{
+      font-family: PingFangSC-Regular;
+      font-size: 14px;
+      color: $--color-text-primary;
+      line-height: 20px;
+      font-weight: 400;
+      display: flex;
+      word-break: break-word;
+      .nz-icon{
+        margin-right: 6px;
+      }
+      .nz-icon-jinggao{
+        font-size: 14px;
+        color: $--color-primary;
+      }
+      .nz-icon-jinggao1{
+        font-size: 13px;
+        color: $--color-danger;
+      }
+    }
+    .el-textarea{
+      textarea{
+        border-radius: 2px;
+        min-height: 164px !important;
+        max-height: 500px;
+      }
+    }
+  }
+  .el-dialog__footer{
+    padding: 20px;
+    .nz-btn.nz-btn-size-normal{
+      height: 32px;
+      line-height: 32px;
+      font-size: 14px;
+    }
+  }
+}
