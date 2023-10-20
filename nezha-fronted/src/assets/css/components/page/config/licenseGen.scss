@@ -40,3 +40,21 @@
     }
   }
 }
+.license-mange-expand {
+  display: flex;
+  margin: 10px;
+  width: calc(100% - 20px);
+  box-sizing: border-box;
+  border-left: 1px solid $--border-color-light;
+  border-top: 1px solid $--border-color-light;
+  flex-wrap: wrap;
+  .license-mange-expand-item {
+    width: 20%;
+    flex-shrink: 0;
+    border-bottom: 1px solid $--border-color-light;
+    border-right: 1px solid $--border-color-light;
+    text-align: center;
+    height: 36px;
+    line-height: 36px;
+  }
+}

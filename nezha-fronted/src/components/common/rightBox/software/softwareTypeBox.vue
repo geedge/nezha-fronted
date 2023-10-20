@@ -439,7 +439,6 @@ export default {
         img.src = _URL.createObjectURL(file.raw)
       }).then(() => {
         if (isJPG) {
-          console.log(file.raw)
           this.getBase64(file.raw).then(base64Str => {
             this.imageUrl = base64Str
           })

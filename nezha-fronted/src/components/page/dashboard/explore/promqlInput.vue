@@ -1043,7 +1043,6 @@ export default {
       const boxHeight = 400
       const parentHeight = this.$refs.queryRow.offsetHeight + 10
       let top = 0
-      console.log()
       const left = position.left
       if (position.top + parentHeight + boxHeight > windowHeight - 100) {
         top = position.top - boxHeight - 10
@@ -1054,7 +1053,6 @@ export default {
         top: top,
         left: left
       }
-      console.log(position, this.queryPromptWidth)
     },
     selectMetric (item) {
       if (!item.id) {

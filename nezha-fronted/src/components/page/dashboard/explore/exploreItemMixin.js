@@ -310,7 +310,6 @@ export default {
       this.expressions = []
       this.expressionsShow = []
       this.expressionName = []
-      console.log(this.promqlKeys.length)
       if (!this.promqlKeys.length) {
         this.addExpression()
       } else {
@@ -406,7 +405,6 @@ export default {
       if (!item) {
         this.expressions.push('')
         const expressionName = this.getExpressionName()
-        console.log(expressionName)
         this.expressionName.push(expressionName)
         this.expressionsShow.push({
           id: getUUID(),
@@ -469,7 +467,6 @@ export default {
       this.$set(this.expressionsShow, index - 1, this.expressionsShow[index - 1])
     },
     showHistoryBox (index) {
-      console.log(this.$refs['promql-' + (index)])
       const historyshow = this.$refs['promql-' + (index)][0]?.historyshow
       this.$refs['promql-' + (index)][0]?.showHistoryBox(!historyshow)
     }

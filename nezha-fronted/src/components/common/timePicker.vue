@@ -612,15 +612,12 @@ export default {
           const endTime = this.momentStrToTimestamp(start + ' 23:59:59', 'YYYY-MM-DD HH:mm:ss')
           start = this.momentSetMonthDate(noTime, 1)
           end = this.momentSetMonthDate(endTime, 31)
-          console.log(end)
         }
         if (nowTimeType.id === 20) { // Previous month 需要判断当前是否是 1号
           unit = 'm'
           const noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
           end = this.momentStrToTimestamp(this.momentSetMonthDate(noTime, 1)) - 1000 // 当月1号 00:00:00 减1s 则是上月最后一天 23:59:59
-          console.log(end, '1')
           start = this.momentSetMonthDate(end, 1, 'YYYY-MM-DD') + ' 00:00:00'
-          console.log(start, '1')
           start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
           end = this.momentTz(end)
         }

@@ -30,7 +30,6 @@ export default {
       getTopology(this.meta2dId)._setValue(node)
     },
     getQueryValues (elements, startTime, endTime) {
-      console.log(startTime, endTime)
       this.meta2dLoading = true
       return new Promise(resolve => {
         const step = bus.getStep(startTime, endTime)

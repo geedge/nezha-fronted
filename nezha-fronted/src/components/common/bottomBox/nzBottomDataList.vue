@@ -20,7 +20,7 @@
         <div class="sub-list-tabs">
           <!--          <div v-for="tab in tabs" :key="tab.prop" :class="{'sub-list-tab&#45;&#45;active': tab.active || tab.prop == targetTab }" :title='tab.name' class="sub-list-tab" @click="changeTab(tab.prop)">{{tab.name}}</div>-->
           <el-tabs v-model="activeTargetTab" @tab-click="changeTab" class="sub-list-tabs-nz-tabs" :class="customClassName">
-            <el-tab-pane v-for="tab in tabs" :label="tab.name" :name="tab.prop" :key="tab.prop"  class="sub-list-tab"></el-tab-pane>
+            <el-tab-pane v-for="tab in tabs" :label="tab.name" :name="tab.prop" :key="tab.prop"  :class="tab.class" class="sub-list-tab"></el-tab-pane>
           </el-tabs>
         </div>
       </div>

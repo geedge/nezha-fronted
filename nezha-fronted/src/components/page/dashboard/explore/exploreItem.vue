@@ -4149,13 +4149,11 @@ export default {
       }
     },
     async queryTableData () {
-      console.log(this.expressions)
       this.tools.loading = true
       if (this.expressions.length > 0) {
         const requestArr = []
         this.expressions.forEach((item, index) => {
           // 过滤掉state为0的元素
-          console.log(this.promqlKeys[index].queryType)
           if (item !== '' && this.promqlKeys[index].state && this.promqlKeys[index].queryType == 2) {
             // requestArr.push(this.$get('/prom/api/v1/query?query=' + encodeURIComponent(item)))
             this.showTable = true

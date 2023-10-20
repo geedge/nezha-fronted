@@ -61,7 +61,7 @@ export default {
           if (this.detailType) {
             params.detailType = this.detailType
           }
-          if (this.detailType === 'list' && this.$refs[detailType]) {
+          if (this.detailType === 'list' && this.$refs[detailType]  && this.$refs[detailType].bottomBox) {
             params.bottomBox = this.$refs[detailType].bottomBox.showSubList
             params.targetTab = this.$refs[detailType].bottomBox.targetTab
           } else {
@@ -74,6 +74,7 @@ export default {
             const obj = {
               id: this.$refs[detailType].bottomBox.object.id,
               name: this.$refs[detailType].bottomBox.object.name,
+              typeId: this.$refs[detailType].bottomBox.object.typeId,
               childrenNum: this.$refs[detailType].bottomBox.object.childrenNum || '',
               clientState: this.$refs[detailType].bottomBox.object.clientState || '',
               protocol: this.$refs[detailType].bottomBox.object.protocol || '',
@@ -100,6 +101,7 @@ export default {
               const obj = {
                 id: this.$refs[detailType].detailViewRightObj.id,
                 name: this.$refs[detailType].detailViewRightObj.name,
+                typeId: this.$refs[detailType].detailViewRightObj.typeId,
                 childrenNum: this.$refs[detailType].detailViewRightObj.childrenNum || '',
                 clientState: this.$refs[detailType].detailViewRightObj.clientState || '',
                 protocol: this.$refs[detailType].detailViewRightObj.protocol || '',
@@ -133,6 +135,7 @@ export default {
             const obj = {
               id: this.bottomBox.object.id,
               name: this.bottomBox.object.name,
+              typeId: this.bottomBox.object.typeId,
               childrenNum: this.bottomBox.object.childrenNum || '',
               clientState: this.bottomBox.object.clientState || '',
               protocol: this.bottomBox.object.protocol || '',
@@ -164,6 +167,7 @@ export default {
           const obj = {
             id: this.detailViewRightObj.id,
             name: this.detailViewRightObj.name,
+            typeId: this.detailViewRightObj.typeId,
             childrenNum: this.detailViewRightObj.childrenNum || '',
             clientState: this.detailViewRightObj.clientState || '',
             protocol: this.detailViewRightObj.protocol || '',
@@ -203,7 +207,7 @@ export default {
         setTimeout(() => {
           const obj = lodash.cloneDeep(val.defaultJson)
           obj[val.jsonKey] = qv
-          if (obj[val.jsonKey]) {
+          if (obj[val.jsonKey] && this.$refs[dataList].$refs.searchInput) {
             this.$refs[dataList].$refs.searchInput.select_list.push(obj)
             this.$refs[dataList].$refs.searchInput.sreach_num++
           }

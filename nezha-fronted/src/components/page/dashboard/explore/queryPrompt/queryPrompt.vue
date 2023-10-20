@@ -262,7 +262,6 @@ export default {
         } else {
           this.logValues = []
         }
-        console.log(this.logValues)
       })
     },
     selectValue (obj) {

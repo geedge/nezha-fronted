@@ -237,6 +237,15 @@
     width: 175px !important;
   }
 }
+.license-management-active {
+  .el-tabs__header .el-tabs__item {
+    width: auto !important;
+    min-width: 120px !important;
+  }
+  .el-tabs__active-bar {
+    width: 141px;
+  }
+}
 .nz-dashboard-dropdown {
   z-index: 3001 !important;
 }

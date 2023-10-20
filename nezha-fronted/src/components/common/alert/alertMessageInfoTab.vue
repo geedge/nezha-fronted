@@ -199,7 +199,6 @@ export default {
       this.snapshotVisible = true
     },
     linkClick (data) {
-      console.log(data)
       if (data.openIn === 'newTab') {
         window.open(data.url)
       } else {

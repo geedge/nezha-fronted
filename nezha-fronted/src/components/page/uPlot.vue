@@ -55,11 +55,9 @@ export default {
       const nowTime = new Date().getTime()
       const start = this.start ? this.start : nowTime - 60 * 60 * 10000
       const end = this.end ? this.end : nowTime
-      console.log(start, end)
       url += `start=${start}&end=${end}&step=15s&nullType=zero`
       url += `&query=${encodeURIComponent(this.metrics)}`
       this.$get(url).then(res => {
-        console.log(res)
         this.oldData = res.data
       })
     }

@@ -83,7 +83,9 @@
         <!-- notebook Tab -->
         <notebook-tab @getTableData="getTableData" v-if="from === fromRoute.notebook && targetTab === 'notebookTab'" :from="from" :obj="obj"  :tabs="tabs.notebook" @changeTab="changeTab" :targetTab.sync="targetTab"></notebook-tab>
         <!--softwareAsset列表的tab-->
-        <endpointTabNew v-if="from === fromRoute.softwareAsset && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.softwareAsset.softwareAssetTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
+        <endpointTabNew v-if="from === fromRoute.softwareAsset && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="softwareAssetTbas" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
+        <licenseManagementTab v-if="from === fromRoute.softwareAsset && targetTab === 'licenseManagement'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="softwareAssetTbas" :targetTab="targetTab" @changeTab="changeTab"></licenseManagementTab>
+
         <!--softwareType 下滑-->
         <softwareAsset v-if="(from === fromRoute.softwareType) && targetTab === 'softwareAsset'" :tabs="tabs.softwareType" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></softwareAsset>
       </div>
@@ -125,6 +127,7 @@ import IpDetails from '@/components/common/bottomBox/tabs/IpDetails'
 import recordRuleEvalLog from '@/components/common/bottomBox/tabs/recordRuleEvalLog'
 import notebookTab from '@/components/common/bottomBox/tabs/notebookTab'
 import softwareAsset from '@/components/common/bottomBox/tabs/softwareAsset'
+import licenseManagementTab from '@/components/common/bottomBox/tabs/licenseManagementTab'
 
 export default {
   name: 'bottomBox',
@@ -160,7 +163,8 @@ export default {
     vsysBottomTab,
     rolesTab,
     notebookTab,
-    softwareAsset
+    softwareAsset,
+    licenseManagementTab
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -200,6 +204,12 @@ export default {
           const hasLog = config && config.enable === 1
           if (this.targetTab === 'log' && !hasLog) {
             this.changeTab('dashboardTab')
+          }
+        }
+        if (this.from === this.fromRoute.softwareAsset) {
+          const hasLog = this.obj.type.name == 'ACC'
+          if (this.targetTab === 'licenseManagement' && !hasLog) {
+            this.changeTab('endpoint')
           }
         }
       }
@@ -250,6 +260,7 @@ export default {
         softwareAsset: {
           softwareAssetTabTitle: [
             { prop: 'endpoint', name: this.$t('asset.endpoint') },
+            { prop: 'licenseManagement', name: this.$t('License Management'), class: 'license-management' }
           ]
         },
         endpoint: {
@@ -397,6 +408,15 @@ export default {
       ]
       if (hasLog) {
         tabs.push({ prop: 'log', name: this.$t('dashboard.dashboard.chartForm.typeVal.log.label') })
+      }
+      return tabs
+    },
+    softwareAssetTbas () {
+      const tabs = [
+        { prop: 'endpoint', name: this.$t('asset.endpoint') }
+      ]
+      if (this.obj.typeId == 1) {
+        tabs.push({ prop: 'licenseManagement', name: this.$t('License Management'), class: 'license-management' })
       }
       return tabs
     }
