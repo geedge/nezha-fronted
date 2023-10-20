@@ -50,8 +50,15 @@ export default {
       this.chartInfo.param.oldText = this.chartInfo.param.text
     },
     cancel () {
-      this.chartInfo.param.isEdit = false
-      this.chartInfo.param.text = this.chartInfo.param.oldText
+      if (this.chartInfo.param.oldText) {
+        this.chartInfo.param.isEdit = false
+        this.chartInfo.param.text = this.chartInfo.param.oldText
+      } else {
+        this.$store.dispatch('dispatchDelChart', {
+          chart: this.chartInfo,
+          type: 'delete'
+        })
+      }
     },
     textChange (val) {
       this.chartInfo.param.text = val
