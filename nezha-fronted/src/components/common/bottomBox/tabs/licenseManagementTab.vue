@@ -167,16 +167,17 @@ export default {
       }
       params.saId = this.obj.id
       axios.get('/license/downloadC2V', { responseType: 'blob', params: params }).then(res => {
+        const filename = params.name ? params.name : (this.obj.name + '.csv')
         if (window.navigator.msSaveOrOpenBlob) {
           // 兼容ie11
           const blobObject = new Blob([res.data])
-          window.navigator.msSaveOrOpenBlob(blobObject, params.name)
+          window.navigator.msSaveOrOpenBlob(blobObject, filename)
         } else {
           const url = URL.createObjectURL(new Blob([res.data]))
           const a = document.createElement('a')
           document.body.appendChild(a) // 此处增加了将创建的添加到body当中
           a.href = url
-          a.download = params.name
+          a.download = filename
           a.target = '_blank'
           a.click()
           a.remove() // 将a标签移除

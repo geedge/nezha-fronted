@@ -415,13 +415,9 @@ export default {
       if (!baseUrl || baseUrl == '/') {
         baseUrl = window.location.protocol + '//' + window.location.host
       }
-      // let metadataOptions = await this.$get('prom/api/v1/metadata')
-      // console.log(metadataOptions)
-      // metadataOptions = metadataOptions.data
-      // let metricsdataOptions = await this.$get('prom//api/v1/label/__name__/values')
-      // console.log(metricsdataOptions)
-      // metricsdataOptions = metricsdataOptions.data
-
+      const defaultHeaders = {
+        Authorization: localStorage.getItem('nz-token')
+      }
       const promqlExtension = new PromQLExtension()
         .activateCompletion(true)
         .activateLinter(true)
@@ -430,7 +426,16 @@ export default {
             newCompleteStrategy({
               remote: {
                 url: baseUrl + '/prom/',
-                fetchFn: self.fetchFn
+                fetchFn: (resource, options = {}) => {
+                  const params = options.body?.toString()
+                  const search = params ? `?${params}` : ''
+                  return fetch(resource + search, {
+                    method: 'Get',
+                    headers: new Headers(
+                      defaultHeaders
+                    )
+                  })
+                }
               },
               maxMetricsMetadata: 99999
             })
@@ -462,6 +467,7 @@ export default {
               })),
               span: /^[a-zA-Z0-9_:]+$/
             }
+            // 过滤 非logs的函数
             if (res !== null) {
               historyItems.options = historyItems.options.concat(res.options)
             }
