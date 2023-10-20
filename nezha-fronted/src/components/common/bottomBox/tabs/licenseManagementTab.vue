@@ -170,12 +170,13 @@ export default {
         if (window.navigator.msSaveOrOpenBlob) {
           // 兼容ie11
           const blobObject = new Blob([res.data])
-          window.navigator.msSaveOrOpenBlob(blobObject)
+          window.navigator.msSaveOrOpenBlob(blobObject, params.name)
         } else {
           const url = URL.createObjectURL(new Blob([res.data]))
           const a = document.createElement('a')
           document.body.appendChild(a) // 此处增加了将创建的添加到body当中
           a.href = url
+          a.download = params.name
           a.target = '_blank'
           a.click()
           a.remove() // 将a标签移除

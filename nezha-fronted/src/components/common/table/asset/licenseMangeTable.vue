@@ -158,7 +158,7 @@ export default {
       })
     },
     exportLicense (row) {
-      this.$emit('export', { haspid: row.haspid })
+      this.$emit('export', { haspid: row.haspid, name: row.name + '.c2v' })
     }
   },
   created () {
