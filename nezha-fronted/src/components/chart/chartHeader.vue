@@ -104,14 +104,14 @@
         </span>
       </template>
       <template v-else-if="notebookEdit">
+        <span class="chart-header__tool" @click="editChart">
+          <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i>
+        </span>
         <span class="chart-header__tool" @click="duplicate">
           <i class="nz-icon nz-icon-override" style="font-size: 16px;"></i>
         </span>
         <span class="chart-header__tool" @click="removeChart">
           <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>
-        </span>
-        <span class="chart-header__tool" @click="editChart">
-          <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i>
         </span>
       </template>
     </div>

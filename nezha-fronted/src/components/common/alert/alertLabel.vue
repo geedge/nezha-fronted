@@ -29,6 +29,7 @@
     <div class="alert-label-header-title">
       <div
         class="alert-label-header-circle"
+        style="text-transform:capitalize;"
       >
         {{alertLabelData && alertLabelData.createUser ? alertLabelData.createUser.name.substr(0, 1) : "-" }}
       </div>
@@ -724,7 +725,7 @@
       </div>
     </div>
 
-    <!-- type === 'user' -->
+    <!-- type === 'notebook' -->
     <div class="alert-label-info" v-if="type === 'notebook'" v-my-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>

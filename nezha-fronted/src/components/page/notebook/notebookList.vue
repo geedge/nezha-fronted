@@ -19,11 +19,15 @@
       <div
         class="panel-chart-wrap"
         :class="{
+          'notebookEdit':notebookEdit,
+          'table-chart-wrap':item.type==='table',
           'text-chart-wrap':item.type==='text',
-          'table-chart-wrap':item.type==='table'
+          'text-edit':item.type==='text'&&item.param.isEdit,
         }"
         v-for="item in copyDataList"
-        :key="item.id">
+        :key="item.id"
+      >
+        <notebookAdd :chart-info="item"></notebookAdd>
         <panel-chart
           :from="from"
           :variablesInit="true"
@@ -41,6 +45,7 @@
 <script>
 import draggable from 'vuedraggable'
 import panelChart from '@/components/chart/panelChart'
+import notebookAdd from './notebookAdd'
 import { lineChartMove } from '@/components/common/js/common'
 export default {
   name: 'notebookList',
@@ -65,7 +70,8 @@ export default {
   },
   components: {
     draggable,
-    panelChart
+    panelChart,
+    notebookAdd
   },
   computed: {
     notebookEdit () { // 是否是编辑状态

@@ -3,7 +3,6 @@
   <div
     :class="{
       'panel-chart--fullscreen': isFullscreen,
-      'panel-chart-notebook':from==='notebook'&&notebookEdit&&!isExportHtml,
     }"
     class="panel-chart"
     :id="isFullscreen ? ('chart-screen-' + chartInfo.id ) : ('chart-local-' + chartInfo.id)"
@@ -72,18 +71,6 @@
       :showAllData="showAllData"
       v-if="(!isGroup(chartInfo.type) || !chartInfo.param.collapse) && snapshotShow"
     ></chart>
-    <div class="noteboook-chart-addWrap" v-if="from==='notebook'&&!isExportHtml">
-      <el-tooltip :content="$t('notebook.addchart')" effect="light" placement="bottom">
-        <div class="noteboook-chart-add addBefore">
-          <i class="nz-icon nz-icon-plus" @click="addNotebook({position:'before',id:chartInfo.id})"></i>
-        </div>
-      </el-tooltip>
-      <el-tooltip :content="$t('notebook.addchart')" effect="light" placement="top">
-        <div class="noteboook-chart-add addAfter">
-          <i class="nz-icon nz-icon-plus" @click="addNotebook({position:'after',id:chartInfo.id})"></i>
-        </div>
-      </el-tooltip>
-    </div>
   </div>
 </template>
 
@@ -169,16 +156,10 @@ export default {
     },
     variablesArr () {
       return this.$store.getters.getVariablesArr
-    },
-    notebookEdit () { // 是否是编辑状态
-      return this.$store.getters.getNotebookEdit
     }
   },
   methods: {
     isGroup,
-    addNotebook (position) {
-      bus.$emit('addNotebook', position)
-    },
     variablesHandle (searchTime) {
       this.setGlobalVariablesValue(searchTime)
       this.myVariables = []

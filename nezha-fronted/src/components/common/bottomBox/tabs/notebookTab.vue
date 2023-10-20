@@ -168,11 +168,6 @@ export default {
   },
   methods: {
     done () {
-      this.$refs.notebookList.copyDataList.forEach(item => {
-        if (item.type === 'text') {
-          this.$set(item.param, 'isEdit', false)
-        }
-      })
       let charts = this.$lodash.cloneDeep(this.$refs.notebookList.copyDataList)
       charts = charts.filter(item => item.name !== 'groupTemp')
       charts.forEach(item => {
@@ -238,15 +233,8 @@ export default {
       this.$refs.notebookList.onScroll(this.scrollbarWrap.scrollTop)
       this.$store.dispatch('clearPanel')
     },
-    addNotebook (position) {
-      this.addChartBefore({ type: 'line', datasource: 'metrics', position })
-    },
-    copyChartText (data) {
-      const chart = JSON.parse(JSON.stringify(data))
-      chart.param.isEdit = false
-      chart.position = { position: 'after', id: chart.id }
-      delete chart.id
-      this.createSuccess(chart)
+    addNotebook (data) {
+      this.addChartBefore(data)
     },
     // 编辑图表信息,打开编辑弹窗
     editChart (data, copy) {
@@ -299,16 +287,23 @@ export default {
         this.$refs.addChartModal.isStable = 'stable'
       })
     },
-    addText () {
-      const timestamp = Math.floor(new Date().getTime() / 1000)
-      const name = `text-[${timestamp}]`
+    addText (position) {
       const chart = {
-        name,
         type: 'text',
         unit: 2,
         datasource: 'misc',
         param: this.newChart('text')
       }
+      if (position) {
+        chart.position = position
+      }
+      this.createSuccess(chart)
+    },
+    copyChartText (data) {
+      const chart = JSON.parse(JSON.stringify(data))
+      chart.param.isEdit = false
+      chart.position = { position: 'after', id: chart.id }
+      delete chart.id
       this.createSuccess(chart)
     },
     getMaxId (arr) { // 获取当前列表最大的id
@@ -479,7 +474,7 @@ export default {
     },
     addChartBefore (chart) {
       if (chart.type === 'text') {
-        this.addText()
+        this.addText(chart.position)
         return false
       }
       this.$store.dispatch('dispatchEditChart', {

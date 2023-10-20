@@ -1,9 +1,10 @@
 <template>
   <div class="mt-10 rich-text-container" v-cloak style="height: 100%;width: 100%;">
     <div class="notebook-editor" v-if="from==='notebook'&&chartInfo.param.isEdit" >
-      <markdownEditor :edit-data="text" @textChange="textChange"></markdownEditor>
+      <markdownEditor :edit-data="text" @textChange="textChange" :autofocus="true" v-clickoutside="clickout"></markdownEditor>
+      <div class="md-placeholder" v-show="!text" v-html="$t('notebook.mdPlaceholder')"></div>
       <div class="notebook-editor-btn">
-        <button class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-10" @click="cancel">
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-10 no-style-class" @click="cancel">
           <span>{{$t('overall.cancel')}}</span>
         </button>
         <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="save">
@@ -43,6 +44,7 @@ export default {
     }
   },
   methods: {
+    resize () {},
     save () {
       this.chartInfo.param.isEdit = false
       this.chartInfo.param.oldText = this.chartInfo.param.text
@@ -54,7 +56,16 @@ export default {
     textChange (val) {
       this.chartInfo.param.text = val
     },
-    resize () {}
+    clickout () {
+      if (this.chartInfo.param.text) {
+        this.save()
+      } else {
+        this.$store.dispatch('dispatchDelChart', {
+          chart: this.chartInfo,
+          type: 'delete'
+        })
+      }
+    }
   },
   watch: {
     chartInfo: {

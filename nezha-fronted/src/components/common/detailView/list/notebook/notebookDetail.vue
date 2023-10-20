@@ -31,8 +31,8 @@
             <span class="author-avatar">{{item.createUser ? item.createUser.name.substr(0, 1) : '-'}}</span>
             <span>{{item.name}}</span>
           </div>
-          <div class="asset-name">
-            <span>{{item.location?item.location:'-'}}</span>
+          <div class="asset-name" style="padding-left:25px;">
+            <span>{{item.createUser ? item.createUser.name : '-'}}</span>
           </div>
         </div>
         <alertLabel

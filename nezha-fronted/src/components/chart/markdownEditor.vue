@@ -1,5 +1,5 @@
 <template>
-  <v-md-editor v-model="text" @change="textChange" mode="edit" height="390px" :leftToolbar="leftToolbar" right-toolbar="" class="markdownEditor"></v-md-editor>
+  <v-md-editor v-model="text" @change="textChange" mode="edit" height="390px" :leftToolbar="leftToolbar" right-toolbar="" class="markdownEditor" :autofocus="autofocus"></v-md-editor>
 </template>
 
 <script>
@@ -9,7 +9,8 @@ import VueMarkdownEditor from '@kangc/v-md-editor'
 export default {
   name: 'markdownEditor',
   props: {
-    editData: String
+    editData: String,
+    autofocus: Boolean
   },
   computed: {
     language () {
