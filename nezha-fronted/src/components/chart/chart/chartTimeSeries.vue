@@ -134,6 +134,9 @@ export default {
   // 监听当前鼠标所在的图表id变化
     '$store.state.panel.currentMousemove': {
       handler (n) {
+        if (this.isConnect !== 'crosshair') {
+          return
+        }
         // 判断是否是当前鼠标所在的图表
         if (n === this.chartId) {
           let option = {}
@@ -255,9 +258,8 @@ export default {
         // timeSeries类型图表设置group 用于多表联动
         if (this.isInit && !this.isFullscreen) {
           myChart.group = 'timeSeriesGroup'
-          if (this.isConnect === 'crosshair') {
+          if (this.isConnect !== 'none') {
             myChart.getZr().on('mousemove', params => {
-              // crosshair 模式才会执行
               if (this.$store.state.panel.currentMousemove !== this.chartId) {
                 this.$store.commit('setCurrentMousemove', this.chartId)
               }
