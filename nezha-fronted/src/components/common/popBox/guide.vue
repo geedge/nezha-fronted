@@ -124,6 +124,11 @@ export default {
       interval: null
     }
   },
+  computed: {
+    externalTerminal () {
+      return this.$store.getters.getExternalTerminal
+    }
+  },
   methods: {
     close () {
       this.$emit('close')
@@ -154,13 +159,18 @@ export default {
         return
       }
       this.$emit('close')
-      this.$router.push({
-        path: '/asset',
-        query: {
-          t: +new Date()
-        }
-      })
-      this.$store.commit('openConsole')
+      if (!this.externalTerminal) {
+        this.$store.dispatch('dispatchExternalTerminal')
+      } else {
+        this.$store.dispatch('dispatchOpenExternalTerminalWindow')
+      }
+      // this.$router.push({
+      //   path: '/asset',
+      //   query: {
+      //     t: +new Date()
+      //   }
+      // })
+      // this.$store.commit('openConsole')
     },
     jump (guide) {
       if (!this.hasButton(guide.permissionCode)) {
