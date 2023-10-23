@@ -145,7 +145,7 @@ export default {
           width: 120,
           sortable: 'custom'
         }, {
-          label: this.$t('config.model.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           width: 350,

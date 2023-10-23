@@ -34,7 +34,7 @@
           </el-form-item>
           <!--module-->
           <el-form-item :label='$t("overall.module")' prop="moduleId">
-            <el-select @change="renderEndpoint" id="module-box-input-module" v-model="editEndpoint.moduleId" :disabled="!editEndpoint.projectId || disabled " class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
+            <el-select @change="renderEndpoint(false)" id="module-box-input-module" v-model="editEndpoint.moduleId" :disabled="!editEndpoint.projectId || disabled " class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
               <el-option v-for="item in moduleList" :id="'module-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -50,7 +50,7 @@
                 varType: 2, dashboardId: 0,
                 returnChildren:0,groupId:0,
               }"
-              @values="renderEndpoint"
+              @values="renderEndpoint(true)"
               :multiple="false"
               :language="language"
               title="ChartSearch"
@@ -65,6 +65,34 @@
           </el-form-item>
           <el-form-item :label='$t("asset.asset")' label-width="125px" prop="assetName" v-if="disabled">
             <el-input id="module-box-input-assetName" v-model="editEndpoint.assetName" :disabled="disabled"   placeholder="" show-word-limit size="small"></el-input>
+          </el-form-item>
+          <!--softwareAsset-->
+
+          <el-form-item :label='$t("softwareAsset.text")' label-width="125px" prop="softwareAssetId" v-if="showSoftwareAsset">
+            <!--            <el-select id="module-box-input-asset"  @change="renderEndpoint" v-model="editEndpoint.assetId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">-->
+            <!--              <el-option v-for="item in assetList" :id="'asset-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
+            <!--            </el-select>  @values="renderEndpoint"-->
+            <v-selectpage
+              :data="softwareAssetList"
+              :tb-columns="softwareAssetColumns"
+              :params="{
+                varType: 2, dashboardId: 0,
+                returnChildren:0,groupId:0,
+              }"
+              :multiple="false"
+              :language="language"
+              title="ChartSearch"
+              key-field="id"
+              show-field="name"
+              :width="626"
+              v-model="editEndpoint.softwareAssetId"
+              class="form-control"
+              ref="sp"
+              :result-format="resultFormat"
+            ></v-selectpage>
+          </el-form-item>
+          <el-form-item :label='$t("softwareAsset.text")' label-width="125px" prop="softwareAssetName" v-else>
+            <el-input id="module-box-input-softwareAssetName" v-model="editEndpoint.softwareAssetName" :disabled="!(editEndpoint.assetId && editEndpoint.projectId) || disabled"   placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--name-->
           <el-form-item v-if="optionType!=='batch'" :label='$t("overall.name")' label-width="125px" prop="name">
@@ -835,6 +863,7 @@ export default {
       projectList: [],
       moduleList: [],
       assetList: [],
+      softwareAssetList: [],
       credentialList: [],
       typeList: [
         {
@@ -952,6 +981,39 @@ export default {
           title: this.$t('overall.dc'),
           data: (row) => {
             return row.dc ? row.dc.name : ''
+          }
+        }
+      ],
+      softwareAssetColumns: [
+        { title: 'ID', data: 'id' },
+        {
+          title: this.$t('overall.name'),
+          data: function (row) {
+            if (row.name.length > 15) {
+              return row.name.substring(0, 12) + '...'
+            }
+            return row.name
+          }
+        },
+        {
+          title: this.$t('softwareType.category'),
+          data: (row) => {
+            return row.type ? row.type.category : ''
+          }
+        },
+        {
+          title: this.$t('overall.type'),
+          data: (row) => {
+            return row.type ? row.type.name : ''
+          }
+        },
+        {
+          title: this.$t('overall.remark'),
+          data: function (row) {
+            if (row.remark.length > 15) {
+              return row.remark.substring(0, 12) + '...'
+            }
+            return row.remark
           }
         }
       ],
@@ -1073,6 +1135,11 @@ export default {
     getAsset () {
       this.$get('asset/asset', { pageSize: -1 }).then(res => {
         this.assetList = res.data.list
+      })
+    },
+    getSoftwareAsset () {
+      this.$get('/asset/software', { pageSize: -1, projectIds: this.editEndpoint.projectId, assetIds:  this.editEndpoint.assetId }).then(res => {
+        this.softwareAssetList = res.data.list
       })
     },
     getWalkData () {
@@ -1331,6 +1398,10 @@ export default {
         this.$refs.sp.remove()
         this.$refs.moduleForm.clearValidate('moduleId')
       }
+      if (this.editEndpoint.assetId) {
+        this.editEndpoint.softwareAssetId = ''
+        this.getSoftwareAsset()
+      }
     },
     /* 获取module列表 */
     getModuleList () {
@@ -1582,7 +1653,7 @@ export default {
         return assetData
       }
     },
-    renderEndpoint () {
+    renderEndpoint (flag) {
       if (this.disabled) {
         return
       }
@@ -1673,6 +1744,10 @@ export default {
           //   this.editEndpoint.chartIds = res.data.list[0].module.chartIds
           // }
         })
+      }
+      if (this.editEndpoint.projectId && flag) {
+        this.editEndpoint.softwareAssetId = ''
+        this.getSoftwareAsset()
       }
     },
 
@@ -1768,7 +1843,11 @@ export default {
   mounted () {
     setTimeout(() => {
       this.editEndpoint.assetId = this.module.assetId + ''
+      this.editEndpoint.softwareAssetId = this.module.softwareAssetId + ''
     }, 500)
+    if (this.disabled && !this.module.softwareAssetId) {
+      this.getSoftwareAsset()
+    }
   },
   created () {
     this.getProjectList()
@@ -1782,6 +1861,19 @@ export default {
       return (value) => {
         return this.getMibName(this.walkData, value)
       }
+    },
+    showSoftwareAsset () {
+      let show = false
+      if (this.editEndpoint.projectId && this.editEndpoint.assetId) {
+        show = true
+      }
+      if (this.disabled && !this.module.softwareAssetId) {
+        show = true
+      }
+      if (this.disabled && this.module.softwareAssetId) {
+        show = false
+      }
+      return show
     },
     language () { return this.$store.getters.getLanguage }
   },
@@ -1797,7 +1889,11 @@ export default {
       deep: true,
       handler (n, o) {
         this.isEdit = true
-        this.editEndpoint = JSON.parse(JSON.stringify(n))
+        const editEndpoint = JSON.parse(JSON.stringify(n))
+        if (!editEndpoint.softwareAssetId) {
+          editEndpoint.softwareAssetId = ''
+        }
+        this.editEndpoint = editEndpoint
         this.getModuleList()
         this.activeName = 'Basic'
         this.activeNameLogs = this.editEndpoint.configs[1].config.map(() => 'Basic')
