@@ -3887,7 +3887,7 @@ export default {
         const requestArr = []
         // 过滤掉state为0的元素
         this.expressions.forEach((item, index) => {
-          if (item != '' && this.promqlKeys[index].state) {
+          if (item != '' && this.promqlKeys[index].state && item) {
             requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&limit=' + limit))
           }
         })
@@ -4369,7 +4369,8 @@ export default {
         } else {
           const promiseArr = []
           this.expressions.forEach((item, index) => {
-            if (item != '' && this.promqlKeys[index].state) {
+            console.log(item)
+            if (item != '' && this.promqlKeys[index].state && item) {
               promiseArr.push(this.$get('logs/loki/api/v1/format_query', { query: item }))
             } else {
               promiseArr.push('')
@@ -4384,6 +4385,7 @@ export default {
       this.updatePath()
     },
     initQueryFromPath () {
+      console.log('initQueryFromPath')
       const param = this.$route.query[this.position]
       if (param) {
         const data = JSON.parse(param)
@@ -4409,6 +4411,7 @@ export default {
         this.promqlCount = data.queries.length
         data.queries.forEach((item, index) => {
           this.$set(this.expressions, index, item.expr)
+          console.log(item)
           this.promqlKeys[index] = {
             ...item,
             id: getUUID(),
@@ -4426,7 +4429,11 @@ export default {
       const queries = this.expressions.map((item, index) => {
         return {
           expr: item,
-          state: this.promqlKeys[index].state
+          state: this.promqlKeys[index].state,
+          oldName: this.promqlKeys[index].oldName,
+          legend: this.promqlKeys[index].legend,
+          step: this.promqlKeys[index].step,
+          queryType: this.promqlKeys[index].queryType
         }
       })
       const q = {

@@ -380,7 +380,7 @@ export default {
         this.myChart.clear()
         this.myChart.setOption(option)
         this.$nextTick(() => {
-          this.myChart.resize()
+          this.myChart?.resize()
         })
         /* 点击legend
           * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
@@ -424,7 +424,7 @@ export default {
         this.myChart.clear()
         this.myChart.setOption(option)
         this.$nextTick(() => {
-          this.myChart.resize()
+          this.myChart?.resize()
         })
       }
     },
@@ -531,7 +531,7 @@ export default {
     },
     resizeChart () {
       setTimeout(() => {
-        this.myChart.resize()
+        this.myChart?.resize()
       })
     },
     aliasLegend (row) {

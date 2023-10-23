@@ -60,7 +60,7 @@
             {{scope.row.type ? scope.row.type.category : '-'}}
           </div>
           </template>
-          <span v-else-if="item.prop === 'production_date' || item.prop === 'expiration_date'">{{ scope.row[item.prop] ? momentTz(scope.row[item.prop]) : '-'}}</span>
+          <span v-else-if="item.prop === 'production_date' || item.prop === 'expiration_date'">{{ scope.row[item.prop] ? momentTz(scope.row[item.prop] * 1000) : '-'}}</span>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
           <span v-else>-</span>
         </template>

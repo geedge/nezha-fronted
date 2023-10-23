@@ -421,13 +421,14 @@ export default {
         })
         this.expressionChange()
       } else {
-        this.expressions.push(item.expression)
-        this.expressionName.push(item.name)
+        const expressionName = this.getExpressionName()
+        this.expressions.push(item.expression || item.expr || '')
+        this.expressionName.push(item.name || expressionName)
         this.expressionsShow.push({
           id: getUUID(),
           show: true,
           hideInput: true,
-          oldName: item.name,
+          oldName: item.name || expressionName,
           error: '',
           elementId: item.id,
           legend: item.legend,
