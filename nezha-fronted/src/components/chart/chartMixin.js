@@ -337,6 +337,9 @@ export default {
       }
     },
     tooltipPosition (point, params, dom, rect, size) {
+      if (this.isConnect === 'tooltip' && this.$store.state.panel.currentMousemove != this.chartId) {
+        return
+      }
       dom.style.transform = 'translateZ(999999)'
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
