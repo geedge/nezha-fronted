@@ -3733,7 +3733,7 @@ export default {
       logsHistory: [],
       lastHistory: [],
       showChart: false,
-      showTable: false,
+      showTable: false
     }
   },
   async created () {
@@ -4041,7 +4041,7 @@ export default {
         const promqlInputIndexs = []
         const queryExpression = []
         // 过滤掉state为0的元素
-        let step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
+        const step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
         this.expressions.forEach((item, index) => {
           if (item != '' && this.promqlKeys[index].state && !this.promqlKeys[index].matrix && this.promqlKeys[index].queryType == 1) {
             let queryStep = step
@@ -4162,6 +4162,7 @@ export default {
         })
         if (requestArr.length > 0) {
           this.showIntroduce = false
+          this.saveDisabled = false
         }
         const res = await axios.all(requestArr)
         const tData = []
@@ -4179,7 +4180,7 @@ export default {
             if (response.data && response.status === 'success') {
               // matrix类型不请求chart接口 只展示表格数据
               this.promqlKeys[index].matrix = response.data.resultType === 'matrix'
-              let data = response.data.result
+              const data = response.data.result
               if (data) {
                 data.forEach((result, i) => {
                   const metrics = Object.assign({}, result.metric)
@@ -4605,30 +4606,28 @@ export default {
         param: {
           stack: 0,
           nullType: 'null',
-          legend: { placement: 'bottom', values: [], show: true },
+          legend: {
+            placement: 'bottom',
+            values: [],
+            show: true
+          },
+          enable: {
+            legend: true,
+            valueMapping: false,
+            thresholds: false,
+            visibility: false,
+            rightYAxis: false,
+            tooltip: true
+          },
           thresholdShow: true,
-          thresholds: [{ value: undefined, color: '#eeeeeeff' }],
+          thresholds: [{ color: '#31a1f7', id: '1fbdd19f' }],
           showHeader: 1,
-          visibility: {
-            varName: '',
-            operator: 'equal',
-            varValue: '',
-            result: 'show'
-          },
-          rightYAxis: {
-            elementNames: [],
-            style: 'line',
-            unit: 2,
-            label: '',
-            min: undefined,
-            max: undefined
-          },
+          visibility: { varName: '', operator: 'equal', varValue: '', result: 'show' },
+          rightYAxis: { elementNames: [], style: 'line', unit: 2, label: '' },
           dataLink: [],
-          tooltip: {
-            mode: 'all',
-            sort: 'none'
-          },
-          option: undefined
+          tooltip: { mode: 'all', sort: 'none' },
+          valueMapping: [],
+          link: ''
         },
         elements: [],
         panel: '',
@@ -4637,7 +4636,16 @@ export default {
         groupId: -1
       }
       this.expressions.forEach((exp, index) => {
-        chart.elements.push({ state: this.promqlKeys[index].state, expression: exp, legend: '', type: 'expert', id: '', name: this.transformNumToLetter(index) })
+        chart.elements.push({
+          state: this.promqlKeys[index].state,
+          expression: exp,
+          legend: this.promqlKeys[index].legend,
+          step: this.promqlKeys[index].step,
+          queryType: this.promqlKeys[index].queryType,
+          type: 'expert',
+          id: '',
+          name: this.transformNumToLetter(index)
+        })
       })
       this.chartData = chart
       this.rightBox.show = true
@@ -4674,7 +4682,16 @@ export default {
         remark: ''
       }
       this.expressions.forEach((exp, index) => {
-        chart.elements.push({ state: this.promqlKeys[index].state, expression: exp, legend: '', type: 'expert', id: '', name: this.transformNumToLetter(index) })
+        chart.elements.push({
+          state: this.promqlKeys[index].state,
+          expression: exp,
+          legend: this.promqlKeys[index].legend,
+          step: this.promqlKeys[index].step,
+          queryType: this.promqlKeys[index].queryType,
+          type: 'expert',
+          id: '',
+          name: this.transformNumToLetter(index)
+        })
       })
       this.chartData = chart
       this.rightBox.show = true
