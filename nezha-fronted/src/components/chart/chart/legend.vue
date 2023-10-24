@@ -350,7 +350,7 @@ export default {
         maxValue = Math.abs(minValue)
       }
       maxValue = maxValue - minValue
-      maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii)
+      maxValue = chartDataFormat.formatDatas(maxValue, unit, 'ceil', unit.ascii)
       let oldValue = maxValue
       if (maxValue < 0) {
         oldValue = Math.abs(maxValue)

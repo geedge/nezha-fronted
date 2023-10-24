@@ -110,13 +110,13 @@ export default {
       tableTitle: [ // 原始table列
         {
           label: this.$t('licenseMange.product'),
-          prop: 'typename',
+          prop: 'name',
           show: true,
           width: 350
           // sortable: 'custom'
         }, {
           label: this.$t('licenseMange.keyType'),
-          prop: 'name',
+          prop: 'typename',
           minWidth: 200,
           show: true
         }, {

@@ -191,7 +191,7 @@ export default {
 
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
-
+      console.log(this.$lodash.cloneDeep( this.chartData), ' this.chartData')
       chartOption.series.forEach(item => {
         if (item.lineStyle) {
           item.lineStyle.width = this.lineOption.lineWidth
@@ -238,6 +238,7 @@ export default {
         delete chartOption.tooltip.position
       }
       const option = this.renderYAxis(this.chartData, this.chartInfo)
+      console.log(option)
       chartOption.yAxis[0] = { ...chartOption.yAxis[0], ...option.yAxis[0] }
       chartOption.yAxis[1] = { ...chartOption.yAxis[1], ...option.yAxis[1] }
       if (chartOption.toolbox.feature) {
@@ -611,7 +612,11 @@ export default {
     yAxisLabelFormatter (minValue, maxValue, copies, unit, dot) {
       const self = this
       return function (val, index) {
-        const value = formatScientificNotation(val, 6)
+        console.log(val)
+        let value = formatScientificNotation(val, 6)
+        if (!val) {
+          value = 0
+        }
         return unit.compute(value, index, -1, dot)
       }
     },
