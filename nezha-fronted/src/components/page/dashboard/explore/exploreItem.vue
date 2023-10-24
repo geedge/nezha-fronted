@@ -1,6 +1,6 @@
 <template>
   <div class="explore list-page" :class="'nz-explore-' + tabIndex" style="position:relative;">
-    <div class="right-box__container main-list">
+    <div class="right-box__container main-list" style="padding: 0;">
       <div class="main-container explore-split-box" ref="exploreScrollbar" @mouseenter="tableHover = true" @mouseleave="tableHover = false">
         <!-- 关闭按钮 -->
         <div v-if="closable" class="explore-close">

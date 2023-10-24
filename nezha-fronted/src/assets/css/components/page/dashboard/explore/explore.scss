@@ -168,6 +168,7 @@
   .main-container {
     padding: 0 !important;
     overflow: auto;
+    background-color: $--background-color-empty !important;
   }
   .metric-table {
     border-bottom: 1px solid $--border-color-light !important;
