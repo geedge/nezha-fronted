@@ -336,7 +336,7 @@ export default {
       this.hideMe()
     },
     selectLog () {
-      this.$emit('selectLog', this.logFinalStr)
+      this.$emit('selectLog', { name: this.logFinalStr })
       this.hideMe()
     },
     copyItem (value) {

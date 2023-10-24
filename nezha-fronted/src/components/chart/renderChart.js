@@ -5,7 +5,6 @@ import { formatScientificNotation } from '@/components/common/js/tools'
 export default {
   methods: {
     renderYAxis (chartDatas, chartInfo, type) {
-      console.log(chartDatas, '1')
       let chartData = lodash.cloneDeep(chartDatas)
       if (type === 'legend') {
         chartData.forEach(item => {
@@ -13,7 +12,6 @@ export default {
         })
         chartData = chartData.map(item => [item])
       }
-      console.log(chartDatas, '2')
       const decimals = chartInfo.param.decimals || 2
       const chartOption = {
         yAxis: [
@@ -32,7 +30,6 @@ export default {
       }
       // 左y轴
       const leftData = chartData.filter(item => item[0] && !item[0].yAxisIndex)
-      console.log(chartDatas, '3')
       const leftInfo = this.getMinMaxFromData(leftData, chartInfo.unit, chartInfo.param) //
       chartOption.yAxis[0].minInterval = chartDataFormat.Interval(leftInfo.maxValue, leftInfo.copies, leftInfo.unit, 'min')
       chartOption.yAxis[0].maxInterval = chartDataFormat.Interval(leftInfo.maxValue, leftInfo.copies, leftInfo.unit, 'max') * Math.ceil(this.series.length / 5)
@@ -64,14 +61,9 @@ export default {
         // 如果全都为右y轴数据 则右y轴显示网格
         const unit = chartDataFormat.getUnit(lodash.get(chartInfo, 'param.rightYAxis.unit', 2))
         const allRight = this.series.every(item => item.yAxisIndex == 1)
-        console.log(allRight)
         chartOption.yAxis[1].splitLine.show = allRight
-        console.log(chartDatas, '4')
         const rightData = chartData.filter(item => item[0] && item[0].yAxisIndex)
-        console.log(chartDatas, '5')
-        console.log(rightData)
         const rightInfo = this.getMinMaxFromData(rightData, lodash.get(chartInfo, 'param.rightYAxis.unit', 2), lodash.get(chartInfo, 'param.rightYAxis', {}))//
-        console.log(rightInfo)
         chartOption.yAxis[1].minInterval = chartDataFormat.Interval(rightInfo.maxValue, rightInfo.copies, rightInfo.unit, 'min')
         chartOption.yAxis[1].maxInterval = chartDataFormat.Interval(rightInfo.maxValue, rightInfo.copies, rightInfo.unit, 'max') * Math.ceil(this.series.length / 5)
         if (chartInfo.param.stack) {

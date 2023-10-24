@@ -154,7 +154,6 @@ export default {
             })
           }
         } else {
-          console.log(response)
           this.$message.error(response.msg || response.error)
         }
       })

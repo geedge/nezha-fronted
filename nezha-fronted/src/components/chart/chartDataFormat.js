@@ -1153,8 +1153,7 @@ export default {
     }
   },
   Interval: function (value, copies, unit, interValType) {
-    console.log(unit)
-    const type = unit.type
+    const type = unit.type || unit
     const ascii = unit.ascii || 1000
     if (!copies) {
       copies = 1
