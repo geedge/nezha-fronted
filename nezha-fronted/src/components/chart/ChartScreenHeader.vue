@@ -34,10 +34,10 @@
     <div class="chart-header__tools">
       <span v-if="chartInfo.remark" class="chart-header__tool top-tool-btn-group">
         <el-tooltip :content="chartInfo.remark" effect="light" placement="top">
-           <i class="nz-icon nz-icon-info-normal tool__icon"></i>
+          <i class="nz-icon nz-icon-info-normal tool__icon"></i>
         </el-tooltip>
       </span>
-      <span class="chart-header__tool" v-if="showTime(chartInfo.type)">
+      <span class="chart-header__tool" v-if="showTime(chartInfo.type)&&!isExportHtml">
         <pick-time
           :refresh-data-func="dateChange"
           v-model="searchTime"
@@ -48,7 +48,8 @@
           id="line-chart"
           :sign="chartInfo.id"
           @unitChange="unitChange"
-        ></pick-time>
+        >
+        </pick-time>
       </span>
       <span class="chart-header__tool" v-if="showSaveBtn(from)">
         <button id="endpoint-query-full-chart-save" v-has="'main_add'" class="nz-btn nz-btn-size-large nz-btn-style-normal" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>

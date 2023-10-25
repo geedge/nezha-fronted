@@ -35,6 +35,7 @@
     <chart-screen-header
       v-if="isFullscreen"
       :is-group="isGroup(chartInfo.type)"
+      :isExportHtml="isExportHtml"
       :isError="isError"
       :from="from"
       :nowTimeType="nowTimeType"

@@ -89,6 +89,7 @@
         :filter="filter"
         :is-fullscreen="true"
         @groupShow="groupShow"
+        :isExportHtml="isExportHtml"
         :dataJson="dataJson"
         :panelLock="panelLock"
         :time-range="timeRange"
