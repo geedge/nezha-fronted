@@ -73,6 +73,22 @@ function bits (value, index, type = 1, dot = 0) {
     return asciiCompute(num, 1024, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
   }
 }
+function bitsSI (value, index, type = 1, dot = 0) {
+  const num = value / 8
+  if (value < 8) {
+    return value + 'b'
+  }
+  if (num < 1000) {
+    return num + 'B'
+  }
+  if (type == 1) {
+    return asciiCompute(num, 1000, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0)
+  } else if (type == -1) {
+    return asciiCompute(num, 1000, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot)
+  } else {
+    return asciiCompute(num, 1000, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
+  }
+}
 function bytes (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1024, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0)
@@ -80,6 +96,15 @@ function bytes (value, index, type = 1, dot) {
     return asciiCompute(value, 1024, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot)
   } else {
     return asciiCompute(value, 1024, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
+  }
+}
+function bytesSI (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1000, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0)
+  } else if (type == -1) {
+    return asciiCompute(value, 1000, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot)
+  } else {
+    return asciiCompute(value, 1000, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
   }
 }
 function kilobytes (value, index, type = 1, dot) {
@@ -91,6 +116,15 @@ function kilobytes (value, index, type = 1, dot) {
     return asciiCompute(value, 1024, ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
   }
 }
+function kilobytesSI (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1000, ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0)
+  } else if (type == -1) {
+    return asciiCompute(value, 1000, ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot)
+  } else {
+    return asciiCompute(value, 1000, ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
+  }
+}
 function megabytes (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1024, ['MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0)
@@ -98,6 +132,15 @@ function megabytes (value, index, type = 1, dot) {
     return asciiCompute(value, 1024, ['MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot)
   } else {
     return asciiCompute(value, 1024, ['MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
+  }
+}
+function megabytesSI (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1000, ['MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0)
+  } else if (type == -1) {
+    return asciiCompute(value, 1000, ['MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot)
+  } else {
+    return asciiCompute(value, 1000, ['MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
   }
 }
 function gigabytes (value, index, type = 1, dot) {
@@ -109,6 +152,15 @@ function gigabytes (value, index, type = 1, dot) {
     return asciiCompute(value, 1024, ['GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
   }
 }
+function gigabytesSI (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1000, ['GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0)
+  } else if (type == -1) {
+    return asciiCompute(value, 1000, ['GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot)
+  } else {
+    return asciiCompute(value, 1000, ['GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
+  }
+}
 function terabytes (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1024, ['TB', 'PB', 'EB', 'ZB', 'YB'], 0)
@@ -118,7 +170,25 @@ function terabytes (value, index, type = 1, dot) {
     return asciiCompute(value, 1024, ['TB', 'PB', 'EB', 'ZB', 'YB'], 2)
   }
 }
+function terabytesSI (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1000, ['TB', 'PB', 'EB', 'ZB', 'YB'], 0)
+  } else if (type == -1) {
+    return asciiCompute(value, 1000, ['TB', 'PB', 'EB', 'ZB', 'YB'], dot)
+  } else {
+    return asciiCompute(value, 1000, ['TB', 'PB', 'EB', 'ZB', 'YB'], 2)
+  }
+}
 function petabytes (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['PB', 'EB', 'ZB', 'YB'], 0)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['PB', 'EB', 'ZB', 'YB'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['PB', 'EB', 'ZB', 'YB'], 2)
+  }
+}
+function petabytesSI (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1024, ['PB', 'EB', 'ZB', 'YB'], 0)
   } else if (type == -1) {
@@ -137,6 +207,128 @@ function packetsSec (value, index, type = 1, dot) {
   }
 }
 function bitsSec (value, index, type = 1, dot) {
+  const num = value / 8
+  if (value < 8) {
+    return value + 'b'
+  }
+  if (num < 1024) {
+    return num + 'B'
+  }
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 1)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 2)
+  }
+}
+function bytesSec (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['Bs', 'KBs', 'MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 1)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['Bs', 'KBs', 'MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['Bs', 'KBs', 'MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 2)
+  }
+}
+function kilobytesSec (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['KBs', 'MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 1)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['KBs', 'MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['KBs', 'MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 1)
+  }
+}
+function kilobitsSec (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 1)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 2)
+  }
+}
+function megabytesSec (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 1)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 2)
+  }
+}
+function megabitsSec (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 1)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 2)
+  }
+}
+function gigabytesSec (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 1)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 2)
+  }
+}
+function gigabitsSec (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 1)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 2)
+  }
+}
+function terabytesSec (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 1)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 2)
+  }
+}
+function terabitsSec (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 1)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 2)
+  }
+}
+function petabytesSec (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['PBs', 'EBs', 'ZBs', 'YBs'], 1)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['PBs', 'EBs', 'ZBs', 'YBs'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['PBs', 'EBs', 'ZBs', 'YBs'], 2)
+  }
+}
+function petabitsSec (value, index, type = 1, dot) {
+  if (type == 1) {
+    return asciiCompute(value, 1024, ['Pbps', 'Ebps', 'Zbps', 'Ybps'], 1)
+  } else if (type == -1) {
+    return asciiCompute(value, 1024, ['Pbps', 'Ebps', 'Zbps', 'Ybps'], dot)
+  } else {
+    return asciiCompute(value, 1024, ['Pbps', 'Ebps', 'Zbps', 'Ybps'], 2)
+  }
+}
+function bitsSecSI (value, index, type = 1, dot) {
+  const num = value / 8
+  if (value < 8) {
+    return value + 'b'
+  }
+  if (num < 1000) {
+    return num + 'B'
+  }
   if (type == 1) {
     return asciiCompute(value, 1000, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 1)
   } else if (type == -1) {
@@ -145,7 +337,7 @@ function bitsSec (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 2)
   }
 }
-function bytesSec (value, index, type = 1, dot) {
+function bytesSecSI (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1000, ['Bs', 'KBs', 'MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 1)
   } else if (type == -1) {
@@ -154,7 +346,7 @@ function bytesSec (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, ['Bs', 'KBs', 'MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 2)
   }
 }
-function kilobytesSec (value, index, type = 1, dot) {
+function kilobytesSecSI (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1000, ['KBs', 'MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 1)
   } else if (type == -1) {
@@ -163,7 +355,7 @@ function kilobytesSec (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, ['KBs', 'MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 1)
   }
 }
-function kilobitsSec (value, index, type = 1, dot) {
+function kilobitsSecSI (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1000, ['Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 1)
   } else if (type == -1) {
@@ -172,7 +364,7 @@ function kilobitsSec (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, ['Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 2)
   }
 }
-function megabytesSec (value, index, type = 1, dot) {
+function megabytesSecSI (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1000, ['MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 1)
   } else if (type == -1) {
@@ -181,7 +373,7 @@ function megabytesSec (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, ['MBs', 'GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 2)
   }
 }
-function megabitsSec (value, index, type = 1, dot) {
+function megabitsSecSI (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1000, ['Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 1)
   } else if (type == -1) {
@@ -190,7 +382,7 @@ function megabitsSec (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, ['Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 2)
   }
 }
-function gigabytesSec (value, index, type = 1, dot) {
+function gigabytesSecSI (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1000, ['GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 1)
   } else if (type == -1) {
@@ -199,7 +391,7 @@ function gigabytesSec (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, ['GBs', 'TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 2)
   }
 }
-function gigabitsSec (value, index, type = 1, dot) {
+function gigabitsSecSI (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1000, ['Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 1)
   } else if (type == -1) {
@@ -208,7 +400,7 @@ function gigabitsSec (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, ['Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 2)
   }
 }
-function terabytesSec (value, index, type = 1, dot) {
+function terabytesSecSI (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1000, ['TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 1)
   } else if (type == -1) {
@@ -217,7 +409,7 @@ function terabytesSec (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, ['TBs', 'PBs', 'EBs', 'ZBs', 'YBs'], 2)
   }
 }
-function terabitsSec (value, index, type = 1, dot) {
+function terabitsSecSI (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1000, ['Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 1)
   } else if (type == -1) {
@@ -226,7 +418,7 @@ function terabitsSec (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, ['Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'], 2)
   }
 }
-function petabytesSec (value, index, type = 1, dot) {
+function petabytesSecSI (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1000, ['PBs', 'EBs', 'ZBs', 'YBs'], 1)
   } else if (type == -1) {
@@ -235,7 +427,7 @@ function petabytesSec (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, ['PBs', 'EBs', 'ZBs', 'YBs'], 2)
   }
 }
-function petabitsSec (value, index, type = 1, dot) {
+function petabitsSecSI (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1000, ['Pbps', 'Ebps', 'Zbps', 'Ybps'], 1)
   } else if (type == -1) {
@@ -244,6 +436,7 @@ function petabitsSec (value, index, type = 1, dot) {
     return asciiCompute(value, 1000, ['Pbps', 'Ebps', 'Zbps', 'Ybps'], 2)
   }
 }
+
 function Hertz (value, index, type = 1, dot) {
   if (type == 1) {
     return asciiCompute(value, 1000, ['Hz', 'KHz', 'MHz', 'GHz', 'THz', 'PHz', 'EHz', 'ZHz', 'YHz'], 1)
@@ -549,37 +742,86 @@ const unitOptions = [
       {
         value: 6,
         compute: bits,
-        label: 'bits'
+        label: 'bits(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 36,
+        compute: bitsSI,
+        label: 'bits(SI)',
+        ascii: 1000
       },
       {
         value: 7,
         compute: bytes,
-        label: 'bytes'
+        label: 'bytes(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 37,
+        compute: bytesSI,
+        label: 'bytes(SI)',
+        ascii: 1000
       },
       {
         value: 8,
         compute: kilobytes,
-        label: 'kilobytes'
+        label: 'kilobytes(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 38,
+        compute: kilobytesSI,
+        label: 'kilobytes(SI)',
+        ascii: 1000
       },
       {
         value: 9,
         compute: megabytes,
-        label: 'megabytes'
+        label: 'megabytes(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 39,
+        compute: megabytesSI,
+        label: 'megabytes(SI)',
+        ascii: 1000
       },
       {
         value: 10,
         compute: gigabytes,
-        label: 'gigabytes'
+        label: 'gigabytes(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 40,
+        compute: gigabytesSI,
+        label: 'gigabytes(SI)',
+        ascii: 1000
       },
       {
         value: 11,
         compute: terabytes,
-        label: 'terabytes'
+        label: 'terabytes(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 41,
+        compute: terabytesSI,
+        label: 'terabytes(SI)',
+        ascii: 1000
       },
       {
         value: 12,
         compute: petabytes,
-        label: 'petabytes'
+        label: 'petabytes(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 42,
+        compute: petabytesSI,
+        label: 'petabytes(SI)',
+        ascii: 1000
       }
     ]
   }, // Data end
@@ -590,67 +832,152 @@ const unitOptions = [
       {
         value: 13,
         compute: packetsSec,
-        label: 'packets/sec'
+        label: 'packets/sec',
+        ascii: 1024
       },
       {
         value: 14,
         compute: bitsSec,
-        label: 'bits/sec'
+        label: 'bits/sec(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 43,
+        compute: bitsSecSI,
+        label: 'bits/sec(SI)',
+        ascii: 1000
       },
       {
         value: 15,
         compute: bytesSec,
-        label: 'bytes/sec'
+        label: 'bytes/sec(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 44,
+        compute: bytesSecSI,
+        label: 'bytes/sec(SI)',
+        ascii: 1000
       },
       {
         value: 16,
         compute: kilobytesSec,
-        label: 'kilobytes/sec'
+        label: 'kilobytes/sec(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 45,
+        compute: kilobytesSecSI,
+        label: 'kilobytes/sec(SI)',
+        ascii: 1000
       },
       {
         value: 17,
         compute: kilobitsSec,
-        label: 'kilobits/sec'
+        label: 'kilobits/sec(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 46,
+        compute: kilobitsSecSI,
+        label: 'kilobits/sec(SI)',
+        ascii: 1000
       },
       {
         value: 18,
         compute: megabytesSec,
-        label: 'megabytes/sec'
+        label: 'megabytes/sec(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 47,
+        compute: megabytesSecSI,
+        label: 'megabytes/sec(SI)',
+        ascii: 1000
       },
       {
         value: 19,
         compute: megabitsSec,
-        label: 'megabits/sec'
+        label: 'megabits/sec(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 48,
+        compute: megabitsSecSI,
+        label: 'megabits/sec(SI)',
+        ascii: 1000
       },
       {
         value: 20,
         compute: gigabytesSec,
-        label: 'gigabytes/sec'
+        label: 'gigabytes/sec(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 49,
+        compute: gigabytesSecSI,
+        label: 'gigabytes/sec(SI)',
+        ascii: 1000
       },
       {
         value: 21,
         compute: gigabitsSec,
-        label: 'gigabits/sec'
+        label: 'gigabits/sec(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 50,
+        compute: gigabitsSec,
+        label: 'gigabits/sec(SI)',
+        ascii: 1000
       },
       {
         value: 22,
         compute: terabytesSec,
-        label: 'terabytes/sec'
+        label: 'terabytes/sec(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 51,
+        compute: terabytesSecSI,
+        label: 'terabytes/sec(SI)',
+        ascii: 1000
       },
       {
         value: 23,
         compute: terabitsSec,
-        label: 'terabits/sec'
+        label: 'terabits/sec(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 52,
+        compute: terabitsSecSI,
+        label: 'terabits/sec(SI)',
+        ascii: 1000
       },
       {
         value: 24,
         compute: petabytesSec,
-        label: 'petabytes/sec'
+        label: 'petabytes/sec(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 53,
+        compute: petabytesSecSI,
+        label: 'petabytes/sec(SI)',
+        ascii: 1000
       },
       {
         value: 25,
         compute: petabitsSec,
-        label: 'petabits/sec'
+        label: 'petabits/sec(IEC)',
+        ascii: 1024
+      },
+      {
+        value: 54,
+        compute: petabitsSecSI,
+        label: 'petabits/sec(SI)',
+        ascii: 1000
       }
     ]
   }, // DataRate end
@@ -739,7 +1066,7 @@ export default {
   unitOptions: function () {
     return unitOptions
   },
-  getUnit: function (index) {
+  getUnit: function (value) {
     if (units.length < 1) {
       unitOptions.forEach((item, index) => {
         item.children.forEach((n, i) => {
@@ -747,13 +1074,15 @@ export default {
         })
       })
     }
-    return units[index - 1]
+    return units.find(item => item.value === value)
   },
   formatData: function (value, unit) {
     return this.getUnit(unit).compute(value, null, 2)
   },
-  formatDatas: function (value, type, flow = 'ceil', ascii) {
+  formatDatas: function (value, unit, flow = 'ceil') {
     let pow = 0
+    const ascii = unit.ascii || 1000
+    const type = unit.type
     if (value < 1 && value != 0) {
       while (value < 1) {
         pow++
@@ -767,19 +1096,19 @@ export default {
 
     if (type === 'Data') {
       if (value > 1) {
-        while (value > 1024) {
+        while (value > ascii) {
           pow++
-          value = value / 1024
+          value = value / ascii
         }
 
         if (flow === 'ceil') {
           const length = JSON.stringify(Math.ceil(value)).length
           value = value / Math.pow(10, length - 1)
-          return Math.ceil(value) * Math.pow(1024, pow) * Math.pow(10, length - 1)
+          return Math.ceil(value) * Math.pow(ascii, pow) * Math.pow(10, length - 1)
         } else if (flow === 'floor') {
           const length = JSON.stringify(Math.floor(value)).length
           value = value / Math.pow(10, length - 1)
-          return Math.floor(value) * Math.pow(1024, pow) * Math.pow(10, length - 1)
+          return Math.floor(value) * Math.pow(ascii, pow) * Math.pow(10, length - 1)
         }
       } else {
         return value
@@ -788,19 +1117,19 @@ export default {
 
     if (type === 'Misc' || type === 'DataRate') {
       if (value > 1) {
-        while (value > 1000) {
+        while (value > ascii) {
           pow++
-          value = value / 1000
+          value = value / ascii
         }
 
         if (flow === 'ceil') {
           const length = JSON.stringify(Math.ceil(value)).length
           value = value / Math.pow(10, length - 1)
-          return Math.ceil(value) * Math.pow(1000, pow) * Math.pow(10, length - 1)
+          return Math.ceil(value) * Math.pow(ascii, pow) * Math.pow(10, length - 1)
         } else if (flow === 'floor') {
           const length = JSON.stringify(Math.floor(value)).length
           value = value / Math.pow(10, length - 1)
-          return Math.floor(value) * Math.pow(1000, pow) * Math.pow(10, length - 1)
+          return Math.floor(value) * Math.pow(ascii, pow) * Math.pow(10, length - 1)
         }
       } else {
         return value
@@ -823,7 +1152,9 @@ export default {
       case 10: return 5
     }
   },
-  Interval: function (value, copies, type, interValType) {
+  Interval: function (value, copies, unit, interValType) {
+    const type = unit.type || unit
+    const ascii = unit.ascii || 1000
     if (!copies) {
       copies = 1
     }
@@ -834,12 +1165,12 @@ export default {
       return value || 1
     }
 
-    if (value < 1024 && type === 'Data') {
+    if (value < ascii && type === 'Data') {
       let interVal = value / copies
       interVal = !isNaN(interVal) ? interVal : 1
       return interVal
     }
-    if (value < 1000 && (type === 'DataRate' || type === 'Misc')) {
+    if (value < ascii && (type === 'DataRate' || type === 'Misc')) {
       let interVal = value / copies
       interVal = !isNaN(interVal) ? interVal : 1
       return interVal
@@ -848,17 +1179,17 @@ export default {
       let interVal = value / copies
       let pow = 0
       if (interVal) {
-        while (interVal > 1024) {
+        while (interVal > ascii) {
           pow++
-          interVal = interVal / 1024
+          interVal = interVal / ascii
         }
-        interVal = Math.ceil(interVal) * Math.pow(1024, pow)
+        interVal = Math.ceil(interVal) * Math.pow(ascii, pow)
       }
       interVal = !isNaN(interVal) ? interVal : 1
-      if (interVal >= 1 && interVal <= 512) {
-        interVal = 512
-      } else if (interVal > 512 && interVal <= 1024) {
-        interVal = 1024
+      if (interVal >= 1 && interVal <= ascii / 2) {
+        interVal = ascii / 2
+      } else if (interVal > 512 && interVal <= ascii) {
+        interVal = ascii
       }
       return interVal
     }
@@ -866,11 +1197,11 @@ export default {
       let interVal = value / copies
       let pow = 0
       if (interVal) {
-        while (interVal > 1000) {
+        while (interVal > ascii) {
           pow++
-          interVal = interVal / 1000
+          interVal = interVal / ascii
         }
-        interVal = Math.ceil(interVal) * Math.pow(1000, pow)
+        interVal = Math.ceil(interVal) * Math.pow(ascii, pow)
       }
       interVal = !isNaN(interVal) ? interVal : 1
       return interVal

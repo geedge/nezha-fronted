@@ -10,30 +10,29 @@
           @click="dropDownVisible = false"
         >
           <div
-            :id="pqid + 'editor'+index"
-            v-if="type !== 'log'"
+            :id="pqid + 'editor'+index + type"
             class="not-fixed-height no-resize no-close"
             style="padding-right: 24px;box-sizing: border-box"
           >
           </div>
-          <div class="zy" style="position: relative;overflow-x: hidden;display: block;border: 1px solid #dedede;width: 100%"  v-if="type == 'log'">
-            <MonacoEditor
-              v-if="type == 'log'"
-              v-model="expressionList[index]"
-              theme="nz"
-              class="not-fixed-height no-resize"
-              ref="monacoEditor"
-              style="width: calc(100% - 24px)"
-              :style="{
-                height: monacoEditorHeight + 'px'
-              }"
-              language="logql"
-              :options="MONACO_EDITOR_OPTIONS"
-              @editorWillMount="handelBeforeMount"
-              @editorDidMount="handleMount"
-              @change="expressionChange"
-            />
-          </div>
+<!--          <div class="zy" style="position: relative;overflow-x: hidden;display: block;border: 1px solid #dedede;width: 100%"  v-if="type == 'log'">-->
+<!--            <MonacoEditor-->
+<!--              v-if="type == 'log'"-->
+<!--              v-model="expressionList[index]"-->
+<!--              theme="nz"-->
+<!--              class="not-fixed-height no-resize"-->
+<!--              ref="monacoEditor"-->
+<!--              style="width: calc(100% - 24px)"-->
+<!--              :style="{-->
+<!--                height: monacoEditorHeight + 'px'-->
+<!--              }"-->
+<!--              language="logql"-->
+<!--              :options="MONACO_EDITOR_OPTIONS"-->
+<!--              @editorWillMount="handelBeforeMount"-->
+<!--              @editorDidMount="handleMount"-->
+<!--              @change="expressionChange"-->
+<!--            />-->
+<!--          </div>-->
 
           <div v-if="errorMsg" class="append-msg error" style="position: absolute">
             <span>{{ errorMsg }}</span>
@@ -68,30 +67,29 @@
               v-if="plugins.indexOf('metric-input') > -1"
             >
             <div
-              :id="pqid + 'editor'+index"
-              v-if="type !== 'log'"
+              :id="pqid + 'editor'+index + type"
               class="not-fixed-height no-resize no-close"
               style="padding-right: 24px;box-sizing: border-box"
             >
             </div>
-              <div class="zy" style="position: relative;overflow-x: hidden;display: block;border: 1px solid #dedede;width: 100%"  v-if="type == 'log'">
-                <MonacoEditor
-                  v-if="type == 'log'"
-                  v-model="expressionList[index]"
-                  theme="nz"
-                  class="not-fixed-height no-resize"
-                  ref="monacoEditor"
-                  style="width: calc(100% - 24px)"
-                  :style="{
-                    height: monacoEditorHeight + 'px'
-                  }"
-                  language="logql"
-                  :options="MONACO_EDITOR_OPTIONS"
-                  @editorWillMount="handelBeforeMount"
-                  @editorDidMount="handleMount"
-                  @change="expressionChange"
-                />
-              </div>
+<!--              <div class="zy" style="position: relative;overflow-x: hidden;display: block;border: 1px solid #dedede;width: 100%"  v-if="type == 'log'">-->
+<!--                <MonacoEditor-->
+<!--                  v-if="type == 'log'"-->
+<!--                  v-model="expressionList[index]"-->
+<!--                  theme="nz"-->
+<!--                  class="not-fixed-height no-resize"-->
+<!--                  ref="monacoEditor"-->
+<!--                  style="width: calc(100% - 24px)"-->
+<!--                  :style="{-->
+<!--                    height: monacoEditorHeight + 'px'-->
+<!--                  }"-->
+<!--                  language="logql"-->
+<!--                  :options="MONACO_EDITOR_OPTIONS"-->
+<!--                  @editorWillMount="handelBeforeMount"-->
+<!--                  @editorDidMount="handleMount"-->
+<!--                  @change="expressionChange"-->
+<!--                />-->
+<!--              </div>-->
             </div>
             <div class="append-msg error" v-if="errorMsg">
               <span>{{ errorMsg }}</span>
@@ -254,6 +252,8 @@ import { get } from '@/http'
 import { PromQLExtension } from '@prometheus-io/codemirror-promql'
 import { baseTheme, promqlHighlighter, lightTheme } from './CMTheme.tsx'
 import { newCompleteStrategy } from '@prometheus-io/codemirror-promql/dist/esm/complete'
+import { analyzeCompletion, computeStartCompletePosition, ContextKind } from '@prometheus-io/codemirror-promql/dist/esm/complete/hybrid'
+import { aggregateOpModifierTerms, aggregateOpTerms, atModifierTerms, binOpModifierTerms, binOpTerms, durationTerms, functionIdentifierTerms, matchOpTerms, numberTerms } from '@prometheus-io/codemirror-promql/dist/esm/complete/promql.terms'
 // import {basicSetup} from '@codemirror/basic-setup';
 import { EditorView, highlightSpecialChars, keymap, ViewUpdate, placeholder } from '@codemirror/view'
 import { EditorState, Prec, Compartment } from '@codemirror/state'
@@ -261,6 +261,7 @@ import { bracketMatching, indentOnInput, syntaxHighlighting, syntaxTree } from '
 import { defaultKeymap, history, historyKeymap, insertNewlineAndIndent } from '@codemirror/commands'
 import { highlightSelectionMatches } from '@codemirror/search'
 import { lintKeymap } from '@codemirror/lint'
+import logqlHint from './logqlHint'
 import {
   autocompletion,
   completionKeymap,
@@ -418,28 +419,143 @@ export default {
       const defaultHeaders = {
         Authorization: localStorage.getItem('nz-token')
       }
+
+      let api = '/prom/'
+      if (this.type === 'log') {
+        api = '/logs/loki/'
+      }
       const promqlExtension = new PromQLExtension()
-        .activateCompletion(true)
-        .activateLinter(true)
-        .setComplete({
-          completeStrategy: new HistoryCompleteStrategy(
-            newCompleteStrategy({
-              remote: {
-                url: baseUrl + '/prom/',
-                fetchFn: (resource, options = {}) => {
-                  const params = options.body?.toString()
-                  const search = params ? `?${params}` : ''
-                  return fetch(resource + search, {
-                    method: 'Get',
-                    headers: new Headers(
-                      defaultHeaders
-                    )
-                  })
-                }
-              },
-              maxMetricsMetadata: 99999
+      const completeStrategy = newCompleteStrategy({
+        remote: {
+          url: baseUrl + api,
+          fetchFn: (resource, options = {}) => {
+            const params = options.body?.toString()
+            const search = params ? `?${params}` : ''
+            return fetch(resource + search, {
+              method: 'Get',
+              headers: new Headers(
+                defaultHeaders
+              )
             })
-          )
+          }
+        },
+        maxMetricsMetadata: 99999
+      })
+      if (this.type === 'log') {
+        const autocompleteNodes = {
+          matchOp: matchOpTerms,
+          binOp: binOpTerms,
+          duration: durationTerms,
+          binOpModifier: [],
+          atModifier: [],
+          functionIdentifier: logqlHint.functions,
+          aggregateOp: logqlHint.aggregateOp,
+          aggregateOpModifier: aggregateOpModifierTerms,
+          number: numberTerms
+        }
+        completeStrategy.promQL = function (context) {
+          const { state, pos } = context
+          const tree = syntaxTree(state).resolve(pos, -1)
+          const contexts = analyzeCompletion(state, tree)
+          let asyncResult = Promise.resolve([])
+          let completeSnippet = false
+          const span = true
+          for (const context of contexts) {
+            switch (context.kind) {
+              case ContextKind.Aggregation:
+                completeSnippet = true
+                asyncResult = asyncResult.then((result) => {
+                  return result.concat(autocompleteNodes.aggregateOp)
+                })
+                break
+              case ContextKind.Function:
+                completeSnippet = true
+                asyncResult = asyncResult.then((result) => {
+                  return result.concat(autocompleteNodes.functionIdentifier)
+                })
+                break
+              case ContextKind.BinOpModifier:
+                asyncResult = asyncResult.then((result) => {
+                  return result.concat(autocompleteNodes.binOpModifier)
+                })
+                break
+              case ContextKind.BinOp:
+                asyncResult = asyncResult.then((result) => {
+                  return result.concat(autocompleteNodes.binOp)
+                })
+                break
+              case ContextKind.MatchOp:
+                asyncResult = asyncResult.then((result) => {
+                  return result.concat(autocompleteNodes.matchOp)
+                })
+                break
+              case ContextKind.AggregateOpModifier:
+                asyncResult = asyncResult.then((result) => {
+                  return result.concat(autocompleteNodes.aggregateOpModifier)
+                })
+                break
+              case ContextKind.Duration:
+                span = false
+                asyncResult = asyncResult.then((result) => {
+                  return result.concat(autocompleteNodes.duration)
+                })
+                break
+              case ContextKind.Offset:
+                asyncResult = asyncResult.then((result) => {
+                  return result.concat([{ label: 'offset' }])
+                })
+                break
+              case ContextKind.Bool:
+                asyncResult = asyncResult.then((result) => {
+                  return result.concat([{ label: 'bool' }])
+                })
+                break
+              case ContextKind.AtModifiers:
+                asyncResult = asyncResult.then((result) => {
+                  return result.concat(autocompleteNodes.atModifier)
+                })
+                break
+              case ContextKind.Number:
+                asyncResult = asyncResult.then((result) => {
+                  return result.concat(autocompleteNodes.number)
+                })
+                break
+              case ContextKind.MetricName:
+                asyncResult = asyncResult.then((result) => {
+                  return this.autocompleteMetricName(result, context)
+                })
+                break
+              case ContextKind.LabelName:
+                asyncResult = asyncResult.then((result) => {
+                  return this.autocompleteLabelName(result, context)
+                })
+                break
+              case ContextKind.LabelValue:
+                asyncResult = asyncResult.then((result) => {
+                  return this.autocompleteLabelValue(result, context)
+                })
+            }
+          }
+          return asyncResult.then((result) => {
+            return arrayToCompletionResult(result, computeStartCompletePosition(tree, pos), pos, completeSnippet, span)
+          })
+        }
+      }
+      function arrayToCompletionResult (data, from, to, includeSnippet = false, span = true) {
+        const options = data
+        // options.push(...logqlHint);
+        return {
+          from: from,
+          to: to,
+          options: options,
+          validFor: span ? /^[a-zA-Z0-9_:]+$/ : undefined
+        }
+      }
+      // console.log(JSON.stringify(promqlExtension.promQL()))
+      promqlExtension.activateCompletion(true)
+        .activateLinter(!(this.type === 'log'))
+        .setComplete({
+          completeStrategy: new HistoryCompleteStrategy(completeStrategy)
 
         })
       function HistoryCompleteStrategy (CompleteStrategy) {
@@ -467,6 +583,7 @@ export default {
               })),
               span: /^[a-zA-Z0-9_:]+$/
             }
+            console.log(res.options)
             // 过滤 非logs的函数
             if (res !== null) {
               historyItems.options = historyItems.options.concat(res.options)
@@ -485,6 +602,10 @@ export default {
         lightTheme
       ]
       if (!this.newView) {
+        let placeholderStr = 'Metrics Expression (press Shift+Enter for newlines)'
+        if (this.type === 'log') {
+          placeholderStr = 'Logs Expression (press Shift+Enter for newlines)'
+        }
         const EditorViewstate = EditorState.create({
           doc: self.codeMirrorValue[self.index],
           extensions: [
@@ -500,7 +621,7 @@ export default {
             highlightSelectionMatches(),
             EditorView.lineWrapping,
             keymap.of([...closeBracketsKeymap, ...defaultKeymap, ...historyKeymap, ...completionKeymap, ...lintKeymap]),
-            placeholder('Expression (press Shift+Enter for newlines)'),
+            placeholder(placeholderStr),
             dynamicConfigCompartment.of(dynamicConfig),
             keymap.of([
               {
@@ -539,7 +660,7 @@ export default {
         const view = new EditorView({
           state: EditorViewstate,
           // parent: document.getElementById('editor')
-          parent: document.getElementById(this.pqid + 'editor' + self.index)
+          parent: document.getElementById(this.pqid + 'editor' + self.index + this.type)
         })
         self.newView = view
       } else {
@@ -1090,14 +1211,35 @@ export default {
         })
       }
     },
-    selectLog (str) {
-      if (!str || str.length === 0) return
-      this.expressionList[this.index] = str
-      this.codeMirrorValue[this.index] = str
-      this.dropDownVisible = false
-      this.$emit('change', str)
-      this.$forceUpdate()
-      this.cascaderValue = ''
+    selectLog (item) {
+      if (!item.id) {
+        this.metricChangeNew(item.name)
+      } else if (item.id) {
+        this.dropDownVisible = false
+        this.$get('/expression/tmpl/' + item.id).then(res => {
+          if (res.code === 200) {
+            if (!res.data.vars || !res.data.vars.length) {
+              this.metricChange(item.expression)
+              this.initCodeMirror()
+              return
+            }
+            res.data.vars.forEach(item => {
+              res.data[item] = ''
+              const arr = item.split('.')
+              const keyword = arr[0].toLowerCase()
+              this.getAllOptins(keyword, keyword + 'Option')
+            })
+            this.tempBox = {
+              ...this.tempBox,
+              ...res.data
+            }
+
+            setTimeout(() => {
+              this.tempBoxShow = true
+            }, 100)
+          }
+        })
+      }
     }
   },
   watch: {
@@ -1150,11 +1292,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        if (n !== 'log') {
-          this.$nextTick(() => {
-            this.initCodeMirror()
-          })
-        }
+        this.$nextTick(() => {
+          this.initCodeMirror()
+        })
       }
     }
   },

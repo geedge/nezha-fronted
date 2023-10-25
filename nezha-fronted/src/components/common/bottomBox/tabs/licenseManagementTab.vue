@@ -86,6 +86,7 @@ export default {
       async handler (n) {
         if (n) {
           this.searchLabel = {}
+          this.tableData = []
           this.getTableData()
         }
       }
@@ -152,6 +153,8 @@ export default {
               this.toTopBtnHandler(this.scrollbarWrap)
             })
           }
+        } else {
+          this.$message.error(response.msg || response.error)
         }
       })
     },

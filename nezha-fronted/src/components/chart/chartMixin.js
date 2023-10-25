@@ -100,12 +100,12 @@ export default {
 
           // 设置右y轴
           if (chartInfo.param.enable.rightYAxis) {
-            s.yAxisIndex = 0
             chartInfo.param.rightYAxis && chartInfo.param.rightYAxis.elementNames.forEach(item => {
-              if (data.elements.name == item) {
+              if ((data.elements.name == item) && !s.yAxisIndex) {
                 s.yAxisIndex = 1
                 data.yAxisIndex = 1
               } else {
+                s.yAxisIndex = 0
                 data.yAxisIndex = 0
               }
             })
@@ -405,7 +405,7 @@ export default {
         maxValue = Math.abs(minValue)
       }
       maxValue = maxValue - minValue
-      maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii)
+      maxValue = chartDataFormat.formatDatas(maxValue, unit, 'ceil', unit.ascii)
       let oldValue = maxValue
       if (maxValue < 0) {
         oldValue = Math.abs(maxValue)

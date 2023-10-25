@@ -83,7 +83,6 @@ export default {
     momentTz (timestamp, fmt) { // moment 转化时间戳为str
       const offset = localStorage.getItem('nz-sys-timezone')
       const format = fmt || localStorage.getItem('nz-default-dateFormat')
-      console.log(timestamp, fmt, offset, localStorage.getItem('nz-default-dateFormat'), format)
       return moment.tz(timestamp, offset).format(format)
     },
     momentStrToTimestamp (str, fmt) {

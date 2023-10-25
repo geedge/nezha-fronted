@@ -191,7 +191,6 @@ export default {
 
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
-
       chartOption.series.forEach(item => {
         if (item.lineStyle) {
           item.lineStyle.width = this.lineOption.lineWidth
@@ -611,7 +610,10 @@ export default {
     yAxisLabelFormatter (minValue, maxValue, copies, unit, dot) {
       const self = this
       return function (val, index) {
-        const value = formatScientificNotation(val, 6)
+        let value = formatScientificNotation(val, 6)
+        if (!val) {
+          value = 0
+        }
         return unit.compute(value, index, -1, dot)
       }
     },

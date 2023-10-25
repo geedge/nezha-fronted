@@ -267,7 +267,9 @@ export default {
           this.object.paramObj.push({ key: '', value: [] })
         }
         this.object.assetName = this.object.asset ? this.object.asset.name : ''
+        this.object.softwareAssetName = this.object.softwareAsset ? this.object.softwareAsset.name : ''
         this.object.assetId = this.object.asset ? this.object.asset.id + '' : ''
+        this.object.softwareAssetId = this.object.softwareAsset ? this.object.softwareAsset.id + '' : ''
         this.object.projectId = this.object.project.id
         this.object.moduleId = this.object.module.id
         this.object.type = this.object.module.type

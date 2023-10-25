@@ -56,9 +56,17 @@
             </div>
           </template>
           <template v-else-if="item.prop === 'category'">
-          <div>
-            {{scope.row.type ? scope.row.type.category : '-'}}
-          </div>
+            <div>
+              {{scope.row.type ? scope.row.type.category : '-'}}
+            </div>
+          </template>
+          <template v-else-if="item.prop === 'loginlimit'">
+            <div v-if="scope.row.loginlimit">
+              {{scope.row.loginlimit == -1 ? '∞': scope.row.loginlimit}}
+            </div>
+            <div v-else>
+              '-'
+            </div>
           </template>
           <span v-else-if="item.prop === 'production_date' || item.prop === 'expiration_date'">{{ scope.row[item.prop] ? momentTz(scope.row[item.prop] * 1000) : '-'}}</span>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -110,13 +118,13 @@ export default {
       tableTitle: [ // 原始table列
         {
           label: this.$t('licenseMange.product'),
-          prop: 'typename',
+          prop: 'name',
           show: true,
           width: 350
           // sortable: 'custom'
         }, {
           label: this.$t('licenseMange.keyType'),
-          prop: 'name',
+          prop: 'typename',
           minWidth: 200,
           show: true
         }, {

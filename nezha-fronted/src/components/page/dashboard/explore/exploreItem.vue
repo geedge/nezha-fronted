@@ -3885,10 +3885,12 @@ export default {
       this.$refs.logDetail && this.$refs.logDetail.resetOperation()
       if (this.expressions.length > 0) {
         const requestArr = []
+        const realArr = [] // 记录原始位置
         // 过滤掉state为0的元素
         this.expressions.forEach((item, index) => {
           if (item != '' && this.promqlKeys[index].state && item) {
             requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&limit=' + limit))
+            realArr.push(index)
           }
         })
         if (requestArr.length > 0) {
@@ -3896,18 +3898,22 @@ export default {
           this.saveDisabled = false
         }
         axios.all(requestArr).then(res => {
-          this.postHistory()
+          console.log(res)
           this.chartLoading = false
           const errorRowIndex = []
           res.forEach((r, i) => {
-            if (typeof r === 'string') {
+            if (r.code !== 200) {
               errorRowIndex.push(i)
+              this.promqlKeys[realArr[i]].isResError = true
+            } else {
+              this.promqlKeys[realArr[i]].isResError = false
             }
           })
           if (errorRowIndex.length > 0) {
             this.$message.error(this.$t('tip.errorInRow') + ': ' + errorRowIndex.map(e => e + 1).join(' ,'))
             res = res.filter((r, i) => errorRowIndex.indexOf(i) === -1)
           }
+          this.postHistory()
           if (res.length > 0) {
             const logData = res.map(r => r.data)
             if (logData[0].result.length > 0) {
@@ -3941,6 +3947,8 @@ export default {
               this.logData = logData
               hasGraph && this.loadLogGraph()
             })
+          } else {
+            this.showIntroduce = true
           }
         }).catch(e => {
           this.chartLoading = false
@@ -4370,7 +4378,6 @@ export default {
         } else {
           const promiseArr = []
           this.expressions.forEach((item, index) => {
-            console.log(item)
             if (item != '' && this.promqlKeys[index].state && item) {
               promiseArr.push(this.$get('logs/loki/api/v1/format_query', { query: item }))
             } else {
@@ -4386,7 +4393,6 @@ export default {
       this.updatePath()
     },
     initQueryFromPath () {
-      console.log('initQueryFromPath')
       const param = this.$route.query[this.position]
       if (param) {
         const data = JSON.parse(param)
@@ -4412,7 +4418,6 @@ export default {
         this.promqlCount = data.queries.length
         data.queries.forEach((item, index) => {
           this.$set(this.expressions, index, item.expr)
-          console.log(item)
           this.promqlKeys[index] = {
             ...item,
             id: getUUID(),
@@ -4571,7 +4576,7 @@ export default {
       })
       this.lastHistory.forEach((item) => {
         const findItem = arr.find(history => history.id == item.id)
-        if (findItem && findItem.queryValue !== item.value) {
+        if (findItem && findItem.queryValue !== item.value && !findItem.isError && !findItem.isResError) {
           postArr.push({
             queryKey,
             queryValue: findItem.queryValue
@@ -4580,7 +4585,7 @@ export default {
       })
       arr.forEach(item => {
         const findItem = this.lastHistory.find(history => history.id == item.id)
-        if (!findItem) {
+        if (!findItem && !item.isResError) {
           postArr.push({
             queryKey,
             queryValue: item.queryValue
@@ -4588,8 +4593,8 @@ export default {
         }
       })
       postArr = postArr.filter(item => item.queryValue)
+      console.log(postArr)
       this.$post('/sys/user/queryHistory', postArr).then(res => {
-        console.log(res)
         this.lastHistory = this.$lodash.cloneDeep(postArr)
       })
     },
