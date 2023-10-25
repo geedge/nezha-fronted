@@ -1334,7 +1334,7 @@ const i18nData = {
     'asset.brandAndModel': 'Brand & Model',
     'config.assetMeta.editGroup': 'Edit group',
     consul_serf_snapshot_appendLine_median: 'Measures the median time it takes for the Consul agent to append entries to an existing log',
-    'validate.number': 'Numberic',
+    'validate.number': 'Numeric',
     mongodb_db_stats_avg_obj_size: 'Average size of all documents in the database',
     'el.pagination.goto': 'Go to',
     'overall.select': 'Select',
