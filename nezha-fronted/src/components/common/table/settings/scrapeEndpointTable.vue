@@ -70,8 +70,8 @@
       <template v-else-if="item.prop === 'lastScrapeDuration'">
         <el-tooltip effect="light" placement="right">
           <div slot="content">
-            <div><span>Interval:&nbsp;</span>{{ scope.row.discoveredLabels._scrape_interval_ ? scope.row.discoveredLabels._scrape_interval_ + 's' : '0s' }}</div>
-            <div><span>Timeout:&nbsp;</span>{{ scope.row.discoveredLabels._scrape_timeout_ ? scope.row.discoveredLabels._scrape_timeout_ + 's' : '0s'}}</div>
+            <div><span>Interval:&nbsp;</span>{{ scope.row.discoveredLabels.__scrape_interval__ ? scope.row.discoveredLabels.__scrape_interval__ : '0s' }}</div>
+            <div><span>Timeout:&nbsp;</span>{{ scope.row.discoveredLabels.__scrape_timeout__ ? scope.row.discoveredLabels.__scrape_timeout__  : '0s'}}</div>
           </div>
           <span>{{ scope.row.lastScrapeDuration }}</span>
         </el-tooltip>
