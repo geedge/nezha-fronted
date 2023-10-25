@@ -647,7 +647,7 @@ export default {
     },
     chartClick (params) {
       // 先取消多表联动 防止其它图表setOption
-      if (this.isConnect !== 'none') {
+      if (this.isConnect && this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }
       getChart(this.chartId).dispatchAction({
@@ -705,7 +705,7 @@ export default {
       this.toolbox.clickIndex = params.seriesIndex
       const e = params.event.event
       this.toolboxPosition(e)
-      if (this.isConnect !== 'none') {
+      if (this.isConnect && this.isConnect !== 'none') {
         echarts.connect('timeSeriesGroup')
       }
     },
@@ -715,7 +715,7 @@ export default {
       }
     },
     showSelectedSeries () {
-      if (this.isConnect !== 'none') {
+      if (this.isConnect && this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }
       this.legends.forEach((item, index) => {
@@ -745,13 +745,13 @@ export default {
         ]
       })
 
-      if (this.isConnect !== 'none') {
-        echarts.disconnect('timeSeriesGroup')
+      if (this.isConnect && this.isConnect !== 'none') {
+        echarts.connect('timeSeriesGroup')
       }
       this.clickout()
     },
     showAllSeries () {
-      if (this.isConnect !== 'none') {
+      if (this.isConnect && this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }
       getChart(this.chartId).dispatchAction({
@@ -771,8 +771,8 @@ export default {
         ]
       })
 
-      if (this.isConnect !== 'none') {
-        echarts.disconnect('timeSeriesGroup')
+      if (this.isConnect && this.isConnect !== 'none') {
+        echarts.connect('timeSeriesGroup')
       }
       this.clickout()
     }
