@@ -437,7 +437,7 @@ export default {
               if (this.chartInfo.type === 'log') {
                 this.logChartDataFormat()
               }
-            console.log(this.$lodash.cloneDeep(this.chartData), '123123')
+              console.log(this.$lodash.cloneDeep(this.chartData), '123123')
             }).catch(res => {
               // console.info(res)
             }).finally(() => {
@@ -467,7 +467,7 @@ export default {
             if (this.from == 'dashboard') {
               linkId = this.chartInfo.varId
             } else {
-              linkId = this.chartDetailInfo.id
+              linkId = this.chartDetailInfo && this.chartDetailInfo.id
             }
             if (this.chartInfo.type === 'assetInfo') {
               this.$get('asset/asset/' + linkId).then(res => {
