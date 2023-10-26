@@ -54,8 +54,10 @@ export default {
       async handler (n) {
         this.loading = true
         this.getReadyTableData().then(res => {
+          this.ringTableData = []
           this.getTableData()
         }).catch(res => {
+          this.ringTableData = []
           this.ringTableData.push([])
           this.$refs.loading.endLoading()
           this.loading = false
@@ -80,6 +82,7 @@ export default {
   },
   methods: {
     async getTableData () {
+      this.servicesTableData = []
       await this.getCompactorTableData()
       await this.getservicesTableData()
       await this.getIngesterTableData()

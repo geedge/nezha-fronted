@@ -75,10 +75,16 @@
               <span class="data-column__span">{{item.label}} <i class="nz-icon nz-icon-label" v-if="item.type==='label'"/></span>
             </template>
             <template slot-scope="scope" :column="item">
-              <template v-if="item.prop === 'devicesName'">
+              <!-- hostname -->
+              <template v-if="item.prop === 'hostname'">
+                <span>{{scope.row.hostname}}</span>
+              </template>
+              <!-- ip -->
+              <template v-if="item.prop === 'ip'">
                 <span>{{getLicense(scope.row)}}</span>
               </template>
-              <template v-else-if="item.prop === 'status'">
+              <!-- state -->
+              <template v-else-if="item.prop === 'state'">
                 <div v-if="scope.row.status === 0">
                   <div class="active-icon green-bg inline-block"></div> {{ $t('overall.active') }}
                 </div>
@@ -178,12 +184,16 @@ export default {
       tableData: [],
       tableTitle: [
         {
-          label: this.$t('asset.server'),
-          prop: 'devicesName'
+          label: this.$t('license.hostname'),
+          prop: 'hostname'
+        },
+        {
+          label: 'IP:port',
+          prop: 'ip'
         },
         {
           label: this.$t('overall.state'),
-          prop: 'status'
+          prop: 'state'
         }
       ],
       expData: {},
