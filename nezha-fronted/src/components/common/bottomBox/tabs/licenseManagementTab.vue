@@ -206,7 +206,7 @@ export default {
       form.append('saId', this.obj.id)
       const res = await this.$post('/license/uploadV2C', form, { 'Content-Type': 'multipart/form-data' })
       if (res.code === 200) {
-        this.$message.success()
+        this.$message.success(this.$t('tip.uploadSuccess'))
       } else {
         this.$message.error(res.msg)
       }
