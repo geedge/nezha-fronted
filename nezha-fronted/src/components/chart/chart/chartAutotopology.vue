@@ -134,7 +134,7 @@ export default {
     },
     resize () {
       this.allProject.forEach((item, index) => {
-        this.$refs['topology' + index][0] && this.$refs['topology' + index][0].topoResize()
+        this.$refs['topology' + index] && this.$refs['topology' + index][0] && this.$refs['topology' + index][0].topoResize('autoTopology' + item.id + (this.isFullscreen ? 'screen' : ''))
       })
     }
   },
