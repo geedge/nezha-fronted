@@ -85,6 +85,20 @@ export default {
       return this.$store.getters.getTimePickerRange
     }
   },
+  watch: {
+    obj: {
+      immediate: false,
+      deep: true,
+      handler (n) {
+        if (this.from === fromRoute.endpoint) {
+          this.expressions = [`{project="${this.obj.project.name}",module="${this.obj.module.name}",endpoint="${this.obj.name}"}`]
+        } else if (this.from === fromRoute.asset) {
+          this.expressions = [`{asset="${this.obj.name}"}`]
+        }
+        this.queryLogData()
+      }
+    }
+  },
   methods: {
     exportLog ({ limit, descending }) {
       const params = {
