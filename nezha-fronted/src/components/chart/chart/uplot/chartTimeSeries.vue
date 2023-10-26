@@ -59,7 +59,7 @@ import renderChart from '@/components/chart/renderChart'
 import { chartLegendPlacement } from '@/components/common/js/constants'
 import { chartCache, getChart } from '@/components/common/js/common'
 import { initColor } from '@/components/chart/chart/tools'
-import uPlot from 'uplot'
+import UPlot from 'uplot/dist/uPlot.esm'
 export default {
   name: 'chartTimeSeries',
   components: {
@@ -159,6 +159,42 @@ export default {
   methods: {
     initChart (chartOptions = this.chartOption) {
       console.log(this.chartData, this.chartInfo)
+      const opts = {
+        id: `chart-canvas-${this.chartId}-uplot`,
+        width: 400,
+        height: 400,
+        legend: {
+          show: false,
+          live: false,
+          isolate: true
+        },
+        series: [
+          {},
+          {
+            name: this.chartData[0][0].elements.name,
+            label: this.chartData[0][0].elements.name,
+            scale: 'mb',
+            value: (u, v) => v == null ? null : v.toFixed(2) + ' MB',
+            stroke: 'green',
+            width: 1 / devicePixelRatio
+          }
+
+        ],
+        axes: [
+          {},
+          {
+            scale: 'mb',
+            size: 60,
+            values: (u, vals, space) => vals.map(v => +v.toFixed(2) + ' MB'),
+          }
+        ]
+      }
+      const data = [
+        this.chartData[0][0].values.map(item => item[0]),
+        this.chartData[0][0].values.map(item => Number(item[1]) / 1000000).splice(0, 20)
+      ]
+      console.log(data)
+      this.chart = new UPlot(opts, data, document.getElementById(`chart-canvas-${this.chartId}`))
     },
     clickout () {
       if (this.toolbox.show) {
