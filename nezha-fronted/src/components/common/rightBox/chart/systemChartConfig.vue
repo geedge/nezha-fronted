@@ -453,9 +453,9 @@
                     <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside">
                       <div class="columns-dispaly-pop" style="width:396px">
                         <div class="columns-dispaly-title" v-pre>{{&lt;expression name&gt;.$labels.&lt;label name&gt;}}</div>
-                        <div class="columns-dispaly-msg">{{$t('tip.expressionLabel')}}{{$t('tip.$labels')}}</div>
+                        <div class="columns-dispaly-msg">{{$t('tip.expressionLabel',{expr:"\{\{System.$labels.asset\}\}"})}}</div>
                         <div class="columns-dispaly-title" v-pre>{{&lt;expression name&gt;.$value}}</div>
-                        <div class="columns-dispaly-msg">{{$t('tip.expressionValue')}}</div>
+                        <div class="columns-dispaly-msg">{{$t('tip.expressionValue',{expr:"\{\{System.$value\}\}"})}}</div>
                       </div>
                       <span slot="reference">
                         <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
