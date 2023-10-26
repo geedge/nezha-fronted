@@ -46,12 +46,12 @@
           </template>
           <template v-else-if="item.prop === 'summary'">
             <div class="document-copy-block">
-              <span class="document-copy-text">{{scope.row[item.prop] ? scope.row[item.prop] : '-'}}</span>
+              <span class="document-copy-text white-space-pre">{{scope.row[item.prop] ? scope.row[item.prop] : '-'}}</span>
               <i v-if="scope.row[item.prop]" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.copyText')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'description'">
-            <span v-if="scope.row[item.prop]" class="el-table-remark">{{scope.row[item.prop]}}</span>
+            <span v-if="scope.row[item.prop]" class="el-table-remark white-space-pre">{{scope.row[item.prop]}}</span>
             <span v-else>-</span>
           </template>
           <span v-else-if="item.prop === 'severityId'&&scope.row['severity']" class="severity">
