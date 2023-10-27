@@ -153,7 +153,7 @@ export default {
   },
   data () {
     return {
-      regNum: /^[0-9]+.?[0-9]*/,
+      regNum: /^-[0-9]+(\\.[0-9]+)?|[0-9]+(\\.[0-9]+)?$/,
       needAlertDaysData: true,
       trendKey: 'dcId',
       tableTitle: [
@@ -227,7 +227,7 @@ export default {
     showTableTooltip,
     hideTableTooltip,
     regNumTest (val) { // 校验是否是数字
-      return this.regNum.test(val)
+      return !isNaN(val)
     },
     messageStyle (title, row) {
       if (title.prop === 'alertNum') {
