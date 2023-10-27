@@ -12,13 +12,15 @@
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-slot:top-tool-right>
-        <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-if="!notebookEdit" @click="edit">
-          <i class="nz-icon nz-icon-edit"></i>
-          <span>{{$t('overall.edit')}}</span>
-        </button>
-        <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-else @click="done">
-          <span>{{$t('notebook.done')}}</span>
-        </button>
+        <div v-has="'notebook_edit'">
+          <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-if="!notebookEdit" @click="edit">
+            <i class="nz-icon nz-icon-edit"></i>
+            <span>{{$t('overall.edit')}}</span>
+          </button>
+          <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-else @click="done">
+            <span>{{$t('notebook.done')}}</span>
+          </button>
+        </div>
         <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :show-locked="true" :use-chart-unit="false" :sign="'notebook' + obj.id"></pick-time>
         <el-dropdown v-has="['notebook_view']" trigger="click" size="medium" class="nz-el-dropdown">
           <button class="top-tool-btn" :title="$t('overall.download')">

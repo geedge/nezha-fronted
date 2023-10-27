@@ -80,7 +80,7 @@
                 <span>{{scope.row.hostname}}</span>
               </template>
               <!-- ip -->
-              <template v-if="item.prop === 'ip'">
+              <template v-else-if="item.prop === 'ip'">
                 <span>{{getLicense(scope.row)}}</span>
               </template>
               <!-- state -->
