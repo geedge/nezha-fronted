@@ -144,7 +144,7 @@
                       <div class="legend-title-new" style="width: 55px">
                         <span class="legend-title__span">{{$t('overall.type')}}&nbsp;</span>
                         <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
-                          <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div>
+                          <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.queryTypeTip')}}</div>
                           <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div> -->
                           <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                         </el-popover>

@@ -61,10 +61,12 @@ export default {
           }, {
             chinese: '[FEATURE] 系统备份功能允许您将系统的配置保存到磁盘，以便在需要的时候恢复数据',
             english: '[FEATURE] The backup feature allows you to save the system configuration to disk so you can recover the configuration when needed'
-          }, {
-            chinese: '[FEATURE] 通过软件资产管理功能可以集中管理软件资产，统计软件的使用情况',
-            english: '[FEATURE] The software asset management feature can centrally manage software assets and count software usage'
-          }, {
+          },
+          //   {
+          //   chinese: '[FEATURE] 通过软件资产管理功能可以集中管理软件资产，统计软件的使用情况',
+          //   english: '[FEATURE] The software asset management feature can centrally manage software assets and count software usage'
+          // },
+          {
             chinese: '[ENHANCEMENT] 告警消息详情页面增加显示相关资产仪表板并支持快照导出',
             english: '[ENHANCEMENT] The alarm message details page now displays the related asset dashboard and supports snapshot export'
           }, {

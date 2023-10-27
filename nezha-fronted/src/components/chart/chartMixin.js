@@ -633,14 +633,14 @@ export default {
       }
       this.$lodash.get(this, keyByData, []).forEach(item => {
         let val = item.showValue
-        let legend = this.yasuo(item[legend])
+        let legends = this.yasuo(item[legend])
         try {
           val = val.trim()
-          legend = legend.trim()
+          legends = legends.trim()
         } catch (e) {
           console.log(e)
         }
-        csv += `"${legend}","${val}"\n`
+        csv += `"${legends}","${val}"\n`
       })
       return csv
     },
