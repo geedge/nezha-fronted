@@ -1083,10 +1083,15 @@
                       </el-select>
                     </el-form-item>
                     <div>
-                      <div class='mapping-display'>{{$t('config.assetLabel.display')}}</div>
+                      <div class='mapping-display'>{{$t('config.assetLabel.display')}}
+                        <el-popover placement="top" trigger="hover" width="" popper-class="prevent-clickoutside">
+                          <p>{{$t('placeholder.chart.display')}}</p>
+                          <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                        </el-popover>
+                      </div>
                     </div>
                     <el-form-item :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
-                      <el-input v-model="item.display" style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)" class="mapping-display-input">
+                      <el-input v-model="item.display" style="margin-right: 10px" placeholder="" size="small" @change="change('valueMapping', index)" class="mapping-display-input">
                         <el-dropdown trigger="click" slot="prefix" placement="top-start">
                           <div class="el-dropdown-link">
                             <i v-if="item.icon" class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>
