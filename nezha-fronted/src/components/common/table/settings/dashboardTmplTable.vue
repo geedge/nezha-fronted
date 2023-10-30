@@ -114,8 +114,7 @@ export default {
           label: this.$t('dashboard.dashboard.chartForm.varType'),
           prop: 'varType',
           show: true,
-          minWidth: 200,
-          sortable: 'custom'
+          minWidth: 200
         }, {
           label: this.$t('overall.remark'),
           prop: 'remark',
