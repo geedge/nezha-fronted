@@ -408,7 +408,7 @@ export default {
       isError: false,
       defaultPick: 10,
       defaultPickType: 'date',
-      defaultPickVal: 7,
+      defaultPickVal: 7
     }
   },
   computed: {
@@ -452,19 +452,16 @@ export default {
   },
   methods: {
     renderDefaultParams () {
-      if (sessionStorage.getItem('nz-reload') == 1) {
-        this.searchTime = [bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 24 * 7)), bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime()))), '7d']
-        this.searchLabel = {}
-        sessionStorage.setItem('nz-reload', 0)
-        return
-      }
+      sessionStorage.setItem('nz-reload', 0)
       const q = JSON.parse(this.$route.query.body)
       this.state = q.state
       this.searchTime[0] = q.startAt ? this.momentTz(q.startAt) : ''
       this.searchTime[1] = q.endAt ? this.momentTz(q.endAt) : ''
       this.searchTime[2] = q.timeType
-      if (!q.startAt) {
-        this.searchTime[2] = 'all'
+      if (!q.startAt && !q.timeType) {
+        this.searchTime = ['', '', 'all']
+      } else if (q.timeType === 'all') {
+        this.searchTime = ['', '', 'all']
       }
       switch (this.searchTime[2]) {
         case '5m' :
@@ -922,10 +919,16 @@ export default {
         ...this.searchLabel
       }
       const path = this.fromRoute.alertMessage
-      const routePathParams = this.$lodash.cloneDeep(param)
+      const routePathParams = JSON.parse(JSON.stringify(param))
       delete routePathParams.statistics
-      routePathParams.body.startAt = this.searchTime[0] ? this.momentStrToTimestamp(this.searchTime[0]) : ''
-      routePathParams.body.endAt = this.searchTime[1] ? this.momentStrToTimestamp(this.searchTime[1]) : ''
+      console.log(this.searchTime[2])
+      if (!this.searchTime[2]) {
+        routePathParams.body.startAt = this.searchTime[0] ? this.momentStrToTimestamp(this.searchTime[0]) : ''
+        routePathParams.body.endAt = this.searchTime[1] ? this.momentStrToTimestamp(this.searchTime[1]) : ''
+      } else {
+        delete routePathParams.body.startAt
+        delete routePathParams.body.endAt
+      }
       routePathParams.body.timeType = this.searchTime[2]
       routePathParams.body = JSON.stringify(routePathParams.body)
       this.updatePath(routePathParams, path)
