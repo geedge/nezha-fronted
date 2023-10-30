@@ -105,8 +105,11 @@ export default {
       } else {
         baseUrl = baseUrl.replace('http://', 'ws://').replace('https://', 'ws://')
       }
+      if (!baseUrl.endsWith('/')) {
+        baseUrl += '/'
+      }
       /// monitor
-      const url = baseUrl + '/terminal/monitor.ws?' + '&token=' + token + '&uuid=' + this.obj.uuid
+      const url = baseUrl + 'terminal/monitor.ws?' + '&token=' + token + '&uuid=' + this.obj.uuid
       if (this.terminalSocket) { // 如果存在之前的链接 先断开 再链接新的
         this.terminalSocket.close()
       }

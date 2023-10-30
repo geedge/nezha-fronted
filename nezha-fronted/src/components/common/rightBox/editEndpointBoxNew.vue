@@ -68,32 +68,32 @@
           </el-form-item>
           <!--softwareAsset-->
 
-          <el-form-item :label='$t("softwareAsset.text")' label-width="125px" prop="softwareAssetId" v-if="showSoftwareAsset">
-            <!--            <el-select id="module-box-input-asset"  @change="renderEndpoint" v-model="editEndpoint.assetId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">-->
-            <!--              <el-option v-for="item in assetList" :id="'asset-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
-            <!--            </el-select>  @values="renderEndpoint"-->
-            <v-selectpage
-              :data="softwareAssetList"
-              :tb-columns="softwareAssetColumns"
-              :params="{
-                varType: 2, dashboardId: 0,
-                returnChildren:0,groupId:0,
-              }"
-              :multiple="false"
-              :language="language"
-              title="ChartSearch"
-              key-field="id"
-              show-field="name"
-              :width="626"
-              v-model="editEndpoint.softwareAssetId"
-              class="form-control"
-              ref="sp"
-              :result-format="resultFormat"
-            ></v-selectpage>
-          </el-form-item>
-          <el-form-item :label='$t("softwareAsset.text")' label-width="125px" prop="softwareAssetName" v-else>
-            <el-input id="module-box-input-softwareAssetName" v-model="editEndpoint.softwareAssetName" :disabled="!(editEndpoint.assetId && editEndpoint.projectId) || disabled"   placeholder="" show-word-limit size="small"></el-input>
-          </el-form-item>
+<!--          <el-form-item :label='$t("softwareAsset.text")' label-width="125px" prop="softwareAssetId" v-if="showSoftwareAsset">-->
+<!--            &lt;!&ndash;            <el-select id="module-box-input-asset"  @change="renderEndpoint" v-model="editEndpoint.assetId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">&ndash;&gt;-->
+<!--            &lt;!&ndash;              <el-option v-for="item in assetList" :id="'asset-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>&ndash;&gt;-->
+<!--            &lt;!&ndash;            </el-select>  @values="renderEndpoint"&ndash;&gt;-->
+<!--            <v-selectpage-->
+<!--              :data="softwareAssetList"-->
+<!--              :tb-columns="softwareAssetColumns"-->
+<!--              :params="{-->
+<!--                varType: 2, dashboardId: 0,-->
+<!--                returnChildren:0,groupId:0,-->
+<!--              }"-->
+<!--              :multiple="false"-->
+<!--              :language="language"-->
+<!--              title="ChartSearch"-->
+<!--              key-field="id"-->
+<!--              show-field="name"-->
+<!--              :width="626"-->
+<!--              v-model="editEndpoint.softwareAssetId"-->
+<!--              class="form-control"-->
+<!--              ref="sp"-->
+<!--              :result-format="resultFormat"-->
+<!--            ></v-selectpage>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item :label='$t("softwareAsset.text")' label-width="125px" prop="softwareAssetName" v-else>-->
+<!--            <el-input id="module-box-input-softwareAssetName" v-model="editEndpoint.softwareAssetName" :disabled="!(editEndpoint.assetId && editEndpoint.projectId) || disabled"   placeholder="" show-word-limit size="small"></el-input>-->
+<!--          </el-form-item>-->
           <!--name-->
           <el-form-item v-if="optionType!=='batch'" :label='$t("overall.name")' label-width="125px" prop="name">
             <el-input id="module-box-input-name" v-model="editEndpoint.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
@@ -1255,6 +1255,8 @@ export default {
                 this.activeNameLogs = [...this.activeNameLogs]
               }
             }
+            delete params.softwareAssetId
+            delete params.softwareAssetName
             if (valid) {
               if (this.optionType === 'add') {
                 this.$post('monitor/endpoint', params).then(response => {

@@ -55,7 +55,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" @click="showBottomBox('notebookTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+        <button class="table-operation-item" v-has="'notebook_view'" @click="showBottomBox('notebookTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" v-has="['notebook_add','notebook_edit','notebook_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
             <i class="nz-icon nz-icon-more3"></i>
@@ -121,6 +121,9 @@ export default {
   },
   methods: {
     showBottomBox (targetTab, row) {
+      if (!this.hasButton('notebook_view')) {
+        return
+      }
       this.$store.commit('setNotebookEdit', false)
       this.$emit('showBottomBox', targetTab, JSON.parse(JSON.stringify(row)))
     }

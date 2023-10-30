@@ -61,11 +61,11 @@
                     </div>
                     <div>
                       <span>{{$t('asset.vendor')}}:</span>
-                      <span>{{n.vendor}}</span>
+                      <span>{{n.brand ? n.brand.name : ''}}</span>
                     </div>
                     <div>
                       <span>{{$t('overall.type')}}:</span>
-                      <span>{{n.type}}</span>
+                      <span>{{n.type ? n.type.name : ''}}</span>
                     </div>
                   </div>
                   <template slot="reference">

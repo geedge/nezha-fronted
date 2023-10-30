@@ -117,7 +117,7 @@
                   <div class="legend-title-new" style="width: 55px">
                     <span class="legend-title__span">{{$t('overall.type')}}&nbsp;</span>
                     <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
-                      <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div>
+                      <div style="white-space: pre-wrap" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.queryTypeTip')}}</div>
                       <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div> -->
                       <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                     </el-popover>
@@ -801,9 +801,9 @@
                     <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside">
                       <div class="columns-dispaly-pop" style="width:396px">
                         <div class="columns-dispaly-title" v-pre>{{&lt;expression name&gt;.$labels.&lt;label name&gt;}}</div>
-                        <div class="columns-dispaly-msg">{{$t('tip.expressionLabel')}}{{$t('tip.$labels')}}</div>
+                        <div class="columns-dispaly-msg">{{$t('tip.expressionLabel',{expr:"\{\{A.$labels.asset\}\}"})}}</div>
                         <div class="columns-dispaly-title" v-pre>{{&lt;expression name&gt;.$value}}</div>
-                        <div class="columns-dispaly-msg">{{$t('tip.expressionValue')}}</div>
+                        <div class="columns-dispaly-msg">{{$t('tip.expressionValue',{expr:"\{\{A.$value\}\}"})}}</div>
                       </div>
                       <span slot="reference">
                         <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
@@ -1083,10 +1083,15 @@
                       </el-select>
                     </el-form-item>
                     <div>
-                      <div class='mapping-display'>{{$t('config.assetLabel.display')}}</div>
+                      <div class='mapping-display'>{{$t('config.assetLabel.display')}}
+                        <el-popover placement="top" trigger="hover" width="" popper-class="prevent-clickoutside">
+                          <p>{{$t('placeholder.chart.display')}}</p>
+                          <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                        </el-popover>
+                      </div>
                     </div>
                     <el-form-item :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
-                      <el-input v-model="item.display" style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)" class="mapping-display-input">
+                      <el-input v-model="item.display" style="margin-right: 10px" placeholder="" size="small" @change="change('valueMapping', index)" class="mapping-display-input">
                         <el-dropdown trigger="click" slot="prefix" placement="top-start">
                           <div class="el-dropdown-link">
                             <i v-if="item.icon" class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>

@@ -437,7 +437,6 @@ export default {
               if (this.chartInfo.type === 'log') {
                 this.logChartDataFormat()
               }
-              console.log(this.$lodash.cloneDeep(this.chartData), '123123')
             }).catch(res => {
               // console.info(res)
             }).finally(() => {

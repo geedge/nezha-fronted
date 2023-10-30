@@ -46,12 +46,12 @@
           </template>
           <template v-else-if="item.prop === 'summary'">
             <div class="document-copy-block">
-              <span class="document-copy-text">{{scope.row[item.prop] ? scope.row[item.prop] : '-'}}</span>
+              <span class="document-copy-text white-space-pre">{{scope.row[item.prop] ? scope.row[item.prop] : '-'}}</span>
               <i v-if="scope.row[item.prop]" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.copyText')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'description'">
-            <span v-if="scope.row[item.prop]" class="el-table-remark">{{scope.row[item.prop]}}</span>
+            <span v-if="scope.row[item.prop]" class="el-table-remark white-space-pre">{{scope.row[item.prop]}}</span>
             <span v-else>-</span>
           </template>
           <span v-else-if="item.prop === 'severityId'&&scope.row['severity']" class="severity">
@@ -102,7 +102,7 @@
         fixed="right">
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
-          <button v-if="scope.row.alertRule" class="table-operation-item" @click="$emit('messageDetail', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+          <button v-has="'alertMessage_view'" v-if="scope.row.alertRule" class="table-operation-item" @click="$emit('messageDetail', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
           <el-dropdown v-has="['alertMessage_delete','alertMessage_expired', 'alertSilence_add']" size="medium" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
@@ -545,7 +545,7 @@ export default {
       return this.$t(this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label)
     },
     rowDblclick (row) {
-      if (!this.showOption) {
+      if (!this.showOption || !this.hasButton('alertMessage_view')) {
         return
       }
       this.$emit('messageDetail', row)

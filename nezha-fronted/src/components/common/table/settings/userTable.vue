@@ -95,7 +95,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" @click="showBottomBox('operationLogTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+        <button v-has="'user_view'" class="table-operation-item" @click="showBottomBox('operationLogTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" v-has="['user_edit','user_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
             <i class="nz-icon nz-icon-more3"></i>
@@ -134,6 +134,7 @@ export default {
   },
   data () {
     return {
+      viewPermission: 'user_view',
       tableTitle: [ // 原始table列
         {
           label: 'ID',

@@ -130,6 +130,9 @@ export default {
       })
     },
     showBottomBox (targetTab, row) {
+      if (!this.hasButton(this.viewPermission)) {
+        return
+      }
       this.$emit('showBottomBox', targetTab, JSON.parse(JSON.stringify(row)))
     },
     tableDataSort (item) {

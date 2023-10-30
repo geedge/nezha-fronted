@@ -61,7 +61,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" v-has="'role_edit'" @click="showBottomBox('roles', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+        <button v-has="'role_view'" class="table-operation-item" @click="showBottomBox('roles', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" v-has="['role_delete','role_edit']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
             <i class="nz-icon nz-icon-more3"></i>
@@ -98,6 +98,7 @@ export default {
   },
   data () {
     return {
+      viewPermission: 'role_view',
       tableTitle: [ // 原table列
         {
           label: 'ID',

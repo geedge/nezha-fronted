@@ -69,7 +69,7 @@
           </span>
           </template>
           <template v-else-if="item.prop === 'alertNum'">
-           <span class="num-cursor" @click.stop="$emit('showBottomBox', 'alertMessageTab', scope.row)" @dblclick.stop="">
+           <span class="num-cursor" @click.stop="showBottomBox('alertMessageTab', scope.row)" @dblclick.stop="">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
               <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
@@ -109,7 +109,7 @@
         fixed="right">
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
-          <button class="table-operation-item" @click="showBottomBox('cabinet', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+          <button v-has="'dc_view'" class="table-operation-item" @click="showBottomBox('cabinet', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
           <el-dropdown size="medium" v-has="['dc_delete','dc_edit']" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
@@ -153,7 +153,8 @@ export default {
   },
   data () {
     return {
-      regNum: /^[0-9]+.?[0-9]*/,
+      viewPermission: 'dc_view',
+      regNum: /^-[0-9]+(\\.[0-9]+)?|[0-9]+(\\.[0-9]+)?$/,
       needAlertDaysData: true,
       trendKey: 'dcId',
       tableTitle: [
@@ -227,7 +228,7 @@ export default {
     showTableTooltip,
     hideTableTooltip,
     regNumTest (val) { // 校验是否是数字
-      return this.regNum.test(val)
+      return !isNaN(val)
     },
     messageStyle (title, row) {
       if (title.prop === 'alertNum') {

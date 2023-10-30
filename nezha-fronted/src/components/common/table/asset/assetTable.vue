@@ -12,7 +12,7 @@
       @header-dragend="dragend"
       @sort-change="tableDataSort"
       @selection-change="selectionChange"
-      @row-dblclick="(row)=>{$emit('showBottomBox', 'dashboardTab', row)}"
+      @row-dblclick="(row)=>{showBottomBox('dashboardTab', row)}"
     >
       <el-table-column
         :resizable="false"
@@ -60,14 +60,14 @@
           <template v-else-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
           <template v-else-if="item.prop === 'state'">{{scope.row.state ? scope.row.state.name : '-'}}</template>
           <template v-else-if="item.prop === 'endpointNum'">
-            <span class="num-cursor" @click.stop="$emit('showBottomBox', 'endpointTab', scope.row)" @dblclick.stop="">
+            <span class="num-cursor" @click.stop="showBottomBox('endpointTab', scope.row)" @dblclick.stop="">
               <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>
               <span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span>
             </span>
           </template>
           <template v-else-if="item.prop === 'alertNum'">
             <!-- v-my-loading:ldsFacebook="scope.row.trendLoading" -->
-            <span class="num-cursor" @click.stop="$emit('showBottomBox', 'alertMessageTab', scope.row)" @dblclick.stop="">
+            <span class="num-cursor" @click.stop="showBottomBox('alertMessageTab', scope.row)" @dblclick.stop="">
               <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
               <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
                 <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
@@ -106,7 +106,7 @@
             <span v-else> - </span>
           </template>
           <template v-else-if="item.prop === 'children'">
-            <div  @click.stop="$emit('showBottomBox', 'assetSubTab', scope.row)" v-if="scope.row.childrenNum" style="cursor: pointer" @dblclick.stop="">
+            <div  @click.stop="showBottomBox('assetSubTab', scope.row)" v-if="scope.row.childrenNum" style="cursor: pointer" @dblclick.stop="">
               <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
               {{scope.row.childrenNum}}</div>
             <!--          <span v-else-if="scope.row.pid == -1">  <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i> 0 </span>-->
@@ -157,8 +157,8 @@
         fixed="right">
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
-          <button v-if="assetTab"  class="table-operation-item" v-has="'model_edit'" @click="$emit('edit', scope.row)" :title="$t('overall.edit')"><i class="nz-icon nz-icon-edit"></i></button>
-          <button v-else class="table-operation-item" @click="$emit('showBottomBox', 'dashboardTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+          <button v-if="assetTab"  class="table-operation-item" v-has="'asset_edit'" @click="$emit('edit', scope.row)" :title="$t('overall.edit')"><i class="nz-icon nz-icon-edit"></i></button>
+          <button v-has="'asset_view'" v-else class="table-operation-item" @click="showBottomBox('dashboardTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
           <el-dropdown size="medium" v-has="['asset_edit','asset_connect','asset_add','asset_delete', 'alertSilence_add']" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
@@ -222,6 +222,7 @@ export default {
   },
   data () {
     return {
+      viewPermission: 'asset_view',
       needAlertDaysData: true,
       trendKey: 'assetId',
       tableTitle: [

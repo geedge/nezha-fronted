@@ -66,9 +66,10 @@ export default {
           }, {
             id: 13,
             name: this.$t('overall.option'),
-            type: 'selectString',
+            type: 'select',
             label: 'operation',
-            disabled: false
+            disabled: false,
+            readonly: true,
           }, {
             id: 14,
             name: this.$t('config.operationlog.operaId'),
@@ -78,7 +79,7 @@ export default {
           }, {
             id: 16,
             name: this.$t('config.operationlog.state'),
-            type: 'selectString',
+            type: 'select',
             label: 'state',
             readonly: true,
             disabled: false

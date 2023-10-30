@@ -1069,6 +1069,10 @@ export default {
           localStorage.setItem('nz-history-' + this.where, JSON.stringify(this.historyList))
         } else {
           this.historyList = JSON.parse(localStorage.getItem('nz-history-' + this.where))
+          const findIndex = this.historyList.findIndex(item=> JSON.stringify(item) ==  JSON.stringify(this.select_list))
+          if (findIndex !== -1) {
+            this.historyList.splice(findIndex, 1)
+          }
           this.historyList.unshift(this.select_list)
           if (this.historyList.length > 10) {
             this.historyList.length = 10
