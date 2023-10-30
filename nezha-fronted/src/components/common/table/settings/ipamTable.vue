@@ -63,7 +63,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item"  @click="showBottomBox('ipam', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+        <button v-has="'ipam_view'" class="table-operation-item"  @click="showBottomBox('ipam', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" trigger="click" v-has="['ipam_edit', 'ipam_delete']" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
             <i class="nz-icon nz-icon-more3"></i>
@@ -105,6 +105,7 @@ export default {
   },
   data () {
     return {
+      viewPermission: 'ipam_view',
       tableTitle: [ // 原始table列
         {
           label: 'ID',

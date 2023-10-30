@@ -95,7 +95,7 @@
         fixed="right">
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
-          <button class="table-operation-item"  @click="showBottomBox('endpoint', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+          <button v-has="'monitor_module_view'" class="table-operation-item"  @click="showBottomBox('endpoint', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
           <el-dropdown size="medium" v-has="['monitor_module_edit','monitor_module_delete','alertSilence_add','main_edit']" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
@@ -146,6 +146,7 @@ export default {
   },
   data () {
     return {
+      viewPermission: 'monitor_module_view',
       needAlertDaysData: true,
       trendKey: 'moduleId',
       tableTitle: [ // 原始table列
