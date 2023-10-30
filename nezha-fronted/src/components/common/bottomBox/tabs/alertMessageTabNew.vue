@@ -19,7 +19,7 @@
         <el-select v-model="state" class="margin-r-10" size="small" value-key="value" :disabled="from === fromRoute.alertSilence" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 110px">
           <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>
-        <pick-time ref="pickTime" v-model="searchTimeHeader" :default-pick="10" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="false" :sign="sign"></pick-time>
+        <pick-time ref="pickTime" v-model="searchTimeHeader" :default-pick="defaultPick" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="false" :sign="sign"></pick-time>
       </template>
       <template v-slot>
         <alertMessageTable
@@ -312,27 +312,36 @@ export default {
       dialogText: '',
       isError: false,
       errorContent: '',
-      chartInfo: {}
+      chartInfo: {},
+      defaultPick: 10,
+      defaultPickType: 'date',
+      defaultPickVal: 7
     }
   },
   created () {
     if (this.from === fromRoute.alertSilence) {
       this.searchMsg = this.searchMsgSilence
     }
-    this.$route.query.bottomSelectArr && this.renderDefaultParams()
+    this.$route.query.bottomSelectTime && this.renderDefaultParams()
   },
   methods: {
     renderDefaultParams () {
-      const q = JSON.parse(this.$route.query.bottomSelectArr)
+      sessionStorage.setItem('nz-reload', 0)
+      const q = JSON.parse(this.$route.query.bottomSelectTime)
       this.state = q.state
       this.searchTimeHeader[0] = q.startAt ? this.momentTz(q.startAt) : ''
       this.searchTimeHeader[1] = q.endAt ? this.momentTz(q.endAt) : ''
       this.searchTimeHeader[2] = q.timeType
-      if (!q.startAt) {
-        this.searchTimeHeader[2] = 'all'
+      if (!q.startAt && !q.timeType) {
+        this.searchTimeHeader = ['', '', 'all']
+      } else if (q.timeType === 'all') {
+        this.searchTimeHeader = ['', '', 'all']
       }
       this.initTimeType(this.searchTimeHeader[2])
       // this.defaultPick = 11
+      if (this.defaultPick && this.defaultPick !== 12) {
+        this.setDefaultSearchTime('')
+      }
     },
     labelsSort (obj) {
       const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'project', 'datacenter', 'parent_asset', 'user']
@@ -406,6 +415,116 @@ export default {
       this.setSearchTime('searchTimeHeader')
       this.getTableData()
     },
+    setDefaultSearchTime () {
+      const type = this.defaultPickType
+      const val = this.defaultPickVal
+      const key = 'searchTimeHeader'
+      const oneDTimestamp = 24 * 60 * 60 * 1000
+      if (type === 'relative') {
+        const now = new Date(bus.computeTimezone(new Date().getTime()))
+        let start = bus.timeFormate(now, 'YYYY-MM-DD') // 使用固定时间格式 方便添加  00:00:00 23:59:59
+        let end = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
+        let unit = ''
+        if (this.defaultPick === 13) { // today
+          unit = 't'
+          end = start + ' 23:59:59'
+          start += ' 00:00:00'
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+        }
+        if (this.defaultPick === 14) { // Yesterday
+          unit = 't'
+          end = start + ' 23:59:59'
+          start += ' 00:00:00'
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss') - oneDTimestamp)
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss') - oneDTimestamp)
+        }
+        if (this.defaultPick === 15) { // The day before yesterday
+          unit = 't'
+          end = start + ' 23:59:59'
+          start += ' 00:00:00'
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss') - 2 * oneDTimestamp)
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss') - 2 * oneDTimestamp)
+        }
+        if (this.defaultPick === 16) { // This day last week
+          unit = 't'
+          end = start + ' 23:59:59'
+          start += ' 00:00:00'
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss') - 7 * oneDTimestamp)
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss') - 7 * oneDTimestamp)
+        }
+        if (this.defaultPick === 17) { // This week
+          unit = 'w'
+          const noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
+          const nowDay = this.momentDays(noTime)
+          end = start + ' 23:59:59'
+          if (nowDay == 0) {
+            start = this.momentSetDay(noTime, -6, 'YYYY-MM-DD')
+            end = this.momentSetDay(noTime, 0, 'YYYY-MM-DD')
+          } else {
+            start = this.momentSetDay(noTime, 1, 'YYYY-MM-DD')
+            end = this.momentSetDay(noTime, 7, 'YYYY-MM-DD')
+          }
+          start += ' 00:00:00'
+          end += ' 23:59:59'
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+        }
+        if (this.defaultPick === 18) { // Previous week
+          unit = 'w'
+          let noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
+          noTime = noTime - 7 * oneDTimestamp
+          const nowDay = this.momentDays(noTime)
+          if (nowDay == 0) { // 判断当前是否是周天 周天则为 -6 - 0 非周天 则是 1 - 7
+            start = this.momentSetDay(noTime, -6, 'YYYY-MM-DD')
+            end = this.momentSetDay(noTime, 0, 'YYYY-MM-DD')
+          } else {
+            start = this.momentSetDay(noTime, 1, 'YYYY-MM-DD')
+            end = this.momentSetDay(noTime, 7, 'YYYY-MM-DD')
+          }
+          start += ' 00:00:00'
+          end += ' 23:59:59'
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
+          end = this.momentTz(this.momentStrToTimestamp(end, 'YYYY-MM-DD HH:mm:ss'))
+        }
+        if (this.defaultPick === 19) { // this month
+          unit = 'm'
+          const noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
+          const endTime = this.momentStrToTimestamp(start + ' 23:59:59', 'YYYY-MM-DD HH:mm:ss')
+          start = this.momentSetMonthDate(noTime, 1)
+          end = this.momentSetMonthDate(endTime, 31)
+        }
+        if (this.defaultPick === 20) { // Previous month 需要判断当前是否是 1号
+          unit = 'm'
+          const noTime = this.momentStrToTimestamp(start + ' 00:00:00', 'YYYY-MM-DD HH:mm:ss')
+          end = this.momentStrToTimestamp(this.momentSetMonthDate(noTime, 1)) - 1000 // 当月1号 00:00:00 减1s 则是上月最后一天 23:59:59
+          start = this.momentSetMonthDate(end, 1, 'YYYY-MM-DD') + ' 00:00:00'
+          start = this.momentTz(this.momentStrToTimestamp(start, 'YYYY-MM-DD HH:mm:ss'))
+          end = this.momentTz(end)
+        }
+        this.$set(this[key], 0, start)
+        this.$set(this[key], 1, end)
+        this.$set(this[key], 2, val + unit)
+      } else if (type === 'minute') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+        this.$set(this[key], 0, startTime)
+        this.$set(this[key], 1, endTime)
+        this.$set(this[key], 2, val + 'm')
+      } else if (type === 'hour') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+        this.$set(this[key], 0, startTime)
+        this.$set(this[key], 1, endTime)
+        this.$set(this[key], 2, val + 'h')
+      } else if (type === 'date') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+        this.$set(this[key], 0, startTime)
+        this.$set(this[key], 1, endTime)
+        this.$set(this[key], 2, val + 'd')
+      }
+    },
     getTableData (state) {
       if (state) {
         this.state = state
@@ -463,9 +582,20 @@ export default {
       delete routePathParams.statistics
       routePathParams.body.startAt = this.searchTimeHeader[0] ? this.momentStrToTimestamp(this.searchTimeHeader[0]) : ''
       routePathParams.body.endAt = this.searchTimeHeader[1] ? this.momentStrToTimestamp(this.searchTimeHeader[1]) : ''
-      routePathParams.body.timeType = this.searchTime[2]
+      routePathParams.body.timeType = this.searchTimeHeader[2]
+      console.log(this.$route, this.$router)
+      if (!this.searchTimeHeader[2]) {
+        routePathParams.body.startAt = this.searchTimeHeader[0] ? this.momentStrToTimestamp(this.searchTimeHeader[0]) : ''
+        routePathParams.body.endAt = this.searchTimeHeader[1] ? this.momentStrToTimestamp(this.searchTimeHeader[1]) : ''
+      } else {
+        delete routePathParams.body.startAt
+        delete routePathParams.body.endAt
+      }
+      const bottomSelectTime = JSON.stringify(routePathParams.body)
       routePathParams.body = JSON.stringify(routePathParams.body)
-      // this.updatePath(routePathParams, path)
+      const path = this.$route.path
+      const urlQuery = this.$route.query
+      this.$router.replace({ path, query: { ...urlQuery, bottomSelectTime } }).catch(err => {})
       const queryParams = {
         ...this.searchLabel,
         body: encodeURIComponent(JSON.stringify(this.searchLabel.body))
