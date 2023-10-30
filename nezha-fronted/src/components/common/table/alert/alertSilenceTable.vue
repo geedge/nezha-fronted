@@ -52,7 +52,7 @@
         <template v-else-if="item.prop === 'alertNum'">
           <span
             class="num-cursor"
-            @click="$emit('showBottomBox', 'alertMessageTab', scope.row)"
+            @click="showBottomBox('alertMessageTab', scope.row)"
           >
             <i
               :class="scope.row.alertNum > 0 ? 'gray' : 'green'"
@@ -117,9 +117,10 @@
       <div slot-scope="scope" class="table-operation-items">
         <!--        <button :class="{'table-operation-item&#45;&#45;disable': scope.row.state === 3}" class="table-operation-item" v-has="'alertSilence_edit'" @click="$emit('edit', scope.row)" :disabled="scope.row.state === 3"><i class="nz-icon nz-icon-edit"></i></button>-->
         <button
+          v-has="'alertSilence_view'"
           class="table-operation-item"
           :title="$t('overall.view')"
-          @click="$emit('showBottomBox', 'alertMessageTab', scope.row)"
+          @click="showBottomBox('alertMessageTab', scope.row)"
         >
           <i class="nz-icon nz-icon-view1"></i>
         </button>
@@ -193,6 +194,7 @@ export default {
   },
   data () {
     return {
+      viewPermission: 'alertSilence_view',
       /* 表格相关 */
       tableTitle: [
         {

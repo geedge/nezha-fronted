@@ -91,7 +91,7 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items" :key="scope.row.status + scope.row.uuid">
         <template v-if="scope.row.status == 0">
-          <button :title="$t('config.terminallog.monitor.monitor')" v-has="'terminal_view'" class="table-operation-item" @click="showBottomBox('monitorTab', scope.row)"><i class="nz-icon nz-icon-JC"></i></button>
+          <button v-has="'terminal_view'" :title="$t('config.terminallog.monitor.monitor')" class="table-operation-item" @click="showBottomBox('monitorTab', scope.row)"><i class="nz-icon nz-icon-JC"></i></button>
           <el-dropdown size="medium" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
@@ -102,7 +102,7 @@
           </el-dropdown>
         </template>
         <template v-else>
-          <button class="table-operation-item" @click="showBottomBox('cmdTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+          <button v-has="'terminal_view'" class="table-operation-item" @click="showBottomBox('cmdTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
           <el-dropdown size="medium" trigger="click" v-has="['terminal_edit']" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
@@ -141,6 +141,7 @@ export default {
   },
   data () {
     return {
+      viewPermission: 'terminal_view',
       tableTitle: [
         {
           label: this.$t('asset.id'),
@@ -231,6 +232,9 @@ export default {
   },
   methods: {
     showBottomBox (targetTab, row) {
+      if (!this.hasButton('terminal_view')) {
+        return
+      }
       if (this.timer) {
         clearTimeout(this.timer)
       }

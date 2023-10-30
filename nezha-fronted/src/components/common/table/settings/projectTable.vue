@@ -82,7 +82,7 @@
       :width="155">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" @click="changeProjectTopo(scope.row)" v-has="'project_view'" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+        <button v-has="'project_view'" class="table-operation-item" @click="changeProjectTopo(scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" v-has="['project_edit','project_delete','alertSilence_add']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
             <i class="nz-icon nz-icon-more3"></i>

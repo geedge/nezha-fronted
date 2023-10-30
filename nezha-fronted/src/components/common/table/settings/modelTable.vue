@@ -85,7 +85,7 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
         <!-- <button class="table-operation-item" v-has="'model_edit'" @click="$emit('edit', scope.row)" :title="$t('overall.edit')"><i class="nz-icon nz-icon-edit"></i></button> -->
-       <button class="table-operation-item" @click="showBottomBox('asset', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+       <button v-has="'model_view'" class="table-operation-item" @click="showBottomBox('asset', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" v-has="['model_delete','main_edit','model_edit']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
             <i class="nz-icon nz-icon-more3"></i>
@@ -124,6 +124,7 @@ export default {
   },
   data () {
     return {
+      viewPermission: 'model_view',
       tableTitle: [ // 原始table列
         {
           label: 'ID',

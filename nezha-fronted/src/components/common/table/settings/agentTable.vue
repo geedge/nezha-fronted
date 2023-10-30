@@ -77,7 +77,7 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
 <!--        <button class="table-operation-item" v-has="'agent_edit'" @click="tableOperation(['edit', scope.row])"><i class="nz-icon nz-icon-edit"></i></button>-->
-        <button class="table-operation-item"  @click="showBottomBox('scrapeEndpoint', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+        <button v-has="'agent_view'" class="table-operation-item"  @click="showBottomBox('scrapeEndpoint', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" v-has="['agent_edit','agent_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
             <i class="nz-icon nz-icon-more3"></i>
@@ -127,6 +127,7 @@ export default {
   },
   data () {
     return {
+      viewPermission: 'agent_view',
       agent: agent,
       alertLabelShow: false,
       alertLabelObj: {},
