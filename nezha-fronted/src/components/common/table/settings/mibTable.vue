@@ -65,7 +65,7 @@
                     </div>
                     <div>
                       <span>{{$t('overall.type')}}:</span>
-                      <span>{{n.type}}</span>
+                      <span>{{n.type ? n.type.name : ''}}</span>
                     </div>
                   </div>
                   <template slot="reference">

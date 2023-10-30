@@ -158,19 +158,19 @@ export default {
           {
             value: 'download',
             label: i18n.t('overall.download')
-          },
-          {
-            value: 'createTask',
-            label: i18n.t('operationlog.createTask')
-          },
-          {
-            value: 'sync',
-            label: i18n.t('operationlog.sync')
-          },
-          {
-            value: 'diagnosis',
-            label: i18n.t('overall.diagnosis')
           }
+          // {
+          //   value: 'createTask',
+          //   label: i18n.t('operationlog.createTask')
+          // },
+          // {
+          //   value: 'sync',
+          //   label: i18n.t('operationlog.sync')
+          // },
+          // {
+          //   value: 'diagnosis',
+          //   label: i18n.t('overall.diagnosis')
+          // }
         ],
         alertMessageState: [
           {

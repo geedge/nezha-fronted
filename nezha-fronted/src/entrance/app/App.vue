@@ -39,6 +39,14 @@ export default {
     if (window.outerWidth <= defaultWindowWidth) { // outerWidth 获取设备宽度
       document.querySelector('meta[name=viewport]').setAttribute('content', `width=device-width, initial-scale=${window.outerWidth / (defaultWindowWidth * window.devicePixelRatio)}, maximum-scale=1.0, user-scalable=0`)
     }
+    window.addEventListener('unload', this.clearUrl)
+  },
+  methods: {
+    clearUrl () {
+      sessionStorage.setItem('nz-reload', 1)
+    }
+  },
+  beforeDestroy () {
   }
 }
 </script>

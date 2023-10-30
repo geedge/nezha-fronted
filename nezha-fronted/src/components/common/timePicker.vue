@@ -246,8 +246,9 @@ export default {
     this.getUtcStr()
     this.getRangeHistoryArr()
     const timeTemp = this.$lodash.cloneDeep(this.searchTime)
-    this.oldSearchTime[0] = timeTemp[0]
-    this.oldSearchTime[1] = timeTemp[1]
+    console.log(this.searchTime)
+    this.oldSearchTime[0] = timeTemp[0] || ''
+    this.oldSearchTime[1] = timeTemp[1] || ''
     // 监听dateFormat变化 改变日期格式
     window.addEventListener('storage', this.watchDateFormat)
   },
@@ -703,7 +704,7 @@ export default {
             }
           }
           if (this.showEmpty && this.defaultPick === 12) {
-            this.searchTime = []
+            this.searchTime = ['', '']
           }
         }
       }
