@@ -76,7 +76,7 @@ export default {
   },
   data () {
     return {
-      searchTime: [],
+      searchTime: ['', ''],
       visible: false,
       intervalTimer: null,
       interval: -1,
@@ -146,10 +146,10 @@ export default {
     },
     timeFormate (timeRange) {
       if (timeRange && timeRange.length < 2) {
-        return []
+        return ['', '']
       }
       if (!timeRange[0]) {
-        return []
+        return ['', '']
       }
       const startTime = bus.timeFormate(timeRange[0], this.pickTimer)
       const endTime = bus.timeFormate(timeRange[1], this.pickTimer)

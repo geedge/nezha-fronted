@@ -246,66 +246,107 @@ export default {
       switch (value) {
         case '5m' :
           this.defaultPick = 1
+          this.defaultPickType = 'minute'
+          this.defaultPickVal = 5
           break
         case '15m' :
           this.defaultPick = 2
+          this.defaultPickType = 'minute'
+          this.defaultPickVal = 15
           break
         case '30m' :
           this.defaultPick = 3
+          this.defaultPickType = 'minute'
+          this.defaultPickVal = 30
           break
         case '1h' :
           this.defaultPick = 4
+          this.defaultPickType = 'hour'
+          this.defaultPickVal = 1
           break
         case '3h' :
           this.defaultPick = 5
+          this.defaultPickType = 'hour'
+          this.defaultPickVal = 3
           break
         case '6h' :
           this.defaultPick = 6
+          this.defaultPickType = 'hour'
+          this.defaultPickVal = 6
           break
         case '12h' :
           this.defaultPick = 7
+          this.defaultPickType = 'hour'
+          this.defaultPickVal = 12
           break
-        case '1d' :
-          this.defaultPick = 8
-          break
+        // case '1d' :
+        //   this.defaultPick = 8
+        //   this.defaultPickType = 'hour'
+        //   break
         case '24h' :
           this.defaultPick = 8
+          this.defaultPickType = 'hour'
+          this.defaultPickVal = 24
           break
         case '2d' :
           this.defaultPick = 9
+          this.defaultPickType = 'date'
+          this.defaultPickVal = 2
           break
         case '7d' :
           this.defaultPick = 10
+          this.defaultPickType = 'date'
+          this.defaultPickVal = 7
           break
         case '30d' :
           this.defaultPick = 11
+          this.defaultPickType = 'date'
+          this.defaultPickVal = 30
           break
         case 'all' :
           this.defaultPick = 12
+          this.defaultPickType = 'all'
+          this.defaultPickVal = 'all'
           break
         case '0t' :
           this.defaultPick = 13
+          this.defaultPickType = 'relative'
+          this.defaultPickVal = 'all'
           break
         case '1t' :
           this.defaultPick = 14
+          this.defaultPickType = 'relative'
+          this.defaultPickVal = 'all'
           break
         case '2t' :
           this.defaultPick = 15
+          this.defaultPickType = 'relative'
+          this.defaultPickVal = 'all'
           break
         case '7t' :
           this.defaultPick = 16
+          this.defaultPickType = 'relative'
+          this.defaultPickVal = 'all'
           break
         case '0w' :
           this.defaultPick = 17
+          this.defaultPickType = 'relative'
+          this.defaultPickVal = 'all'
           break
         case '1w' :
           this.defaultPick = 18
+          this.defaultPickType = 'relative'
+          this.defaultPickVal = 'all'
           break
         case '0m' :
           this.defaultPick = 19
+          this.defaultPickType = 'relative'
+          this.defaultPickVal = 'all'
           break
         case '1m' :
           this.defaultPick = 20
+          this.defaultPickType = 'relative'
+          this.defaultPickVal = 'all'
           break
         default:
           this.defaultPick = 0
