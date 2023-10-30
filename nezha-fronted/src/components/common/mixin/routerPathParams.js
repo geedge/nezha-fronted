@@ -311,42 +311,42 @@ export default {
         case '0t' :
           this.defaultPick = 13
           this.defaultPickType = 'relative'
-          this.defaultPickVal = 'all'
+          this.defaultPickVal = '0'
           break
         case '1t' :
           this.defaultPick = 14
           this.defaultPickType = 'relative'
-          this.defaultPickVal = 'all'
+          this.defaultPickVal = '1'
           break
         case '2t' :
           this.defaultPick = 15
           this.defaultPickType = 'relative'
-          this.defaultPickVal = 'all'
+          this.defaultPickVal = '2'
           break
         case '7t' :
           this.defaultPick = 16
           this.defaultPickType = 'relative'
-          this.defaultPickVal = 'all'
+          this.defaultPickVal = '7'
           break
         case '0w' :
           this.defaultPick = 17
           this.defaultPickType = 'relative'
-          this.defaultPickVal = 'all'
+          this.defaultPickVal = '0'
           break
         case '1w' :
           this.defaultPick = 18
           this.defaultPickType = 'relative'
-          this.defaultPickVal = 'all'
+          this.defaultPickVal = '1'
           break
         case '0m' :
           this.defaultPick = 19
           this.defaultPickType = 'relative'
-          this.defaultPickVal = 'all'
+          this.defaultPickVal = '0'
           break
         case '1m' :
           this.defaultPick = 20
           this.defaultPickType = 'relative'
-          this.defaultPickVal = 'all'
+          this.defaultPickVal = '1'
           break
         default:
           this.defaultPick = 0
