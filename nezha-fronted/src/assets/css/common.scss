@@ -746,3 +746,23 @@ i.nz-icon-override{
 input::placeholder{
   text-transform:capitalize;
 }
+.vue-tags-input {
+  .ti-tag.ti-valid {
+    max-width: 100%;
+    .ti-content {
+      max-width: 90%;
+      flex-shrink: 0;
+      .ti-tag-center {
+        max-width: 100%;
+        flex-shrink: 0;
+        > span {
+          max-width: 100%;
+          display: inline-block;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}

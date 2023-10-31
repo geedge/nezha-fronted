@@ -188,7 +188,6 @@
         >
           <vue-tags-input
             v-model="tag"
-            :maxlength="32"
             :placeholder="$t('tagsInput.placeholder')"
             :tags="chartConfig.param.tags"
             @tags-changed="(newTags)=>{tagsChange(newTags)}"
