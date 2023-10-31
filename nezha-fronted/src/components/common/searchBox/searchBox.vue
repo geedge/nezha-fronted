@@ -132,7 +132,7 @@
       <div class="search-item-title"  @mousedown="mousedownSearchBox">{{$t('searchBox.enterNext')}}</div>
     </el-popover>
     <span class="nz-icon-search-box">
-      <i class="nz-icon nz-icon-search" @click="emitSearch"/>
+      <i class="nz-icon nz-icon-search" @click="searchEvent"/>
     </span>
     <!--编辑暂未用到-->
     <el-dialog :title="$t('overall.edit')" class="no-transform-dialog" :visible.sync="dialogShow" @close="dialogClose" :append-to-body="false" :modal-append-to-body="false" :destroy-on-close="true">
@@ -893,6 +893,17 @@ export default {
         this.$refs.searchStr.$el.scrollIntoView()
         this.$refs.searchStr.blur()
       })
+    },
+    searchEvent () {
+      if (this.searchStr.indexOf(':') !== -1) {
+        const findKeyItem = this.oldSearchList.find(item => item.name === this.key)
+        if (findKeyItem) {
+          this.addSelectArr(this.searchStr, true)
+          this.searchStr = ''
+        }
+        this.contentShow()
+      }
+      this.emitSearch()
     },
     emitSearch: bus.debounce(function () {
       this.$nextTick(() => {

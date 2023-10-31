@@ -61,7 +61,7 @@
                     </div>
                     <div>
                       <span>{{$t('asset.vendor')}}:</span>
-                      <span>{{n.vendor}}</span>
+                      <span>{{n.brand ? n.brand.name : ''}}</span>
                     </div>
                     <div>
                       <span>{{$t('overall.type')}}:</span>
