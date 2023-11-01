@@ -187,7 +187,6 @@
                   <el-form-item :prop="'paramObj.' + index + '.value'" class="param-box-row-value">
                     <vue-tags-input
                       v-model="item.tags"
-                      :maxlength="32"
                       :placeholder="$t('tagsInput.placeholder')"
                       :tags="item.value"
                       @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
@@ -247,7 +246,6 @@
                       ]">
                       <vue-tags-input
                         v-model="item.tags"
-                        :maxlength="32"
                         ref="relabelTag"
                         tabindex="9999"
                         :placeholder="$t('tagsInput.placeholder')"
@@ -420,7 +418,6 @@
                     >
                       <vue-tags-input
                         v-model="item.namespaces.tags"
-                        :maxlength="32"
                         :placeholder="$t('tagsInput.placeholder')"
                         :tags="item.namespaces.names"
                         @tags-changed="(newTags)=>{logsTagsChange(newTags,item)}"
@@ -472,7 +469,6 @@
                             ]">
                             <vue-tags-input
                               v-model="subItem.tags"
-                              :maxlength="32"
                               :ref="'logsRelabelTag'+index+subIndex"
                               tabindex="9999"
                               :placeholder="$t('tagsInput.placeholder')"

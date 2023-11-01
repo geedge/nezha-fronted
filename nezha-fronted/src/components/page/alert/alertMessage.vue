@@ -15,7 +15,7 @@
         <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 100px">
           <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>
-        <pick-time ref="pickTime" v-model="searchTime" sign="message" :default-pick="defaultPick" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
+        <pick-time ref="pickTime" v-model="searchTime" sign="message" :default-pick="defaultPick" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="true"></pick-time>
         <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcel')" class="top-tool-btn margin-r-10" type="button" @click="showExportDialog">
           <i class="nz-icon-download1 nz-icon"></i>
         </button>
