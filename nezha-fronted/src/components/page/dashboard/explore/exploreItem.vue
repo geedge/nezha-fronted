@@ -3842,8 +3842,8 @@ export default {
     exportLog ({ limit, descending }) {
       const params = {
         logql: this.expressions,
-        start: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])),
-        end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])),
+        start: this.momentStrToTimestamp(this.filterTime[0]),
+        end: this.momentStrToTimestamp(this.filterTime[1]),
         direction: descending ? 'backward' : 'forward',
         limit
       }
