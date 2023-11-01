@@ -271,11 +271,11 @@ export default {
           case 'logs': {
             if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp || this.from === fromRoute.integration) {
               setTimeout(() => {
-                this.chartData = [chartTempData.data.result]
-                this.chartData.forEach(item => {
-                  item.forEach(children => {
-                    children.elements = elements[0]
-                  })
+                this.chartData = []
+                elements.forEach(item => {
+                  const data = this.$lodash.cloneDeep(chartTempData.data.result)
+                  data[0].elements = item
+                  this.chartData.push(data)
                 })
                 this.loading = false
               }, 100)

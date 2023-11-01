@@ -233,7 +233,7 @@
   .bottom-box__top .my-loading-box {
     height: calc(100% + 20px) !important;
   }
-  .my-loading-parent--relative{
+  .my-loading-parent--relative:not(.panel-chart){
     height: calc(100% - 20px) !important;
   }
 }
