@@ -370,8 +370,8 @@ export const intervalList = [
   { value: 300, label: '5m' },
   { value: 900, label: '15m' },
   { value: 1800, label: '30m' },
-  { value: 3600, label: '1h' },
-  { value: 7200, label: '2h' }
+  // { value: 3600, label: '1h' },
+  // { value: 7200, label: '2h' }
 ]
 
 export const setting = {

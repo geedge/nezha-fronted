@@ -342,3 +342,10 @@
 .el-date-range-picker__content.el-date-range-picker__content__only{
   width: 100%;
 }
+.nz-time-box.nz-dropdown {
+  width: 64px;
+  .dropdown-content {
+    height: 32px;
+    line-height: 32px;
+  }
+}
