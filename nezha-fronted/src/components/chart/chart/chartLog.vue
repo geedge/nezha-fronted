@@ -218,8 +218,8 @@ export default {
       const descending = this.operations.descending
       const params = {
         logql: this.chartInfo.elements.map(item => item.expression),
-        start: this.$stringTimeParseToUnix(this.filterTime[0]),
-        end: this.$stringTimeParseToUnix(this.filterTime[1]),
+        start: this.momentStrToTimestamp(this.filterTime[0]),
+        end: this.momentStrToTimestamp(this.filterTime[1]),
         direction: descending ? 'backward' : 'forward',
         limit
       }
