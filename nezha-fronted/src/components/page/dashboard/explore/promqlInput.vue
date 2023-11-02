@@ -583,7 +583,6 @@ export default {
               })),
               span: /^[a-zA-Z0-9_:]+$/
             }
-            console.log(res.options)
             // 过滤 非logs的函数
             if (res !== null) {
               historyItems.options = historyItems.options.concat(res.options)

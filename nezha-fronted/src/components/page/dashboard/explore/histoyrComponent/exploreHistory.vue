@@ -98,7 +98,7 @@ export default {
       const params = {
         ...this.pageObj,
         queryValue: this.searchStr,
-        orderBy: 'uts'
+        orderBy: '-uts'
       }
       if (this.type === 'metric') {
         params.queryKey = 'explore-metric'
@@ -151,7 +151,7 @@ export default {
       const params = {
         pageNo: 1,
         queryValue: this.searchStr,
-        orderBy: 'uts',
+        orderBy: '-uts',
         pageSize
       }
       if (this.type === 'metric') {

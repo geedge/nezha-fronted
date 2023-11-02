@@ -12,7 +12,7 @@
         <span class="select-refresh-time-label" v-if="interval">{{interLabel}}</span>
         <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px;"></i>
         <transition name="el-zoom-in-top">
-          <ul v-show="dropdownShow" class="el-dropdown-menu el-popper el-dropdown-menu--mini nz-dropdown popper-z-index" v-clickoutside="dropdownHandler">
+          <ul v-show="dropdownShow" class="el-dropdown-menu el-popper el-dropdown-menu--mini nz-dropdown popper-z-index nz-time-box" v-clickoutside="dropdownHandler">
             <li v-for="i in $CONSTANTS.intervalList" :key="i.value + i.label" :style="{color:interval === i.value || interval.value === i.value ? theme.themeColor : ''}" class="el-dropdown-menu__item dropdown-content" @click="selectInterval(i,true)">
               {{$t(i.label)}}
             </li>

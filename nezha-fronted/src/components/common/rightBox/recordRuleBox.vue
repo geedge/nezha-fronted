@@ -12,8 +12,7 @@
     <!-- begin--表单-->
     <div class="right-box__container">
       <div class="container__form">
-        <el-form ref="recordRuleForm" :model="editRecordRule"
-                 :rules="rules" label-position="top" label-width="120px">
+        <el-form ref="recordRuleForm" :model="editRecordRule" :rules="rules" label-position="top" label-width="120px">
             <!-- name -->
           <el-form-item :label='$t("overall.name")' prop="name">
             <el-input
@@ -262,6 +261,7 @@ export default {
     },
     metricChange (val) {
       this.editRecordRule.expr = val
+      this.$refs.recordRuleForm?.clearValidate('expr')
     },
     labelsSort (obj) {
       if (typeof obj != 'object') {

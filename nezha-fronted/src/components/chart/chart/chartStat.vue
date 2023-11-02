@@ -16,43 +16,52 @@
         background:item.mapping ? item.mapping.color.bac : (statData.length===1 ? '' : colorList[index]),
         height:item.height+'px',
         width:item.width + 'px',
-        fontSize: item.fontSize + 'px',
       }"
     >
       <div style="maxWidth:100%;z-index: 10;">
         <!-- all -->
         <template v-if="chartInfo.param.text==='all'">
           <div v-if="item.mapping" :style="{color:item.mapping.color.text}">
-            <p style="white-space: nowrap;">{{item.legend}}</p>
-            <template v-if="item.mapping && item.mapping.icon">
-              <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
-            </template>
-            <span style="white-space: nowrap;">{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
+            <p class="stat-text" :style="{fontSize: item.titleFontSize + 'px'}">{{item.legend}}</p>
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px'}">
+              <template v-if="item.mapping && item.mapping.icon">
+                <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
+              </template>
+              <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
+            </p>
           </div>
           <div v-else>
-            <p style="white-space: nowrap;">{{item.legend}}</p>
-            <span style="white-space: nowrap;">{{item.showValue}}</span>
+            <p class="stat-text" :style="{fontSize: item.titleFontSize + 'px'}">{{item.legend}}</p>
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px'}">{{item.showValue}}</p>
           </div>
         </template>
         <!-- legend -->
         <template v-if="chartInfo.param.text==='legend'">
           <div v-if="item.mapping" :style="{color:item.mapping.color.text}">
-            <template v-if="item.mapping && item.mapping.icon">
-              <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
-            </template>
-            <span style="white-space: nowrap;">{{item.legend}}</span>
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px'}">
+              <template v-if="item.mapping && item.mapping.icon">
+                <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
+              </template>
+              <span>{{item.legend}}</span>
+            </p>
           </div>
-          <div v-else style="white-space: nowrap;">{{item.legend}}</div>
+          <div v-else>
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px'}">{{item.legend}}</p>
+          </div>
         </template>
         <!-- value -->
         <template v-if="chartInfo.param.text==='value'|| !chartInfo.param.text">
           <div v-if="item.mapping" :style="{color:item.mapping.color.text}">
-            <template v-if="item.mapping && item.mapping.icon">
-              <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
-            </template>
-            <span style="white-space: nowrap;">{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px'}">
+              <template v-if="item.mapping && item.mapping.icon">
+                <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
+              </template>
+              <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
+            </p>
           </div>
-          <div v-else style="white-space: nowrap;">{{item.showValue}}</div>
+          <div v-else style="white-space: nowrap;">
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px'}">{{item.showValue}}</p>
+          </div>
         </template>
         <!-- none -->
         <template v-if="chartInfo.param.text==='none'"></template>
@@ -118,7 +127,7 @@
         </div>
       </div>
     </div>
-    <span class="temp-dom--12" ref="temp-dom"></span>
+    <span class="temp-dom" ref="temp-dom"></span>
   </div>
 </template>
 
@@ -133,6 +142,7 @@ import { initColor } from '@/components/chart/chart/tools'
 import * as echarts from 'echarts'
 import chartSparklineOption from './options/chartSparkline'
 import lodash from 'lodash'
+import tinycolor from 'tinycolor2'
 export default {
   name: 'chart-stat',
   mixins: [chartMixin, chartFormat],
@@ -291,7 +301,6 @@ export default {
       })
     },
     renderStat (layout) {
-      let isDouble = false
       const width = this.boxWidth / layout.col
       const height = this.boxHeight / layout.row
       const integer = Math.floor(this.statData.length / layout.col)
@@ -305,86 +314,62 @@ export default {
         } else {
           item.width = width
         }
-        let font = '' // 获取显示的字体
         let display = ''
         if (item.mapping) {
           display = this.handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })
         }
+        let titleFont = ''
+        let valueFont = ''
+        let titleFontSize = ''
+        let valueFontSize = ''
+        const padding = 10
         switch (this.chartInfo.param.text) {
           case 'all':
+            titleFont = item.legend
             if (item.mapping) {
-              isDouble = true
-              if (item.legend.length > item.showValue.length + 2) {
-                font = item.legend
-              } else {
-                font = display
-                if (item.mapping.icon) {
-                  font += 'AA'
-                }
+              valueFont = display
+              if (item.mapping.icon) {
+                valueFont += 'AA'
               }
             } else {
-              isDouble = true
-              if (item.legend.length > item.showValue.length) {
-                font = item.legend
-              } else {
-                font = item.showValue
-              }
+              valueFont = item.showValue
             }
+            titleFontSize = this.calculateFontSize(titleFont, (item.width - padding * 2), (item.height - padding * 2) * 0.4, 30)
+            valueFontSize = this.calculateFontSize(valueFont, (item.width - padding * 2), (item.height - padding * 2) * 0.4)
+            titleFontSize = Math.min(valueFontSize * 0.7, titleFontSize)
             break
           case 'legend':
+            titleFont = item.legend
             if (item.mapping) {
-              isDouble = true
-              if (item.legend.length > item.showValue.length + 2) {
-                font = item.legend
-              } else {
-                font = display
-                if (item.mapping.icon) {
-                  font += 'AA'
-                }
+              if (item.mapping.icon) {
+                titleFont += 'AA'
               }
-            } else {
-              font = item.legend
             }
+            valueFontSize = this.calculateFontSize(titleFont, (item.width - padding * 2), (item.height - padding * 2) * 0.4)
             break
-
           case 'none':
-            font = ''
+            titleFontSize = ''
+            valueFontSize = ''
             break
           case 'value':
           default:
             if (item.mapping) {
-              font = display
+              valueFont = display
               if (item.mapping.icon) {
-                font += 'AA'
+                valueFont += 'AA'
               }
             } else {
-              font = item.showValue
+              valueFont = item.showValue
             }
+            valueFontSize = this.calculateFontSize(valueFont, (item.width - padding * 2), (item.height - padding * 2) * 0.4)
             break
         }
-        const el = this.$refs['temp-dom']
-        el.innerText = font
-        const elWidth = el.offsetWidth
-        const elHeight = el.offsetHeight
-        const dimension = Math.min(item.width, item.height * 1.3)
-        const fontScale = parseInt('70%', 10) / 100
-        let fontSize = Math.min(dimension / 5, 100) * fontScale
-        let scale = item.width / elWidth
-        if (scale * elHeight > item.height) {
-          scale = item.height / elHeight
-        }
-        if (isDouble) {
-          if (scale * elHeight * 2.5 > item.height) {
-            scale = item.height / elHeight * 2.5
-          }
-        }
-        item.scale = scale < 1 ? 1 : parseFloat(scale)
-        fontSize = fontSize > 12 ? fontSize : this.minFontSzie
-        item.fontSize = fontSize
+        item.titleFontSize = titleFontSize
+        item.valueFontSize = valueFontSize
 
-        if (fontSize > 36) {
+        if (item.valueFontSize > 36) {
           item.comparisonFont = 16
-        } else if (fontSize > 24) {
+        } else if (item.valueFontSize > 24) {
           item.comparisonFont = 14
         } else {
           item.comparisonFont = 12
@@ -392,28 +377,43 @@ export default {
       })
       this.isInit = false
     },
+
+    calculateFontSize (text, width, height, maxSize, lineHeight = 1.2) {
+      const el = this.$refs['temp-dom']
+      el.innerText = text
+      const elWidth = el.offsetWidth
+      const fontSizeBasedOnWidth = (width / (elWidth + 2)) * 14
+      const fontSizeBasedOnHeight = height / lineHeight
+
+      const optimalSize = Math.min(fontSizeBasedOnHeight, fontSizeBasedOnWidth)
+      return Math.min(optimalSize, maxSize || optimalSize)
+    },
+
     // 绘制图表
     drawChart () {
       this.statData.forEach((item, index) => {
         const chart = this.sparkline[index] ? this.sparkline[index] : echarts.init(document.getElementById(`chart-canvas-${this.chartId}-${index}`))
         const chartOption = lodash.cloneDeep(chartSparklineOption)
-        // sparkline 颜色和 字体颜色 保持一致
-        const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
-        let color = theme === 'light' ? '#666666' : '#BEBEBE'
-        if (item.mapping) {
-          color = item.mapping.color.text
+
+        // sparkline 颜色根据背景色计算
+        const color = item.mapping ? item.mapping.color.bac : this.colorList[index]
+        const lineColor = tinycolor(color).brighten(40).toRgbString()
+        let areaColor = 'rgba(255,255,255,0.4)'
+        if (this.statData.length === 1 && !item.mapping) {
+          areaColor = tinycolor(color).setAlpha(0.2).toRgbString()
         }
+
         chartOption.series = [{
           ...chartOption.series[0],
           data: item.data,
           lineStyle: {
-            color
+            width: 1,
+            color: lineColor
           }
         }]
         if (this.chartInfo.param.sparklineMode === 'area') {
           chartOption.series[0].areaStyle = {
-            color: color,
-            opacity: 0.1
+            color: areaColor
           }
         }
         chartOption.yAxis.max = this.maxValue
