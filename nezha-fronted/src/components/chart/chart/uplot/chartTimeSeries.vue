@@ -60,6 +60,7 @@ import { chartLegendPlacement } from '@/components/common/js/constants'
 import { chartCache, getChart } from '@/components/common/js/common'
 import { initColor } from '@/components/chart/chart/tools'
 import UPlot from 'uplot/dist/uPlot.esm'
+import chartTimeSeriesMixin from '@/components/chart/chart/uplot/chartTimeSeriesMixin'
 export default {
   name: 'chartTimeSeries',
   components: {
@@ -70,7 +71,7 @@ export default {
     multipleTime: {},
     minusTime: {}
   },
-  mixins: [chartMixin, renderChart],
+  mixins: [chartMixin, renderChart, chartTimeSeriesMixin],
   data () {
     return {
       stackTotalColor: null,
@@ -184,11 +185,11 @@ export default {
           {},
           {
             scale: 'mb',
-            size: 60,
-            values: (u, vals, space) => vals.map(v => +v.toFixed(2) + ' MB'),
+            values: (u, vals, space) => vals.map(v => +v.toFixed(2) + ' MB')
           }
         ]
       }
+      const seriesData = this.initSeriesData(this.chartData)
       const data = [
         this.chartData[0][0].values.map(item => item[0]),
         this.chartData[0][0].values.map(item => Number(item[1]) / 1000000).splice(0, 20)
