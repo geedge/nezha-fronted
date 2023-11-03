@@ -1,5 +1,5 @@
 <template>
-  <div class="log-detail chart-log" style="flex-direction: column;display: flex">
+  <div class="log-detail chart-log" style="flex-direction: column;display: block;overflow: hidden">
     <div class="log-operations">
       <div class="log-operation">
         <span class="operation-label">{{$t('overall.time')}}</span>
@@ -30,7 +30,7 @@
         <button class="top-tool-btn" style="cursor: pointer" type="button" @click="exportLog" :title="$t('overall.download')"><i class="nz-icon nz-icon-download"></i></button>
       </div>
     </div>
-    <div class="log-table" style="flex: 1">
+    <div class="log-table" style="flex: 1;">
       <el-table
         :cell-class-name="cellClassName"
         :data="tableData"
