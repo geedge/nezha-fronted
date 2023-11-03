@@ -62,6 +62,9 @@ export default {
         })
       }
     }
+  },
+  beforeDestroy() {
+    this.$store.dispatch('clearPanel')
   }
 }
 </script>
