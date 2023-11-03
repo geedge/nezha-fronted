@@ -157,51 +157,27 @@ export default {
         this.clickLegendD3(legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight)
         return
       }
-
       if (echarts) {
-        // 判断timeSeries类型图表 先取消多表联动
-        if (this.isTimeSeries && (this.isConnect && this.isConnect !== 'none')) {
-          chart.disconnect('timeSeriesGroup')
-        }
         if (!hasGrey) { // 1.除当前legend外全置灰
-          echarts.dispatchAction({
-            type: 'legendInverseSelect'
+          echarts.series.forEach((seriesItem, sindex) => {
+            if (sindex > 0) {
+              seriesItem.show = false
+            }
           })
-          echarts.dispatchAction({
-            type: 'legendSelect',
-            name: legendName
-          })
+          echarts.series[index + 1].show = !echarts.series[index + 1].show
           this.isGrey = this.isGrey.map((g, i) => i !== index)
         } else if (currentIsTheOnlyOneHighlight) { // 2.全高亮
-          echarts.dispatchAction({
-            type: 'legendAllSelect'
+          echarts.series.forEach((seriesItem, sindex) => {
+            if (sindex > 0) {
+              echarts.series[sindex].show = true
+            }
           })
           this.isGrey = this.isGrey.map(() => false)
         } else {
-          const type = curIsGrey ? 'legendSelect' : 'legendUnSelect'
-          echarts.dispatchAction({
-            type: type,
-            name: legendName
-          })
+          echarts.series[index + 1].show = !echarts.series[index + 1].show
           this.$set(this.isGrey, index, !this.isGrey[index])
         }
-        if (this.isTimeSeries) {
-          this.$parent.legendChange(this.isGrey)
-        }
-        // 点击后 处理Y轴的刻度边的
-        const chartInfo = this.chartInfo
-        const series = this.$lodash.cloneDeep(this.series)
-        const dataArg = series.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])
-        const option = this.renderYAxis(dataArg, chartInfo, 'legend')
-        getChart(this.chartId) && getChart(this.chartId).setOption({
-          yAxis: [
-            ...option.yAxis
-          ]
-        })
-        // 判断timeSeries类型图表 建立多表联动
-        if (this.isTimeSeries && (this.isConnect && this.isConnect !== 'none')) {
-          chart.connect('timeSeriesGroup')
-        }
+        echarts.redraw()
       }
     },
     clickLegendBar (legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight) {
@@ -271,6 +247,7 @@ export default {
       if (this.isGrey[index]) {
         return false
       }
+      return
       if (this.chartInfo.type === 'pie' || this.chartInfo.type === 'doughnut' || this.chartInfo.type === 'rose') {
         this.$emit('hoverLegendD3', legendName, index, type)
       } else if (this.isTimeSeries) {

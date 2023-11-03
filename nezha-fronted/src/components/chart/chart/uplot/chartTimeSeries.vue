@@ -15,6 +15,7 @@
     </div>
     <chart-legend
       ref="legend"
+      style="flex-shrink: 0"
       v-if="hasLegend"
       :chart-data="chartData"
       :chart-info="chartInfo"
@@ -57,10 +58,11 @@ import legend from '../legend'
 import chartMixin from '@/components/chart/chartMixin'
 import renderChart from '@/components/chart/renderChart'
 import { chartLegendPlacement } from '@/components/common/js/constants'
-import { chartCache, getChart } from '@/components/common/js/common'
+import { getChart, setChart, chartCache } from '@/components/common/js/common'
 import { initColor } from '@/components/chart/chart/tools'
-import UPlot from 'uplot/dist/uPlot.esm'
+import UPlot from 'uplot/dist/uPlot.cjs'
 import chartTimeSeriesMixin from '@/components/chart/chart/uplot/chartTimeSeriesMixin'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 export default {
   name: 'chartTimeSeries',
   components: {
@@ -160,42 +162,125 @@ export default {
   methods: {
     initChart (chartOptions = this.chartOption) {
       console.log(this.chartData, this.chartInfo)
+      const leftUnit = this.chartInfo.unit
+      const leftUnitCompute = chartDataFormat.getUnit(leftUnit)
+      const asciiType = leftUnitCompute.ascii
+      console.log(asciiType)
+      const incrs = asciiType == 1024 ? this.incrs : undefined
+      console.log(incrs, 'incrs')
+      const decimals = this.chartInfo.param.decimals || 2
+      // .compute(minusVal, null, -1, decimals)
       const opts = {
         id: `chart-canvas-${this.chartId}-uplot`,
-        width: 400,
-        height: 400,
+        width: 100,
+        height: 100,
+        padding: [15, this.autoPadRight, 15, 15],
         legend: {
-          show: false,
-          live: false,
-          isolate: true
+          show: false
         },
         series: [
-          {},
           {
-            name: this.chartData[0][0].elements.name,
-            label: this.chartData[0][0].elements.name,
-            scale: 'mb',
-            value: (u, v) => v == null ? null : v.toFixed(2) + ' MB',
-            stroke: 'green',
-            width: 1 / devicePixelRatio
-          }
 
+          }
         ],
         axes: [
           {},
           {
-            scale: 'mb',
-            values: (u, vals, space) => vals.map(v => +v.toFixed(2) + ' MB')
+            scale: 'left',
+            values: (u, vals, space) => vals.map(v => leftUnitCompute.compute(v, null, -1, decimals)),
+            formatValue: (v, d) => {
+              console.log(v, d, 'vd')
+              return v
+            },
+            incrs: incrs,
+            size (self, values, axisIdx, cycleNum) {
+              const axis = self.axes[axisIdx]
+
+              // bail out, force convergence
+              if (cycleNum > 1) { return axis._size }
+
+              let axisSize = axis.ticks.size + axis.gap
+
+              // find longest value
+              const longestVal = (values ?? []).reduce((acc, val) => (
+                val.length > acc.length ? val : acc
+              ), '')
+
+              if (longestVal != '') {
+                self.ctx.font = axis.font[0]
+                axisSize += self.ctx.measureText(longestVal).width / devicePixelRatio
+              }
+
+              return Math.ceil(axisSize)
+            }
           }
         ]
       }
-      const seriesData = this.initSeriesData(this.chartData)
-      const data = [
-        this.chartData[0][0].values.map(item => item[0]),
-        this.chartData[0][0].values.map(item => Number(item[1]) / 1000000).splice(0, 20)
-      ]
-      console.log(data)
-      this.chart = new UPlot(opts, data, document.getElementById(`chart-canvas-${this.chartId}`))
+      const { seriesData, seriesAll } = this.initSeriesData(this.chartData)
+      console.log(seriesData, seriesAll)
+      const data = seriesData
+      opts.series.push(...seriesAll)
+      this.series = seriesAll
+      setTimeout(() => { // 延迟加载 保证legend的高度正常
+        const dom = document.getElementById(`chart-canvas-${this.chartId}`)
+        const width = dom.offsetWidth
+        const height = dom.offsetHeight
+        console.log(width, height)
+        opts.width = width
+        opts.height = height
+        this.chart = new UPlot(opts, data, document.getElementById(`chart-canvas-${this.chartId}`))
+        setChart(this.chartId, this.chart)
+      }, 100)
+    },
+    size (self, values, axisIdx, cycleNum) {
+      const axis = self.axes[axisIdx]
+
+      // bail out, force convergence
+      if (cycleNum > 1) { return axis._size }
+
+      let axisSize = axis.ticks.size + axis.gap
+
+      // find longest value
+      const longestVal = (values ?? []).reduce((acc, val) => (
+        val.length > acc.length ? val : acc
+      ), '')
+
+      if (longestVal != '') {
+        self.ctx.font = axis.font[0]
+        axisSize += self.ctx.measureText(longestVal).width / devicePixelRatio
+      }
+
+      return Math.ceil(axisSize)
+    },
+    autoPadRight (self, side, sidesWithAxes, cycleNum) {
+      const xAxis = self.axes[0]
+
+      const xVals = xAxis._values
+
+      if (xVals != null) {
+        // bail out, force convergence
+        if (cycleNum > 2) { return self._padding[1] }
+
+        const xSplits = xAxis._splits
+        const rightSplit = xSplits[xSplits.length - 1]
+        const rightSplitCoord = self.valToPos(rightSplit, 'x')
+        const leftPlotEdge = (self.bbox.left / devicePixelRatio)
+        const rightPlotEdge = leftPlotEdge + (self.bbox.width / devicePixelRatio)
+        const rightChartEdge = rightPlotEdge + self._padding[1]
+
+        const pxPerChar = 8
+        const rightVal = xVals[xVals.length - 1] + ''
+        const valHalfWidth = pxPerChar * (rightVal.length / 2)
+
+        const rightValEdge = leftPlotEdge + rightSplitCoord + valHalfWidth
+
+        if (rightValEdge >= rightChartEdge) {
+          return rightValEdge - rightPlotEdge
+        }
+      }
+
+      // default size
+      return 8
     },
     clickout () {
       if (this.toolbox.show) {

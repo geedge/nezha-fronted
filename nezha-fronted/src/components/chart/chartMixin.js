@@ -326,15 +326,6 @@ export default {
     },
     mouseEnterChart () {
       const myChart = getChart(this.chartId)
-      if (myChart) {
-        setTimeout(() => {
-          myChart.setOption({
-            toolbox: {
-              show: true
-            }
-          })
-        }, 300)
-      }
     },
     tooltipPosition (point, params, dom, rect, size) {
       if (this.isConnect === 'tooltip' && this.$store.state.panel.currentMousemove != this.chartId) {
@@ -370,15 +361,6 @@ export default {
     },
     mouseLeaveChart () {
       const myChart = getChart(this.chartId)
-      if (myChart) {
-        setTimeout(() => {
-          myChart.setOption({
-            toolbox: {
-              show: false
-            }
-          })
-        }, 300)
-      }
     },
     getMaxValue (dataArg, chartInfo) {
       let maxValue = 0

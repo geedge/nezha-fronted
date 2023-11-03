@@ -203,3 +203,11 @@ export function initColor (colorNum = 20) {
   }
   return colorList
 }
+export function initIncrs () {
+  const arr = []
+  for (let i = 0; i < 53; i++) {
+    arr.push(Math.pow(2, i))
+  }
+  return arr
+}
+export const Incrs = initIncrs()
