@@ -23,7 +23,7 @@
           <el-select
             id="chart-box-type"
             v-model="chartConfig.type"
-            :disabled="!!(chartConfig.type==='group'&&chartConfig.id)"
+            :disabled="!!(chartConfig.type==='group'&&chartConfig.id && isInitGroup)"
             :placeholder="$t('el.select.placeholder')"
             popper-class="right-box-select-top prevent-clickoutside"
             size="small"
@@ -369,7 +369,8 @@ export default {
         querysArray: {},
         currentProject: {},
         params: {}
-      }
+      },
+      isInitGroup: false
     }
   },
   methods: {
@@ -378,6 +379,7 @@ export default {
       this.change()
     },
     init () {
+      this.isInitGroup = this.params.type === 'group'
       this.chartConfig = JSON.parse(JSON.stringify(this.params))
       this.reloadTopo()
       bus.$on('showMeta2dPreview', (params) => {
