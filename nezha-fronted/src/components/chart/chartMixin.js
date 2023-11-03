@@ -189,6 +189,7 @@ export default {
     },
     // 单个legend
     handleLegend (chartInfo, data, expressionIndexs, dataIndex, colorIndex) {
+      console.log(chartInfo, data, expressionIndexs, dataIndex, colorIndex)
       let expressionIndex = expressionIndexs
       let legend = '' // up
       let alias = ''
@@ -250,7 +251,7 @@ export default {
         const colorRandom = randomcolor()
         this.colorList.push(colorRandom)
       }
-      this.legends.push({ name, alias, statistics, color: this.colorList[colorIndex] })
+      // this.legends.push({ name, alias, statistics, color: this.colorList[colorIndex] })
       return {
         name,
         alias
