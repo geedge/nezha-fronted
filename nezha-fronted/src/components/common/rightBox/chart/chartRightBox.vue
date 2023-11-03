@@ -106,7 +106,7 @@
       v-if="previewShow"
       :visible.sync="previewShow"
       :show-close="false"
-      class="nz-dialog chart-fullscreen"
+      class="nz-dialog chart-fullscreen no-transform-dialog"
       destroy-on-close
       fullscreen
       :modal-append-to-body="false"

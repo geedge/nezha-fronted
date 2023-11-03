@@ -1323,6 +1323,7 @@ export default {
   },
   beforeDestroy () {
     // 移除键盘ESC事件
+    this.$store.dispatch('clearPanel')
     document.removeEventListener('keydown', this.escExit)
     bus.$off('refreshPanel')
     this.$store.dispatch('dispatchPanelLock', { flag: true })
