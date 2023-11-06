@@ -164,17 +164,43 @@ export default {
       console.log(this.chartData, this.chartInfo)
       const leftUnit = this.chartInfo.unit
       const leftUnitCompute = chartDataFormat.getUnit(leftUnit)
-      const asciiType = leftUnitCompute.ascii
-      console.log(asciiType)
-      const incrs = asciiType == 1024 ? this.incrs : undefined
+      const rightUnit = this.$lodash.get(this.chartInfo, 'param.rightYAxis.unit', 2)
+      const rightUnitCompute = chartDataFormat.getUnit(rightUnit)
+      const incrs = leftUnitCompute.ascii == 1024 ? this.incrs : undefined
+      const rightIncrs = rightUnitCompute.ascii == 1024 ? this.incrs : undefined
       console.log(incrs, 'incrs')
       const decimals = this.chartInfo.param.decimals || 2
+      let cursLeft = -10
+      let cursTop = -10
+      const cursorMemo = {
+        set: (left, top) => {
+          cursLeft = left
+          cursTop = top
+        },
+        get: () => ({ left: cursLeft, top: cursTop })
+      }
       // .compute(minusVal, null, -1, decimals)
       const opts = {
         id: `chart-canvas-${this.chartId}-uplot`,
         width: 100,
         height: 100,
-        padding: [15, this.autoPadRight, 15, 15],
+        cursor: {
+          focus: {
+            prox: 5
+          },
+          drag: {
+            x: true,
+            y: true
+          }
+        },
+        plugins: [
+          this.tooltipPlugin({
+            onclick (u, seriesIdx, dataIdx) {
+              console.log(u, seriesIdx, dataIdx, 'nz-tooltipClick')
+            }
+          })
+        ],
+        padding: [15, 15, 15, 15],
         legend: {
           show: false
         },
@@ -213,6 +239,38 @@ export default {
 
               return Math.ceil(axisSize)
             }
+          },
+          {
+            show: true,
+            side: 1,
+            grid: { show: false, width: 0 },
+            scale: 'right',
+            values: (u, vals, space) => vals.map(v => rightUnitCompute.compute(v, null, -1, decimals)),
+            formatValue: (v, d) => {
+              console.log(v, d, 'vd')
+              return v
+            },
+            incrs: rightIncrs
+            // size (self, values, axisIdx, cycleNum) {
+            //   const axis = self.axes[axisIdx]
+            //
+            //   // bail out, force convergence
+            //   if (cycleNum > 1) { return axis._size }
+            //
+            //   let axisSize = axis.ticks.size + axis.gap
+            //
+            //   // find longest value
+            //   const longestVal = (values ?? []).reduce((acc, val) => (
+            //     val.length > acc.length ? val : acc
+            //   ), '')
+            //
+            //   if (longestVal != '') {
+            //     self.ctx.font = axis.font[0]
+            //     axisSize += self.ctx.measureText(longestVal).width / devicePixelRatio
+            //   }
+            //
+            //   return Math.ceil(axisSize)
+            // }
           }
         ]
       }
