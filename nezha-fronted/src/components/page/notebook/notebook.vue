@@ -205,6 +205,13 @@ export default {
     }
   },
   methods: {
+    notebookSave (data) {
+      if (this.detailType === 'list') {
+        this.$refs.dataList.showBottomBox('notebookTab', data)
+      } else {
+        this.detailViewRightObj = this.$lodash.cloneDeep(data)
+      }
+    },
     add () {
       this.$store.commit('setNotebookEdit', true)
       const username = localStorage.getItem('nz-username')
@@ -281,6 +288,10 @@ export default {
     this.initQueryFromPath(searchKeys)
   },
   mounted () {
+    bus.$on('notebookSave', this.notebookSave)
+  },
+  beforeDestroy () {
+    bus.$off('notebookSave', this.notebookSave)
   }
 }
 </script>

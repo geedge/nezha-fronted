@@ -414,9 +414,6 @@
             ></el-option>
           </el-select>
         </el-form-item>
-      </div>
-
-      <div class="form-items--half-width-group">
         <!-- comparison -->
         <el-form-item :label="$t('dashboard.chartForm.comparison')" class="form-item--half-width" v-if="isStat(chartConfig.type)">
           <el-select
@@ -432,6 +429,19 @@
               :label="$t(item.name)"
               :value="item.id"
             ></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- colorMode -->
+        <el-form-item :label="$t('dashboard.chartForm.colorMode')" class="form-item--half-width" v-if="isStat(chartConfig.type)">
+          <el-select
+            v-model="chartConfig.param.colorMode"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            @change="change"
+          >
+            <el-option :label="$t('overall.value')" value="value"></el-option>
+            <el-option :label="$t('project.topology.bac')" value="background"></el-option>
           </el-select>
         </el-form-item>
       </div>
@@ -1470,10 +1480,6 @@ export default {
         case 'bubble':
         case 'rank':
         case 'funnel':
-          if (type === 'stat') {
-            if (!this.chartConfig.param.sparklineMode) { this.chartConfig.param.sparklineMode = 'line' }
-            if (!this.chartConfig.param.comparison) { this.chartConfig.param.comparison = 'none' }
-          }
           if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'sankey' || this.oldType === 'hexagon' || this.oldType === 'bubble' || this.oldType === 'rank' || this.oldType === 'funnel') {
             break
           }
@@ -1500,6 +1506,7 @@ export default {
             },
             sparklineMode: 'line',
             comparison: 'none',
+            colorMode: 'value',
             dataLink: this.chartConfig.param.dataLink
           }
           break

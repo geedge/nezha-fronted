@@ -189,6 +189,7 @@ export default {
       if (!this.obj.id) { // 新增
         this.$post('visual/notebook', params).then(response => {
           if (response.code === 200) {
+            bus.$emit('notebookSave', { id: response.data.id, ...params })
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
             this.$emit('getTableData')
             this.$store.commit('setNotebookEdit', false)
@@ -200,6 +201,7 @@ export default {
         params.id = this.obj.id
         this.$put('visual/notebook', params).then(response => {
           if (response.code === 200) {
+            bus.$emit('notebookSave', params)
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
             this.$emit('getTableData')
             this.$store.commit('setNotebookEdit', false)
@@ -357,8 +359,7 @@ export default {
             tooltip: {
               mode: 'all',
               sort: 'none'
-            },
-            option: undefined
+            }
           }
           break
         case 'stat':
@@ -391,6 +392,7 @@ export default {
             },
             sparklineMode: 'line',
             comparison: 'none',
+            colorMode: 'value',
             dataLink: []
           }
           break
@@ -515,6 +517,9 @@ export default {
       this.snapshotVisible = true
     },
     downloadJson () {
+      if (!this.obj.id) {
+        return this.$message.error(this.$t('NOTEBOOK_ID_ISNULL'))
+      }
       const params = {
         format: 3,
         ids: this.obj.id

@@ -270,6 +270,19 @@
             :placeholder="'Default 2'"
             show-word-limit v-model="chartConfig.param.decimals"/>
         </el-form-item>
+        <!-- colorMode -->
+        <el-form-item :label="$t('dashboard.chartForm.colorMode')" class="form-item--half-width" v-if="isStat(chartConfig.type)">
+          <el-select
+            v-model="chartConfig.param.colorMode"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            @change="change"
+          >
+            <el-option :label="$t('overall.value')" value="value"></el-option>
+            <el-option :label="$t('project.topology.bac')" value="background"></el-option>
+          </el-select>
+        </el-form-item>
       </div>
       <!--legend-->
       <div v-if="isShowLegend(chartConfig.type)">
@@ -1128,6 +1141,7 @@ export default {
               varValue: '',
               result: 'show'
             },
+            colorMode: 'value',
             dataLink: this.chartConfig.param.dataLink
           }
           break
