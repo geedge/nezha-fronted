@@ -258,6 +258,7 @@ export default {
         if (!this.isStat(params.type)) {
           delete params.param.sparklineMode
           delete params.param.comparison
+          delete params.param.colorMode
         }
         if (!params.x && !params.y && this.from === 'endpointQuery') { // endpointQuery 新增 放在最后
           params.x = 0
@@ -527,6 +528,7 @@ export default {
               varValue: '',
               result: 'show'
             },
+            colorMode: 'value',
             dataLink: []
           }
         }
@@ -727,8 +729,9 @@ export default {
             }
           }
           if (obj.type === 'stat') {
-            if (!obj.param.sparklineMode) { obj.param.sparklineMode = 'none' }
+            if (!obj.param.sparklineMode) { obj.param.sparklineMode = 'line' }
             if (!obj.param.comparison) { obj.param.comparison = 'none' }
+            if (!obj.param.colorMode) { obj.param.colorMode = 'value' }
           }
           if (obj.type == 'text' && !obj.param.editorType) {
             obj.param.editorType = 'richText'

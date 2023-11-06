@@ -13,7 +13,7 @@
         'chart-cursor-pointer':(dataLink.length || chartInfo.datasource === 'metrics' || chartInfo.datasource === 'logs')
       }"
       :style="{
-        background:item.mapping ? item.mapping.color.bac : (statData.length===1 ? '' : colorList[index]),
+        background:item.backgroundColor,
         height:item.height+'px',
         width:item.width + 'px',
       }"
@@ -21,9 +21,9 @@
       <div style="maxWidth:100%;z-index: 10;">
         <!-- all -->
         <template v-if="chartInfo.param.text==='all'">
-          <div v-if="item.mapping" :style="{color:item.mapping.color.text}">
+          <div v-if="item.mapping">
             <p class="stat-text" :style="{fontSize: item.titleFontSize + 'px'}">{{item.legend}}</p>
-            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px'}">
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px',color:item.textColor}">
               <template v-if="item.mapping && item.mapping.icon">
                 <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
               </template>
@@ -32,13 +32,13 @@
           </div>
           <div v-else>
             <p class="stat-text" :style="{fontSize: item.titleFontSize + 'px'}">{{item.legend}}</p>
-            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px'}">{{item.showValue}}</p>
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px',color:item.textColor}">{{item.showValue}}</p>
           </div>
         </template>
         <!-- legend -->
         <template v-if="chartInfo.param.text==='legend'">
-          <div v-if="item.mapping" :style="{color:item.mapping.color.text}">
-            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px'}">
+          <div v-if="item.mapping">
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px',color:item.textColor}">
               <template v-if="item.mapping && item.mapping.icon">
                 <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
               </template>
@@ -46,21 +46,21 @@
             </p>
           </div>
           <div v-else>
-            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px'}">{{item.legend}}</p>
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px',color:item.textColor}">{{item.legend}}</p>
           </div>
         </template>
         <!-- value -->
         <template v-if="chartInfo.param.text==='value'|| !chartInfo.param.text">
           <div v-if="item.mapping" :style="{color:item.mapping.color.text}">
-            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px'}">
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px',color:item.textColor}">
               <template v-if="item.mapping && item.mapping.icon">
                 <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
               </template>
               <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
             </p>
           </div>
-          <div v-else style="white-space: nowrap;">
-            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px'}">{{item.showValue}}</p>
+          <div v-else>
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px',color:item.textColor}">{{item.showValue}}</p>
           </div>
         </template>
         <!-- none -->
@@ -170,14 +170,12 @@ export default {
         if (this.isNoData) {
           return
         }
-        this.getLayout().then(layout => {
-          this.renderStat(layout)
-          if (this.chartInfo.param.sparklineMode && this.chartInfo.param.sparklineMode !== 'none') {
-            this.$nextTick(() => {
-              this.drawChart()
-            })
-          }
-        })
+        this.renderStat()
+        if (this.chartInfo.param.sparklineMode && this.chartInfo.param.sparklineMode !== 'none') {
+          this.$nextTick(() => {
+            this.drawChart()
+          })
+        }
       })
     },
     initStatData (chartInfo, originalDatas) {
@@ -266,54 +264,54 @@ export default {
         resolve()
       })
     },
-    getLayout () {
+    calculateGridDimensions (parentWidth, parentHeight, numberOfChildren) {
+      const vertical = this.calculateSizeOfChild(parentWidth, parentHeight, numberOfChildren)
+      const horizontal = this.calculateSizeOfChild(parentHeight, parentWidth, numberOfChildren)
+      const square = Math.max(vertical, horizontal)
+      let xCount = Math.floor(parentWidth / square)
+      const yCount = Math.ceil(numberOfChildren / xCount)
+
+      // after yCount update xCount to make split between rows more even
+      xCount = Math.ceil(numberOfChildren / yCount)
+
+      const itemsOnLastRow = xCount - (xCount * yCount - numberOfChildren)
+      const widthOnLastRow = parentWidth / itemsOnLastRow
+
+      return {
+        width: parentWidth / xCount,
+        height: parentHeight / yCount,
+        widthOnLastRow,
+        xCount,
+        yCount
+      }
+    },
+    calculateSizeOfChild (parentWidth, parentHeight, numberOfChildren) {
+      const parts = Math.ceil(Math.sqrt((numberOfChildren * parentWidth) / parentHeight))
+      if (Math.floor((parts * parentHeight) / parentWidth) * parts < numberOfChildren) {
+        return parentHeight / Math.ceil((parts * parentHeight) / parentWidth)
+      }
+      return parentWidth / parts
+    },
+    renderStat () {
       try {
         this.boxWidth = this.$refs['chart-stat-box'].offsetWidth - 3 * this.boxPadding
         this.boxHeight = this.$refs['chart-stat-box'].offsetHeight - 3 * this.boxPadding
       } catch (error) {}
-      return new Promise(resolve => {
-        let rateMax = 0
-        let col = 0
-        let row = 0
-        for (let i = 1; i <= this.statData.length; i++) {
-          const cols = Math.ceil(this.statData.length / i)
-          const w = this.boxWidth / i
-          const h = this.boxHeight / cols
-          const rate = w > h ? h / w : w / h
-          if (rate > rateMax) {
-            rateMax = rate
-            col = cols
-            row = i
-          }
-        }
-        if (this.statData.length) {
-          while (col * row >= this.statData.length) { // 避免出现空白
-            row--
-          }
-        }
-        row++
-        if (col === 1 || row === 1) { // 行 或 列有一个为1时 需要调换位置
-          const temp = col
-          col = row
-          row = temp
-        }
-        resolve({ col, row })
-      })
-    },
-    renderStat (layout) {
-      const width = this.boxWidth / layout.col
-      const height = this.boxHeight / layout.row
-      const integer = Math.floor(this.statData.length / layout.col)
-      const remainder = this.statData.length % layout.col
-      const specialIndex = integer * layout.col
-      const specialWidth = this.boxWidth / remainder
+
+      const grid = this.calculateGridDimensions(this.boxWidth, this.boxHeight, this.statData.length)
+      let xGrid = 0
+      let yGrid = 0
+
       this.statData.forEach((item, index) => {
-        item.height = height
-        if (remainder && index >= specialIndex) {
-          item.width = specialWidth
-        } else {
-          item.width = width
+        const isLastRow = yGrid === grid.yCount - 1
+        item.width = isLastRow ? grid.widthOnLastRow : grid.width
+        item.height = grid.height
+        xGrid++
+        if (xGrid === grid.xCount) {
+          xGrid = 0
+          yGrid++
         }
+
         let display = ''
         if (item.mapping) {
           display = this.handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })
@@ -367,6 +365,9 @@ export default {
         item.titleFontSize = titleFontSize
         item.valueFontSize = valueFontSize
 
+        // 设置图表颜色和字体颜色
+        this.setColor(item, index)
+
         if (item.valueFontSize > 36) {
           item.comparisonFont = 16
         } else if (item.valueFontSize > 24) {
@@ -377,12 +378,24 @@ export default {
       })
       this.isInit = false
     },
-
+    setColor (data, index) {
+      const colorMode = lodash.get(this.chartInfo, 'param.colorMode', 'value')
+      if (colorMode == 'value') {
+        data.textColor = this.colorList[index]
+      } else if (colorMode === 'background') {
+        data.backgroundColor = this.colorList[index]
+      }
+      if (data.mapping) {
+        data.textColor = data.mapping.color.text
+        data.backgroundColor = data.mapping.color.bac
+      }
+    },
+    // 计算字体大小
     calculateFontSize (text, width, height, maxSize, lineHeight = 1.2) {
       const el = this.$refs['temp-dom']
       el.innerText = text
       const elWidth = el.offsetWidth
-      const fontSizeBasedOnWidth = (width / (elWidth + 2)) * 14
+      const fontSizeBasedOnWidth = (width / elWidth) * 14
       const fontSizeBasedOnHeight = height / lineHeight
 
       const optimalSize = Math.min(fontSizeBasedOnHeight, fontSizeBasedOnWidth)
@@ -399,7 +412,7 @@ export default {
         const color = item.mapping ? item.mapping.color.bac : this.colorList[index]
         const lineColor = tinycolor(color).brighten(40).toRgbString()
         let areaColor = 'rgba(255,255,255,0.4)'
-        if (this.statData.length === 1 && !item.mapping) {
+        if (!item.backgroundColor) {
           areaColor = tinycolor(color).setAlpha(0.2).toRgbString()
         }
 
@@ -427,14 +440,11 @@ export default {
         this.statTimer = null
       }
       this.statTimer = setTimeout(() => {
-        this.getLayout().then(layout => {
-          this.renderStat(layout)
-
-          this.$nextTick(() => {
-            for (const key in this.sparkline) {
-              this.sparkline[key].resize()
-            }
-          })
+        this.renderStat()
+        this.$nextTick(() => {
+          for (const key in this.sparkline) {
+            this.sparkline[key].resize()
+          }
         })
       }, 100)
     },
@@ -513,7 +523,7 @@ export default {
           minHeight = 24
           break
       }
-      return this.chartInfo.param.comparison && this.chartInfo.param.comparison !== 'none' && item.height > minHeight && item.width > minWidth
+      return (this.chartInfo.param.comparison && this.chartInfo.param.comparison !== 'none') && (item.height > minHeight && item.width > minWidth)
     },
     toolboxPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
