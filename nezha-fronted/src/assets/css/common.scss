@@ -440,7 +440,7 @@ td .nz-icon-gear:before {
 .chart-bar,
 .chart-gauge,
 .chart-sankey,
-.chart-time-series,
+.chart-time-series-tooltip,
 .chart-treemap,
 .chart-pie,
 .chart-bubble,
@@ -456,7 +456,7 @@ td .nz-icon-gear:before {
   color: $--color-text-regular !important;
   box-shadow: none !important;
 }
-.chart-time-series,
+.chart-time-series-tooltip,
 .chart-pie,
 .chart-bar,
 .chart-treemap,
@@ -464,7 +464,26 @@ td .nz-icon-gear:before {
   visibility: hidden;
   position: absolute;
 }
-
+.chart-time-series-tooltip {
+  position: absolute;
+  display: block;
+  border-style: solid;
+  white-space: nowrap;
+  box-shadow: rgba(0, 0, 0, 0.2) 1px 2px 10px;
+  transition: opacity 0.2s cubic-bezier(0.23, 1, 0.32, 1) 0s, visibility 0.2s cubic-bezier(0.23, 1, 0.32, 1) 0s, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s;
+  background-color: rgb(255, 255, 255);
+  border-width: 1px;
+  border-radius: 4px;
+  color: rgb(102, 102, 102);
+  font: 14px / 21px "Microsoft YaHei";
+  padding: 10px;
+  top: 0px;
+  left: 0px;
+  border-color: rgb(255, 255, 255);
+  z-index: 99999999;
+  visibility: visible;
+  pointer-events: none;
+}
 .yAxis-icon{
   margin-right: 4px;
   background: transparent !important;
@@ -543,7 +562,7 @@ i.nz-icon-override{
     outline: none;
   }
 }
-.chart-time-series.hide{
+.chart-time-series-tooltip.hide{
   display: none !important;
 }
 .alert-rule-info-two{

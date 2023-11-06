@@ -200,7 +200,7 @@ export default {
             }
           })
         ],
-        padding: [15, 15, 15, 15],
+        padding: [15, this.autoPadRight, 15, 15],
         legend: {
           show: false
         },
@@ -214,11 +214,11 @@ export default {
           {
             scale: 'left',
             values: (u, vals, space) => vals.map(v => leftUnitCompute.compute(v, null, -1, decimals)),
-            formatValue: (v, d) => {
-              console.log(v, d, 'vd')
-              return v
-            },
             incrs: incrs,
+            // space: (self) => {
+            //   console.log(self)
+            //   return 50
+            // },
             size (self, values, axisIdx, cycleNum) {
               const axis = self.axes[axisIdx]
 
@@ -243,34 +243,14 @@ export default {
           {
             show: true,
             side: 1,
-            grid: { show: false, width: 0 },
+            grid: { show: false },
             scale: 'right',
+            // space: (self) => {
+            //   console.log(self)
+            //   return 50
+            // },
             values: (u, vals, space) => vals.map(v => rightUnitCompute.compute(v, null, -1, decimals)),
-            formatValue: (v, d) => {
-              console.log(v, d, 'vd')
-              return v
-            },
             incrs: rightIncrs
-            // size (self, values, axisIdx, cycleNum) {
-            //   const axis = self.axes[axisIdx]
-            //
-            //   // bail out, force convergence
-            //   if (cycleNum > 1) { return axis._size }
-            //
-            //   let axisSize = axis.ticks.size + axis.gap
-            //
-            //   // find longest value
-            //   const longestVal = (values ?? []).reduce((acc, val) => (
-            //     val.length > acc.length ? val : acc
-            //   ), '')
-            //
-            //   if (longestVal != '') {
-            //     self.ctx.font = axis.font[0]
-            //     axisSize += self.ctx.measureText(longestVal).width / devicePixelRatio
-            //   }
-            //
-            //   return Math.ceil(axisSize)
-            // }
           }
         ]
       }

@@ -247,26 +247,15 @@ export default {
       if (this.isGrey[index]) {
         return false
       }
-      return
       if (this.chartInfo.type === 'pie' || this.chartInfo.type === 'doughnut' || this.chartInfo.type === 'rose') {
         this.$emit('hoverLegendD3', legendName, index, type)
       } else if (this.isTimeSeries) {
-        if (type == 'highlight' && getChart(this.chartId)) {
-          const option = getChart(this.chartId).getOption()
-          const series = this.$lodash.cloneDeep(option.series)
-          series[index].emphasis.focus = 'series'
-          getChart(this.chartId).setOption({ series })
-        } else if (getChart(this.chartId)) {
-          const option = getChart(this.chartId).getOption()
-          const series = this.$lodash.cloneDeep(option.series)
-          series[index].emphasis.focus = 'none'
-          getChart(this.chartId).setOption({ series })
+        const echarts = getChart(this.chartId)
+        if (type == 'highlight') {
+          echarts.setSeries(index + 1, {focus:true})
+        } else {
+          echarts.setSeries(null, {focus: true})
         }
-        getChart(this.chartId) && getChart(this.chartId).dispatchAction({
-          type: type,
-          seriesIndex: index,
-          name: legendName
-        })
       } else {
         getChart(this.chartId) && getChart(this.chartId).dispatchAction({
           type: type,
