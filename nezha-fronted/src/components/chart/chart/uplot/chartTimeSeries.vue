@@ -18,6 +18,7 @@
       :legends="legends"
       :series="series"
       :is-fullscreen="isFullscreen"
+      @legendChange="legendChange"
     ></chart-legend>
     <!-- toolbox -->
     <div :id="`chart-toolbox-${chartId}`" class="chart-canvas-tooltip no-style-class chart-toolbox" :style="{left:toolbox.x+'px',top:toolbox.y+'px'}" v-if="toolbox.show" v-clickoutside="clickout">
@@ -59,6 +60,7 @@ import { initColor } from '@/components/chart/chart/tools'
 import UPlot from 'uplot/dist/uPlot.cjs'
 import chartTimeSeriesMixin from '@/components/chart/chart/uplot/chartTimeSeriesMixin'
 import chartDataFormat from '@/components/chart/chartDataFormat'
+import getStackedOpts from './stack'
 export default {
   name: 'chartTimeSeries',
   components: {
@@ -89,7 +91,8 @@ export default {
         activeIndex: undefined,
         clickIndex: undefined
       },
-      isGrey: []
+      isGrey: [],
+      seriesData: []
     }
   },
   computed: {
@@ -158,6 +161,10 @@ export default {
   methods: {
     initChart (chartOptions = this.chartOption) {
       this.setDataLink()
+      console.log(this.chartInfo.param)
+      try {
+        this.isStack = !!this.chartInfo.param.stack
+      } catch (e) {}
       const self = this
       const leftUnit = this.chartInfo.unit
       const leftUnitCompute = chartDataFormat.getUnit(leftUnit)
@@ -180,7 +187,7 @@ export default {
           },
           drag: {
             x: true
-          }
+          },
         },
         plugins: [
           this.tooltipPlugin({
@@ -248,11 +255,15 @@ export default {
       if (this.isConnect !== 'none') {
         opts.cursor.sync = {
           key: 'nz' + this.isFullscreen,
-          setSeries: true
+          setSeries: true,
+          scales: [null, null]
         }
       }
-      const data = seriesData
+      const data = this.seriesData = seriesData
       opts.series.push(...seriesAll)
+      if (this.isStack) {
+        getStackedOpts('', opts, data)
+      }
       setTimeout(() => { // 延迟加载 保证legend的高度正常
         const dom = document.getElementById(`chart-canvas-${this.chartId}`)
         const width = dom.offsetWidth
@@ -324,11 +335,14 @@ export default {
       if (echarts) {
         echarts.series.forEach((seriesItem, sindex) => {
           if (sindex > 0) {
-            seriesItem.show = true
+            echarts.setSeries(sindex, { show: true, focus: false })
             arr.push(false)
           }
         })
-        echarts.redraw()
+        this.isGrey = arr
+        if (this.$refs.legend) {
+          this.$refs.legend.isGrey = arr
+        }
         if (this.$refs.legend) {
           this.$refs.legend.isGrey = this.isGrey = arr
         }
@@ -342,25 +356,28 @@ export default {
       if (echarts) {
         echarts.series.forEach((seriesItem, sindex) => {
           if (sindex > 0) {
-            seriesItem.show = false
+            echarts.setSeries(sindex, { show: false, focus: false })
             arr.push(true)
           }
         })
-        echarts.series[index + 1].show = !echarts.series[index + 1].show
+        echarts.setSeries(index + 1, { show: true, focus: false })
         arr[index] = false
-        echarts.redraw()
+        this.isGrey = arr
         if (this.$refs.legend) {
-          this.$refs.legend.isGrey = this.isGrey = arr
+          this.$refs.legend.isGrey = arr
         }
       }
       this.clickout()
+    },
+    legendChange (isGrey) {
+      this.isGrey = isGrey
     }
   },
   mounted () {
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color
     try {
-      this.isStack = this.chartInfo.param.stack
+      this.isStack = !!this.chartInfo.param.stack
     } catch (e) {}
     this.chartInfo.loaded && this.initChart(this.chartOption)
   },

@@ -128,6 +128,7 @@ export default {
       let tooltipLeftOffset = 0
       let tooltipTopOffset = 0
       const self = this
+      const totoalStr = this.$t('dashboard.dashboard.chartTotal')
       const tooltip = document.createElement('div')
       tooltip.className = 'nz-uplot-tooltip chart-time-series-tooltip'
       tooltip.style.display = 'none'
@@ -164,10 +165,11 @@ export default {
         if (self.chartInfo.param && !(tooltipModel == 'single')) {
           params = u.series.map((s, i) => {
             if (i == 0) return ''
+            const value = self.seriesData[i][self.dataIdx]
             return {
               seriesIndex: i - 1,
               yAxisIndex: s.yAxisIndex,
-              value: [u.data[0][self.dataIdx], u.data[i][self.dataIdx]],
+              value: [u.data[0][self.dataIdx], value],
               seriesName: s.label,
               show: s.show
             }
@@ -176,11 +178,17 @@ export default {
             return item && item.show
           })
         } else if (self.seriesIdx) {
-          const obj = self.series[self.seriesIdx - 1]
+          let obj = self.series[self.seriesIdx - 1]
+          let value
+          if (!obj) {
+            obj = {}
+          } else {
+            value = self.seriesData[self.seriesIdx][self.dataIdx]
+          }
           params = [{
             seriesIndex: self.seriesIdx - 1,
             yAxisIndex: obj.yAxisIndex,
-            value: [u.data[0][self.dataIdx], u.data[self.seriesIdx][self.dataIdx]],
+            value: [u.data[0][self.dataIdx], value],
             seriesName: obj.label
           }]
         }
@@ -192,6 +200,10 @@ export default {
           tooltip.style.display = 'block'
         }
         if (self.isConnect == 'crosshair' && self.chartId != self.currentMousemove) {
+          tooltip.style.display = 'none'
+          return
+        }
+        if (tooltipModel == 'single' && self.isConnect !== 'none' && self.chartId != self.currentMousemove) {
           tooltip.style.display = 'none'
           return
         }
@@ -370,9 +382,9 @@ export default {
             }
             str += `
             <div class="tooltip__row">
-              <div class="row__label" title="${self.$t('dashboard.dashboard.chartTotal')}">
+              <div class="row__label" title="${totoalStr}">
                 <span class="${className}" style="background-color: ${color};color: ${color}"></span>
-                <span>${self.$t('dashboard.dashboard.chartTotal')}</span>
+                <span>${totoalStr}</span>
               </div>
               <div class="row__value">
                 <span>${chartDataFormat.getUnit(unit).compute(sum, null, -1, decimals)}</span>
@@ -480,12 +492,11 @@ export default {
     uplotMouseleave () {
       const chart = getChart(this.chartId)
       const over = chart.over
-      const root = chart.root.querySelector('.u-wrap')
-      let tooltip = root.getElementsByClassName('nz-uplot-tooltip')
-      console.log(tooltip, over)
+      const tooltip = document.getElementsByClassName('nz-uplot-tooltip')
       if (tooltip.length) {
-        tooltip = tooltip[0]
-        tooltip.style.display = 'none'
+        tooltip.forEach(item => {
+          item.style.display = 'none'
+        })
       }
       over.removeEventListener('mouseleave', this.uplotMouseleave)
       over.removeEventListener('mousemove', this.uplotMousemove)

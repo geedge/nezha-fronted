@@ -161,23 +161,22 @@ export default {
         if (!hasGrey) { // 1.除当前legend外全置灰
           echarts.series.forEach((seriesItem, sindex) => {
             if (sindex > 0) {
-              seriesItem.show = false
+              echarts.setSeries(sindex, { show: false, focus: false })
             }
           })
-          echarts.series[index + 1].show = !echarts.series[index + 1].show
           this.isGrey = this.isGrey.map((g, i) => i !== index)
         } else if (currentIsTheOnlyOneHighlight) { // 2.全高亮
           echarts.series.forEach((seriesItem, sindex) => {
             if (sindex > 0) {
-              echarts.series[sindex].show = true
+              echarts.setSeries(sindex, { show: true, focus: false })
             }
           })
           this.isGrey = this.isGrey.map(() => false)
         } else {
-          echarts.series[index + 1].show = !echarts.series[index + 1].show
+          echarts.setSeries(index + 1, { show: true, focus: false })
           this.$set(this.isGrey, index, !this.isGrey[index])
         }
-        echarts.redraw()
+        this.$emit('legendChange', this.isGrey)
       }
     },
     clickLegendBar (legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight) {
