@@ -8,10 +8,6 @@
   >
     <div class="chart__canvas" style="position:relative" :class="{'chart-cursor-default':cursorDefault}">
       <div :id="`chart-canvas-${chartId}`"></div>
-<!--      &lt;!&ndash; 右y轴name &ndash;&gt;-->
-<!--      <p class="rightYAxis-name" v-if="hasRightYAxis">-->
-<!--        <span>{{chartInfo.param.rightYAxis.label}}</span>-->
-<!--      </p>-->
     </div>
     <chart-legend
       ref="legend"
@@ -161,7 +157,7 @@ export default {
   },
   methods: {
     initChart (chartOptions = this.chartOption) {
-      console.log(this.chartData, this.chartInfo)
+      this.setDataLink()
       const self = this
       const leftUnit = this.chartInfo.unit
       const leftUnitCompute = chartDataFormat.getUnit(leftUnit)
@@ -169,10 +165,9 @@ export default {
       const rightUnitCompute = chartDataFormat.getUnit(rightUnit)
       const incrs = leftUnitCompute.ascii == 1024 ? this.incrs : undefined
       const rightIncrs = rightUnitCompute.ascii == 1024 ? this.incrs : undefined
-      console.log(incrs, 'incrs')
       const decimals = this.chartInfo.param.decimals || 2
-      let cursLeft = -10
-      let cursTop = -10
+      const cursLeft = -10
+      const cursTop = -10
       const { seriesData, seriesAll } = this.initSeriesData(this.chartData)
       // .compute(minusVal, null, -1, decimals)
       const opts = {
@@ -184,8 +179,7 @@ export default {
             prox: 5
           },
           drag: {
-            x: true,
-            y: true
+            x: true
           }
         },
         plugins: [
@@ -203,7 +197,7 @@ export default {
           {}
         ],
         tzDate: ts => UPlot.tzDate(new Date(ts * 1e3), localStorage.getItem('nz-sys-timezone')),
-        fmtDate: ()=> {
+        fmtDate: () => {
           return self.xAxisLabelFormatter(seriesData[0][0], seriesData[0][seriesData[0].length - 1])
         },
         axes: [
@@ -251,14 +245,18 @@ export default {
           }
         ]
       }
-      console.log(seriesData, seriesAll)
+      if (this.isConnect !== 'none') {
+        opts.cursor.sync = {
+          key: 'nz' + this.isFullscreen,
+          setSeries: true
+        }
+      }
       const data = seriesData
       opts.series.push(...seriesAll)
       setTimeout(() => { // 延迟加载 保证legend的高度正常
         const dom = document.getElementById(`chart-canvas-${this.chartId}`)
         const width = dom.offsetWidth
         const height = dom.offsetHeight
-        console.log(width, height)
         opts.width = width
         opts.height = height
         this.chart = new UPlot(opts, data, document.getElementById(`chart-canvas-${this.chartId}`))
@@ -301,7 +299,7 @@ export default {
         const rightPlotEdge = leftPlotEdge + (self.bbox.width / devicePixelRatio)
         const rightChartEdge = rightPlotEdge + self._padding[1]
 
-        const pxPerChar = 8
+        const pxPerChar = 15
         const rightVal = xVals[xVals.length - 1] + ''
         const valHalfWidth = pxPerChar * (rightVal.length / 2)
 
@@ -313,7 +311,7 @@ export default {
       }
 
       // default size
-      return 8
+      return 15
     },
     clickout () {
       if (this.toolbox.show) {
@@ -321,62 +319,9 @@ export default {
       }
     },
     showAllSeries () {
-      if (this.isConnect !== 'none') {
-      }
-      getChart(this.chartId).dispatchAction({
-        type: 'legendAllSelect'
-      })
-      this.isGrey = this.isGrey.map(() => false)
-      this.$refs.legend.isGrey = this.isGrey
-
-      // 点击后 处理Y轴的刻度边的
-      const chartInfo = this.chartInfo
-      const series = this.$lodash.cloneDeep(this.series)
-      const dataArg = series.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])
-      const option = this.renderYAxis(dataArg, chartInfo, 'legend')
-      getChart(this.chartId) && getChart(this.chartId).setOption({
-        yAxis: [
-          ...option.yAxis
-        ]
-      })
-
-      if (this.isConnect !== 'none') {
-      }
       this.clickout()
     },
     showSelectedSeries () {
-      if (this.isConnect !== 'none') {
-
-      }
-      this.legends.forEach((item, index) => {
-        if (index == this.toolbox.clickIndex) {
-          getChart(this.chartId).dispatchAction({
-            type: 'legendSelect',
-            name: item.name
-          })
-        } else {
-          getChart(this.chartId).dispatchAction({
-            type: 'legendUnSelect',
-            name: item.name
-          })
-        }
-      })
-      this.isGrey = this.isGrey.map((g, i) => i !== this.toolbox.clickIndex)
-      this.$refs.legend.isGrey = this.isGrey
-
-      // 点击后 处理Y轴的刻度边的
-      const chartInfo = this.chartInfo
-      const series = this.$lodash.cloneDeep(this.series)
-      const dataArg = series.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])
-      const option = this.renderYAxis(dataArg, chartInfo, 'legend')
-      getChart(this.chartId) && getChart(this.chartId).setOption({
-        yAxis: [
-          ...option.yAxis
-        ]
-      })
-
-      if (this.isConnect !== 'none') {
-      }
       this.clickout()
     }
   },
@@ -387,6 +332,14 @@ export default {
       this.isStack = this.chartInfo.param.stack
     } catch (e) {}
     this.chartInfo.loaded && this.initChart(this.chartOption)
+  },
+  beforeDestroy () {
+    const chart = getChart(this.chartId)
+    if (chart) {
+      const over = chart.over
+      over.removeEventListener()
+      chart.destroy()
+    }
   }
 }
 </script>

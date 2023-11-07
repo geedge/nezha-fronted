@@ -583,7 +583,6 @@ export default {
       routePathParams.body.startAt = this.searchTimeHeader[0] ? this.momentStrToTimestamp(this.searchTimeHeader[0]) : ''
       routePathParams.body.endAt = this.searchTimeHeader[1] ? this.momentStrToTimestamp(this.searchTimeHeader[1]) : ''
       routePathParams.body.timeType = this.searchTimeHeader[2]
-      console.log(this.$route, this.$router)
       if (!this.searchTimeHeader[2]) {
         routePathParams.body.startAt = this.searchTimeHeader[0] ? this.momentStrToTimestamp(this.searchTimeHeader[0]) : ''
         routePathParams.body.endAt = this.searchTimeHeader[1] ? this.momentStrToTimestamp(this.searchTimeHeader[1]) : ''

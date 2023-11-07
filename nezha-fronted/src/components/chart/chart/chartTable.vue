@@ -303,7 +303,6 @@ export default {
           oldValue: ''
         }
         const display = this.globalVariablesReplace(column.display)
-        console.log(column, display, /\{\{.+\}\}/.test(display), params)
         if (/\{\{.+\}\}/.test(display)) {
           const labelValue = display.replace(/(\{\{.+?\}\})/g, function (i) {
             const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
@@ -313,7 +312,6 @@ export default {
               if (label.indexOf('$value') !== -1) {
                 value = chartDataFormat.getUnit(column.unit ? column.unit : 2).compute(value, null, -1, 2)
               }
-              console.log(value)
               if (!((typeof value) == 'string' && value.constructor == String) && isNaN(value)) {
                 let legend = ''
                 if (value.__name__) {
@@ -363,7 +361,6 @@ export default {
             }
             return value || ''
           })
-          console.log(labelValue)
           obj[column.title + 'display'] = {
             display: labelValue,
             oldValue: oldLabelValue

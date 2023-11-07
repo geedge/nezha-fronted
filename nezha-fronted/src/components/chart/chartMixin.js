@@ -189,7 +189,6 @@ export default {
     },
     // 单个legend
     handleLegend (chartInfo, data, expressionIndexs, dataIndex, colorIndex) {
-      console.log(chartInfo, data, expressionIndexs, dataIndex, colorIndex)
       let expressionIndex = expressionIndexs
       let legend = '' // up
       let alias = ''

@@ -223,7 +223,6 @@ export default {
         this.nowTimeType = nowType || this.$refs.pickTime.$refs.timePicker.nowTimeType
         const type = nowTimeType.type
         const val = nowTimeType.value
-        console.log(val)
         const oneDTimestamp = 24 * 60 * 60 * 1000
         if (type === 'relative') {
           const now = new Date(bus.computeTimezone(new Date().getTime()))

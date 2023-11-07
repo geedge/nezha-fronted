@@ -3,14 +3,31 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import lodash from 'lodash'
 import { formatScientificNotation, getMetricTypeValue } from '@/components/common/js/tools'
-import uPlot, {Points} from 'uplot'
+import uPlot, { Points } from 'uplot'
 import bus from '@/libs/bus'
-import moment from "moment-timezone";
+import moment from 'moment-timezone'
+import { getChart } from '@/components/common/js/common'
 export default {
   data () {
     return {
       seriesColor: initColor(),
-      incrs: Incrs
+      incrs: Incrs,
+      dataIdx: null,
+      seriesIdx: null,
+      mousePosition: {
+        top: 0,
+        left: 0
+      }
+    }
+  },
+  computed: {
+    // timeSeries类型图表联动
+    isConnect () {
+      return this.$store.state.panel.isConnect
+    },
+    // timeSeries类型图表联动
+    currentMousemove () {
+      return this.$store.state.panel.currentMousemove
     }
   },
   methods: {
@@ -110,47 +127,45 @@ export default {
       let tooltipTopOffset = 0
       const self = this
       const tooltip = document.createElement('div')
-      let seriesIdx = null
-      let dataIdx = null
+      tooltip.className = 'nz-uplot-tooltip'
       let over
-      let tooltipVisible = false
       let isRender = false
-      function showTooltip () {
-        if (!tooltipVisible) {
-          tooltip.style.display = 'block'
-          over.style.cursor = 'pointer'
-          tooltipVisible = true
+      function setTooltip (u, e) { // 生成tooltip内容
+        tooltip.style.display = 'none'
+        over.style.cursor = null
+        isRender = false
+        const { top } = u.cursor
+        const lft = u.valToPos(u.data[0][self.dataIdx], 'x')
+        const windowWidth = window.innerWidth// 窗口宽度
+        const windowHeight = window.innerHeight// 窗口高度
+        const boxWidth = tooltip.offsetWidth
+        const boxHeight = tooltip.offsetHeight
+        let x = 0
+        let y = 0
+        if (self.mousePosition.left < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+          tooltip.style.left = (tooltipLeftOffset + lft + shiftX) + 'px'
+        } else {
+          tooltip.style.left = (tooltipLeftOffset + lft - shiftX) + 'px'
+          x = '-100%'
         }
-      }
-
-      function hideTooltip () {
-        if (tooltipVisible) {
-          tooltip.style.display = 'none'
-          over.style.cursor = null
-          tooltipVisible = false
+        if (self.mousePosition.top + 50 < windowHeight / 2) { // 说明鼠标上面放不下提示框
+          tooltip.style.top = (tooltipTopOffset + top + shiftY) + 'px'
+        } else {
+          tooltip.style.top = (tooltipTopOffset + top - shiftY) + 'px'
+          y = '-100%'
         }
-      }
-
-      function setTooltip (u) { // 生成tooltip内容
-        showTooltip()
+        tooltip.style.transform = `translate(${x},${y})`
         if (!self.$lodash.get(self.chartInfo, 'param.enable.tooltip', false)) {
           return
         }
-        isRender = false
-        console.log(self.chartInfo, seriesIdx, dataIdx, u)
-        const { left, top } = u.cursor
-        const lft = u.valToPos(u.data[0][dataIdx], 'x')
-        tooltip.style.top = (tooltipTopOffset + top + shiftX) + 'px'
-        tooltip.style.left = (tooltipLeftOffset + lft + shiftY) + 'px'
         let params = []
         const tooltipModel = self.$lodash.get(self.chartInfo, 'param.tooltip.mode', 'single')
-        console.log(tooltipModel)
         if (self.chartInfo.param && !(tooltipModel == 'single')) {
           params = u.series.map((s, i) => {
             return {
               seriesIndex: i - 1,
               yAxisIndex: s.yAxisIndex,
-              value: [u.data[0][dataIdx], u.data[i][dataIdx]],
+              value: [u.data[0][self.dataIdx], u.data[i][self.dataIdx]],
               seriesName: s.label,
               show: s.show
             }
@@ -159,30 +174,32 @@ export default {
             if (!item || !item.seriesIndex || !item.show) {
               return false
             }
-            console.log(item.value[1], typeof (item.value[1]) == 'undefined')
             const flag = typeof (item.value[1]) == 'undefined'
             return !flag
           })
-        } else if (seriesIdx) {
-          const obj = self.series[seriesIdx - 1]
+        } else if (self.seriesIdx) {
+          const obj = self.series[self.seriesIdx - 1]
           params = [{
-            seriesIndex: seriesIdx - 1,
+            seriesIndex: self.seriesIdx - 1,
             yAxisIndex: obj.yAxisIndex,
-            value: [u.data[0][dataIdx], u.data[seriesIdx][dataIdx]],
+            value: [u.data[0][self.dataIdx], u.data[self.seriesIdx][self.dataIdx]],
             seriesName: obj.label
           }]
         }
         isRender = !!params.length
-        console.log(isRender, 'isRender')
         if (!isRender) {
           tooltip.style.display = 'none'
-          over.style.cursor = null
           return
         } else {
           tooltip.style.display = 'block'
+        }
+        if (self.isConnect == 'crosshair' && self.chartId !== self.currentMousemove) {
+          return
+        }
+        if (self.seriesIdx) {
           over.style.cursor = 'pointer'
         }
-        tooltip.className = 'chart-time-series-tooltip'
+        tooltip.className += ' chart-time-series-tooltip'
         let str = '<div class="nz-tooltip nz-chart__tooltip">'
         const hasTotal = self.isStack
         const decimals = self.chartInfo.param.decimals || 2
@@ -207,7 +224,6 @@ export default {
         handler(leftYAxis, 'left')
         handler(rightYAxis, 'right')
         function handler (arr, type) {
-          console.log(arr, type)
           if (!arr.length) {
             return
           }
@@ -318,7 +334,7 @@ export default {
 
             // 鼠标悬浮 series data symbol 时，tooltip 中相应的legend 高亮显示
             str += `
-            <div class="${(seriesIdx - 1 == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}" title="${seriesName}">
+            <div class="${(self.seriesIdx - 1 == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}" title="${seriesName}">
               <div class="row__label">
                 <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${seriesName}</span>
@@ -377,41 +393,27 @@ export default {
               tooltipLeftOffset = parseFloat(over.style.left)
               tooltipTopOffset = parseFloat(over.style.top)
               u.root.querySelector('.u-wrap').appendChild(tooltip)
-
-              let clientX
-              let clientY
-              over.addEventListener('mouseleave', () => {
-                if (!u.cursor._lock) {
-                  hideTooltip()
-                }
-              })
-              over.addEventListener('mousedown', e => {
-                clientX = e.clientX
-                clientY = e.clientY
-              })
-              over.addEventListener('mouseup', e => {
-                if (e.clientX == clientX && e.clientY == clientY) {
-                  if (seriesIdx != null && dataIdx != null) {
-                    onclick(u, seriesIdx, dataIdx)
-                  }
-                }
-              })
+              over.addEventListener('mouseenter', self.uplotMouseenter)
+              // over.addEventListener('mouseleave', self.uplotMouseleave.bind(self, hideTooltip, over)) 放入mouseenter 减少绑定事件数量
+              // over.addEventListener('mousemove', self.uplotMousemove)
+              // over.addEventListener('mousedown', self.uplotMousedown)
+              // over.addEventListener('mouseup', self.uplotMouseup.bind(self, nodeInfo))
             }
           ],
           setCursor: [
             u => {
               const c = u.cursor
-              if (dataIdx != c.idx) {
-                dataIdx = c.idx
+              if (self.dataIdx != c.idx) {
+                self.dataIdx = c.idx
                 setTooltip(u)
               }
             }
           ],
           setSeries: [
             (u, sidx) => {
-              if (seriesIdx != sidx) {
-                seriesIdx = sidx
-                if (dataIdx != null) { setTooltip(u) }
+              if (self.seriesIdx != sidx) {
+                this.seriesIdx = sidx
+                if (self.dataIdx != null) { setTooltip(u) }
               }
             }
           ]
@@ -422,7 +424,6 @@ export default {
       const self = this
       return function (val, index) {
         const value = self.momentStrToTimestamp(self.momentTz(val))
-        console.log(value)
         let offset = localStorage.getItem('nz-sys-timezone')
         offset = moment.tz(offset).format('Z')
         offset = Number.parseInt(offset)
@@ -462,5 +463,127 @@ export default {
         }
       }
     },
+    uplotMouseenter () {
+      const chart = getChart(this.chartId)
+      const over = chart.over
+      over.addEventListener('mouseleave', this.uplotMouseleave)
+      over.addEventListener('mousemove', this.uplotMousemove)
+      over.addEventListener('mousedown', this.uplotMousedown)
+      over.addEventListener('mouseup', this.uplotMouseup)
+      this.$store.commit('setCurrentMousemove', this.chartId)
+    },
+    uplotMouseleave () {
+      const chart = getChart(this.chartId)
+      const over = chart.over
+      over.removeEventListener('mouseleave', this.uplotMouseleave)
+      over.removeEventListener('mousemove', this.uplotMousemove)
+      over.removeEventListener('mousedown', this.uplotMousedown)
+      over.removeEventListener('mouseup', this.uplotMouseup)
+    },
+    uplotMousemove (e) {
+      this.mousePosition = {
+        left: e.pageX,
+        top: e.pageY
+      }
+    },
+    uplotMousedown (e) {
+      this.toolbox.x = e.clientX
+      this.toolbox.y = e.clientY
+    },
+    uplotMouseup (e) {
+      if (e.clientX == this.toolbox.x && e.clientY == this.toolbox.y) {
+        if (this.seriesIdx) {
+          this.toolbox.show = true
+          this.datalinkClick(this.seriesIdx, this.dataIdx)
+          const windowWidth = window.innerWidth// 窗口宽度
+          const windowHeight = window.innerHeight// 窗口高度
+          this.$nextTick(() => {
+            const box = document.getElementById(`chart-toolbox-${this.chartId}`)
+            const left = e.pageX - this.$refs['timeSeries-chart-box'].getBoundingClientRect().left
+            const top = e.pageY - this.$refs['timeSeries-chart-box'].getBoundingClientRect().top
+            if (box) {
+              const boxWidth = box.offsetWidth
+              const boxHeight = box.offsetHeight
+              if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+                this.toolbox.x = left + 15
+              } else {
+                this.toolbox.x = left - boxWidth - 15
+              }
+              if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+                this.toolbox.y = top + 15
+              } else {
+                this.toolbox.y = top - boxHeight - 10
+              }
+            }
+          })
+        } else {
+          this.toolbox.show = false
+        }
+      }
+    },
+    datalinkClick (seriesIdx, dataIdx, e) { // 处理datalink数据
+      const obj = this.series[seriesIdx - 1]
+      const chart = getChart(this.chartId)
+      const params = {
+        seriesIndex: seriesIdx - 1,
+        yAxisIndex: obj.yAxisIndex,
+        value: [chart.data[0][dataIdx], chart.data[seriesIdx][dataIdx]],
+        seriesName: obj.label
+      }
+      console.log(params)
+      if (!params.seriesName) {
+         return
+      }
+      const nameArr = params.seriesName.split('-')
+      if (nameArr.length > 1) {
+        nameArr.splice(nameArr.length - 1, 1)
+      }
+      const seriesName = nameArr.join('-')
+      if (this.series[params.seriesIndex]) {
+        params.yAxisIndex = this.series[params.seriesIndex].yAxisIndex
+      }
+      const decimals = this.chartInfo.param.decimals || 2
+      let unit = this.chartInfo.unit ? this.chartInfo.unit : 2
+      if (params.yAxisIndex == 1) {
+        unit = lodash.get(this, 'chartInfo.param.rightYAxis.unit', 2)
+      }
+      // title
+      const value = bus.computeTimezone(params.value[0] * 1000)
+      const tData = new Date(value)
+      // value
+      let paramsDot = bus.countDecimals(params.value[1])
+      if (paramsDot < this.chartDot) {
+        paramsDot = this.chartDot
+      } else if (paramsDot > 6) {
+        paramsDot = 6
+      }
+      const val = formatScientificNotation(params.value[1], paramsDot)
+      // 根据左右轴设置图标
+      let className = 'row__color-block'
+      if (params.yAxisIndex == 0) {
+        className = 'yAxis-icon nz-icon nz-icon-zuozongzhou'
+      } else if (params.yAxisIndex == 1) {
+        className = 'yAxis-icon nz-icon nz-icon-youzongzhou'
+      }
+      const color = this.colorList[params.seriesIndex]
+      this.toolbox.tooltipHtml = `
+        <div class="nz-chart__tooltip">
+          <div class="tooltip-title" style="margin-bottom: 5px">${bus.timeFormate(tData)}</div>
+          <div class="tooltip__row">
+            <div class="row__label" :title=">${seriesName}">
+              <span class="${className}" style="background-color: ${color};color: ${color}"></span>
+              <span>${seriesName}</span>
+            </div>
+            <div class="row__value">
+              <span>${chartDataFormat.getUnit(unit).compute(val, null, -1, decimals)}</span>
+            </div>
+          </div>
+        </div>
+        `
+      this.toolbox.show = true
+      this.toolbox.metric.labels = this.series[params.seriesIndex].labels
+      this.toolbox.metric.expressionIndex = this.series[params.seriesIndex].expressionIndex
+      this.toolbox.clickIndex = params.seriesIndex
+    }
   }
 }
