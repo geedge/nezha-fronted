@@ -70,6 +70,7 @@ export default {
             ...ObjTime,
             ...seriesObjTime
           }
+          item.expressionIndex = expressionIndex
           seriesData.push(Object.keys(seriesObjTime).map(time => seriesObjTime[time]))
           seriesAll.push(this.renderSeries(item, expressionIndex, seriesIndex, chartIndex))
           chartIndex++
@@ -107,7 +108,8 @@ export default {
         yAxisIndex: isRight ? 1 : 0, // right
         values: (u, v) => series.elements.name + JSON.stringify(series.metric),
         stroke: this.seriesColor[chartIndex],
-        width: 1 / devicePixelRatio
+        width: 1 / devicePixelRatio,
+        expressionIndex: series.expressionIndex
       }
       if (chartType === 'area') {
         obj.fill = this.seriesColor[chartIndex] + '20' // 面积图使用
@@ -127,7 +129,8 @@ export default {
       let tooltipTopOffset = 0
       const self = this
       const tooltip = document.createElement('div')
-      tooltip.className = 'nz-uplot-tooltip'
+      tooltip.className = 'nz-uplot-tooltip chart-time-series-tooltip'
+      tooltip.style.display = 'none'
       let over
       let isRender = false
       function setTooltip (u, e) { // 生成tooltip内容
@@ -138,8 +141,6 @@ export default {
         const lft = u.valToPos(u.data[0][self.dataIdx], 'x')
         const windowWidth = window.innerWidth// 窗口宽度
         const windowHeight = window.innerHeight// 窗口高度
-        const boxWidth = tooltip.offsetWidth
-        const boxHeight = tooltip.offsetHeight
         let x = 0
         let y = 0
         if (self.mousePosition.left < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
@@ -162,6 +163,7 @@ export default {
         const tooltipModel = self.$lodash.get(self.chartInfo, 'param.tooltip.mode', 'single')
         if (self.chartInfo.param && !(tooltipModel == 'single')) {
           params = u.series.map((s, i) => {
+            if (i == 0) return ''
             return {
               seriesIndex: i - 1,
               yAxisIndex: s.yAxisIndex,
@@ -171,11 +173,7 @@ export default {
             }
           })
           params = params.filter(item => {
-            if (!item || !item.seriesIndex || !item.show) {
-              return false
-            }
-            const flag = typeof (item.value[1]) == 'undefined'
-            return !flag
+            return item && item.show
           })
         } else if (self.seriesIdx) {
           const obj = self.series[self.seriesIdx - 1]
@@ -193,13 +191,13 @@ export default {
         } else {
           tooltip.style.display = 'block'
         }
-        if (self.isConnect == 'crosshair' && self.chartId !== self.currentMousemove) {
+        if (self.isConnect == 'crosshair' && self.chartId != self.currentMousemove) {
+          tooltip.style.display = 'none'
           return
         }
         if (self.seriesIdx) {
           over.style.cursor = 'pointer'
         }
-        tooltip.className += ' chart-time-series-tooltip'
         let str = '<div class="nz-tooltip nz-chart__tooltip">'
         const hasTotal = self.isStack
         const decimals = self.chartInfo.param.decimals || 2
@@ -305,11 +303,12 @@ export default {
             } else if (paramsDot > 6) {
               paramsDot = 6
             }
-            const val = formatScientificNotation(item.value[1], paramsDot)
+            const val = typeof (item.value[1]) == 'undefined' ? 0 : formatScientificNotation(item.value[1], paramsDot)
+            const showVal = typeof (item.value[1]) == 'undefined' ? '' : chartDataFormat.getUnit(unit).compute(val, null, -1, decimals)
             sum += isNaN(self.numberWithEConvent(val)) ? 0 : parseFloat(self.numberWithEConvent(val))
             let previousDom = ''
             if (previousItem) {
-              const previousVal = formatScientificNotation(previousItem.value[1], paramsDot)
+              const previousVal = typeof (previousItem.value[1]) == 'undefined' ? 0 : formatScientificNotation(previousItem.value[1], paramsDot)
               let minusVal = 0
               let operator
               if (previousVal <= val) {
@@ -340,7 +339,7 @@ export default {
                 <span>${seriesName}</span>
               </div>
               <div class="row__value">
-                <span>${chartDataFormat.getUnit(unit).compute(val, null, -1, decimals)}</span>
+                <span>${showVal}</span>
                 ${previousDom}
               </div>
             </div>
@@ -466,6 +465,12 @@ export default {
     uplotMouseenter () {
       const chart = getChart(this.chartId)
       const over = chart.over
+      const root = chart.root.querySelector('.u-wrap')
+      let tooltip = root.getElementsByClassName('nz-uplot-tooltip')
+      if (tooltip.length) {
+        tooltip = tooltip[0]
+        tooltip.style.display = 'block'
+      }
       over.addEventListener('mouseleave', this.uplotMouseleave)
       over.addEventListener('mousemove', this.uplotMousemove)
       over.addEventListener('mousedown', this.uplotMousedown)
@@ -475,6 +480,13 @@ export default {
     uplotMouseleave () {
       const chart = getChart(this.chartId)
       const over = chart.over
+      const root = chart.root.querySelector('.u-wrap')
+      let tooltip = root.getElementsByClassName('nz-uplot-tooltip')
+      console.log(tooltip, over)
+      if (tooltip.length) {
+        tooltip = tooltip[0]
+        tooltip.style.display = 'none'
+      }
       over.removeEventListener('mouseleave', this.uplotMouseleave)
       over.removeEventListener('mousemove', this.uplotMousemove)
       over.removeEventListener('mousedown', this.uplotMousedown)
@@ -532,7 +544,7 @@ export default {
       }
       console.log(params)
       if (!params.seriesName) {
-         return
+        return
       }
       const nameArr = params.seriesName.split('-')
       if (nameArr.length > 1) {

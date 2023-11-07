@@ -166,6 +166,7 @@ export default {
   methods: {
     initChart (chartOptions = this.chartOption) {
       this.setDataLink()
+      console.log(JSON.stringify(this.chartData))
       try {
         this.isStack = this.chartInfo.param.stack
       } catch (e) {}

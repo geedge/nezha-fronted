@@ -319,9 +319,40 @@ export default {
       }
     },
     showAllSeries () {
+      const echarts = getChart(this.chartId)
+      const arr = []
+      if (echarts) {
+        echarts.series.forEach((seriesItem, sindex) => {
+          if (sindex > 0) {
+            seriesItem.show = true
+            arr.push(false)
+          }
+        })
+        echarts.redraw()
+        if (this.$refs.legend) {
+          this.$refs.legend.isGrey = this.isGrey = arr
+        }
+      }
       this.clickout()
     },
     showSelectedSeries () {
+      const index = this.toolbox.clickIndex
+      const echarts = getChart(this.chartId)
+      const arr = []
+      if (echarts) {
+        echarts.series.forEach((seriesItem, sindex) => {
+          if (sindex > 0) {
+            seriesItem.show = false
+            arr.push(true)
+          }
+        })
+        echarts.series[index + 1].show = !echarts.series[index + 1].show
+        arr[index] = false
+        echarts.redraw()
+        if (this.$refs.legend) {
+          this.$refs.legend.isGrey = this.isGrey = arr
+        }
+      }
       this.clickout()
     }
   },
