@@ -3,8 +3,9 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import lodash from 'lodash'
 import { formatScientificNotation, getMetricTypeValue } from '@/components/common/js/tools'
-import uPlot from 'uplot'
+import uPlot, {Points} from 'uplot'
 import bus from '@/libs/bus'
+import moment from "moment-timezone";
 export default {
   data () {
     return {
@@ -58,6 +59,7 @@ export default {
         })
       })
       seriesData.unshift(time)
+      this.series = seriesAll
       return {
         seriesData,
         seriesAll
@@ -79,6 +81,7 @@ export default {
       const name = legend.name
       const alias = legend.alias
       const statistics = series.statistics
+      const chartType = this.chartInfo.type
       const obj = {
         name: name,
         label: alias,
@@ -88,6 +91,16 @@ export default {
         values: (u, v) => series.elements.name + JSON.stringify(series.metric),
         stroke: this.seriesColor[chartIndex],
         width: 1 / devicePixelRatio
+      }
+      if (chartType === 'area') {
+        obj.fill = this.seriesColor[chartIndex] + '20' // 面积图使用
+      }
+      if (chartType === 'point') {
+        obj.points = {
+          show: true,
+          width: 2
+        }
+        obj.width = 0
       }
       this.legends.push({ name, alias, statistics, color: this.seriesColor[chartIndex] })
       return obj
@@ -133,15 +146,19 @@ export default {
         const tooltipModel = self.$lodash.get(self.chartInfo, 'param.tooltip.mode', 'single')
         console.log(tooltipModel)
         if (self.chartInfo.param && !(tooltipModel == 'single')) {
-          params = self.series.map((s, i) => {
+          params = u.series.map((s, i) => {
             return {
-              seriesIndex: i,
+              seriesIndex: i - 1,
               yAxisIndex: s.yAxisIndex,
-              value: [u.data[0][dataIdx], u.data[i + 1][dataIdx]],
-              seriesName: s.label
+              value: [u.data[0][dataIdx], u.data[i][dataIdx]],
+              seriesName: s.label,
+              show: s.show
             }
           })
           params = params.filter(item => {
+            if (!item || !item.seriesIndex || !item.show) {
+              return false
+            }
             console.log(item.value[1], typeof (item.value[1]) == 'undefined')
             const flag = typeof (item.value[1]) == 'undefined'
             return !flag
@@ -400,6 +417,50 @@ export default {
           ]
         }
       }
-    }
+    },
+    xAxisLabelFormatter (minTime, maxTime) {
+      const self = this
+      return function (val, index) {
+        const value = self.momentStrToTimestamp(self.momentTz(val))
+        console.log(value)
+        let offset = localStorage.getItem('nz-sys-timezone')
+        offset = moment.tz(offset).format('Z')
+        offset = Number.parseInt(offset)
+        const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
+        // if (window.dataJson) {
+        //   offset = new Date().getTimezoneOffset() * -1 / 60
+        // }
+        const tData = new Date(value - localOffset + offset * 60 * 60 * 1000)
+        let hour = tData.getHours()
+        hour = hour > 9 ? hour : '0' + hour // 加0补充为两位数字
+        let minute = tData.getMinutes()
+        minute = minute > 9 ? minute : '0' + minute // 如果分钟小于10,则在前面加0补充为两位数字
+        if (minTime !== null && maxTime !== null) {
+          const diffSec = (maxTime - minTime)
+          const secOneDay = 12 * 60 * 60// 0.5天的秒数
+          const secOneMonth = secOneDay * 30// 30天的秒数
+          const dateFormatStr = self.timeFormatMain.split(' ')[0]
+          let str = ''
+          const month = tData.getMonth() + 1
+          const day = tData.getDate()
+          if (dateFormatStr === 'DD/MM/YYYY') {
+            str += [day, month].join('/')
+          } else if (dateFormatStr === 'MM/DD/YYYY') {
+            str += [month, day].join('/')
+          } else {
+            str += [month, day].join('-')
+          }
+          if (diffSec <= secOneDay - 100) { // 同一天
+            return [hour, minute].join(':')
+          } else if (diffSec < secOneMonth) { // 大于1天，小于30天
+            return str + '\n' + [hour, minute].join(':')
+          } else { // 大于等于30天
+            return str
+          }
+        } else {
+          return [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('/') + '\n' + [hour, minute].join(':')
+        }
+      }
+    },
   }
 }

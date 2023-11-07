@@ -162,6 +162,7 @@ export default {
   methods: {
     initChart (chartOptions = this.chartOption) {
       console.log(this.chartData, this.chartInfo)
+      const self = this
       const leftUnit = this.chartInfo.unit
       const leftUnitCompute = chartDataFormat.getUnit(leftUnit)
       const rightUnit = this.$lodash.get(this.chartInfo, 'param.rightYAxis.unit', 2)
@@ -172,13 +173,7 @@ export default {
       const decimals = this.chartInfo.param.decimals || 2
       let cursLeft = -10
       let cursTop = -10
-      const cursorMemo = {
-        set: (left, top) => {
-          cursLeft = left
-          cursTop = top
-        },
-        get: () => ({ left: cursLeft, top: cursTop })
-      }
+      const { seriesData, seriesAll } = this.initSeriesData(this.chartData)
       // .compute(minusVal, null, -1, decimals)
       const opts = {
         id: `chart-canvas-${this.chartId}-uplot`,
@@ -205,10 +200,12 @@ export default {
           show: false
         },
         series: [
-          {
-
-          }
+          {}
         ],
+        tzDate: ts => UPlot.tzDate(new Date(ts * 1e3), localStorage.getItem('nz-sys-timezone')),
+        fmtDate: ()=> {
+          return self.xAxisLabelFormatter(seriesData[0][0], seriesData[0][seriesData[0].length - 1])
+        },
         axes: [
           {},
           {
@@ -254,11 +251,9 @@ export default {
           }
         ]
       }
-      const { seriesData, seriesAll } = this.initSeriesData(this.chartData)
       console.log(seriesData, seriesAll)
       const data = seriesData
       opts.series.push(...seriesAll)
-      this.series = seriesAll
       setTimeout(() => { // 延迟加载 保证legend的高度正常
         const dom = document.getElementById(`chart-canvas-${this.chartId}`)
         const width = dom.offsetWidth

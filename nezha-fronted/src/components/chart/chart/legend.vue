@@ -252,9 +252,9 @@ export default {
       } else if (this.isTimeSeries) {
         const echarts = getChart(this.chartId)
         if (type == 'highlight') {
-          echarts.setSeries(index + 1, {focus:true})
+          echarts.setSeries(index + 1, { focus: true })
         } else {
-          echarts.setSeries(null, {focus: true})
+          echarts.setSeries(null, { focus: true })
         }
       } else {
         getChart(this.chartId) && getChart(this.chartId).dispatchAction({
