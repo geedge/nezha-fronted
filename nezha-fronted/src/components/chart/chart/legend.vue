@@ -164,6 +164,7 @@ export default {
               echarts.setSeries(sindex, { show: false, focus: false })
             }
           })
+          echarts.setSeries(index + 1, { show: true, focus: false })
           this.isGrey = this.isGrey.map((g, i) => i !== index)
         } else if (currentIsTheOnlyOneHighlight) { // 2.全高亮
           echarts.series.forEach((seriesItem, sindex) => {

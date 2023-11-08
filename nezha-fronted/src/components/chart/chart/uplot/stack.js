@@ -28,7 +28,6 @@ function stack (data, omit) {
 
 export default function getStackedOpts (title, opt, data, interp) {
   const opts = opt
-  opt.scales = {}
   const interped = interp ? interp(data) : data
 
   const stacked = stack(interped, i => false)
@@ -55,15 +54,6 @@ export default function getStackedOpts (title, opt, data, interp) {
       }
     }
   })
-
-  // force 0 to be the sum minimum this instead of the bottom series
-  opts.scales.y = {
-    range: (u, min, max) => {
-      const minMax = uPlot.rangeNum(0, max, 0.1, true)
-      return [0, minMax[1]]
-    }
-  }
-
   // restack on toggle
   opts.hooks = {
     setSeries: [

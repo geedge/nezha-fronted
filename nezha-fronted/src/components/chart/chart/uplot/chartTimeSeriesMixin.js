@@ -32,6 +32,7 @@ export default {
   methods: {
     initSeriesData (chartData) { // 处理数据 以及 series
       let time = []
+      this.legends = []
       const seriesData = [] // 返回的数据
       const seriesAll = [ // 返回的 series
 
@@ -51,6 +52,9 @@ export default {
       })
       chartData.forEach((series, expressionIndex) => { // 首先处理时间 对应点没有值（不包括null 则添加undefind）
         series.forEach((item, seriesIndex) => {
+          if (chartIndex >= 20 && !this.showAllData) {
+            return
+          }
           let seriesObjTime = {}
           // 若需要统计，处理统计数据
           const statisticsTypes = this.chartInfo.param.legend ? this.chartInfo.param.legend.values : ''
@@ -102,7 +106,6 @@ export default {
       const obj = {
         name: name,
         label: alias,
-        class: series.elements.name + JSON.stringify(series.metric),
         scale: isRight ? 'right' : 'left', // right
         yAxisIndex: isRight ? 1 : 0, // right
         values: (u, v) => series.elements.name + JSON.stringify(series.metric),
@@ -557,7 +560,6 @@ export default {
         value: [chart.data[0][dataIdx], chart.data[seriesIdx][dataIdx]],
         seriesName: obj.label
       }
-      console.log(params)
       if (!params.seriesName) {
         return
       }

@@ -279,18 +279,22 @@ export default {
         getStackedOpts('', opts, data)
       }
       this.renderMinMax(opts)
-      console.log(opts)
+      if (getChart(this.chartId)) {
+        getChart(this.chartId).destroy()
+      }
       setTimeout(() => { // 延迟加载 保证legend的高度正常
         const dom = document.getElementById(`chart-canvas-${this.chartId}`)
         const width = dom.offsetWidth
         const height = dom.offsetHeight
         opts.width = width
         opts.height = height
-        const chartUplot = new UPlot(opts, data, document.getElementById(`chart-canvas-${this.chartId}`))
+        let chartUplot = ''
+        chartUplot = new UPlot(opts, data, document.getElementById(`chart-canvas-${this.chartId}`))
         setChart(this.chartId, chartUplot)
       }, 100)
     },
     renderMinMax (opts) {
+      console.log(opts)
       let leftMin = this.$lodash.get(this.chartInfo, 'param.min', undefined)
       let leftMax = this.$lodash.get(this.chartInfo, 'param.max', undefined)
       if (leftMin || leftMax) {
@@ -299,7 +303,7 @@ export default {
           leftMin = leftMax
           leftMax = temp
         }
-        opts.scales.left.range = (self, initMin, initMax, scaleKey)=>{
+        opts.scales.left.range = (self, initMin, initMax, scaleKey) => {
           if (typeof (leftMin) === 'undefined') {
             if (initMin > 0) {
               leftMin = initMin / 2
@@ -327,7 +331,7 @@ export default {
             rightMin = rightMax
             rightMax = temp
           }
-          opts.scales.right.range = (self, initMin, initMax, scaleKey)=>{
+          opts.scales.right.range = (self, initMin, initMax, scaleKey) => {
             if (typeof (rightMin) === 'undefined') {
               if (initMin > 0) {
                 rightMin = initMin / 2
@@ -420,6 +424,7 @@ export default {
           this.$refs.legend.isGrey = this.isGrey = arr
         }
       }
+      this.renderYaxis()
       this.clickout()
     },
     showSelectedSeries () {
@@ -440,10 +445,12 @@ export default {
           this.$refs.legend.isGrey = arr
         }
       }
+      this.renderYaxis()
       this.clickout()
     },
     legendChange (isGrey) {
       this.isGrey = isGrey
+      this.renderYaxis()
     },
     resize () {
       setTimeout(() => {
@@ -457,6 +464,27 @@ export default {
           u.setSize({ width, height })
         }
       }, 100)
+    },
+    renderYaxis () {
+      const u = getChart(this.chartId)
+      let leftShow = false
+      let rightShow = false
+      u.series.forEach(item => {
+        if (item.show && item.scale == 'left') {
+          leftShow = true
+        }
+        if (item.show && item.scale == 'right') {
+          rightShow = true
+        }
+      })
+      u.axes[1].show = leftShow
+      u.axes[2].show = rightShow
+      if (!leftShow) {
+        u.axes[2].grid.show = true
+      } else {
+        u.axes[2].grid.show = false
+      }
+     u.redraw(false, true)
     }
   },
   mounted () {
