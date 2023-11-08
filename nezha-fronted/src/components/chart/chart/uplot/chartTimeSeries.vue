@@ -57,10 +57,11 @@ import renderChart from '@/components/chart/renderChart'
 import { chartLegendPlacement } from '@/components/common/js/constants'
 import { getChart, setChart, chartCache } from '@/components/common/js/common'
 import { initColor } from '@/components/chart/chart/tools'
-import UPlot from 'uplot/dist/uPlot.cjs'
+import UPlot from 'uplot'
 import chartTimeSeriesMixin from '@/components/chart/chart/uplot/chartTimeSeriesMixin'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import getStackedOpts from './stack'
+
 export default {
   name: 'chartTimeSeries',
   components: {
@@ -187,7 +188,7 @@ export default {
           },
           drag: {
             x: true
-          },
+          }
         },
         plugins: [
           this.tooltipPlugin({
@@ -248,11 +249,24 @@ export default {
             //   return 50
             // },
             values: (u, vals, space) => vals.map(v => rightUnitCompute.compute(v, null, -1, decimals)),
-            incrs: rightIncrs
+            incrs: rightIncrs,
+            ticks: {
+              show: false // true
+            }
           }
-        ]
+        ],
+        scales: {
+          left: {
+            key: 'left',
+            time: false
+          },
+          right: {
+            key: 'right',
+            time: false
+          }
+        }
       }
-      if (this.isConnect !== 'none') {
+      if (this.isConnect !== 'none') { // 是否同步光标
         opts.cursor.sync = {
           key: 'nz' + this.isFullscreen,
           setSeries: true,
@@ -264,15 +278,74 @@ export default {
       if (this.isStack) {
         getStackedOpts('', opts, data)
       }
+      this.renderMinMax(opts)
+      console.log(opts)
       setTimeout(() => { // 延迟加载 保证legend的高度正常
         const dom = document.getElementById(`chart-canvas-${this.chartId}`)
         const width = dom.offsetWidth
         const height = dom.offsetHeight
         opts.width = width
         opts.height = height
-        this.chart = new UPlot(opts, data, document.getElementById(`chart-canvas-${this.chartId}`))
-        setChart(this.chartId, this.chart)
+        const chartUplot = new UPlot(opts, data, document.getElementById(`chart-canvas-${this.chartId}`))
+        setChart(this.chartId, chartUplot)
       }, 100)
+    },
+    renderMinMax (opts) {
+      let leftMin = this.$lodash.get(this.chartInfo, 'param.min', undefined)
+      let leftMax = this.$lodash.get(this.chartInfo, 'param.max', undefined)
+      if (leftMin || leftMax) {
+        if (leftMin > leftMax) {
+          const temp = leftMin
+          leftMin = leftMax
+          leftMax = temp
+        }
+        opts.scales.left.range = (self, initMin, initMax, scaleKey)=>{
+          if (typeof (leftMin) === 'undefined') {
+            if (initMin > 0) {
+              leftMin = initMin / 2
+            } else {
+              leftMin = initMin * 2
+            }
+          }
+          if (typeof (leftMax) === 'undefined') {
+            if (initMax > 0) {
+              leftMax = initMax * 2
+            } else {
+              leftMax = initMax / 2
+            }
+          }
+          return [leftMin, leftMax]
+        }
+      }
+      const rightYAxisEnable = this.$lodash.get(this.chartInfo, 'param.enable.rightYAxis', false)
+      if (rightYAxisEnable) {
+        let rightMin = this.$lodash.get(this.chartInfo, 'param.rightYAxis.min', undefined)
+        let rightMax = this.$lodash.get(this.chartInfo, 'param.rightYAxis.max', undefined)
+        if (rightMin || rightMax) {
+          if (rightMin > leftMax) {
+            const temp = rightMin
+            rightMin = rightMax
+            rightMax = temp
+          }
+          opts.scales.right.range = (self, initMin, initMax, scaleKey)=>{
+            if (typeof (rightMin) === 'undefined') {
+              if (initMin > 0) {
+                rightMin = initMin / 2
+              } else {
+                rightMin = initMin * 2
+              }
+            }
+            if (typeof (rightMax) === 'undefined') {
+              if (initMax > 0) {
+                rightMax = initMax * 2
+              } else {
+                rightMax = initMax / 2
+              }
+            }
+            return [rightMin, rightMax]
+          }
+        }
+      }
     },
     size (self, values, axisIdx, cycleNum) {
       const axis = self.axes[axisIdx]
@@ -371,6 +444,19 @@ export default {
     },
     legendChange (isGrey) {
       this.isGrey = isGrey
+    },
+    resize () {
+      setTimeout(() => {
+        console.log('chartMixinnz')
+        const dom = this.$refs['timeSeries-chart-box']
+        const width = dom.offsetWidth
+        const legendHeight = this.$lodash.get(this.$refs, 'legend.$el.offsetHeight', 40)
+        const height = dom.offsetHeight - legendHeight
+        const u = getChart(this.chartId)
+        if (u) {
+          u.setSize({ width, height })
+        }
+      }, 100)
     }
   },
   mounted () {

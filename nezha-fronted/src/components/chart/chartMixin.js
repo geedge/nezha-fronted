@@ -427,7 +427,8 @@ export default {
     },
     resize () {
       setTimeout(() => {
-        getChart(this.chartId) && getChart(this.chartId).resize()
+        console.log('chartMixin')
+        // getChart(this.chartId) && getChart(this.chartId).resize()
       }, 100)
     },
     // 全局变量替换

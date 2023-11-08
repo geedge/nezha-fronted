@@ -3,7 +3,6 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import lodash from 'lodash'
 import { formatScientificNotation, getMetricTypeValue } from '@/components/common/js/tools'
-import uPlot, { Points } from 'uplot'
 import bus from '@/libs/bus'
 import moment from 'moment-timezone'
 import { getChart } from '@/components/common/js/common'
@@ -109,7 +108,7 @@ export default {
         values: (u, v) => series.elements.name + JSON.stringify(series.metric),
         stroke: this.seriesColor[chartIndex],
         width: 1 / devicePixelRatio,
-        expressionIndex: series.expressionIndex
+        expressionIndex: series.expressionIndex,
       }
       if (chartType === 'area') {
         obj.fill = this.seriesColor[chartIndex] + '20' // 面积图使用
@@ -189,7 +188,7 @@ export default {
             seriesIndex: self.seriesIdx - 1,
             yAxisIndex: obj.yAxisIndex,
             value: [u.data[0][self.dataIdx], value],
-            seriesName: obj.label
+            seriesName: obj.label || ''
           }]
         }
         isRender = !!params.length
@@ -427,6 +426,11 @@ export default {
                 if (self.dataIdx != null) { setTooltip(u) }
               }
             }
+          ],
+          drawClear: [
+            () => {
+              self.renderThresholds()
+            }
           ]
         }
       }
@@ -607,6 +611,32 @@ export default {
       this.toolbox.metric.labels = this.series[params.seriesIndex].labels
       this.toolbox.metric.expressionIndex = this.series[params.seriesIndex].expressionIndex
       this.toolbox.clickIndex = params.seriesIndex
+    },
+    renderThresholds () { // 画阈值线
+      const u = getChart(this.chartId)
+      const thresholdsEnable = this.$lodash.get(this.chartInfo, 'param.enable.thresholds', false)
+      if (!thresholdsEnable || !u) {
+        return
+      }
+      const thresholdsArr = this.$lodash.get(this.chartInfo, 'param.thresholds', [])
+      const ctx = u.ctx
+      ctx.save()
+      const xd = u.data[0]
+      const i0 = 0
+      const i1 = xd.length - 1
+      const x0 = u.valToPos(xd[i0], 'x', true)
+      const x1 = u.valToPos(xd[i1], 'x', true)
+      thresholdsArr.forEach(item => {
+        const y0 = u.valToPos(item.value, 'left', true)
+        const y1 = u.valToPos(item.value, 'left', true)
+        ctx.beginPath()
+        ctx.strokeStyle = item.color
+        ctx.setLineDash([5, 5])
+        ctx.moveTo(x0, y0)
+        ctx.lineTo(x1, y1)
+        ctx.stroke()
+      })
+      ctx.restore()
     }
   }
 }
