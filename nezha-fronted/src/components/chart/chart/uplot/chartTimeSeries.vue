@@ -162,7 +162,6 @@ export default {
   methods: {
     initChart (chartOptions = this.chartOption) {
       this.setDataLink()
-      console.log(this.chartInfo.param)
       try {
         this.isStack = !!this.chartInfo.param.stack
       } catch (e) {}
@@ -177,9 +176,18 @@ export default {
       const cursLeft = -10
       const cursTop = -10
       const { seriesData, seriesAll } = this.initSeriesData(this.chartData)
+      this.isNoData = false
+      if (!seriesData.length || seriesData.length == 1) {
+        this.isNoData = true
+        this.$emit('chartIsNoData', this.isNoData)
+      }
+      if (this.isNoData) {
+        return
+      }
       // .compute(minusVal, null, -1, decimals)
-      const opts = {
+      let opts = {
         id: `chart-canvas-${this.chartId}-uplot`,
+        mode: 1,
         width: 100,
         height: 100,
         cursor: {
@@ -188,6 +196,45 @@ export default {
           },
           drag: {
             x: true
+          },
+          dataIdx: (self, seriesIdx, hoveredIdx, cursorXVal) => {
+            const seriesData = self.data[seriesIdx]
+            const hoverProximityPx = (self.valToPos(self.data[0][1], 'x') - self.valToPos(self.data[0][0], 'x')) / 2
+            if (seriesData[hoveredIdx] == null) {
+              let nonNullLft = null
+              let nonNullRgt = null
+              let i
+
+              i = hoveredIdx
+              while (nonNullLft == null && i-- > 0) {
+                if (seriesData[i] != null) { nonNullLft = i }
+              }
+
+              i = hoveredIdx
+              while (nonNullRgt == null && i++ < seriesData.length) {
+                if (seriesData[i] != null) { nonNullRgt = i }
+              }
+
+              const xVals = self.data[0]
+
+              const curPos = self.valToPos(cursorXVal, 'x')
+              const rgtPos = nonNullRgt == null ? Infinity : self.valToPos(xVals[nonNullRgt], 'x')
+              const lftPos = nonNullLft == null ? -Infinity : self.valToPos(xVals[nonNullLft], 'x')
+
+              const lftDelta = curPos - lftPos
+              const rgtDelta = rgtPos - curPos
+
+              if (lftDelta <= rgtDelta) {
+                if (lftDelta <= hoverProximityPx) { hoveredIdx = nonNullLft }
+              } else {
+                if (rgtDelta <= hoverProximityPx) { hoveredIdx = nonNullRgt }
+              }
+            }
+            return hoveredIdx
+          },
+          points: {
+            size: 10,
+            width: 5
           }
         },
         plugins: [
@@ -202,18 +249,34 @@ export default {
           show: false
         },
         series: [
-          {}
+          {
+            scale: 'x'
+          }
         ],
         tzDate: ts => UPlot.tzDate(new Date(ts * 1e3), localStorage.getItem('nz-sys-timezone')),
         fmtDate: () => {
           return self.xAxisLabelFormatter(seriesData[0][0], seriesData[0][seriesData[0].length - 1])
         },
         axes: [
-          {},
+          {
+            scale: 'x',
+            gap: 5,
+            grid: {
+              show: true,
+              stroke: 'rgba(0, 10, 23, 0.09)',
+              width: 1
+            }
+          },
           {
             scale: 'left',
             values: (u, vals, space) => vals.map(v => leftUnitCompute.compute(v, null, -1, decimals)),
             incrs: incrs,
+            gap: 5,
+            grid: {
+              show: true,
+              stroke: 'rgba(0, 10, 23, 0.09)',
+              width: 1
+            },
             // space: (self) => {
             //   console.log(self)
             //   return 50
@@ -242,8 +305,13 @@ export default {
           {
             show: true,
             side: 1,
-            grid: { show: false },
+            grid: {
+              show: false,
+              stroke: 'rgba(0, 10, 23, 0.09)',
+              width: 1
+            },
             scale: 'right',
+            gap: 5,
             // space: (self) => {
             //   console.log(self)
             //   return 50
@@ -252,17 +320,52 @@ export default {
             incrs: rightIncrs,
             ticks: {
               show: false // true
+            },
+            size (self, values, axisIdx, cycleNum) {
+              const axis = self.axes[axisIdx]
+
+              // bail out, force convergence
+              if (cycleNum > 1) { return axis._size }
+
+              let axisSize = axis.ticks.size + axis.gap
+
+              // find longest value
+              const longestVal = (values ?? []).reduce((acc, val) => (
+                val.length > acc.length ? val : acc
+              ), '')
+
+              if (longestVal != '') {
+                self.ctx.font = axis.font[0]
+                axisSize += self.ctx.measureText(longestVal).width / devicePixelRatio
+              }
+
+              return Math.ceil(axisSize)
             }
           }
         ],
         scales: {
+          x: {
+            key: 'x',
+            auto: true,
+            ori: 0,
+            dir: 1,
+            time: true
+          },
           left: {
             key: 'left',
-            time: false
+            time: false,
+            auto: true,
+            ori: 1,
+            dir: 1,
+            distr: 1
           },
           right: {
             key: 'right',
-            time: false
+            time: false,
+            auto: true,
+            ori: 1,
+            dir: 1,
+            distr: 1
           }
         }
       }
@@ -273,10 +376,12 @@ export default {
           scales: [null, null]
         }
       }
-      const data = this.seriesData = seriesData
+      let data = this.seriesData = seriesData
       opts.series.push(...seriesAll)
       if (this.isStack) {
-        getStackedOpts('', opts, data)
+        const obj = getStackedOpts('', opts, data)
+        opts = obj.opts
+        data = obj.data
       }
       this.renderMinMax(opts)
       if (getChart(this.chartId)) {
@@ -294,7 +399,6 @@ export default {
       }, 100)
     },
     renderMinMax (opts) {
-      console.log(opts)
       let leftMin = this.$lodash.get(this.chartInfo, 'param.min', undefined)
       let leftMax = this.$lodash.get(this.chartInfo, 'param.max', undefined)
       if (leftMin || leftMax) {
@@ -454,7 +558,6 @@ export default {
     },
     resize () {
       setTimeout(() => {
-        console.log('chartMixinnz')
         const dom = this.$refs['timeSeries-chart-box']
         const width = dom.offsetWidth
         const legendHeight = this.$lodash.get(this.$refs, 'legend.$el.offsetHeight', 40)

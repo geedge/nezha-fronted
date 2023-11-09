@@ -6,6 +6,7 @@ import { formatScientificNotation, getMetricTypeValue } from '@/components/commo
 import bus from '@/libs/bus'
 import moment from 'moment-timezone'
 import { getChart } from '@/components/common/js/common'
+import uplot from 'uplot'
 export default {
   data () {
     return {
@@ -68,6 +69,9 @@ export default {
           item.statistics = statistics
           item.values.forEach(value => {
             let itemValue = value[1]
+            if (!isNaN(itemValue)) {
+              itemValue = Number(itemValue)
+            }
             if (itemValue === null && nullValueMode !== 'null') {
               if (nullValueMode === 'zero') {
                 itemValue = 0
@@ -103,24 +107,28 @@ export default {
         this.seriesColor.push(randomcolor())
       }
       const legend = this.handleLegend(this.chartInfo, series, expressionIndex, dataIndex, chartIndex)
-      let isRight = false
+      let isRight
       if (this.chartInfo.param.enable.rightYAxis) {
         const elementNames = this.$lodash.get(this.chartInfo, 'param.rightYAxis.elementNames', [])
-        isRight = elementNames.indexOf(series.elements.name) !== -1
+        isRight = elementNames.indexOf(series.elements.name) !== -1 ? 1 : 0
       }
       const name = legend.name
       const alias = legend.alias
       const statistics = series.statistics
       const chartType = this.chartInfo.type
+
       const obj = {
         name: name,
         label: alias,
         scale: isRight ? 'right' : 'left', // right
-        yAxisIndex: isRight ? 1 : 0, // right
-        values: (u, v) => series.elements.name + JSON.stringify(series.metric),
+        yAxisIndex: isRight, // right
+        // values: (u, v) => series.elements.name + JSON.stringify(series.metric),
         stroke: this.seriesColor[chartIndex],
         width: 1 / devicePixelRatio,
-        expressionIndex: series.expressionIndex
+        expressionIndex: series.expressionIndex,
+        paths (taht, seriesIdx, idx0, idx1, filtIdxs) {
+          return uplot.paths.spline(taht)(taht, seriesIdx, idx0, idx1, filtIdxs)
+        }
       }
       if (chartType === 'area') {
         obj.fill = this.seriesColor[chartIndex] + '20' // 面积图使用
@@ -128,7 +136,10 @@ export default {
       if (chartType === 'point') {
         obj.points = {
           show: true,
-          width: 2
+          size: 6,
+          width: 3,
+          fill: this.seriesColor[chartIndex],
+          stroke: this.seriesColor[chartIndex]
         }
         obj.width = 0
       }
