@@ -58,13 +58,6 @@
           <template slot-scope="{ row }">{{utcTimeToTimezoneStr(row.date)}}</template>
         </el-table-column>
         <el-table-column
-          prop="legend"
-        >
-          <template slot-scope="{ row }">
-            <div :title="aliasLegend(row)">{{aliasLegend(row)}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
           prop="message"
         >
           <template slot-scope="{ row }">
