@@ -484,7 +484,7 @@ export default {
       } else {
         u.axes[2].grid.show = false
       }
-     u.redraw(false, true)
+      u.redraw(false, true)
     }
   },
   mounted () {

@@ -33,6 +33,7 @@ export default {
     initSeriesData (chartData) { // 处理数据 以及 series
       let time = []
       this.legends = []
+      const nullValueMode = this.chartInfo.param.nullType
       const seriesData = [] // 返回的数据
       const seriesAll = [ // 返回的 series
 
@@ -66,7 +67,15 @@ export default {
           }
           item.statistics = statistics
           item.values.forEach(value => {
-            seriesObjTime[value[0]] = value[1]
+            let itemValue = value[1]
+            if (itemValue === null && nullValueMode !== 'null') {
+              if (nullValueMode === 'zero') {
+                itemValue = 0
+              } else {
+                itemValue = undefined
+              }
+            }
+            seriesObjTime[value[0]] = itemValue
           })
           // 处理统计数据 statistics
           seriesObjTime = {
@@ -111,7 +120,7 @@ export default {
         values: (u, v) => series.elements.name + JSON.stringify(series.metric),
         stroke: this.seriesColor[chartIndex],
         width: 1 / devicePixelRatio,
-        expressionIndex: series.expressionIndex,
+        expressionIndex: series.expressionIndex
       }
       if (chartType === 'area') {
         obj.fill = this.seriesColor[chartIndex] + '20' // 面积图使用
