@@ -92,6 +92,8 @@
 <script>
 import copy from '@/components/common/copy'
 import axios from 'axios'
+// 引入 BigNumber 库
+import BigNumber from 'bignumber.js'
 export default {
   name: 'logContext',
   components: { copy },
@@ -123,13 +125,19 @@ export default {
   methods: {
     queryContext () {
       this.loading = true
-      const beforDate = this.rowData.secondTime - 2 * 60 * 60 // 向前查两个小时
-      const nowDate = this.rowData.secondTime
-      const afterDate = this.rowData.secondTime + 2 * 60 * 60 // 向后查两个小时
+      const twoHours = 2 * 60 * 60 * 1000 * 1000 // 纳秒
+      const bigNum = new BigNumber(this.rowData.timestamp)
+
+      const beforStart = bigNum.minus(twoHours) // 向前查两个小时
+      const beforEnd = this.rowData.timestamp
+
+      const afterStart = bigNum.plus(1) // start加一纳秒 防止出现重复数据
+      const afterEnd = bigNum.plus(twoHours) // 向后查两个小时
+
       const requestArr = []
       const expr = this.getExpression()
-      requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(expr) + '&start=' + nowDate + '&end=' + afterDate + '&limit=' + this.lines + '&direction=forward')) // after
-      requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(expr) + '&start=' + beforDate + '&end=' + nowDate + '&limit=' + this.lines + '&direction=backward')) // befor
+      requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(expr) + '&start=' + afterStart + '&end=' + afterEnd + '&limit=' + this.lines + '&direction=forward')) // after
+      requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(expr) + '&start=' + beforStart + '&end=' + beforEnd + '&limit=' + this.lines + '&direction=backward')) // befor
       Promise.all(requestArr).then(res => {
         const logData = res.map(r => r.data)
         this.beforeLength = logData[1].result.length
