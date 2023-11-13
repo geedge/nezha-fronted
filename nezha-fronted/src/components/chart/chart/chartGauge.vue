@@ -78,10 +78,8 @@ export default {
       }
       this.timer = setTimeout(() => {
         this.initGaugeData(this.chartInfo, this.chartData).then(() => {
-          this.getLayout().then(layout => {
-            this.renderGauge(layout).then(() => {
-              this.gaugeChartInit()
-            })
+          this.renderGauge().then(() => {
+            this.gaugeChartInit()
           })
         })
       }, 200)
@@ -130,52 +128,53 @@ export default {
         resolve()
       })
     },
-    getLayout () {
-      this.boxWidth = this.$refs['chart-gauge-box' + this.chartInfo.id].offsetWidth - 2 * this.boxPadding
-      this.boxHeight = this.$refs['chart-gauge-box' + this.chartInfo.id].offsetHeight - 2 * this.boxPadding
-      return new Promise(resolve => {
-        let rateMax = 0
-        let col = 0
-        let row = 0
-        for (let i = 1; i <= this.gaugeData.length; i++) {
-          const cols = Math.ceil(this.gaugeData.length / i)
-          const w = this.boxWidth / i
-          const h = this.boxHeight / cols
-          const rate = w > h ? h / w : w / h
-          if (rate > rateMax) {
-            rateMax = rate
-            col = cols
-            row = i
-          }
-        }
-        if (this.gaugeData.length) {
-          while (col * row >= this.gaugeData.length) { // 避免出现空白
-            row--
-          }
-        }
-        row++
-        if (col === 1 || row === 1) { // 行 或 列有一个为1时 需要调换位置 显示才会好看
-          const temp = col
-          col = row
-          row = temp
-        }
-        resolve({ col, row })
-      })
+    calculateGridDimensions (parentWidth, parentHeight, numberOfChildren) {
+      const vertical = this.calculateSizeOfChild(parentWidth, parentHeight, numberOfChildren)
+      const horizontal = this.calculateSizeOfChild(parentHeight, parentWidth, numberOfChildren)
+      const square = Math.max(vertical, horizontal)
+      let xCount = Math.floor(parentWidth / square)
+      const yCount = Math.ceil(numberOfChildren / xCount)
+
+      // after yCount update xCount to make split between rows more even
+      xCount = Math.ceil(numberOfChildren / yCount)
+
+      const itemsOnLastRow = xCount - (xCount * yCount - numberOfChildren)
+      const widthOnLastRow = parentWidth / itemsOnLastRow
+
+      return {
+        width: parentWidth / xCount,
+        height: parentHeight / yCount,
+        widthOnLastRow,
+        xCount,
+        yCount
+      }
     },
-    renderGauge (layout) {
+    calculateSizeOfChild (parentWidth, parentHeight, numberOfChildren) {
+      const parts = Math.ceil(Math.sqrt((numberOfChildren * parentWidth) / parentHeight))
+      if (Math.floor((parts * parentHeight) / parentWidth) * parts < numberOfChildren) {
+        return parentHeight / Math.ceil((parts * parentHeight) / parentWidth)
+      }
+      return parentWidth / parts
+    },
+    renderGauge () {
       return new Promise(resolve => {
-        const width = this.boxWidth / layout.col
-        const height = this.boxHeight / layout.row
-        const integer = Math.floor(this.gaugeData.length / layout.col)
-        const remainder = this.gaugeData.length % layout.col
-        const specialIndex = integer * layout.col
-        const specialWidth = this.boxWidth / remainder
+        try {
+          this.boxWidth = this.$refs['chart-gauge-box' + this.chartInfo.id].offsetWidth - 3 * this.boxPadding
+          this.boxHeight = this.$refs['chart-gauge-box' + this.chartInfo.id].offsetHeight - 3 * this.boxPadding
+        } catch (error) {}
+
+        const grid = this.calculateGridDimensions(this.boxWidth, this.boxHeight, this.gaugeData.length)
+        let xGrid = 0
+        let yGrid = 0
+
         this.gaugeData.forEach((item, index) => {
-          item.height = height
-          if (remainder && index >= specialIndex) {
-            item.width = specialWidth
-          } else {
-            item.width = width
+          const isLastRow = yGrid === grid.yCount - 1
+          item.width = isLastRow ? grid.widthOnLastRow : grid.width
+          item.height = grid.height
+          xGrid++
+          if (xGrid === grid.xCount) {
+            xGrid = 0
+            yGrid++
           }
         })
         resolve()
@@ -255,10 +254,8 @@ export default {
     },
     resize () {
       setTimeout(() => {
-        this.getLayout().then(layout => {
-          this.renderGauge(layout).then(() => {
-            this.gaugeChartResize()
-          })
+        this.renderGauge().then(() => {
+          this.gaugeChartResize()
         })
       })
     },
