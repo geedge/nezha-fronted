@@ -125,7 +125,7 @@ export default {
   methods: {
     queryContext () {
       this.loading = true
-      const twoHours = 2 * 60 * 60 * 1000 * 1000 // 纳秒
+      const twoHours = 2 * 60 * 60 * 1000 * 1000 * 1000// 纳秒
       const bigNum = new BigNumber(this.rowData.timestamp)
 
       const beforStart = bigNum.minus(twoHours) // 向前查两个小时
