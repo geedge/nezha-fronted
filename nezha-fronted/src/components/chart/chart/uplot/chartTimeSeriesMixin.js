@@ -69,7 +69,7 @@ export default {
           item.statistics = statistics
           item.values.forEach(value => {
             let itemValue = value[1]
-            if (!isNaN(itemValue)) {
+            if (typeof (itemValue) === 'string') {
               itemValue = Number(itemValue)
             }
             if (itemValue === null && nullValueMode !== 'null') {
@@ -128,7 +128,8 @@ export default {
         expressionIndex: series.expressionIndex,
         paths (taht, seriesIdx, idx0, idx1, filtIdxs) {
           return uplot.paths.spline(taht)(taht, seriesIdx, idx0, idx1, filtIdxs)
-        }
+        },
+        spanGaps: true
       }
       if (chartType === 'area') {
         obj.fill = this.seriesColor[chartIndex] + '20' // 面积图使用
