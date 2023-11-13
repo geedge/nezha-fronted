@@ -301,7 +301,9 @@ export default {
         }
         str += ','
       })
-      str = str.slice(0, -1)
+      if (str.length !== 1) {
+        str = str.slice(0, -1)
+      }
       str += '}'
       this.logFinalStr = str
     },
