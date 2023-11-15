@@ -133,7 +133,7 @@ export default {
       })
     },
     deleteHistoryItem (item) {
-      this.$delete('/sys/user/queryHistory?ids=' + item.id).then(res => {
+      this.$delete('/sys/user/queryHistory?ids=' + item.id + '&queryHash=' + item.queryHash).then(res => {
         if (res.code === 200) {
           this.$message.success(this.$t('tip.deleteSuccess'))
           this.firstLoading = true

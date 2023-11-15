@@ -250,7 +250,7 @@ export default {
         const colorRandom = randomcolor()
         this.colorList.push(colorRandom)
       }
-      this.legends.push({ name, alias, statistics, color: this.colorList[colorIndex] })
+      // this.legends.push({ name, alias, statistics, color: this.colorList[colorIndex] })
       return {
         name,
         alias
@@ -326,15 +326,6 @@ export default {
     },
     mouseEnterChart () {
       const myChart = getChart(this.chartId)
-      if (myChart) {
-        setTimeout(() => {
-          myChart.setOption({
-            toolbox: {
-              show: true
-            }
-          })
-        }, 300)
-      }
     },
     tooltipPosition (point, params, dom, rect, size) {
       if (this.isConnect === 'tooltip' && this.$store.state.panel.currentMousemove != this.chartId) {
@@ -370,15 +361,6 @@ export default {
     },
     mouseLeaveChart () {
       const myChart = getChart(this.chartId)
-      if (myChart) {
-        setTimeout(() => {
-          myChart.setOption({
-            toolbox: {
-              show: false
-            }
-          })
-        }, 300)
-      }
     },
     getMaxValue (dataArg, chartInfo) {
       let maxValue = 0
@@ -445,7 +427,8 @@ export default {
     },
     resize () {
       setTimeout(() => {
-        getChart(this.chartId) && getChart(this.chartId).resize()
+        console.log('chartMixin')
+        // getChart(this.chartId) && getChart(this.chartId).resize()
       }, 100)
     },
     // 全局变量替换

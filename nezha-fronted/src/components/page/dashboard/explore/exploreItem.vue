@@ -3898,7 +3898,6 @@ export default {
           this.saveDisabled = false
         }
         axios.all(requestArr).then(res => {
-          console.log(res)
           this.chartLoading = false
           const errorRowIndex = []
           res.forEach((r, i) => {
@@ -4593,7 +4592,6 @@ export default {
         }
       })
       postArr = postArr.filter(item => item.queryValue)
-      console.log(postArr)
       this.$post('/sys/user/queryHistory', postArr).then(res => {
         this.lastHistory = this.$lodash.cloneDeep(postArr)
       })

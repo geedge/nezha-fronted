@@ -5,6 +5,7 @@ import '@/assets/css/main.scss'
 import '@/assets/css/font/iconfont.js'
 import ElementUI from 'element-ui'
 import i18n from '@/components/common/i18n'
+import 'uplot/dist/uPlot.min.css'
 
 import Vue from 'vue'
 import Vuex from 'vuex'

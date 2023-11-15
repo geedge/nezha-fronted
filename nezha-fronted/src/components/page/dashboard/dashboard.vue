@@ -354,11 +354,13 @@ export default {
       ],
       intervalList: [
         { value: 0, label: this.$t('dashboard.dashboard.chartForm.lockList.off') },
+        { value: 5, label: '5s' },
+        { value: 10, label: '10s' },
         { value: 30, label: '30s' },
         { value: 60, label: '1m' },
         { value: 300, label: '5m' },
         { value: 900, label: '15m' },
-        { value: 1800, label: '30m' }
+        { value: 1800, label: '30m' },
       ],
       playListControls: false, // 显示隐藏轮播按钮
       playlistObj: {} // 轮播仪表盘配置

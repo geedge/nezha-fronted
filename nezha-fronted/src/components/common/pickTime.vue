@@ -121,6 +121,9 @@ export default {
           this.getIntervalData(interval)
         }
         this.intervalTimer = setInterval(() => {
+          if (document.hidden) {
+            return
+          }
           this.getIntervalData(this.interval.value)
         }, val.value * 1000)
       }
