@@ -35,7 +35,8 @@ const chartGaugeOption = {
       },
       axisLine: {
         lineStyle: {
-          width: 30
+          width: 30,
+          color: [[1, '#F4F5F5']]
         }
       },
       axisTick: {
@@ -53,7 +54,8 @@ const chartGaugeOption = {
       title: {
         show: false
       },
-      data: []
+      data: [],
+      center: ['50%', '60%']
     }
   ]
 }

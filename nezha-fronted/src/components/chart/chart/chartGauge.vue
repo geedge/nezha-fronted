@@ -210,7 +210,7 @@ export default {
       return Math.min(optimalSize, maxSize || optimalSize)
     },
     calcGaugeSize (data) {
-      const dimension = Math.min(data.width, data.height) * 0.80 // radius
+      const dimension = Math.min(data.width, data.height) * 0.90 // radius
 
       const titleFontSize = Math.min((dimension * 0.15) / 1.2, 20)
       if (this.chartInfo.param.text === 'legend' || this.chartInfo.param.text === 'all') {
@@ -248,7 +248,7 @@ export default {
         option.series[0].max = this.chartInfo.param.max || this.maxValue
         option.series[0].min = this.chartInfo.param.min || 0
 
-        option.series[0].radius = '80%'
+        option.series[0].radius = '90%'
         const gaugeSize = this.calcGaugeSize(item)
         option.series[0].progress.width = gaugeSize.gaugeWidth
         option.series[0].axisLine.lineStyle.width = gaugeSize.gaugeWidth
