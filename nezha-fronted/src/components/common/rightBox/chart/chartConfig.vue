@@ -444,6 +444,32 @@
             <el-option :label="$t('project.topology.bac')" value="background"></el-option>
           </el-select>
         </el-form-item>
+        <!-- Layout orientation -->
+        <el-form-item :label="$t('dashboard.chartForm.orientation')" class="form-item--half-width" v-if="chartConfig.type==='bar'">
+          <el-select
+            v-model="chartConfig.param.orientation"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            @change="change"
+          >
+            <el-option :label="$t('dashboard.chartForm.vertical')" value="vertical"></el-option>
+            <el-option :label="$t('dashboard.chartForm.horizontal')" value="horizontal"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- Display mode -->
+        <el-form-item :label="$t('dashboard.chartForm.displayMode')" class="form-item--half-width" v-if="chartConfig.type==='bar'">
+          <el-select
+            v-model="chartConfig.param.displayMode"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            @change="change"
+          >
+            <el-option :label="$t('dashboard.chartForm.basic')" value="basic"></el-option>
+            <el-option :label="$t('dashboard.chartForm.retro')" value="led"></el-option>
+          </el-select>
+        </el-form-item>
       </div>
 
       <!-- Right Y Axis   -->
@@ -1540,6 +1566,8 @@ export default {
               varValue: '',
               result: 'show'
             },
+            orientation: 'vertical',
+            displayMode: 'basic',
             dataLink: this.chartConfig.param.dataLink
           }
           break

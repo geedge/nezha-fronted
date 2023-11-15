@@ -260,6 +260,10 @@ export default {
           delete params.param.comparison
           delete params.param.colorMode
         }
+        if (params.type !== 'bar') {
+          delete params.param.orientation
+          delete params.param.displayMode
+        }
         if (!params.x && !params.y && this.from === 'endpointQuery') { // endpointQuery 新增 放在最后
           params.x = 0
           params.y = 999
@@ -735,6 +739,10 @@ export default {
           }
           if (obj.type == 'text' && !obj.param.editorType) {
             obj.param.editorType = 'richText'
+          }
+          if (obj.type === 'bar') {
+            if (!obj.param.orientation) { obj.param.orientation = 'vertical' }
+            if (!obj.param.displayMode) { obj.param.displayMode = 'basic' }
           }
         }
         if (obj.elements && obj.elements.length) {

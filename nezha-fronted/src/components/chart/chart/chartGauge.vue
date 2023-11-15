@@ -122,13 +122,13 @@ export default {
             colorIndex++
           })
         })
-        this.maxValue = this.calcMax()
+        this.maxValue = this.calcMax(this.gaugeData)
         this.$emit('chartIsNoData', this.isNoData)
         resolve()
       })
     },
-    calcMax () {
-      let maxNum = this.gaugeData.reduce((maxValue, obj) => {
+    calcMax (arr) {
+      let maxNum = arr.reduce((maxValue, obj) => {
         return Math.max(maxValue, obj.value)
       }, 0)
 
@@ -199,7 +199,7 @@ export default {
       })
     },
     // 计算字体大小
-    calculateFontSize (text, width, height, maxSize, lineHeight = 1.2) {
+    calculateFontSize (text, width, height, lineHeight = 1.2, maxSize) {
       const el = this.$refs['temp-dom']
       el.innerText = text
       const elWidth = el.offsetWidth
@@ -224,7 +224,7 @@ export default {
         showValue = this.handleDisplay(data.mapping.display, { ...data.label, value: showValue })
       }
       const textWidth = dimension - (gaugeWidth * 4)
-      const valueFontSize = this.calculateFontSize(showValue, textWidth, textWidth / 2, gaugeWidth * 2, 1)
+      const valueFontSize = this.calculateFontSize(showValue, textWidth, textWidth / 2, 1, gaugeWidth * 2)
       return {
         gaugeWidth,
         valueFontSize

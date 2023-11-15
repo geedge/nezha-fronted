@@ -390,9 +390,6 @@ export default {
               varValue: '',
               result: 'show'
             },
-            sparklineMode: 'line',
-            comparison: 'none',
-            colorMode: 'value',
             dataLink: []
           }
           break

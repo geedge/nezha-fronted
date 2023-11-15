@@ -725,7 +725,7 @@ export default {
       handler () {
         setTimeout(() => {
           this.resize()
-        }, 200)
+        }, 300)
       }
     },
     // 监听查看模式变化

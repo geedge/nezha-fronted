@@ -332,8 +332,8 @@ export default {
             } else {
               valueFont = item.showValue
             }
-            titleFontSize = this.calculateFontSize(titleFont, (item.width - padding * 2), (item.height - padding * 2) * 0.4, 30)
-            valueFontSize = this.calculateFontSize(valueFont, (item.width - padding * 2), (item.height - padding * 2) * 0.4)
+            titleFontSize = this.calculateFontSize(titleFont, (item.width - padding * 2), (item.height - padding * 2) * 0.4, 1.2, 30)
+            valueFontSize = this.calculateFontSize(valueFont, (item.width - padding * 2), (item.height - padding * 2) * 0.4, 1.2)
             titleFontSize = Math.min(valueFontSize * 0.7, titleFontSize)
             break
           case 'legend':
@@ -343,7 +343,7 @@ export default {
                 titleFont += 'AA'
               }
             }
-            valueFontSize = this.calculateFontSize(titleFont, (item.width - padding * 2), (item.height - padding * 2) * 0.4)
+            valueFontSize = this.calculateFontSize(titleFont, (item.width - padding * 2), (item.height - padding * 2) * 0.4, 1.2)
             break
           case 'none':
             titleFontSize = ''
@@ -359,7 +359,7 @@ export default {
             } else {
               valueFont = item.showValue
             }
-            valueFontSize = this.calculateFontSize(valueFont, (item.width - padding * 2), (item.height - padding * 2) * 0.4)
+            valueFontSize = this.calculateFontSize(valueFont, (item.width - padding * 2), (item.height - padding * 2) * 0.4, 1.2)
             break
         }
         item.titleFontSize = titleFontSize
@@ -391,7 +391,7 @@ export default {
       }
     },
     // 计算字体大小
-    calculateFontSize (text, width, height, maxSize, lineHeight = 1.2) {
+    calculateFontSize (text, width, height, lineHeight = 1.2, maxSize) {
       const el = this.$refs['temp-dom']
       el.innerText = text
       const elWidth = el.offsetWidth

@@ -93,8 +93,8 @@ export default {
         case 'pie':
         case 'doughnut':
         case 'rose':
-        case 'bar':
           return true
+        case 'bar':
         case 'table':
         case 'stat':
         case 'hexagon':
