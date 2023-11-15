@@ -11,9 +11,10 @@
         :class="{'chart-cursor-default':!(dataLink.length || chartInfo.datasource === 'metrics' || chartInfo.datasource === 'logs')}"
       ></div>
       <div
-        v-if="item.height > 48 && chartInfo.param &&( chartInfo.param.text === 'legend' || chartInfo.param.text === 'all' )"
+        v-if="chartInfo.param &&( chartInfo.param.text === 'legend' || chartInfo.param.text === 'all' )"
         class="chart-gauge-legend"
         :title="item.alias"
+        :style="{fontSize: item.titleFontSize + 'px'}"
       >
         {{item.alias}}
       </div>
@@ -43,6 +44,7 @@
         </div>
       </div>
     </div>
+    <span class="temp-dom" ref="temp-dom" style="fontWeight:600;fontFamily:sans-serif"></span>
   </div>
 </template>
 
@@ -66,7 +68,8 @@ export default {
       boxHeight: 0,
       boxPadding: 5,
       chartInstances: [],
-      timer: null
+      timer: null,
+      maxValue: 0
     }
   },
   methods: {
@@ -106,11 +109,6 @@ export default {
             }
             const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             gauge.value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
-            gauge.max = chartInfo.param.max || 100
-            gauge.min = chartInfo.param.min || 0
-            if (gauge.min === gauge.max) {
-              gauge.min = gauge.max / 2
-            }
             gauge.label = data.metric
             gauge.legend = legend.alias
             gauge.label.legend = gauge.legend
@@ -124,9 +122,29 @@ export default {
             colorIndex++
           })
         })
+        this.maxValue = this.calcMax()
         this.$emit('chartIsNoData', this.isNoData)
         resolve()
       })
+    },
+    calcMax () {
+      let maxNum = this.gaugeData.reduce((maxValue, obj) => {
+        return Math.max(maxValue, obj.value)
+      }, 0)
+
+      if (maxNum <= 1) {
+        return 1
+      }
+
+      let bite = 1
+      while (maxNum >= 10) {
+        maxNum /= 10
+        if (maxNum > 1) {
+          bite += 1
+        }
+      }
+
+      return Math.pow(10, bite)
     },
     calculateGridDimensions (parentWidth, parentHeight, numberOfChildren) {
       const vertical = this.calculateSizeOfChild(parentWidth, parentHeight, numberOfChildren)
@@ -180,11 +198,42 @@ export default {
         resolve()
       })
     },
+    // 计算字体大小
+    calculateFontSize (text, width, height, maxSize, lineHeight = 1.2) {
+      const el = this.$refs['temp-dom']
+      el.innerText = text
+      const elWidth = el.offsetWidth
+      const fontSizeBasedOnWidth = (width / elWidth) * 14
+      const fontSizeBasedOnHeight = height / lineHeight
+
+      const optimalSize = Math.min(fontSizeBasedOnHeight, fontSizeBasedOnWidth)
+      return Math.min(optimalSize, maxSize || optimalSize)
+    },
+    calcGaugeSize (data) {
+      const dimension = Math.min(data.width, data.height) * 0.80 // radius
+
+      const titleFontSize = Math.min((dimension * 0.15) / 1.2, 20)
+      if (this.chartInfo.param.text === 'legend' || this.chartInfo.param.text === 'all') {
+        data.titleFontSize = titleFontSize
+        this.$forceUpdate()
+      }
+
+      const gaugeWidth = Math.min(dimension / 5.5, 30)
+      let showValue = data.showValue
+      if (data.mapping) {
+        showValue = this.handleDisplay(data.mapping.display, { ...data.label, value: showValue })
+      }
+      const textWidth = dimension - (gaugeWidth * 4)
+      const valueFontSize = this.calculateFontSize(showValue, textWidth, textWidth / 2, gaugeWidth * 2, 1)
+      return {
+        gaugeWidth,
+        valueFontSize
+      }
+    },
     gaugeChartInit () {
       this.chartInstances.forEach(item => {
         if (item) {
           item.off('click')
-          item.off('mousedown')
           item.dispose()
         }
       })
@@ -196,18 +245,24 @@ export default {
         const option = lodash.cloneDeep(this.chartOption)
         // option.tooltip = {}
         option.series[0].data.push(item)
-        option.series[0].max = item.max
+        option.series[0].max = this.chartInfo.param.max || this.maxValue
+        option.series[0].min = this.chartInfo.param.min || 0
+
+        option.series[0].radius = '80%'
+        const gaugeSize = this.calcGaugeSize(item)
+        option.series[0].progress.width = gaugeSize.gaugeWidth
+        option.series[0].axisLine.lineStyle.width = gaugeSize.gaugeWidth
         option.series[0].detail = {
-          fontSize: 24,
-          fontWeight: 'bolder',
+          fontSize: gaugeSize.valueFontSize,
+          fontWeight: '600',
           offsetCenter: [0, '20%'],
           formatter: (params) => {
-            let showValue = chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(params, null, -1, 2).trim()
-            if (item.mapping) {
-              showValue = self.handleDisplay(item.mapping.display, { ...item.label, value: showValue })
-            }
             let str = ''
             if (this.chartInfo.param.text === 'all' || this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
+              let showValue = chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(params, null, -1, 2).trim()
+              if (item.mapping) {
+                showValue = self.handleDisplay(item.mapping.display, { ...item.label, value: showValue })
+              }
               str += showValue
             }
             if (this.chartInfo.param.text === 'none' || this.chartInfo.param.text === 'legend') {
@@ -236,8 +291,6 @@ export default {
           option.tooltip.appendToBody = false
           delete option.tooltip.position
         }
-        // option.tooltip.position = this.formatterFunc
-        option.series[0].min = item.max == item.min ? 0 : item.min
         myChart.setOption(option)
         if (this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') {
           myChart.on('click', this.chartClick)
@@ -246,8 +299,15 @@ export default {
       })
     },
     gaugeChartResize () {
-      this.chartInstances.forEach(item => {
+      this.chartInstances.forEach((item, index) => {
         if (item && item.resize) {
+          const option = item.getOption()
+          const gaugeSize = this.calcGaugeSize(this.gaugeData[index])
+          option.series[0].progress.width = gaugeSize.gaugeWidth
+          option.series[0].axisLine.lineStyle.width = gaugeSize.gaugeWidth
+          option.series[0].detail.fontSize = gaugeSize.valueFontSize
+
+          item.setOption(option)
           item.resize()
         }
       })
@@ -328,7 +388,6 @@ export default {
     this.chartInstances.forEach(item => {
       if (item && item.dispose) {
         item.off('click')
-        item.off('mousedown')
         item.dispose()
       }
     })
