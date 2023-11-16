@@ -122,6 +122,7 @@ export default {
             if (map) {
               map.remove()
               map = null
+              setChart(this.mapId, map)
             }
             map = new maplibregl.Map({
               container: mapId,
@@ -340,6 +341,7 @@ export default {
         }
         map && map.remove()
         map = null
+        setChart(this.mapId, null)
         this.initChart()
       }, 100)
     }
@@ -358,6 +360,7 @@ export default {
     map.off('mouseleave', 'pointLayer', this.pointLeave)
     map.remove()
     map = null
+    setChart(this.mapId, null)
   }
 }
 </script>
