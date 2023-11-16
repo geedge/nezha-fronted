@@ -398,7 +398,8 @@ export default {
               thresholds: false,
               legend: true,
               valueMapping: false,
-              visibility: false
+              visibility: false,
+              tooltip: true
             },
             thresholds: [{ id: s8(), value: undefined, color: '#eeeeeeff' }],
             showHeader: this.editChart.param.showHeader,
@@ -704,6 +705,9 @@ export default {
                 min: undefined,
                 max: undefined
               }
+            }
+            if (obj.param.enable.tooltip === undefined) {
+              obj.param.enable.tooltip = true
             }
             if (!obj.param.tooltip || !obj.param.tooltip.mode) {
               obj.param.tooltip = {

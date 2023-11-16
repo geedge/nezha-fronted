@@ -160,6 +160,9 @@ export default {
           // 有分页时根据表格高度计算显示条数
           if (this.showPagination) {
             const trHeight = 48
+            if (!this.$refs.dataTable) {
+              return
+            }
             const tableHeight = this.$refs.dataTable.bodyWrapper.clientHeight
             const pageSize = Math.floor(tableHeight / trHeight) || 1
             this.pageObj.pageSize = pageSize

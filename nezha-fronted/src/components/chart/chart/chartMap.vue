@@ -62,6 +62,7 @@ import axios from 'axios'
 import 'leaflet/dist/leaflet.css'
 import maplibregl from 'maplibre-gl'
 import mapAllStyle from './mapStyle'
+import { getChart, setChart, chartCache } from '@/components/common/js/common'
 const regNum = /^[0-9]+.?[0-9]*/
 export default {
   name: 'chartMap',
@@ -69,7 +70,7 @@ export default {
   data () {
     const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
     return {
-      map: null,
+      mapId: null,
       tooltip: {
         x: 0,
         y: 0,
@@ -116,12 +117,14 @@ export default {
             const mapConfig = JSON.parse(response.data.paramKey.map_center_config)
             mapStyle.center = [Number(mapConfig.longitude), Number(mapConfig.latitude)]
             mapStyle.zoom = Number(mapConfig.zoom)
-            if (this.map) {
-              this.map.remove()
-              this.map = null
+            const mapId = this.mapId = this.isFullscreen ? document.getElementById('map-screen-' + this.chartInfo.id) : document.getElementById('map' + this.chartInfo.id)
+            let map = getChart(mapId) || null
+            if (map) {
+              map.remove()
+              map = null
+              setChart(this.mapId, map)
             }
-            const mapId = this.isFullscreen ? document.getElementById('map-screen-' + this.chartInfo.id) : document.getElementById('map' + this.chartInfo.id)
-            this.map = new maplibregl.Map({
+            map = new maplibregl.Map({
               container: mapId,
               style: mapStyle,
               maxZoom: mapConfig.maxZoom || 7,
@@ -161,7 +164,8 @@ export default {
                 }
               }
             })
-            this.map.on('load', this.mapLoad)
+            map.on('load', this.mapLoad)
+            setChart(mapId, map)
             maplibregl.addProtocol('nzMap', (params, callback) => { // 切片显示接口 防止跨域的问题
               fetch(`${params.url.split('://')[1]}`)
                 .then(t => {
@@ -184,13 +188,21 @@ export default {
       })
     },
     mapLoad () {
+      const map = getChart(this.mapId)
+      if (!map) {
+        return
+      }
       this.loadDataCenterMapData()
-      this.map.addControl(new maplibregl.NavigationControl(), 'bottom-right')
+      map.addControl(new maplibregl.NavigationControl(), 'bottom-right')
       const mapboxglInner = document.getElementsByClassName('mapboxgl-ctrl-attrib-inner')
       mapboxglInner[0].innerHTML = '<span>&copy; MapTiler</span> <span>&copy; OpenStreetMap contributors</span>'
     },
     loadDataCenterMapData () {
       const self = this
+      const map = getChart(this.mapId)
+      if (!map) {
+        return
+      }
       return new Promise(resolve => {
         const requests = [axios.get('dc?pageSize=-1'), axios.get('/stat/overview/map')]
         axios.all(requests).then(result => {
@@ -223,8 +235,8 @@ export default {
             }
           })
           this.renderPoint(dcStats)
-          self.map.on('mouseenter', 'pointLayer', self.pointEnter)
-          self.map.on('mouseleave', 'pointLayer', self.pointLeave)
+          map.on('mouseenter', 'pointLayer', self.pointEnter)
+          map.on('mouseleave', 'pointLayer', self.pointLeave)
           self.pointAnimation(0)
         })
       })
@@ -255,6 +267,10 @@ export default {
     },
     renderPoint (dcStats) {
       const arr = []
+      const map = getChart(this.mapId)
+      if (!map) {
+        return
+      }
       dcStats.forEach(dcStat => {
         arr.push({
           type: 'Feature',
@@ -267,14 +283,14 @@ export default {
           }
         })
       })
-      this.map.addSource('pointData', {
+      map.addSource('pointData', {
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
           features: arr
         }
       })
-      this.map.addLayer({
+      map.addLayer({
         id: 'pointLayer',
         type: 'circle',
         source: 'pointData',
@@ -302,9 +318,10 @@ export default {
       })
     },
     pointAnimation (timeStep) {
+      const map = getChart(this.mapId)
       const opacity = 0.5 + (timeStep % 1000) / 1000 / 2
-      if (this.map) {
-        this.map.setPaintProperty('pointLayer', 'circle-opacity', [
+      if (map) {
+        map.setPaintProperty('pointLayer', 'circle-opacity', [
           'step',
           ['get', 'color'],
           0.5,
@@ -318,8 +335,13 @@ export default {
     },
     resize () {
       setTimeout(() => {
-        this.map && this.map.remove()
-        this.map = null
+        let map = getChart(this.mapId)
+        if (!map) {
+          return
+        }
+        map && map.remove()
+        map = null
+        setChart(this.mapId, null)
         this.initChart()
       }, 100)
     }
@@ -329,11 +351,16 @@ export default {
       clearTimeout(this.timer)
       this.timer = null
     }
-    this.map.off('load', this.mapLoad)
-    this.map.off('mouseenter', 'pointLayer', this.pointEnter)
-    this.map.off('mouseleave', 'pointLayer', this.pointLeave)
-    this.map && this.map.remove()
-    this.map = null
+    let map = getChart(this.mapId)
+    if (!map) {
+      return
+    }
+    map.off('load', this.mapLoad)
+    map.off('mouseenter', 'pointLayer', this.pointEnter)
+    map.off('mouseleave', 'pointLayer', this.pointLeave)
+    map.remove()
+    map = null
+    setChart(this.mapId, null)
   }
 }
 </script>

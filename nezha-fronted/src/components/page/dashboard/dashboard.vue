@@ -156,7 +156,6 @@
 </template>
 
 <script>
-import * as echarts from 'echarts'
 import { chartCache, clearTopology } from '@/components/common/js/common'
 import { data as le5leData, observers as le5leObservers } from 'le5le-store/store/data.js'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
@@ -1217,12 +1216,13 @@ export default {
           chartCache[key].setOption(option)
         }
         this.$store.commit('setCurrentMousemove', 0)
+        console.log(value)
         if (value && value !== 'none') {
           this.$store.commit('setConnect', value)
-          echarts.connect('timeSeriesGroup')
+          // echarts.connect('timeSeriesGroup')
         } else {
           this.$store.commit('setConnect', value)
-          echarts.disconnect('timeSeriesGroup')
+          // echarts.disconnect('timeSeriesGroup')
         }
       }
     },
@@ -1303,7 +1303,7 @@ export default {
     // 页面销毁 清除图表联动
     this.$store.commit('setCurrentMousemove', 0)
     this.$store.commit('setConnect', 'none')
-    echarts.disconnect('timeSeriesGroup')
+    // echarts.disconnect('timeSeriesGroup')
 
     this.$store.commit('setMode', '')
 

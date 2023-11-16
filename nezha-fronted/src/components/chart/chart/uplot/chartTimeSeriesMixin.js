@@ -180,11 +180,11 @@ export default {
           y = '-100%'
         }
         tooltip.style.transform = `translate(${x},${y})`
-        if (!self.$lodash.get(self.chartInfo, 'param.enable.tooltip', false)) {
+        if (!self.$lodash.get(self.chartInfo, 'param.enable.tooltip', true)) {
           return
         }
         let params = []
-        const tooltipModel = self.$lodash.get(self.chartInfo, 'param.tooltip.mode', 'single')
+        const tooltipModel = self.$lodash.get(self.chartInfo, 'param.tooltip.mode', 'all')
         if (self.chartInfo.param && !(tooltipModel == 'single')) {
           params = u.series.map((s, i) => {
             if (i == 0) return ''
@@ -263,7 +263,7 @@ export default {
 
           // tooltip排序
           let sortBy
-          if (self.$lodash.get(self.chartInfo, 'param.enable.tooltip') && self.$lodash.get(self.chartInfo, 'param.tooltip.mode') !== 'single' && self.$lodash.get(self.chartInfo, 'param.tooltip.sort') !== 'none') {
+          if (self.$lodash.get(self.chartInfo, 'param.enable.tooltip', true) && self.$lodash.get(self.chartInfo, 'param.tooltip.mode', 'all') !== 'single' && self.$lodash.get(self.chartInfo, 'param.tooltip.sort', 'none') !== 'none') {
             sortBy = self.$lodash.get(self.chartInfo, 'param.tooltip.sort')
           }
           const previousIndex = arr.findIndex(item => item.seriesName.indexOf('Previous') !== -1)

@@ -389,6 +389,9 @@ export default {
       }
       setTimeout(() => { // 延迟加载 保证legend的高度正常
         const dom = document.getElementById(`chart-canvas-${this.chartId}`)
+        if (!dom) {
+          return
+        }
         const width = dom.offsetWidth
         const height = dom.offsetHeight
         opts.width = width
@@ -602,7 +605,7 @@ export default {
     const chart = getChart(this.chartId)
     if (chart) {
       const over = chart.over
-      over.removeEventListener()
+      over.removeEventListener('mouseenter', this.uplotMouseenter)
       chart.destroy()
     }
   }

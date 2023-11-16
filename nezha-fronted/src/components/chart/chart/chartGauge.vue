@@ -201,6 +201,9 @@ export default {
     // 计算字体大小
     calculateFontSize (text, width, height, lineHeight = 1.2, maxSize) {
       const el = this.$refs['temp-dom']
+      if (!el) {
+        return 12
+      }
       el.innerText = text
       const elWidth = el.offsetWidth
       const fontSizeBasedOnWidth = (width / elWidth) * 14

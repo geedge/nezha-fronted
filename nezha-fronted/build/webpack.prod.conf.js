@@ -82,7 +82,7 @@ if (arg === 'html') {
           compress: {
             warnings: false,
             drop_console: true,
-            pure_funcs: ['console.log']
+            pure_funcs: ['console.log', 'console.error']
           }
         },
         exclude: /manifest.+js/,
