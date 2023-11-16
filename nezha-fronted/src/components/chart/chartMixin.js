@@ -250,7 +250,9 @@ export default {
         const colorRandom = randomcolor()
         this.colorList.push(colorRandom)
       }
-      // this.legends.push({ name, alias, statistics, color: this.colorList[colorIndex] })
+      if (this.chartInfo.type !== 'line' && this.chartInfo.type !== 'area' && this.chartInfo.type !== 'point') {
+        this.legends.push({ name, alias, statistics, color: this.colorList[colorIndex] })
+      }
       return {
         name,
         alias

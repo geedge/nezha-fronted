@@ -236,6 +236,11 @@ export default {
       if ((this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') && this.toolbox.show) {
         this.toolbox.show = false
       }
+    },
+    resize () {
+      setTimeout(() => {
+        getChart(this.chartId) && getChart(this.chartId).resize()
+      }, 100)
     }
   },
   mounted () {

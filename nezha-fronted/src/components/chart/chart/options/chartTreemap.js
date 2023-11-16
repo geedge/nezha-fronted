@@ -51,7 +51,7 @@ const chartTreemapOption = {
           itemStyle: {
             borderColor: 'rgba(0,0,0,0)',
             borderWidth: 0,
-            gapWidth: 5
+            gapWidth: 2
           }
         },
         {
@@ -69,7 +69,9 @@ const chartTreemapOption = {
           }
         }
       ],
-      data: []
+      data: [],
+      width: '99%',
+      height: '99%'
     }
   ]
 }

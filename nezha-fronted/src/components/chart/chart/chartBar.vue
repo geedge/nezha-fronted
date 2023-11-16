@@ -401,7 +401,7 @@ export default {
       } else {
         const height = (this.boxHeight - totalSpacing) / numBars
         const maxTitleHeightRatio = 0.6
-        const titleHeight = height * maxTitleHeightRatio
+        const titleHeight = Math.max(height * maxTitleHeightRatio, 12)
         const titleFontSize = Math.min(titleHeight, 28)
 
         const maxValueWidth = 150
@@ -497,7 +497,7 @@ export default {
       } else {
         const height = (this.boxHeight - totalSpacing) / numBars
         const maxTitleHeightRatio = 0.6
-        const titleHeight = height * maxTitleHeightRatio
+        const titleHeight = Math.max(height * maxTitleHeightRatio, 12)
         const titleFontSize = Math.min(titleHeight, 28)
         const maxValueWidth = 150
         const valueWidth = this.chartInfo.param.text === 'value' || this.chartInfo.param.text === 'all' ? Math.min(this.boxWidth * 0.2, maxValueWidth) : 0
