@@ -31,7 +31,7 @@ function stack (data, omit) {
   bands = bands.reverse()
   return {
     data: [data[0]].concat(data2),
-    bands
+    // bands
   }
 }
 
@@ -40,7 +40,7 @@ export default function getStackedOpts (title, opt, data, interp) {
   const interped = interp ? interp(data) : data
 
   const stacked = stack(interped, i => false)
-  opts.bands = stacked.bands
+  // opts.bands = stacked.bands
 
   opts.cursor = opts.cursor || {}
 
@@ -48,16 +48,6 @@ export default function getStackedOpts (title, opt, data, interp) {
     s.value = (u, v, si, i) => data[si][i]
   })
   // restack on toggle
-  opts.hooks = {
-    setSeries: [
-      (u, i) => {
-        const stacked = stack(data, i => !u.series[i].show)
-        u.delBand(null)
-        stacked.bands.forEach(b => u.addBand(b))
-        u.setData(stacked.data)
-      }
-    ]
-  }
 
   return { opts, data: stacked.data }
 }
