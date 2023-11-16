@@ -605,7 +605,7 @@ export default {
     const chart = getChart(this.chartId)
     if (chart) {
       const over = chart.over
-      over.removeEventListener()
+      over.removeEventListener('mouseenter', this.uplotMouseenter)
       chart.destroy()
     }
   }
