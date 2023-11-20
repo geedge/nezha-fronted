@@ -3959,8 +3959,10 @@ export default {
             })
           })
           seriesItem.data = mergeAndSort(seriesItem.data)
-          series = [seriesItem]
-          legend = [{ name: seriesItem.name, alias: seriesItem.name, isGray: false }]
+          if (seriesItem.data.length) {
+            series = [seriesItem]
+            legend = [{ name: seriesItem.name, alias: seriesItem.name, isGray: false }]
+          }
           this.$nextTick(() => {
             this.$refs.logDetail.$refs.logChart.setLegend(legend)
             this.$refs.logDetail.$refs.logChart.setLogColor(series.length)
