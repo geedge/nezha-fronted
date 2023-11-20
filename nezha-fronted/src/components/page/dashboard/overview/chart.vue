@@ -621,6 +621,14 @@ export default {
       this.colors = Object.assign([], colors)
       this.$set(this.option, 'color', colors)
     },
+    setLogColor: function (num) {
+      const colors = []
+      for (let i = 0; i < num; i++) {
+        colors.push('#bdc4cd')
+      }
+      this.colors = Object.assign([], colors)
+      this.$set(this.option, 'color', colors)
+    },
     startLoading: function () {
       this.$refs.loading.startLoading()
       this.$emit('is-loading', true)
