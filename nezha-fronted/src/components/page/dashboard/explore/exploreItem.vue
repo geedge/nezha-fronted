@@ -259,7 +259,18 @@
                 </div>
               </el-collapse-item>
               <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
-                <log-tab ref="logDetail" :timeRange="filterTime" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData" v-my-loading="chartLoading"></log-tab>
+                <log-tab
+                  ref="logDetail"
+                  :unit="chartUnit"
+                  :timeRange="filterTime"
+                  :log-data="logData"
+                  :explore-log-table="logTabNoData"
+                  :explore-item="true"
+                  :tab-index="tabIndex"
+                  @exportLog="exportLog"
+                  @limitChange="queryLogData"
+                  v-my-loading="chartLoading">
+                </log-tab>
               </el-collapse-item>
             </template>
           </el-collapse>
@@ -3757,7 +3768,92 @@ export default {
         reader.readAsText(error.response.data)
       })
     },
-    queryLogData (limit) { // log的chart和table是一个请求
+    queryLogChart () {
+      this.$refs.logDetail.$refs.logChart.startLoading()
+      const requestArr = []
+      const start = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0]))
+      const end = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))
+      // 当不是 指标查询表达式时，除直接查询 用户输入表达式外，另查询 sum by (level) (count_over_time($_expression[$_step]))
+      this.expressions.forEach((item, index) => {
+        if (item != '' && this.promqlKeys[index].state) {
+          const isMetric = this.validateMetric(item)
+          if (!isMetric) {
+            const step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
+            const supplementaryExpr = `sum by (level) (count_over_time(${item}[${step}]))`
+            requestArr.push(this.$get('/logs/loki/api/v1/query_range?query=' + encodeURIComponent(supplementaryExpr) + '&start=' + start + '&end=' + end))
+          }
+        }
+      })
+      axios.all(requestArr).then(res => {
+        res = res.filter((r, i) => r.code === 200)
+        if (res.length > 0) {
+          let series = []
+          let legend = []
+          const seriesItem = {
+            type: 'line',
+            name: '',
+            symbol: 'emptyCircle', // 去掉点
+            symbolSize: 8,
+            showSymbol: false,
+            smooth: 0.2, // 曲线变平滑
+            data: [],
+            lineStyle: {
+              width: 2,
+              opacity: 0.9
+            },
+            emphasis: {
+              focus: 'none'
+            },
+            blur: {
+              lineStyle: {
+                opacity: 0.3
+              },
+              itemStyle: {
+                opacity: 1
+              }
+            }
+          }
+          function mergeAndSort (arr) {
+            const mergedMap = new Map()
+            // 合并数组，根据时间戳累加值
+            arr.forEach(([timestamp, value]) => {
+              if (mergedMap.has(timestamp)) {
+                mergedMap.set(timestamp, mergedMap.get(timestamp) + Number(value))
+              } else {
+                mergedMap.set(timestamp, Number(value))
+              }
+            })
+            // 将Map转换为二维数组，并根据时间戳排序
+            const mergedArray = Array.from(mergedMap.entries()).sort((a, b) => a[0] - b[0])
+            return mergedArray
+          }
+          const logData = res.map(r => r.data)
+          logData.forEach((response) => {
+            const data = response.result
+            data.forEach((result, i) => {
+              seriesItem.name = 'logs'
+              const values = result.values.map((item) => {
+                return [item[0] * 1000, item[1]]
+              })
+              seriesItem.data.push(...values)
+            })
+          })
+          seriesItem.data = mergeAndSort(seriesItem.data)
+          series = [seriesItem]
+          legend = [{ name: seriesItem.name, alias: seriesItem.name, isGray: false }]
+          this.$nextTick(() => {
+            this.$refs.logDetail.$refs.logChart.setLegend(legend)
+            this.$refs.logDetail.$refs.logChart.setLogColor(series.length)
+            if (!series.length) {
+              series = ''
+            }
+            this.$refs.logDetail.$refs.logChart.setSeries(series)
+            this.$refs.logDetail.$refs.logChart.endLoading()
+          })
+        }
+      })
+    },
+    queryLogData (limit) {
       this.chartLoading = true
       if (!limit) {
         limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
@@ -3836,7 +3932,7 @@ export default {
         let series = []
         const legend = []
         this.expressions.forEach((item, index) => {
-          if (item !== '') {
+          if (item !== '' && this.promqlKeys[index].state) {
             promqlInputIndexs.push(index)
             queryExpression.push(item)
           }
@@ -4165,6 +4261,7 @@ export default {
           this.storeHistory()
         } else {
           this.queryLogData()
+          this.queryLogChart()
         }
       }
       this.updatePath()

@@ -612,9 +612,16 @@ export default {
       const graphData = this.logData.filter(l => l.resultType === 'matrix')
       if (graphData && graphData.length > 0) {
         this.$refs.logChart.startLoading()
+        const promqlInputIndexs = []
         const queryExpression = []
         let series = []
         const legend = []
+        this.dataJson.data.forEach((item, index) => {
+          if (item.expression !== '' && item.state) {
+            promqlInputIndexs.push(index)
+            queryExpression.push(item.expression)
+          }
+        })
         this.logData.forEach((response, index) => {
           if (response.resultType === 'matrix') {
             const data = response.result
