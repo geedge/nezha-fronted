@@ -1,6 +1,7 @@
 <template>
   <div class="log-detail">
-    <div :id="`logChart${tabIndex}`" class="log-chart" v-if="showSwitch"></div>
+    <!-- <div :id="`logChart${tabIndex}`" class="log-chart" v-if="showSwitch"></div> -->
+    <chart ref="logChart" :unit="unit" :timeRange="timeRange"></chart>
     <div class="log-chart chart-no-data" v-if="showSwitch&&noData" style="top: 150px">No data</div>
     <div class="log-operations" v-if="showSwitch">
       <div class="log-operation">
@@ -122,10 +123,12 @@ import chartConfig from '@/components/page/dashboard/overview/chartConfig'
 import { dealLegendAlias } from '@/components/common/js/tools'
 import bus from '@/libs/bus'
 import logContext from '@/components/chart/logContext'
+import chart from '../overview/chart'
 export default {
   name: 'logTab',
   components: {
-    logContext
+    logContext,
+    chart
   },
   props: {
     logData: Array,
@@ -137,7 +140,9 @@ export default {
     loadingBottom: Boolean,
     exploreLogTable: Boolean,
     exploreItem: Boolean,
-    timeRange: {}
+    timeRange: {},
+    logChartData: Array,
+    unit: { type: Number, default: 5 }
   },
   computed: {
     tableTimeFormat () {

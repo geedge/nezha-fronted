@@ -2,7 +2,40 @@ export default {
   data () {
     return {
       metricOptions: [],
-      showTemp: true
+      showTemp: true,
+      metricArr: [
+        { expr: 'rate' },
+        { expr: 'count_over_time' },
+        { expr: 'bytes_rate' },
+        { expr: 'bytes_over_time' },
+        { expr: 'absent_over_time' },
+        { expr: 'duration_seconds' },
+        { expr: 'bytes' },
+        { expr: 'rate_counter' },
+        { expr: 'sum_over_time' },
+        { expr: 'avg_over_time' },
+        { expr: 'max_over_time' },
+        { expr: 'min_over_time' },
+        { expr: 'first_over_time' },
+        { expr: 'last_over_time' },
+        { expr: 'stdvar_over_time' },
+        { expr: 'stddev_over_time' },
+        { expr: 'quantile_over_time' },
+        { expr: 'absent_over_time' },
+        { expr: 'sum' },
+        { expr: 'avg' },
+        { expr: 'min' },
+        { expr: 'max' },
+        { expr: 'stddev' },
+        { expr: 'stdvar' },
+        { expr: 'count' },
+        { expr: 'topk' },
+        { expr: 'bottomk' },
+        { expr: 'sort' },
+        { expr: 'sort_desc' },
+        { expr: 'vector' }
+      ]
+
     }
   },
   methods: {
@@ -68,6 +101,13 @@ export default {
           })
         }
       })
+    },
+    validateMetric (text) {
+      const flag = this.metricArr.some(item => {
+        const regex = new RegExp(`${item.expr}\\(.*\\)`)
+        return regex.test(text)
+      })
+      return flag
     }
   },
   watch: {
