@@ -385,6 +385,8 @@ export default {
       }
       this.renderMinMax(opts)
       if (getChart(this.chartId)) {
+        const over = getChart(this.chartId).over
+        over.removeEventListener('mouseenter', this.uplotMouseenter)
         getChart(this.chartId).destroy()
       }
       setTimeout(() => { // 延迟加载 保证legend的高度正常
