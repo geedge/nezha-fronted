@@ -408,6 +408,7 @@ export default {
     if (!this.fromFatherData && this.type !== 'log') {
       this.queryMetrics()
     }
+    window.addEventListener('resize', this.resize)
   },
   methods: {
     async initCodeMirror () {
@@ -1239,6 +1240,9 @@ export default {
           }
         })
       }
+    },
+    resize () {
+      this.setPosition()
     }
   },
   watch: {
@@ -1299,6 +1303,7 @@ export default {
   },
   beforeDestroy () {
     this.newView = null
+    window.removeEventListener('resize', this.resize)
   }
 }
 </script>

@@ -3899,7 +3899,9 @@ export default {
           const isMetric = this.validateMetric(item)
           if (!isMetric) {
             let step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
-            step = this.promqlKeys[index].step + 's' || step
+            if (this.promqlKeys[index].step) {
+              step = this.promqlKeys[index].step + 's'
+            }
             const supplementaryExpr = `sum by (level) (count_over_time(${item}[${step}]))`
             requestArr.push(this.$get('/logs/loki/api/v1/query_range?query=' + encodeURIComponent(supplementaryExpr) + '&start=' + start + '&end=' + end))
           }
