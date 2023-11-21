@@ -353,12 +353,12 @@
             </template>
             <!--log-->
             <template v-else>
-              <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+              <el-collapse-item v-show="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
                 <div class="chart-room">
                   <chart ref="logChart" :unit="chartUnit" v-my-loading="chartLoading" :timeRange="filterTime"></chart>
                 </div>
               </el-collapse-item>
-              <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
+              <el-collapse-item v-show="showTab.indexOf('2') > -1" name="2" title="Logs">
                 <log-tab
                   ref="logDetail"
                   :unit="chartUnit"
@@ -3898,7 +3898,8 @@ export default {
         if (item != '' && this.promqlKeys[index].state) {
           const isMetric = this.validateMetric(item)
           if (!isMetric) {
-            const step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
+            let step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
+            step = this.promqlKeys[index].step + 's' || step
             const supplementaryExpr = `sum by (level) (count_over_time(${item}[${step}]))`
             requestArr.push(this.$get('/logs/loki/api/v1/query_range?query=' + encodeURIComponent(supplementaryExpr) + '&start=' + start + '&end=' + end))
           }
