@@ -950,8 +950,13 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    white-space: nowrap;
     color: $--color-text-primary;
+    white-space: nowrap;
+    span{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 
@@ -1024,7 +1029,12 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    white-space: nowrap;
     color: $--color-text-primary;
+    white-space: nowrap;
+    span{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }

@@ -405,7 +405,7 @@ export default {
         const titleFontSize = Math.min(titleHeight, 28)
 
         const maxValueWidth = 150
-        const valueWidth = this.chartInfo.param.text === 'value' || this.chartInfo.param.text === 'all' ? Math.min(this.boxWidth * 0.2, maxValueWidth) : 0
+        const valueWidth = this.chartInfo.param.text === 'value' || this.chartInfo.param.text === 'all' ? Math.min(this.boxWidth * 0.15, maxValueWidth) : 0
 
         this.barData.forEach((item) => {
           item.height = height
@@ -428,7 +428,7 @@ export default {
             valueText = item.showValue
           }
           item.valueWidth = valueWidth
-          item.valueFontSize = this.calculateFontSize(valueText, item.valueWidth - 10 * 2, height, 1.2)
+          item.valueFontSize = Math.max(this.calculateFontSize(valueText, item.valueWidth - 10 * 2, height, 1.2), 12)
         })
         const titleWidthArr = this.barData.map(item => item.titleWidth)
         const maxTitleWidth = Math.max(...titleWidthArr)
@@ -500,7 +500,7 @@ export default {
         const titleHeight = Math.max(height * maxTitleHeightRatio, 12)
         const titleFontSize = Math.min(titleHeight, 28)
         const maxValueWidth = 150
-        const valueWidth = this.chartInfo.param.text === 'value' || this.chartInfo.param.text === 'all' ? Math.min(this.boxWidth * 0.2, maxValueWidth) : 0
+        const valueWidth = this.chartInfo.param.text === 'value' || this.chartInfo.param.text === 'all' ? Math.min(this.boxWidth * 0.15, maxValueWidth) : 0
 
         const cellWidth = 10
         const cellHeight = height
@@ -526,7 +526,7 @@ export default {
             valueText = item.showValue
           }
           item.valueWidth = valueWidth
-          item.valueFontSize = this.calculateFontSize(valueText, item.valueWidth - 10 * 2, height, 1.2)
+          item.valueFontSize = Math.max(this.calculateFontSize(valueText, item.valueWidth - 10 * 2, height, 1.2), 12)
         })
         const titleWidthArr = this.barData.map(item => item.titleWidth)
         const maxTitleWidth = Math.max(...titleWidthArr)
