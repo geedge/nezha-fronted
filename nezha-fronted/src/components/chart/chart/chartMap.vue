@@ -110,11 +110,10 @@ export default {
     loadMapConfig () {
       const self = this
       return new Promise(resolve => {
-        const param = { paramKey: 'map_center_config' }
-        this.$get('sysConfig', param).then(response => {
+        this.$get('/sys/config/key/map_center_config').then(response => {
           if (response.code == 200) {
             const mapStyle = mapAllStyle[this.theme]
-            const mapConfig = JSON.parse(response.data.paramKey.map_center_config)
+            const mapConfig = JSON.parse(response.data.paramValue)
             mapStyle.center = [Number(mapConfig.longitude), Number(mapConfig.latitude)]
             mapStyle.zoom = Number(mapConfig.zoom)
             const mapId = this.mapId = this.isFullscreen ? document.getElementById('map-screen-' + this.chartInfo.id) : document.getElementById('map' + this.chartInfo.id)

@@ -199,9 +199,9 @@ export default {
     },
     queryDefaultMapConfig (data) {
       return new Promise(resolve => {
-        this.$get('/sysConfig?paramKey=map_center_config').then(response => {
+        this.$get('/sys/config/key/map_center_config').then(response => {
           if (response.code == 200) {
-            const mapParam = JSON.parse(response.data.paramKey.map_center_config)
+            const mapParam = JSON.parse(response.data.paramValue)
             if (data) {
               const coord = data.split(',')
               this.mapParam = { ...mapParam, longitude: coord[0], latitude: coord[1] }

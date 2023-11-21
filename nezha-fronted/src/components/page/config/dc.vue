@@ -273,9 +273,9 @@ export default {
       this.cabinetBoxShow = true
     },
     add () {
-      this.$get('/sysConfig?paramKey=map_center_config').then(response => {
+      this.$get('/sys/config/key/map_center_config').then(response => {
         if (response.code === 200) {
-          const mapParam = JSON.parse(response.data.paramKey.map_center_config)
+          const mapParam = JSON.parse(response.data.paramValue)
           this.object = this.newObject()
           this.object.longitude = mapParam.longitude
           this.object.latitude = mapParam.latitude
