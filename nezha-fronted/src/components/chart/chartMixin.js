@@ -429,8 +429,7 @@ export default {
     },
     resize () {
       setTimeout(() => {
-        console.log('chartMixin')
-        // getChart(this.chartId) && getChart(this.chartId).resize()
+        getChart(this.chartId) && getChart(this.chartId).resize()
       }, 100)
     },
     // 全局变量替换

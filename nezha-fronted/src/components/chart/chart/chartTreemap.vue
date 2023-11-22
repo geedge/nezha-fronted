@@ -121,7 +121,7 @@ export default {
       setTimeout(() => {
         const dom = document.getElementById(`chart-canvas-${this.chartId}`)
         if (!dom) {
-          return;
+          return
         }
         const myChart = this.isInit ? echarts.init(dom) : getChart(this.chartId)
         if (!myChart) {
@@ -240,11 +240,6 @@ export default {
       if ((this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') && this.toolbox.show) {
         this.toolbox.show = false
       }
-    },
-    resize () {
-      setTimeout(() => {
-        getChart(this.chartId) && getChart(this.chartId).resize()
-      }, 100)
     }
   },
   mounted () {
