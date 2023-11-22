@@ -3733,8 +3733,8 @@ export default {
     exportLog ({ limit, descending }) {
       const params = {
         logql: this.expressions,
-        start: this.momentStrToTimestamp(this.filterTime[0]),
-        end: this.momentStrToTimestamp(this.filterTime[1]),
+        start: this.momentStrToTimestamp(this.filterTime[0]) / 1000,
+        end: this.momentStrToTimestamp(this.filterTime[1]) / 1000,
         direction: descending ? 'backward' : 'forward',
         limit
       }
