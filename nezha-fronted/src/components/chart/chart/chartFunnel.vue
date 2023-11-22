@@ -152,7 +152,7 @@ export default {
       }
       const width = svgDom.getBoundingClientRect().width
       const height = svgDom.getBoundingClientRect().height
-      const margin = 20
+      const margin = 10
       const chartWidth = width - margin * 2
       const chartHeight = height - margin * 2
 
@@ -162,7 +162,7 @@ export default {
 
       const scale = d3.scaleLinear()
         .domain([0, d3.max(funnelData, (d) => d.value)])
-        .range([0, chartWidth * 0.8])
+        .range([0, chartWidth])
 
       // 数据处理
       funnelData = funnelData.map((d, i, array) => {
