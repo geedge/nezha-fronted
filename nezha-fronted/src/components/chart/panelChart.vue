@@ -310,6 +310,8 @@ export default {
               }
               if (this.chartInfo.datasource === 'logs') {
                 query += '&format=1'
+              }
+              if (this.chartInfo.type === 'log') {
                 if (!params || params.descending) {
                   this.chartInfo.descending = true
                   query += '&direction=backward'
@@ -317,6 +319,8 @@ export default {
                   this.chartInfo.descending = false
                   query += '&direction=forward'
                 }
+                const limit = this.$lodash.get(this.chartInfo, 'param.limit', 100)
+                query += `&limit=${limit}`
               }
               query += `&query=${encodeURIComponent(this.variablesReplace(element.expression))}`
               return this.$get(query)
