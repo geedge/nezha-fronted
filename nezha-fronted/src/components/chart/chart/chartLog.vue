@@ -229,12 +229,12 @@ export default {
       return alias
     },
     exportLog () {
-      const limit = this.operations.limit
+      const limit = this.$lodash.get(this.chartInfo, 'param.limit', 100)
       const descending = this.operations.descending
       const params = {
         logql: this.chartInfo.elements.map(item => item.expression),
-        start: this.momentStrToTimestamp(this.filterTime[0]),
-        end: this.momentStrToTimestamp(this.filterTime[1]),
+        start: this.momentStrToTimestamp(this.filterTime[0]) / 1000,
+        end: this.momentStrToTimestamp(this.filterTime[1]) / 1000,
         direction: descending ? 'backward' : 'forward',
         limit
       }

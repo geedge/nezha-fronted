@@ -229,6 +229,8 @@
           class="form-item--half-width"
           prop="param.limit">
           <el-input-number
+            :min="100"
+            :max="2000"
             size="small"
             :placeholder="$t('placeholder.log.limit')"
             v-model.number="chartConfig.param.limit"
