@@ -134,7 +134,6 @@ import axios from 'axios'
 import bus from '@/libs/bus'
 import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
 import chartDataFormat from '@/components/chart/chartDataFormat'
-import chart from '@/components/page/dashboard/overview/chart'
 import { alertMessage as alertMessageConstant, fromRoute } from '@/components/common/js/constants'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
@@ -151,7 +150,6 @@ export default {
     nzBottomDataList,
     alertMessageTable,
     alertSilenceBox,
-    chart,
     panelChart,
     alertMessageInfo
   },

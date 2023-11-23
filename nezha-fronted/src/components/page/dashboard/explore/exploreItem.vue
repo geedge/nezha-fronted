@@ -226,7 +226,17 @@
             <template v-if="showMetrics">
               <el-collapse-item v-if="!allMatrix && showChart" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
                 <div class="chart-room">
-                  <chart ref="exploreChart" :unit="chartUnit" :timeRange="filterTime"></chart>
+                  <uplotChart
+                    :ref="'exploreChart'"
+                    :chart-data="uplotChartData"
+                    :chart-info="uplotChartInfo"
+                    :is-fullscreen="false"
+                    :panelLock="true"
+                    :showAllData="showAllData"
+                    :isFullscreen="false"
+                    :globalVariables="[]"
+                    :from="'explore'"
+                  />
                 </div>
               </el-collapse-item>
               <el-collapse-item class="el-collapse-item__height" name="2" title="Table" v-if="showTable">
@@ -355,7 +365,18 @@
             <template v-else>
               <el-collapse-item v-show="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
                 <div class="chart-room">
-                  <chart ref="logChart" :unit="chartUnit" v-my-loading="chartLoading" :timeRange="filterTime"></chart>
+<!--                  <chart ref="logChart" :unit="chartUnit" v-my-loading="chartLoading" :timeRange="filterTime"></chart>-->
+                  <uplotChart
+                    :ref="'exploreChart'"
+                    :chart-data="uplotChartData"
+                    :chart-info="uplotChartInfoLog"
+                    :is-fullscreen="false"
+                    :panelLock="true"
+                    :showAllData="showAllData"
+                    :isFullscreen="false"
+                    :globalVariables="[]"
+                    :from="'explore'"
+                  />
                 </div>
               </el-collapse-item>
               <el-collapse-item v-show="showTab.indexOf('2') > -1" name="2" title="Logs">
@@ -3639,6 +3660,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
 import bus from '../../../../libs/bus'
 import promqlInput from './promqlInput'
 import chart from '../overview/chart'
+import uplotChart from '@/components/chart/chart.vue'
 import axios from 'axios'
 import { getUUID } from '../../../common/js/common'
 import chartDataFormat from '../../../chart/chartDataFormat'
@@ -3649,6 +3671,8 @@ import exploreItemMixin from '@/components/page/dashboard/explore/exploreItemMix
 import copy from '@/components/common/copy'
 import './promqlparser/wasm_exec.js'
 import draggable from 'vuedraggable'
+import lineData from '@/components/chart/defaultLineData'
+import logData from '@/components/chart/defaultLogData'
 
 export default {
   name: 'exploreItem',
@@ -3658,7 +3682,8 @@ export default {
     chart,
     logTab,
     copy,
-    draggable
+    draggable,
+    uplotChart
   },
   props: {
     tabIndex: Number,
@@ -3744,7 +3769,11 @@ export default {
       logsHistory: [],
       lastHistory: [],
       showChart: false,
-      showTable: false
+      showTable: false,
+      uplotChartInfo: lineData,
+      uplotChartInfoLog: logData,
+      uplotChartData: [],
+      showAllData: false
     }
   },
   async created () {
@@ -3889,6 +3918,7 @@ export default {
       })
     },
     queryLogChart () {
+      const promqlInputIndexs = []
       this.$refs.logDetail.$refs.logChart.startLoading()
       const requestArr = []
       const start = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0]))
@@ -3902,14 +3932,17 @@ export default {
             if (this.promqlKeys[index].step) {
               step = this.promqlKeys[index].step + 's'
             }
+            promqlInputIndexs.push(index)
             const supplementaryExpr = `sum by (level) (count_over_time(${item}[${step}]))`
             requestArr.push(this.$get('/logs/loki/api/v1/query_range?query=' + encodeURIComponent(supplementaryExpr) + '&start=' + start + '&end=' + end))
           }
         }
       })
-      axios.all(requestArr).then(res => {
+      axios.all(requestArr).then((res, index) => {
         res = res.filter((r, i) => r.code === 200)
         if (res.length > 0) {
+          // this.uplotChartData.push(res.data.result)
+          // this.uplotChartInfoLog.elements.push(this.promqlKeys[promqlInputIndexs[index]])
           let series = []
           let legend = []
           const seriesItem = {
@@ -4059,7 +4092,6 @@ export default {
     loadLogGraph () {
       const graphData = this.logData.filter(l => l.resultType === 'matrix')
       if (graphData && graphData.length > 0) {
-        this.$refs.logChart.startLoading()
         const promqlInputIndexs = []
         const queryExpression = []
         let series = []
@@ -4070,6 +4102,8 @@ export default {
             queryExpression.push(item)
           }
         })
+        this.uplotChartData = []
+        this.uplotChartInfoLog.elements = []
         this.logData.forEach((response, index) => {
           if (response.resultType === 'matrix') {
             const promqlIndex = promqlInputIndexs[index]
@@ -4077,73 +4111,25 @@ export default {
             if (!data || data.length < 1) {
               return
             }
-            data.forEach((result, i) => {
-              const seriesItem = {
-                type: 'line',
-                name: '',
-                symbol: 'emptyCircle', // 去掉点
-                symbolSize: 8,
-                showSymbol: false,
-                smooth: 0.2, // 曲线变平滑
-                data: [],
-                lineStyle: {
-                  width: 2,
-                  opacity: 0.9
-                },
-                emphasis: {
-                  focus: 'none'
-                },
-                blur: {
-                  lineStyle: {
-                    opacity: 0.3
-                  },
-                  itemStyle: {
-                    opacity: 1
-                  }
-                }
-              }
-              let legendName = ''
-              seriesItem.data = result.values.map((item) => {
-                return [item[0] * 1000, item[1]]
-              })
-              if (result.metric && Object.keys(result.metric).length > 0) {
-                const metric = Object.assign({}, result.metric)
-                seriesItem.name += metric.__name__ ? metric.__name__ : ''
-                seriesItem.name += '{'
-                delete metric.__name__
-                for (const key in metric) {
-                  seriesItem.name += key + '=' + '"' + metric[key] + '",'
-                }
-                legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
-                legendName += '}'
-              } else {
-                legendName = queryExpression[index]
-              }
-              seriesItem.name = legendName + '-' + index
-              const tagKeysArr = Object.keys(result.metric)
-              // console.log(queryExpression[index], this.expressions[index], tagKeysArr)
-              const legendAlias = this.handleLegendAlias(legendName, this.promqlKeys[promqlInputIndexs[index]].legend, tagKeysArr)
-              series.push(seriesItem)
-              legend.push({ name: seriesItem.name, alias: legendAlias, isGray: false })
-            })
-
+            this.uplotChartData.push(data)
+            this.uplotChartInfoLog.elements.push(this.promqlKeys[promqlInputIndexs[index]])
             this.$refs['promql-' + promqlIndex][0].setError('')
           }
         })
         this.defaultChartVisible = true
         this.$nextTick(() => {
-          this.$refs.logChart.setLegend(legend)
-          this.$refs.logChart.setRandomColors(series.length)
-          if (!series.length) {
-            series = ''
-          }
-          this.$refs.logChart.setSeries(series)
-          this.$refs.logChart.endLoading()
+          // this.$refs.logChart.setLegend(legend)
+          // this.$refs.logChart.setRandomColors(series.length)
+          // if (!series.length) {
+          //   series = ''
+          // }
+          // this.$refs.logChart.setSeries(series)
+          // this.$refs.logChart.endLoading()
         })
       }
     },
     queryChartData () {
-      this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
+      // this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
       if (this.expressions.length > 0) {
         const requestArr = []
         const promqlInputIndexs = []
@@ -4170,6 +4156,8 @@ export default {
           this.showIntroduce = false
           this.saveDisabled = false
         }
+        this.uplotChartData = []
+        this.uplotChartInfo.elements = []
         axios.all(requestArr).then(res => {
           let series = []
           const legend = []
@@ -4182,55 +4170,57 @@ export default {
                   this.$refs['promql-' + promqlIndex][0].setError(response.message)
                   return
                 }
-                data.forEach((result, i) => {
-                  const seriesItem = {
-                    type: 'line',
-                    name: '',
-                    symbol: 'emptyCircle', // 去掉点
-                    symbolSize: 8,
-                    showSymbol: false,
-                    smooth: 0.2, // 曲线变平滑
-                    data: [],
-                    lineStyle: {
-                      width: 2,
-                      opacity: 0.9
-                    },
-                    emphasis: {
-                      focus: 'none'
-                    },
-                    blur: {
-                      lineStyle: {
-                        opacity: 0.3
-                      },
-                      itemStyle: {
-                        opacity: 1
-                      }
-                    }
-                  }
-                  let legendName = ''
-                  seriesItem.data = result.values.map((item) => {
-                    return [item[0] * 1000, item[1]]
-                  })
-                  if (result.metric && Object.keys(result.metric).length > 0) {
-                    const metric = Object.assign({}, result.metric)
-                    seriesItem.name += metric.__name__ ? metric.__name__ : ''
-                    seriesItem.name += '{'
-                    delete metric.__name__
-                    for (const key in metric) {
-                      seriesItem.name += key + '=' + '"' + metric[key] + '",'
-                    }
-                    legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
-                    legendName += '}'
-                  } else {
-                    legendName = queryExpression[index]
-                  }
-                  seriesItem.name = legendName + '-' + index
-                  const tagKeysArr = Object.keys(result.metric)
-                  // console.log(queryExpression[index], this.expressions[index], tagKeysArr)
-                  const legendAlias = this.handleLegendAlias(legendName, this.promqlKeys[promqlInputIndexs[index]].legend, tagKeysArr)
-                  series.push(seriesItem)
-                  legend.push({ name: seriesItem.name, alias: legendAlias, isGray: false })
-                })
+                this.uplotChartData.push(response.data.result)
+                this.uplotChartInfo.elements.push(this.promqlKeys[promqlInputIndexs[index]])
+                // data.forEach((result, i) => {
+                //   const seriesItem = {
+                //     type: 'line',
+                //     name: '',
+                //     symbol: 'emptyCircle', // 去掉点
+                //     symbolSize: 8,
+                //     showSymbol: false,
+                //     smooth: 0.2, // 曲线变平滑
+                //     data: [],
+                //     lineStyle: {
+                //       width: 2,
+                //       opacity: 0.9
+                //     },
+                //     emphasis: {
+                //       focus: 'none'
+                //     },
+                //     blur: {
+                //       lineStyle: {
+                //         opacity: 0.3
+                //       },
+                //       itemStyle: {
+                //         opacity: 1
+                //       }
+                //     }
+                //   }
+                //   let legendName = ''
+                //   seriesItem.data = result.values.map((item) => {
+                //     return [item[0] * 1000, item[1]]
+                //   })
+                //   if (result.metric && Object.keys(result.metric).length > 0) {
+                //     const metric = Object.assign({}, result.metric)
+                //     seriesItem.name += metric.__name__ ? metric.__name__ : ''
+                //     seriesItem.name += '{'
+                //     delete metric.__name__
+                //     for (const key in metric) {
+                //       seriesItem.name += key + '=' + '"' + metric[key] + '",'
+                //     }
+                //     legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
+                //     legendName += '}'
+                //   } else {
+                //     legendName = queryExpression[index]
+                //   }
+                //   seriesItem.name = legendName + '-' + index
+                //   const tagKeysArr = Object.keys(result.metric)
+                //   // console.log(queryExpression[index], this.expressions[index], tagKeysArr)
+                //   const legendAlias = this.handleLegendAlias(legendName, this.promqlKeys[promqlInputIndexs[index]].legend, tagKeysArr)
+                //   series.push(seriesItem)
+                //   legend.push({ name: seriesItem.name, alias: legendAlias, isGray: false })
+                // })
 
                 this.$refs['promql-' + promqlIndex][0].setError('')
               } else {
@@ -4243,16 +4233,17 @@ export default {
                 }
               }
             })
-            this.series = series
-            this.$refs.exploreChart?.setLegend(legend)
-            this.$refs.exploreChart?.setRandomColors(series.length)
-            if (!series.length) {
-              series = ''
-            }
-            this.$refs.exploreChart?.setSeries(series)
+            console.log(this.uplotChartInfo.elements, this.uplotChartData)
+            // this.series = series
+            // this.$refs.exploreChart?.setLegend(legend)
+            // this.$refs.exploreChart?.setRandomColors(series.length)
+            // if (!series.length) {
+            //   series = ''
+            // }
+            // this.$refs.exploreChart?.setSeries(series)
             this.defaultChartVisible = true
           }
-          this.$refs.exploreChart && this.$refs.exploreChart.endLoading()
+          // this.$refs.exploreChart && this.$refs.exploreChart.endLoading()
         })
       }
     },
@@ -4468,7 +4459,7 @@ export default {
         }
         if (error) { return }
         if (this.showMetrics) {
-          this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
+          // this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
           this.showChart = false
           this.showTable = false
           await this.queryTableData()

@@ -55,6 +55,7 @@ export default {
       chartData.forEach((series, expressionIndex) => { // 首先处理时间 对应点没有值（不包括null 则添加undefind）
         series.forEach((item, seriesIndex) => {
           if (chartIndex >= 20 && !this.showAllData) {
+            chartIndex++
             return
           }
           let seriesObjTime = {}
@@ -92,6 +93,7 @@ export default {
           chartIndex++
         })
       })
+      this.chartIndex = chartIndex
       seriesData.unshift(time)
       this.series = seriesAll
       return {

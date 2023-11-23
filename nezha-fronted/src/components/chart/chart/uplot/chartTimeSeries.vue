@@ -6,6 +6,7 @@
     @mouseleave="mouseLeaveChart"
     v-my-loading="chartLoading"
   >
+    <div class="showMore" v-if="chartIndex !== legends.length && from == 'explore'"><i class="nz-icon nz-icon-jinggao"></i>{{$t("dashboard.dashboard.moreTitle")}} <span class="moreChart" @click="showMore">{{$t("dashboard.dashboard.showAll")+ (chartIndex+1)}}</span></div>
     <div class="chart__canvas" style="position:relative" :class="{'chart-cursor-default':cursorDefault}">
       <div :id="`chart-canvas-${chartId}`"></div>
     </div>
@@ -81,6 +82,7 @@ export default {
       hasRightYAxis: false,
       chartLoading: false,
       cursorDefault: false,
+      chartIndex: 0,
       toolbox: {
         x: 0,
         y: 0,
@@ -593,6 +595,10 @@ export default {
         u.axes[2].grid.show = false
       }
       u.redraw(false, true)
+    },
+    showMore () {
+      // this.showAllData = true
+      this.initChart()
     }
   },
   mounted () {
