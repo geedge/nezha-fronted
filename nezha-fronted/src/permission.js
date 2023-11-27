@@ -1,11 +1,11 @@
 import router from './router'
 import store from './store'
 import { get, post, requestsArr } from './http'
-import ElementUI from 'element-ui'
 import Vue from 'vue'
 import i18n, { loadI18n } from './components/common/i18n'
 import VueResource from 'vue-resource'
 import bus from '@/libs/bus'
+import Message from '@/components/common/message/index'
 Vue.use(VueResource)
 
 const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state', '/sys/appearance', '/i18n', '/terminal', '/softwareType'] // 免登陆白名单
@@ -50,6 +50,7 @@ router.beforeEach((to, from, next) => {
                 store.commit('i18nReady', false)
                 post('/sys/user/permissions', { token: localStorage.getItem('nz-token') }).then(res => {
                   if (res.code === 200) {
+                    bus.openNotification(res.time)
                     const menuList = sortByOrderNum(res.data.menus)
                     store.commit('setMenuList', menuList)
                     const arr = []
@@ -138,6 +139,7 @@ router.beforeEach((to, from, next) => {
         Vue.http.get(configUrl).then(config => {
           post(config.body.baseUrl + 'sys/user/permissions', { token: localStorage.getItem('nz-token') }).then(res => {
             if (res.code === 200) {
+              bus.openNotification(res.time)
               store.commit('setMenuList', sortByOrderNum(res.data.menus))
               const arr = []
               returnMenuCode(res.data.menus, arr)
@@ -173,7 +175,7 @@ router.beforeEach((to, from, next) => {
           if (to.path === '/monitor/monitor/project' || to.path === '/monitor/monitor/module' || to.path === '/monitor/monitor/endpoint') {
             return
           }
-          ElementUI.Message.error(i18n.t('tip.noAccess'))
+          Message.error(i18n.t('tip.noAccess'))
         }
       }
     })

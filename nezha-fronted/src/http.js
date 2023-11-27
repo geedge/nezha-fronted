@@ -17,7 +17,7 @@ const removePending = (config) => {
 }
 axios.interceptors.request.use(
   config => {
-    if (!config.cancelToken) {
+    if (!config.cancelToken && !config.headers.notCancel) {
       const source = CancelToken.source() // 申明CancelToken,也可new CancelToken.source()实例一个
       config.cancelToken = source.token // 将实例对象的token赋予该请求
       const id = getUUID() // 添加唯一识别id 在请求完成时清除requestsArr

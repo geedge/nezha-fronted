@@ -921,7 +921,6 @@ export default {
       const path = this.fromRoute.alertMessage
       const routePathParams = JSON.parse(JSON.stringify(param))
       delete routePathParams.statistics
-      console.log(this.searchTime[2])
       if (!this.searchTime[2]) {
         routePathParams.body.startAt = this.searchTime[0] ? this.momentStrToTimestamp(this.searchTime[0]) : ''
         routePathParams.body.endAt = this.searchTime[1] ? this.momentStrToTimestamp(this.searchTime[1]) : ''
@@ -936,7 +935,6 @@ export default {
         ...this.searchLabel,
         body: encodeURIComponent(JSON.stringify(this.searchLabel.body))
       }
-      console.log(this.searchLabel.body)
       this.$get('/alert/message/query', { ...queryParams }).then(response => {
         this.tools.loading = false
         if (response.code == 200) {

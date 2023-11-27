@@ -1,5 +1,9 @@
 import Vue from 'vue'
 import moment from 'moment-timezone'
+import { get } from '../http'
+import store from '../store'
+import router from '../router'
+import audioUrl from '@/assets/audio/new_alert_message.mp3'
 Date.prototype.setStart = function () {
   this.setHours(0)
   this.setMinutes(0)
@@ -334,6 +338,81 @@ export default new Vue({
         return newArr
       }
       return handler(tempArr)
+    },
+    // 开启系统通知
+    openNotification (startAt) {
+      const userId = localStorage.getItem('nz-user-id')
+      const enable = localStorage.getItem(`nz-notification-${userId}`)
+      if (enable != 1 || this.newAlertTimer) {
+        return
+      }
+      const interval = store.state.nzDefaultConfig.interval
+      this.getNewAlert(startAt, interval || 10)
+    },
+    // 查询告警消息
+    getNewAlert (startAt, interval = 10) {
+      const ms = parseInt(interval) * 1000
+      this.newAlertTimer = setTimeout(async () => {
+        const queryParams = {
+          body: encodeURIComponent(JSON.stringify({
+            startAt: [startAt],
+            state: 1
+          })),
+          orderBy: '-id'
+        }
+        const response = await get('/alert/message/query', queryParams, { headers: { notCancel: true } })
+        if (!this.newAlertTimer) {
+          return
+        }
+        if (response.code == 200) {
+          if (!this.audio) {
+            this.audio = new Audio(audioUrl)
+          }
+          if (response.data.list && response.data.list.length) {
+            const h = this.$createElement
+            const self = this
+            response.data.list.forEach((item, index) => {
+              setTimeout(() => {
+                this.$notify({
+                  duration: 5000,
+                  iconClass: 'el-icon-bell',
+                  dangerouslyUseHTMLString: true,
+                  message: h('div', [
+                    h('p',
+                      {
+                        class: 'notification-summary',
+                        on: {
+                          click: self.toAlertPage
+                        }
+                      },
+                      item.summary || '-'
+                    ),
+                    h('p',
+                      {
+                        class: 'notification-description'
+                      },
+                      item.description || '-'
+                    )
+                  ]),
+                  customClass: 'newAlert-notification'
+                })
+              }, 10 * index)
+            })
+            this.audio.play()
+          }
+        }
+        this.getNewAlert(response.time, interval)
+      }, ms)
+    },
+    toAlertPage () {
+      if (router.currentRoute.path !== '/alertMessage') {
+        router.push({ path: '/alertMessage' })
+      }
+      this.$notify.closeAll()
+    },
+    closeNotification () {
+      clearTimeout(this.newAlertTimer)
+      this.newAlertTimer = null
     }
   },
   created () {
