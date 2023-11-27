@@ -137,6 +137,7 @@ export default {
   },
   data () {
     return {
+      viewPermission: 'softwareAsset_view',
       tableTitle: [ // 原始table列
         {
           label: 'ID',
