@@ -51,7 +51,7 @@
       </el-dropdown>
       <el-dropdown trigger="click">
         <div class="personal-avatar"><span>{{name ? name.substr(0, 1) : ''}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
-        <el-dropdown-menu  slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top" style="width: 142px; line-height: 36px;">
+        <el-dropdown-menu slot="dropdown" class="personal-dropdown-menu right-public-box-select-top right-public-box-dropdown-top">
           <div class="personal-dropdown">
             <div class="personal-dropdown__username" :title="name">{{name}}</div>
             <div class="personal-dropdown__name" :title="username">@{{username}}</div>
@@ -59,6 +59,25 @@
           <el-dropdown-item>
             <div id="header-to-profile" @click="showPinDialog"><i class="nz-icon nz-icon-user"></i>{{$t('overall.personalCenter')}}</div>
           </el-dropdown-item>
+          <div class="notification-dropdown">
+            <div class="notification-dropdown-item" style="justify-content: space-between;">
+              <div style="display:flex;align-items:center;">
+                <i class="el-icon-moon"></i>
+                <span>{{$t('overall.darkTheme')}}</span>
+              </div>
+              <el-switch v-model="darkTheme" @change="darkThemeChange" :disabled="themeSave"></el-switch>
+            </div>
+          </div>
+          <div class="notification-dropdown">
+            <div class="notification-dropdown-item" style="font-weight: bold;">
+              <i class="el-icon-bell"></i>
+              <span>{{$t('overall.notification')}}</span>
+            </div>
+            <div class="notification-dropdown-item" style="justify-content: space-between;">
+              <span>{{$t('overall.newAlertMessage')}}</span>
+              <el-switch v-model="newAlertMessage" @change="newAlertMessageChange" :disabled="newAlertMessageSave"></el-switch>
+            </div>
+          </div>
           <el-dropdown-item>
             <div id="header-to-logout" @click="logout"><i class="nz-icon nz-icon-exit"></i>{{$t('overall.signOut')}}</div>
           </el-dropdown-item>
@@ -136,12 +155,74 @@ export default {
           intro: '步骤2：对应Id为#step_2的元素进⾏选择提⽰! 󰀀',
           position: 'right'
         }
-      ]
+      ],
       // fontData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ' ', '@', '$', '-']
+      darkTheme: false,
+      newAlertMessage: false,
+      themeSave: false,
+      newAlertMessageSave: false
     }
+  },
+  created () {
+    const userId = localStorage.getItem('nz-user-id')
+    const theme = localStorage.getItem(`nz-user-${userId}-theme`)
+    const newAlertMessage = localStorage.getItem(`nz-notification-${userId}`)
+    this.darkTheme = theme == 'dark'
+    this.newAlertMessage = newAlertMessage == 1
+    bus.$on('themeChange', this.themeChange)
   },
   methods: {
     ...mapActions(['logoutSuccess']),
+    themeChange (theme) {
+      this.darkTheme = theme == 'dark'
+    },
+    darkThemeChange (val) {
+      this.themeSave = true
+      this.$get('/sys/user/profile').then(response => {
+        if (response.code === 200) {
+          const userInfo = response.user
+          userInfo.roleIds = userInfo.roles[0].id
+          userInfo.theme = val ? 2 : 1
+          this.$put('sys/user/profile', userInfo).then(res => {
+            this.themeSave = false
+            if (res.code === 200) {
+              const currentTheme = val ? 'dark' : 'light'
+              localStorage.setItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`, currentTheme)
+              const body = document.getElementsByTagName('body')[0]
+              body.setAttribute('class', `theme-${currentTheme}`)
+              this.$message.success(this.$t('tip.saveSuccess'))
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        } else {
+          this.$message.error(response.msg)
+        }
+      })
+    },
+    newAlertMessageChange (val) {
+      this.newAlertMessageSave = true
+      const param = {
+        newAlertMessage: {
+          enable: val
+        }
+      }
+      this.$put('/sys/user/preference', { notification: JSON.stringify(param) }).then(res => {
+        this.newAlertMessageSave = false
+        if (res.code === 200) {
+          const userId = localStorage.getItem('nz-user-id')
+          localStorage.setItem(`nz-notification-${userId}`, val ? 1 : 0)
+          if (val) {
+            bus.openNotification(res.time)
+          } else {
+            bus.closeNotification()
+          }
+          this.$message.success(this.$t('tip.saveSuccess'))
+        } else {
+          this.$message.error(res.msg || res.error)
+        }
+      })
+    },
     cli () {
       // this.$store.commit('openConsole')
       if (!this.externalTerminal) {
@@ -322,6 +403,7 @@ export default {
   beforeDestroy () {
     bus.$off('login')
     bus.$off('link-data-change')
+    bus.$off('themeChange', this.themeChange)
   },
   destroyed () {
     window.removeEventListener('popstate', this.cancel, false)
