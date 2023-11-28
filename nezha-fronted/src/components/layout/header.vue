@@ -86,18 +86,32 @@
     </div>
     <guide :show-dialog="showGuide" @dialogClosed="dialogClosed" @close="showGuide = false"></guide>
     <intro></intro>
-<!--    <span v-for="item in fontData" :key="item">-->
-<!--      <span class="temp-dom" :class="`temp-dom&#45;&#45;${fontSzie}`" v-for="fontSzie in [12,13,14,15]" :key="fontSzie">{{item}}</span>-->
-<!--    </span>-->
+    <el-dialog
+      class="operationTutorial-dialog"
+      :title="$t('overall.tip')"
+      :visible.sync="dialogVisible"
+      @close='handleClose'
+      width="772px"
+      :append-to-body="true"
+    >
+      <div class="dialog-header">
+        <i class="nz-icon nz-icon-jinggao"></i>
+        <span>{{$t('overall.newAlertMessageTip')}}</span>
+      </div>
+      <img class="operationTutorial-img" :src="imageUrl">
+      <div class="operationTutorial-msg">{{$t('overall.operationTutorial')}}</div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+// import { theme } from '@/components/common/js/constants'
 import bus from '../../libs/bus'
 import { mapActions } from 'vuex'
 import guide from '@/components/common/popBox/guide'
 import intro from '@/components/common/intro'
-import { theme } from '@/components/common/js/constants'
+import imageUrl from '@/assets/img/system-sound-settings.gif'
+import audioUrl from '@/assets/audio/new_alert_message.mp3'
 export default {
   name: 'Header',
   components: {
@@ -160,7 +174,10 @@ export default {
       darkTheme: false,
       newAlertMessage: false,
       themeSave: false,
-      newAlertMessageSave: false
+      newAlertMessageSave: false,
+      dialogVisible: false,
+      imageUrl,
+      operationTutorial: false
     }
   },
   created () {
@@ -170,9 +187,24 @@ export default {
     this.darkTheme = theme == 'dark'
     this.newAlertMessage = newAlertMessage == 1
     bus.$on('themeChange', this.themeChange)
+    this.testAutoplay()
   },
   methods: {
     ...mapActions(['logoutSuccess']),
+    // 测试是否能自动播放 若不能 点击开关时弹窗
+    testAutoplay () {
+      const audio = new Audio(audioUrl)
+      audio.muted = true
+      audio.play().then(() => {
+        this.operationTutorial = false
+      }).catch((err) => {
+        console.log(err)
+        this.operationTutorial = true
+      })
+    },
+    handleClose () {
+      this.operationTutorial = false
+    },
     themeChange (theme) {
       this.darkTheme = theme == 'dark'
     },
@@ -206,6 +238,9 @@ export default {
         newAlertMessage: {
           enable: val
         }
+      }
+      if (val && this.operationTutorial) {
+        this.dialogVisible = true
       }
       this.$put('/sys/user/preference', { notification: JSON.stringify(param) }).then(res => {
         this.newAlertMessageSave = false

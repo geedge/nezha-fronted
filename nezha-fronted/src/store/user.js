@@ -117,7 +117,6 @@ const user = {
         }
       })
       post('/sys/user/permissions', { token: res.data.token }).then(res => {
-        bus.openNotification(res.time)
         const menuList = sortByOrderNum(res.data.menus)
         // localStorage.setItem('nz-user-permissions', JSON.stringify(res.data.buttons))
         store.commit('setMenuList', menuList)
