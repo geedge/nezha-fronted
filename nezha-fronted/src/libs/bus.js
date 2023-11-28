@@ -340,22 +340,28 @@ export default new Vue({
       return handler(tempArr)
     },
     // 开启系统通知
-    openNotification (startAt) {
+    async openNotification () {
       const userId = localStorage.getItem('nz-user-id')
       const enable = localStorage.getItem(`nz-notification-${userId}`)
       if (enable != 1 || this.newAlertTimer) {
         return
       }
+      const queryParams = {
+        pageSize: 1,
+        orderBy: '-id'
+      }
+      const response = await get('/alert/message/query', queryParams, { headers: { notCancel: true } })
+      const lastId = this.$lodash.get(response, 'data.list[0].id', -1)
       const interval = store.state.nzDefaultConfig.interval
-      this.getNewAlert(startAt, interval || 10)
+      this.getNewAlert(lastId, interval || 10)
     },
     // 查询告警消息
-    getNewAlert (startAt, interval = 10) {
+    getNewAlert (lastId, interval = 10) {
       const ms = parseInt(interval) * 1000
       this.newAlertTimer = setTimeout(async () => {
         const queryParams = {
           body: encodeURIComponent(JSON.stringify({
-            startAt: [startAt],
+            id: ['>' + lastId],
             state: 1
           })),
           orderBy: '-id'
@@ -369,6 +375,9 @@ export default new Vue({
             this.audio = new Audio(audioUrl)
           }
           if (response.data.list && response.data.list.length) {
+            lastId = response.data.list.reduce(function (max, obj) {
+              return obj.id > max ? obj.id : max
+            }, -1)
             const h = this.$createElement
             const self = this
             response.data.list.forEach((item, index) => {
@@ -401,7 +410,7 @@ export default new Vue({
             this.audio.play()
           }
         }
-        this.getNewAlert(response.time, interval)
+        this.getNewAlert(lastId, interval)
       }, ms)
     },
     toAlertPage () {
