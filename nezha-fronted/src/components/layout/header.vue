@@ -91,7 +91,6 @@
       :title="$t('overall.tip')"
       :visible.sync="dialogVisible"
       @close='handleClose'
-      width="772px"
       :append-to-body="true"
     >
       <div class="dialog-header">
