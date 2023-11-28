@@ -31,7 +31,9 @@ export default new Vue({
       // 创建图表信息
       chartAddInfo: {
         metricTarget: []
-      }
+      },
+      newAlertTimer: undefined,
+      lastId: -1
     }
   },
   methods: {
@@ -350,24 +352,33 @@ export default new Vue({
         pageSize: 1,
         orderBy: '-id'
       }
+      this.newAlertTimer = true
       const response = await get('/alert/message/query', queryParams, { headers: { notCancel: true } })
-      const lastId = this.$lodash.get(response, 'data.list[0].id', -1)
+      this.lastId = this.$lodash.get(response, 'data.list[0].id', -1)
       const interval = store.state.nzDefaultConfig.interval
-      this.getNewAlert(lastId, interval || 10)
+      // 防止正在请求时关闭 此时不再执行
+      if (this.newAlertTimer === null) {
+        return
+      }
+      this.getNewAlert(interval || 10)
     },
     // 查询告警消息
-    getNewAlert (lastId, interval = 10) {
+    getNewAlert (interval = 10) {
+      if (this.newAlertTimer && this.newAlertTimer !== true) {
+        return
+      }
       const ms = parseInt(interval) * 1000
-      this.newAlertTimer = setTimeout(async () => {
+      this.newAlertTimer = setInterval(async () => {
         const queryParams = {
           body: encodeURIComponent(JSON.stringify({
-            id: ['>' + lastId],
+            id: ['>' + this.lastId],
             state: 1
           })),
           orderBy: '-id'
         }
         const response = await get('/alert/message/query', queryParams, { headers: { notCancel: true } })
-        if (!this.newAlertTimer) {
+        // 防止正在请求时关闭 此时不再执行
+        if (this.newAlertTimer === null) {
           return
         }
         if (response.code == 200) {
@@ -375,7 +386,7 @@ export default new Vue({
             this.audio = new Audio(audioUrl)
           }
           if (response.data.list && response.data.list.length) {
-            lastId = response.data.list.reduce(function (max, obj) {
+            this.lastId = response.data.list.reduce(function (max, obj) {
               return obj.id > max ? obj.id : max
             }, -1)
             const h = this.$createElement
@@ -410,7 +421,6 @@ export default new Vue({
             this.audio.play()
           }
         }
-        this.getNewAlert(lastId, interval)
       }, ms)
     },
     toAlertPage () {
@@ -420,7 +430,7 @@ export default new Vue({
       this.$notify.closeAll()
     },
     closeNotification () {
-      clearTimeout(this.newAlertTimer)
+      clearInterval(this.newAlertTimer)
       this.newAlertTimer = null
     }
   },
