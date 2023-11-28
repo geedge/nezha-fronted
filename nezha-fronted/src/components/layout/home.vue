@@ -24,7 +24,7 @@ import webSSH from '../cli/webSSH'
 import leftMenu from './leftMenu'
 import container from './container'
 import globalSearch from '@/components/common/globalSearch/globalSearch'
-
+import bus from '@/libs/bus'
 export default {
   name: 'home',
   components: {
@@ -61,6 +61,9 @@ export default {
     refresh () {
       this.$store.commit('setIsRouteLive')
     }
+  },
+  created () {
+    bus.openNotification()
   },
   mounted () {
   },
