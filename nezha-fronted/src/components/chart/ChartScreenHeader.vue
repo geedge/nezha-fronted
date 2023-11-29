@@ -88,7 +88,7 @@ export default {
   methods: {
     dateChange () {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-      this.setSearchTime('searchTime', nowTimeType)
+      this.setSearchTime('searchTime', nowTimeType,'', false)
       this.filter.start_time = bus.timeFormate(this.searchTime[0])
       this.filter.end_time = bus.timeFormate(this.searchTime[1])
       this.filter.value = this.searchTime[2]
@@ -206,10 +206,10 @@ export default {
       this.nowType.end_time = this.searchTime[1]
       if (!this.nowTimeType) {
         this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
-        this.setSearchTime('searchTime', this.nowType)
+        this.setSearchTime('searchTime', this.nowType, '', false)
       } else {
         this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
-        this.setSearchTime('searchTime', this.nowType)
+        this.setSearchTime('searchTime', this.nowType, '', false)
       }
     }
   }

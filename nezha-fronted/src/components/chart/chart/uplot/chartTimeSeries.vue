@@ -95,7 +95,9 @@ export default {
         clickIndex: undefined
       },
       isGrey: [],
-      seriesData: []
+      seriesData: [],
+      leftYaxisMin: undefined,
+      leftYaxisMax: undefined
     }
   },
   computed: {
@@ -403,9 +405,11 @@ export default {
         let chartUplot = ''
         chartUplot = new UPlot(opts, data, document.getElementById(`chart-canvas-${this.chartId}`))
         setChart(this.chartId, chartUplot)
+        this.isInit = false
       }, 100)
     },
     renderMinMax (opts) {
+      const that = this
       let leftMin = this.$lodash.get(this.chartInfo, 'param.min', undefined)
       let leftMax = this.$lodash.get(this.chartInfo, 'param.max', undefined)
       if (leftMin || leftMax) {
@@ -429,6 +433,8 @@ export default {
               leftMax = initMax / 2
             }
           }
+          that.leftYaxisMin = leftMin
+          that.leftYaxisMax = leftMax
           return [leftMin, leftMax]
         }
       }

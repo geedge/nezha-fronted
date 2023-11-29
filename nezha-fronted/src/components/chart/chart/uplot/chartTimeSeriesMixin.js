@@ -511,7 +511,7 @@ export default {
       let tooltip = root.getElementsByClassName('nz-uplot-tooltip')
       if (tooltip.length) {
         tooltip = tooltip[0]
-        tooltip.style.display = 'block'
+        // tooltip.style.display = 'block'
       }
       over.addEventListener('mouseleave', this.uplotMouseleave)
       over.addEventListener('mousemove', this.uplotMousemove)
@@ -652,14 +652,16 @@ export default {
       const x0 = u.valToPos(xd[i0], 'x', true)
       const x1 = u.valToPos(xd[i1], 'x', true)
       thresholdsArr.forEach(item => {
-        const y0 = u.valToPos(item.value, 'left', true)
-        const y1 = u.valToPos(item.value, 'left', true)
-        ctx.beginPath()
-        ctx.strokeStyle = item.color
-        ctx.setLineDash([5, 5])
-        ctx.moveTo(x0, y0)
-        ctx.lineTo(x1, y1)
-        ctx.stroke()
+        if (item.value > this.leftYaxisMin && item.value < this.leftYaxisMax) {
+          const y0 = u.valToPos(item.value, 'left', true)
+          const y1 = u.valToPos(item.value, 'left', true)
+          ctx.beginPath()
+          ctx.strokeStyle = item.color
+          ctx.setLineDash([5, 5])
+          ctx.moveTo(x0, y0)
+          ctx.lineTo(x1, y1)
+          ctx.stroke()
+        }
       })
       ctx.restore()
     }

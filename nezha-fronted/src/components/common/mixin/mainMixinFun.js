@@ -217,10 +217,12 @@ export default {
       }
     },
     /* 时间条件查询--end */
-    setSearchTime (key, nowType, cb) { // 设置searchTime
+    setSearchTime (key, nowType, cb, flag = true) { // 设置searchTime
       if (this.$refs.pickTime) {
         const nowTimeType = nowType || this.$refs.pickTime.$refs.timePicker.nowTimeType
-        this.nowTimeType = nowType || this.$refs.pickTime.$refs.timePicker.nowTimeType
+        if (flag) {
+          this.nowTimeType = nowType || this.$refs.pickTime.$refs.timePicker.nowTimeType
+        }
         const type = nowTimeType.type
         const val = nowTimeType.value
         const oneDTimestamp = 24 * 60 * 60 * 1000
