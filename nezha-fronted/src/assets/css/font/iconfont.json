@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "38284763",
+      "name": "Notification",
+      "font_class": "Notification",
+      "unicode": "e805",
+      "unicode_decimal": 59397
+    },
+    {
+      "icon_id": "38284764",
+      "name": "Dark theme",
+      "font_class": "a-Darktheme",
+      "unicode": "e806",
+      "unicode_decimal": 59398
+    },
+    {
       "icon_id": "124495",
       "name": "警告",
       "font_class": "jinggao1",
