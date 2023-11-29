@@ -390,6 +390,7 @@ export default new Vue({
             response.data.list.forEach((item, index) => {
               setTimeout(() => {
                 this.$notify({
+                  offset: 90,
                   duration: 5000,
                   iconClass: 'nz-icon nz-icon-Notification',
                   dangerouslyUseHTMLString: true,
@@ -397,6 +398,9 @@ export default new Vue({
                     h('p',
                       {
                         class: 'notification-summary',
+                        attrs: {
+                          title: item.summary
+                        },
                         on: {
                           click: self.toAlertPage
                         }
@@ -405,7 +409,10 @@ export default new Vue({
                     ),
                     h('p',
                       {
-                        class: 'notification-description'
+                        class: 'notification-description',
+                        attrs: {
+                          title: item.description
+                        }
                       },
                       item.description || '-'
                     )
@@ -414,15 +421,27 @@ export default new Vue({
                 })
               }, 10 * index)
             })
-            this.audio.play()
+            let playCount = 0
+            const audioLoop = store.state.nzDefaultConfig.audioLoop || 3
+            const maxPlayCount = parseInt(audioLoop) // 设置希望播放的次数
+            if (maxPlayCount) {
+              this.audio.play()
+            }
+            this.audio.addEventListener('ended', () => {
+              playCount++
+              if (playCount < maxPlayCount) {
+                this.audio.play()
+              }
+            })
           }
         }
       }, ms)
     },
     toAlertPage () {
-      if (router.currentRoute.path !== '/alertMessage') {
-        router.push({ path: '/alertMessage' })
+      if (router.currentRoute.path === '/alertMessage') {
+        store.commit('setIsRouteLive')
       }
+      router.push({ path: '/alertMessage' })
       this.$notify.closeAll()
     },
     closeNotification () {

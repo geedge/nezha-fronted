@@ -533,8 +533,11 @@ textarea {
 .newAlert-notification{
   width: auto;
   padding: 15px 55px 15px 18px;
-  border-radius: 4px;
   align-items: center;
+  background: $--background-color-2;
+  border: 1px solid $--border-color-base;
+  border-radius: 4px;
+  z-index: 9999999999 !important;
   .el-notification__icon{
     font-size: 20px;
     color: #EC7F66;
