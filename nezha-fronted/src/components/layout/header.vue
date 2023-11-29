@@ -62,16 +62,16 @@
           <div class="notification-dropdown">
             <div class="notification-dropdown-item" style="justify-content: space-between;">
               <div style="display:flex;align-items:center;">
-                <i class="el-icon-moon"></i>
+                <i class="nz-icon nz-icon-a-Darktheme" style="font-size:15px;"></i>
                 <span>{{$t('overall.darkTheme')}}</span>
               </div>
               <el-switch v-model="darkTheme" @change="darkThemeChange" :disabled="themeSave"></el-switch>
             </div>
           </div>
           <div class="notification-dropdown">
-            <div class="notification-dropdown-item" style="font-weight: bold;">
-              <i class="el-icon-bell"></i>
-              <span>{{$t('overall.notification')}}</span>
+            <div class="notification-dropdown-item">
+              <i class="nz-icon nz-icon-Notification" style="font-size:15px;"></i>
+              <span style="font-weight: bold;">{{$t('overall.notification')}}</span>
             </div>
             <div class="notification-dropdown-item" style="justify-content: space-between;">
               <span>{{$t('overall.newAlertMessage')}}</span>
@@ -195,6 +195,7 @@ export default {
       const audio = new Audio(audioUrl)
       audio.muted = true
       audio.play().then(() => {
+        console.log('autoplay')
         this.operationTutorial = false
       }).catch((err) => {
         console.log(err)

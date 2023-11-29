@@ -356,15 +356,11 @@ export default new Vue({
       const response = await get('/alert/message/query', queryParams, { headers: { notCancel: true } })
       this.lastId = this.$lodash.get(response, 'data.list[0].id', -1)
       const interval = store.state.nzDefaultConfig.interval
-      // 防止正在请求时关闭 此时不再执行
-      if (this.newAlertTimer === null) {
-        return
-      }
       this.getNewAlert(interval || 10)
     },
     // 查询告警消息
     getNewAlert (interval = 10) {
-      if (this.newAlertTimer && this.newAlertTimer !== true) {
+      if (this.newAlertTimer !== true) {
         return
       }
       const ms = parseInt(interval) * 1000
@@ -395,7 +391,7 @@ export default new Vue({
               setTimeout(() => {
                 this.$notify({
                   duration: 5000,
-                  iconClass: 'el-icon-bell',
+                  iconClass: 'nz-icon nz-icon-Notification',
                   dangerouslyUseHTMLString: true,
                   message: h('div', [
                     h('p',
