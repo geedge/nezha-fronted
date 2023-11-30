@@ -1,7 +1,7 @@
 <template>
   <div class="log-detail">
     <!-- <div :id="`logChart${tabIndex}`" class="log-chart" v-if="showSwitch"></div> -->
-    <chart ref="logChart" :unit="unit" :timeRange="timeRange"></chart>
+    <chart ref="logChart" class="log-chart" :unit="unit" :timeRange="timeRange"></chart>
     <div class="log-chart chart-no-data" v-if="showSwitch&&noData" style="top: 150px">No data</div>
     <div class="log-operations" v-if="showSwitch">
       <div class="log-operation">
@@ -123,8 +123,8 @@ export default {
     exploreLogTable: Boolean,
     exploreItem: Boolean,
     timeRange: {},
-    logChartData: Array,
-    unit: { type: Number, default: 5 }
+    unit: { type: Number, default: 5 },
+    supplementaryData: Array
   },
   components: {
     chart
@@ -588,6 +588,77 @@ export default {
     }
   },
   watch: {
+    supplementaryData: {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        this.$nextTick(() => {
+          this.$refs.logChart.startLoading()
+          let series = []
+          let legend = []
+          const seriesItem = {
+            type: 'line',
+            name: '',
+            symbol: 'emptyCircle', // 去掉点
+            symbolSize: 8,
+            showSymbol: false,
+            smooth: 0.2, // 曲线变平滑
+            data: [],
+            lineStyle: {
+              width: 2,
+              opacity: 0.9
+            },
+            emphasis: {
+              focus: 'none'
+            },
+            blur: {
+              lineStyle: {
+                opacity: 0.3
+              },
+              itemStyle: {
+                opacity: 1
+              }
+            }
+          }
+          function mergeAndSort (arr) {
+            const mergedMap = new Map()
+            // 合并数组，根据时间戳累加值
+            arr.forEach(([timestamp, value]) => {
+              if (mergedMap.has(timestamp)) {
+                mergedMap.set(timestamp, mergedMap.get(timestamp) + Number(value))
+              } else {
+                mergedMap.set(timestamp, Number(value))
+              }
+            })
+            // 将Map转换为二维数组，并根据时间戳排序
+            const mergedArray = Array.from(mergedMap.entries()).sort((a, b) => a[0] - b[0])
+            return mergedArray
+          }
+          n.forEach((data) => {
+            console.log(data)
+            data.forEach((result, i) => {
+              seriesItem.name = 'logs'
+              const values = result.values.map((item) => {
+                return [item[0] * 1000, item[1]]
+              })
+              seriesItem.data.push(...values)
+            })
+          })
+          seriesItem.data = mergeAndSort(seriesItem.data)
+          if (seriesItem.data.length) {
+            series = [seriesItem]
+            legend = [{ name: seriesItem.name, alias: seriesItem.name, isGray: false }]
+          }
+          this.$refs.logChart.setLegend(legend)
+          this.$refs.logChart.setLogColor(series.length)
+          if (!series.length) {
+            series = ''
+          }
+          this.$refs.logChart.setSeries(series)
+          this.$refs.logChart.endLoading()
+        })
+      }
+    },
     logData: {
       deep: true,
       immediate: false,

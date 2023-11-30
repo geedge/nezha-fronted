@@ -163,7 +163,18 @@
             </div>
           </el-collapse-item>
           <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
-            <log-tab :unit="chartUnitType" ref="logDetail" :timeRange="filterTime" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="0" v-my-loading="chartLoading"></log-tab>
+            <log-tab
+              :unit="chartUnitType"
+              ref="logDetail"
+              :timeRange="filterTime"
+              :log-data="logData"
+              :explore-log-table="logTabNoData"
+              :explore-item="true"
+              :tab-index="0"
+              v-my-loading="chartLoading"
+              :supplementaryData="supplementaryData"
+              >
+            </log-tab>
           </el-collapse-item>
         </template>
       </el-collapse>
@@ -221,7 +232,8 @@ export default {
       logTabNoData: [],
       storedTableData: [],
       tableMode: 'table',
-      expandResults: false
+      expandResults: false,
+      supplementaryData: []
     }
   },
   mounted () {

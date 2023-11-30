@@ -269,7 +269,9 @@
                   :tab-index="tabIndex"
                   @exportLog="exportLog"
                   @limitChange="queryLogData"
-                  v-my-loading="chartLoading">
+                  v-my-loading="chartLoading"
+                  :supplementaryData="supplementaryData"
+                  >
                 </log-tab>
               </el-collapse-item>
             </template>
@@ -3634,7 +3636,8 @@ export default {
       ],
       tableHover: false,
       showTopBtn: false, // top按钮
-      scrollbarWrap: null
+      scrollbarWrap: null,
+      supplementaryData: []
     }
   },
   async created () {
@@ -3768,8 +3771,7 @@ export default {
         reader.readAsText(error.response.data)
       })
     },
-    queryLogChart () {
-      this.$refs.logDetail.$refs.logChart.startLoading()
+    supplementaryLog () {
       const requestArr = []
       const start = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0]))
       const end = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))
@@ -3784,78 +3786,23 @@ export default {
           }
         }
       })
+      this.supplementaryData = []
       axios.all(requestArr).then(res => {
         res = res.filter((r, i) => r.code === 200)
         if (res.length > 0) {
-          let series = []
-          let legend = []
-          const seriesItem = {
-            type: 'line',
-            name: '',
-            symbol: 'emptyCircle', // 去掉点
-            symbolSize: 8,
-            showSymbol: false,
-            smooth: 0.2, // 曲线变平滑
-            data: [],
-            lineStyle: {
-              width: 2,
-              opacity: 0.9
-            },
-            emphasis: {
-              focus: 'none'
-            },
-            blur: {
-              lineStyle: {
-                opacity: 0.3
-              },
-              itemStyle: {
-                opacity: 1
-              }
-            }
-          }
-          function mergeAndSort (arr) {
-            const mergedMap = new Map()
-            // 合并数组，根据时间戳累加值
-            arr.forEach(([timestamp, value]) => {
-              if (mergedMap.has(timestamp)) {
-                mergedMap.set(timestamp, mergedMap.get(timestamp) + Number(value))
-              } else {
-                mergedMap.set(timestamp, Number(value))
-              }
-            })
-            // 将Map转换为二维数组，并根据时间戳排序
-            const mergedArray = Array.from(mergedMap.entries()).sort((a, b) => a[0] - b[0])
-            return mergedArray
-          }
           const logData = res.map(r => r.data)
           logData.forEach((response) => {
             const data = response.result
-            data.forEach((result, i) => {
-              seriesItem.name = 'logs'
-              const values = result.values.map((item) => {
-                return [item[0] * 1000, item[1]]
-              })
-              seriesItem.data.push(...values)
-            })
-          })
-          seriesItem.data = mergeAndSort(seriesItem.data)
-          if (seriesItem.data.length) {
-            series = [seriesItem]
-            legend = [{ name: seriesItem.name, alias: seriesItem.name, isGray: false }]
-          }
-          this.$nextTick(() => {
-            this.$refs.logDetail.$refs.logChart.setLegend(legend)
-            this.$refs.logDetail.$refs.logChart.setLogColor(series.length)
-            if (!series.length) {
-              series = ''
+            if (!data || data.length < 1) {
+              return
             }
-            this.$refs.logDetail.$refs.logChart.setSeries(series)
-            this.$refs.logDetail.$refs.logChart.endLoading()
+            this.supplementaryData.push(data)
           })
         }
       })
     },
     queryLogData (limit) {
+      this.supplementaryLog()
       this.chartLoading = true
       if (!limit) {
         limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
@@ -4263,7 +4210,6 @@ export default {
           this.storeHistory()
         } else {
           this.queryLogData()
-          this.queryLogChart()
         }
       }
       this.updatePath()
