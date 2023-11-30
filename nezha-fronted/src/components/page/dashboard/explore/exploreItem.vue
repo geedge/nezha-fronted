@@ -3920,13 +3920,7 @@ export default {
         reader.readAsText(error.response.data)
       })
     },
-<<<<<<< HEAD
-    queryLogChart () {
-      const promqlInputIndexs = []
-      this.$refs.logDetail.$refs.logChart.startLoading()
-=======
     supplementaryLog () {
->>>>>>> 5a34b6d505ed3b0339b7f98aedafde68dfaf3da2
       const requestArr = []
       const start = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0]))
       const end = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))
@@ -3939,64 +3933,15 @@ export default {
             if (this.promqlKeys[index].step) {
               step = this.promqlKeys[index].step + 's'
             }
-            promqlInputIndexs.push(index)
             const supplementaryExpr = `sum by (level) (count_over_time(${item}[${step}]))`
             requestArr.push(this.$get('/logs/loki/api/v1/query_range?query=' + encodeURIComponent(supplementaryExpr) + '&start=' + start + '&end=' + end))
           }
         }
       })
-<<<<<<< HEAD
-      axios.all(requestArr).then((res, index) => {
-        res = res.filter((r, i) => r.code === 200)
-        if (res.length > 0) {
-          // this.uplotChartData.push(res.data.result)
-          // this.uplotChartInfoLog.elements.push(this.promqlKeys[promqlInputIndexs[index]])
-          let series = []
-          let legend = []
-          const seriesItem = {
-            type: 'line',
-            name: '',
-            symbol: 'emptyCircle', // 去掉点
-            symbolSize: 8,
-            showSymbol: false,
-            smooth: 0.2, // 曲线变平滑
-            data: [],
-            lineStyle: {
-              width: 2,
-              opacity: 0.9
-            },
-            emphasis: {
-              focus: 'none'
-            },
-            blur: {
-              lineStyle: {
-                opacity: 0.3
-              },
-              itemStyle: {
-                opacity: 1
-              }
-            }
-          }
-          function mergeAndSort (arr) {
-            const mergedMap = new Map()
-            // 合并数组，根据时间戳累加值
-            arr.forEach(([timestamp, value]) => {
-              if (mergedMap.has(timestamp)) {
-                mergedMap.set(timestamp, mergedMap.get(timestamp) + Number(value))
-              } else {
-                mergedMap.set(timestamp, Number(value))
-              }
-            })
-            // 将Map转换为二维数组，并根据时间戳排序
-            const mergedArray = Array.from(mergedMap.entries()).sort((a, b) => a[0] - b[0])
-            return mergedArray
-          }
-=======
       this.supplementaryData = []
       axios.all(requestArr).then(res => {
         res = res.filter((r, i) => r.code === 200)
         if (res.length > 0) {
->>>>>>> 5a34b6d505ed3b0339b7f98aedafde68dfaf3da2
           const logData = res.map(r => r.data)
           logData.forEach((response) => {
             const data = response.result
@@ -4092,7 +4037,7 @@ export default {
       if (graphData && graphData.length > 0) {
         const promqlInputIndexs = []
         const queryExpression = []
-        let series = []
+        const series = []
         const legend = []
         this.expressions.forEach((item, index) => {
           if (item !== '' && this.promqlKeys[index].state) {
@@ -4102,6 +4047,7 @@ export default {
         })
         this.uplotChartData = []
         this.uplotChartInfoLog.elements = []
+        this.uplotChartInfoLog.unit = this.chartUnit
         this.logData.forEach((response, index) => {
           if (response.resultType === 'matrix') {
             const promqlIndex = promqlInputIndexs[index]
@@ -4156,8 +4102,9 @@ export default {
         }
         this.uplotChartData = []
         this.uplotChartInfo.elements = []
+        this.uplotChartInfo.unit = this.chartUnit
         axios.all(requestArr).then(res => {
-          let series = []
+          const series = []
           const legend = []
           if (res.length > 0) {
             res.forEach((response, index) => {
