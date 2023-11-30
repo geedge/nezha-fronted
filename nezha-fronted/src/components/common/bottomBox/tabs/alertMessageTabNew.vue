@@ -600,7 +600,7 @@ export default {
       this.$get(url, queryParams).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
-          this.nowTime = this.utcTimeToTimezoneStr(response.time)
+          this.nowTime = response.time
           this.tableData = response.data.list
           this.deleteBox.ids = ''
           this.pageObj.total = response.data.total
