@@ -954,7 +954,7 @@ export default {
       this.$get('/alert/message/query', { ...queryParams }).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
-          this.nowTime = this.utcTimeToTimezoneStr(response.time)
+          this.nowTime = response.time
           response.data.list.forEach((item) => {
             const labels = JSON.parse(item.labels)
             if (labels) {
