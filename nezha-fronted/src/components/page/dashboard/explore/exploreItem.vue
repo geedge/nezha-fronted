@@ -390,7 +390,9 @@
                   :tab-index="tabIndex"
                   @exportLog="exportLog"
                   @limitChange="queryLogData"
-                  v-my-loading="chartLoading">
+                  v-my-loading="chartLoading"
+                  :supplementaryData="supplementaryData"
+                  >
                 </log-tab>
               </el-collapse-item>
             </template>
@@ -3773,7 +3775,8 @@ export default {
       uplotChartInfo: lineData,
       uplotChartInfoLog: logData,
       uplotChartData: [],
-      showAllData: false
+      showAllData: false,
+      supplementaryData: []
     }
   },
   async created () {
@@ -3917,9 +3920,13 @@ export default {
         reader.readAsText(error.response.data)
       })
     },
+<<<<<<< HEAD
     queryLogChart () {
       const promqlInputIndexs = []
       this.$refs.logDetail.$refs.logChart.startLoading()
+=======
+    supplementaryLog () {
+>>>>>>> 5a34b6d505ed3b0339b7f98aedafde68dfaf3da2
       const requestArr = []
       const start = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0]))
       const end = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))
@@ -3938,6 +3945,7 @@ export default {
           }
         }
       })
+<<<<<<< HEAD
       axios.all(requestArr).then((res, index) => {
         res = res.filter((r, i) => r.code === 200)
         if (res.length > 0) {
@@ -3983,35 +3991,25 @@ export default {
             const mergedArray = Array.from(mergedMap.entries()).sort((a, b) => a[0] - b[0])
             return mergedArray
           }
+=======
+      this.supplementaryData = []
+      axios.all(requestArr).then(res => {
+        res = res.filter((r, i) => r.code === 200)
+        if (res.length > 0) {
+>>>>>>> 5a34b6d505ed3b0339b7f98aedafde68dfaf3da2
           const logData = res.map(r => r.data)
           logData.forEach((response) => {
             const data = response.result
-            data.forEach((result, i) => {
-              seriesItem.name = 'logs'
-              const values = result.values.map((item) => {
-                return [item[0] * 1000, item[1]]
-              })
-              seriesItem.data.push(...values)
-            })
-          })
-          seriesItem.data = mergeAndSort(seriesItem.data)
-          if (seriesItem.data.length) {
-            series = [seriesItem]
-            legend = [{ name: seriesItem.name, alias: seriesItem.name, isGray: false }]
-          }
-          this.$nextTick(() => {
-            this.$refs.logDetail.$refs.logChart.setLegend(legend)
-            this.$refs.logDetail.$refs.logChart.setLogColor(series.length)
-            if (!series.length) {
-              series = ''
+            if (!data || data.length < 1) {
+              return
             }
-            this.$refs.logDetail.$refs.logChart.setSeries(series)
-            this.$refs.logDetail.$refs.logChart.endLoading()
+            this.supplementaryData.push(data)
           })
         }
       })
     },
     queryLogData (limit) {
+      this.supplementaryLog()
       this.chartLoading = true
       if (!limit) {
         limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
@@ -4479,7 +4477,6 @@ export default {
             console.log(res)
           })
           this.queryLogData()
-          this.queryLogChart()
         }
       }
       this.updatePath()
