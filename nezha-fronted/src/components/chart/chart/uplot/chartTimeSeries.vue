@@ -273,7 +273,7 @@ export default {
           },
           {
             scale: 'left',
-            values: (u, vals, space) => vals.map(v => leftUnitCompute.compute(v, null, -1, decimals)),
+            values: (u, vals, space) => vals.map(v => leftUnitCompute.compute(v, null, -1, decimals) + ''),
             incrs: incrs,
             gap: 5,
             grid: {
@@ -320,7 +320,7 @@ export default {
             //   console.log(self)
             //   return 50
             // },
-            values: (u, vals, space) => vals.map(v => rightUnitCompute.compute(v, null, -1, decimals)),
+            values: (u, vals, space) => vals.map(v => rightUnitCompute.compute(v, null, -1, decimals) + ''),
             incrs: rightIncrs,
             ticks: {
               show: false // true
