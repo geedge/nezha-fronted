@@ -56,28 +56,31 @@
             <div class="personal-dropdown__username" :title="name">{{name}}</div>
             <div class="personal-dropdown__name" :title="username">@{{username}}</div>
           </div>
+          <div class="item-divide"></div>
           <el-dropdown-item>
             <div id="header-to-profile" @click="showPinDialog"><i class="nz-icon nz-icon-user"></i>{{$t('overall.personalCenter')}}</div>
           </el-dropdown-item>
           <div class="notification-dropdown">
-            <div class="notification-dropdown-item" style="justify-content: space-between;">
+            <div class="notification-dropdown-item toggle-item" :class="{'nz-btn-disabled': themeSave}" @click="darkThemeChange(!darkTheme)">
               <div style="display:flex;align-items:center;">
                 <i class="nz-icon nz-icon-a-Darktheme" style="font-size:15px;"></i>
                 <span>{{$t('overall.darkTheme')}}</span>
               </div>
-              <el-switch v-model="darkTheme" @change="darkThemeChange" :disabled="themeSave"></el-switch>
+              <el-switch v-model="darkTheme" @change="darkThemeChange" :disabled="themeSave" @click.native.stop></el-switch>
             </div>
           </div>
+          <div class="item-divide"></div>
           <div class="notification-dropdown">
             <div class="notification-dropdown-item">
               <i class="nz-icon nz-icon-Notification" style="font-size:15px;"></i>
               <span style="font-weight: bold;">{{$t('overall.notification')}}</span>
             </div>
-            <div class="notification-dropdown-item" style="justify-content: space-between;">
+            <div class="notification-dropdown-item toggle-item" :class="{'nz-btn-disabled': newAlertMessageSave}" @click="newAlertMessageChange(!newAlertMessage)">
               <span>{{$t('overall.newAlertMessage')}}</span>
-              <el-switch v-model="newAlertMessage" @change="newAlertMessageChange" :disabled="newAlertMessageSave"></el-switch>
+              <el-switch v-model="newAlertMessage" @change="newAlertMessageChange" :disabled="newAlertMessageSave" @click.native.stop></el-switch>
             </div>
           </div>
+          <div class="item-divide"></div>
           <el-dropdown-item>
             <div id="header-to-logout" @click="logout"><i class="nz-icon nz-icon-exit"></i>{{$t('overall.signOut')}}</div>
           </el-dropdown-item>
@@ -189,6 +192,9 @@ export default {
     this.testAutoplay()
   },
   methods: {
+    fn () {
+      console.log(666)
+    },
     ...mapActions(['logoutSuccess']),
     // 测试是否能自动播放 若不能 点击开关时弹窗
     testAutoplay () {
@@ -209,7 +215,11 @@ export default {
       this.darkTheme = theme == 'dark'
     },
     darkThemeChange (val) {
+      if (this.themeSave) {
+        return
+      }
       this.themeSave = true
+      this.darkTheme = val
       this.$get('/sys/user/profile').then(response => {
         if (response.code === 200) {
           const userInfo = response.user
@@ -233,7 +243,11 @@ export default {
       })
     },
     newAlertMessageChange (val) {
+      if (this.newAlertMessageSave) {
+        return
+      }
       this.newAlertMessageSave = true
+      this.newAlertMessage = val
       const param = {
         newAlertMessage: {
           enable: val

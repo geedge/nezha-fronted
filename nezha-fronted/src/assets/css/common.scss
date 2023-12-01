@@ -172,17 +172,21 @@
 }
 
 .personal-dropdown-menu{
-  width: 200px;
+  margin-top: 14px !important;
+  width: 240px;
   padding: 8px 0;
+  box-sizing: border-box;
+  border: none;
   .el-dropdown-menu__item{
     padding: 0 12px;
     line-height: 32px;
+    font-size: 14px;
+    color: $--color-text-regular;
   }
   .personal-dropdown {
-    border-bottom: 1px solid $--border-color-light;
-    padding: 0 12px;
+    padding: 8px 12px;
     .personal-dropdown__username {
-      max-width: 176px;
+      max-width: 216px;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
@@ -190,10 +194,11 @@
       font-family: Roboto-Regular;
       font-size: 14px;
       color: $--color-text-primary;
-      font-weight: 400;
+      font-weight: bold;
+      line-height: 20px;
     }
     .personal-dropdown__name {
-      max-width: 176px;
+      max-width: 216px;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
@@ -202,22 +207,39 @@
       font-size: 14px;
       color: $--color-text-secondary;
       font-weight: 400;
-      padding-bottom: 6px;
+      line-height: 20px;
     }
   }
   .notification-dropdown{
-    border-bottom: 1px solid $--border-color-light;
-    padding: 0 12px;
     .notification-dropdown-item{
+      padding: 0 12px;
+      line-height: 32px;
+      font-size: 14px;
+      color: $--color-text-regular;
       display: flex;
       align-items: center;
       i{
         margin-right: 5px;
       }
-      line-height: 32px;
-      font-size: 14px;
-      color: $--color-text-regular;
     }
+    .toggle-item{
+      cursor: pointer;
+      line-height: 38px;
+      justify-content: space-between;
+      &:hover{
+        background: $--background-color-base;
+        color: $--color-primary;
+      }
+    }
+    .toggle-item.nz-btn-disabled {
+      opacity: .6;
+      cursor: not-allowed !important;
+    }
+  }
+  .item-divide{
+    height: 1px;
+    background: $--border-color-light;
+    margin: 4px 0;
   }
 }
 
