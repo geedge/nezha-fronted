@@ -447,22 +447,24 @@ export default {
       if (!tableTitle || !this.tableId) {
         return
       }
-      const preferenceTableTitle = (tableHeaders && tableHeaders.length) ? tableHeaders : tableTitle
-      if (tableTitle) {
-        // 先根据本地缓存中的prop进行排序
-        tableTitle.sort(function (a, b) {
-          return preferenceTableTitle.findIndex(function (c) {
-            return c.prop === a.prop
-          }) - preferenceTableTitle.findIndex(function (c) {
-            return c.prop === b.prop
-          })
-        })
-        this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
-          item.show = preferenceTableTitle[index].show
-          return item
-        })
-      }
-      if (preferenceTableTitle && (preferenceTableTitle.length > tableTitle.length)) {
+      let preferenceTableTitle = (tableHeaders && tableHeaders.length) ? tableHeaders : tableTitle
+      preferenceTableTitle = preferenceTableTitle.filter(item => tableTitle.find(t => item.prop === t.prop || item.type === 'label'))
+
+      // 先根据本地缓存中的prop进行排序
+      tableTitle.sort((a, b) => {
+        const indexA = preferenceTableTitle.findIndex(item => item.prop === a.prop)
+        const indexB = preferenceTableTitle.findIndex(item => item.prop === b.prop)
+        if (indexA === -1) return 1
+        if (indexB === -1) return -1
+        return indexA - indexB
+      })
+
+      this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
+        item.show = preferenceTableTitle[index] ? preferenceTableTitle[index].show : true
+        return item
+      })
+
+      if (preferenceTableTitle.length > tableTitle.length) { // asset label
         const arr = preferenceTableTitle.splice(tableTitle.length, preferenceTableTitle.length)
         arr.forEach(item => {
           item.minWidth = item.label.length * 16 + 20
@@ -832,10 +834,10 @@ export default {
           },
           jsonKey: 'val'
         },
-        dc: {
+        dcIds: {
           target: this.searchLabel,
           isSearchInput: true,
-          propertyName: 'dc',
+          propertyName: 'dcIds',
           type: 'number',
           defaultJson: {
             name: 'Date center',
@@ -1135,10 +1137,10 @@ export default {
           },
           jsonKey: 'val'
         },
-        dc: {
+        dcIds: {
           target: this.searchLabel,
           isSearchInput: true,
-          propertyName: 'dc',
+          propertyName: 'dcIds',
           type: 'number',
           defaultJson: {
             name: 'Date center',

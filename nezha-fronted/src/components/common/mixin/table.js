@@ -75,17 +75,14 @@ export default {
           break
         }
         case 'sync': {
-          // this.$emit('copy', row)
           this.$emit('sync', row)
           break
         }
         case 'fastSilence': {
-          // this.$emit('copy', row)
           this.$emit('addSilence', row, param)
           break
         }
         case 'topology': {
-          // this.$emit('copy', row)
           this.$emit('topology', row, param)
           break
         }
