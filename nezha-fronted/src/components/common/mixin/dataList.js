@@ -448,6 +448,8 @@ export default {
         return
       }
       let preferenceTableTitle = (tableHeaders && tableHeaders.length) ? tableHeaders : tableTitle
+      preferenceTableTitle = preferenceTableTitle.filter(item => tableTitle.find(t => item.prop === t.prop || item.type === 'label'))
+
       // 先根据本地缓存中的prop进行排序
       tableTitle.sort(function (a, b) {
         return preferenceTableTitle.findIndex(function (c) {
@@ -457,11 +459,10 @@ export default {
         })
       })
       this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
-        item.show = preferenceTableTitle[index].show
+        item.show = preferenceTableTitle[index] ? preferenceTableTitle[index].show : true
         return item
       })
 
-      preferenceTableTitle = preferenceTableTitle.filter(item => tableTitle.find(t => item.prop === t.prop || item.type === 'label'))
       if (preferenceTableTitle.length > tableTitle.length) { // asset label
         const arr = preferenceTableTitle.splice(tableTitle.length, preferenceTableTitle.length)
         arr.forEach(item => {
