@@ -447,22 +447,22 @@ export default {
       if (!tableTitle || !this.tableId) {
         return
       }
-      const preferenceTableTitle = (tableHeaders && tableHeaders.length) ? tableHeaders : tableTitle
-      if (tableTitle) {
-        // 先根据本地缓存中的prop进行排序
-        tableTitle.sort(function (a, b) {
-          return preferenceTableTitle.findIndex(function (c) {
-            return c.prop === a.prop
-          }) - preferenceTableTitle.findIndex(function (c) {
-            return c.prop === b.prop
-          })
+      let preferenceTableTitle = (tableHeaders && tableHeaders.length) ? tableHeaders : tableTitle
+      // 先根据本地缓存中的prop进行排序
+      tableTitle.sort(function (a, b) {
+        return preferenceTableTitle.findIndex(function (c) {
+          return c.prop === a.prop
+        }) - preferenceTableTitle.findIndex(function (c) {
+          return c.prop === b.prop
         })
-        this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
-          item.show = preferenceTableTitle[index].show
-          return item
-        })
-      }
-      if (preferenceTableTitle && (preferenceTableTitle.length > tableTitle.length)) {
+      })
+      this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
+        item.show = preferenceTableTitle[index].show
+        return item
+      })
+
+      preferenceTableTitle = preferenceTableTitle.filter(item => tableTitle.find(t => item.prop === t.prop || item.type === 'label'))
+      if (preferenceTableTitle.length > tableTitle.length) { // asset label
         const arr = preferenceTableTitle.splice(tableTitle.length, preferenceTableTitle.length)
         arr.forEach(item => {
           item.minWidth = item.label.length * 16 + 20
