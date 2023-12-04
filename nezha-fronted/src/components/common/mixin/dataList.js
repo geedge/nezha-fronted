@@ -451,13 +451,14 @@ export default {
       preferenceTableTitle = preferenceTableTitle.filter(item => tableTitle.find(t => item.prop === t.prop || item.type === 'label'))
 
       // 先根据本地缓存中的prop进行排序
-      tableTitle.sort(function (a, b) {
-        return preferenceTableTitle.findIndex(function (c) {
-          return c.prop === a.prop
-        }) - preferenceTableTitle.findIndex(function (c) {
-          return c.prop === b.prop
-        })
+      tableTitle.sort((a, b) => {
+        const indexA = preferenceTableTitle.findIndex(item => item.prop === a.prop)
+        const indexB = preferenceTableTitle.findIndex(item => item.prop === b.prop)
+        if (indexA === -1) return 1
+        if (indexB === -1) return -1
+        return indexA - indexB
       })
+
       this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
         item.show = preferenceTableTitle[index] ? preferenceTableTitle[index].show : true
         return item
