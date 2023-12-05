@@ -15,11 +15,12 @@
           </el-form-item>
           <!--type-->
           <el-form-item :label="$t('softwareType.text')" prop="typeId" class="select-warp">
-<!--            <el-input maxlength="128" show-word-limit v-model="editSoftwareAsset.type" size="small" type="text"></el-input>-->
+            <!-- <el-input maxlength="128" show-word-limit v-model="editSoftwareAsset.type" size="small" type="text"></el-input> -->
             <el-select v-model="editSoftwareAsset.typeId" size="small" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" @change="renderParams">
               <el-option v-for="item in softwareTypeArr" :key="item.id" :value="item.id" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
+          <!-- asset -->
           <el-form-item :label='$t("asset.asset")' label-width="125px" prop="assetId" v-if="!disabled">
             <v-selectpage
               :data="assetList"
@@ -39,12 +40,6 @@
               ref="sp"
               :result-format="resultFormat"
             ></v-selectpage>
-          </el-form-item>
-          <!--project-->
-          <el-form-item :label='$t("project.project.projectName")' class="select-warp" prop="projectId">
-            <el-select id="add-endpoint-project" v-model="editSoftwareAsset.projectId" class="right-box__select" clearable placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
-              <el-option v-for="item in projectList" :id="'project-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
           </el-form-item>
           <!--remark-->
           <el-form-item :label="$t('overall.remark')" prop="remark">
@@ -190,7 +185,6 @@ export default {
         name: '',
         typeId: '',
         assetId: '',
-        projectId: '',
         params: {},
         remark: ''
       },
@@ -209,7 +203,6 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ]
       },
-      projectList: [],
       softwareTypeArr: [],
       assetList: [],
       columns: [
@@ -253,9 +246,6 @@ export default {
         this.isEdit = true
         const editSoftwareAsset = JSON.parse(JSON.stringify(n))
         editSoftwareAsset.paramObj = []
-        if (editSoftwareAsset.projectId === -1) {
-          editSoftwareAsset.projectId = ''
-        }
         editSoftwareAsset.assetId = ''
         // if (editSoftwareAsset.params) {
         //   Object.keys(editSoftwareAsset.params).forEach(key => {
@@ -268,7 +258,6 @@ export default {
     }
   },
   created () {
-    this.getProjectList()
     this.getAsset()
     this.getSoftwareTypeList()
   },
@@ -339,14 +328,6 @@ export default {
         } else {
           this.prevent_opt.save = false
           return false
-        }
-      })
-    },
-    /* 获取project列表 */
-    getProjectList () {
-      this.$get('monitor/project', { pageSize: -1, pageNo: 1 }).then(response => {
-        if (response.code === 200) {
-          this.projectList = response.data.list
         }
       })
     },

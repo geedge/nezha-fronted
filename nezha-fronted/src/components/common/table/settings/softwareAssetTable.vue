@@ -70,7 +70,7 @@
           <span v-else-if="item.prop === 'dateIssued' || item.prop === 'dateExpires'">{{ scope.row[item.prop] ? momentTz(scope.row[item.prop] ) : '-'}}</span>
           <!-- status -->
           <template v-else-if="item.prop === 'status'">
-            <div v-if="scope.row.status === 1">
+            <div v-if="scope.row.status == 1">
               <i class="nz-icon nz-icon-import-success1" style="color:#8dcb4b;"></i>
               <span>{{$t('licenseMange.licensed')}}</span>
             </div>
