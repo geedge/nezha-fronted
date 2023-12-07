@@ -12,12 +12,12 @@
       <!-- begin--表单-->
       <div class="right-box__container">
         <div class="container__form">
-          <el-form label-width="120px"  :model="editAssetMeta" label-position = "top" ref="editAssetMetaForm" :rules="rules">
+          <el-form label-width="120px" :model="editAssetMeta" label-position = "top" ref="editAssetMetaForm" :rules="rules">
             <el-form-item :label='$t("overall.name")' prop="name">
               <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetMeta.name" size="small" id="editAssetMeta-box-input-name"></el-input>
             </el-form-item>
             <el-form-item :label='$t("overall.key")' prop="metaKey">
-              <el-input placeholder="" maxlength="128" show-word-limit v-model="editAssetMeta.metaKey" size="small" id="editAssetMeta-box-input-key"></el-input>
+              <el-input :disabled="!!(editAssetMeta.id)" placeholder="" maxlength="128" show-word-limit v-model="editAssetMeta.metaKey" size="small" id="editAssetMeta-box-input-key"></el-input>
             </el-form-item>
             <el-form-item :label='$t("dashboard.dashboard.chartForm.group")' prop="groupId">
               <el-select v-model="editAssetMeta.groupId" size="small" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" :popper-append-to-body="false">
@@ -336,9 +336,7 @@ export default {
           t.disabled = false
         })
       } else if (value == 1) {
-        if (this.editAssetMeta.type !== 'RADIO' &&
-            this.editAssetMeta.type !== 'CHECKBOX' &&
-            this.editAssetMeta.type !== 'SELECT') {
+        if (this.editAssetMeta.type !== 'RADIO' && this.editAssetMeta.type !== 'CHECKBOX' && this.editAssetMeta.type !== 'SELECT') {
           flag = false
           this.editAssetMeta.type = 'RADIO'
         }
