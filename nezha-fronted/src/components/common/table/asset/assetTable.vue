@@ -143,7 +143,7 @@
           <!-- license -->
           <template v-else-if="item.prop === 'license'">
             <el-popover
-              placement="right-start"
+              placement="left-start"
               trigger="hover"
               :open-delay="300"
               popper-class="licenseStatus nz-tooltip-bac"
@@ -166,13 +166,17 @@
               </div>
               <!-- status -->
               <div slot="reference">
-                <div v-if="scope.row.license&&scope.row.license.status == 1">
+                <div v-if="scope.row.license && scope.row.license.status == 0">
+                  <i class="nz-icon nz-icon-stop" style="color:#bebebe;"></i>
+                  <span>{{$t('licenseMange.notLicensed')}}</span>
+                </div>
+                <div v-else-if="scope.row.license && scope.row.license.status == 1">
                   <i class="nz-icon nz-icon-import-success1" style="color:#8dcb4b;"></i>
                   <span>{{$t('licenseMange.licensed')}}</span>
                 </div>
-                <div v-if="scope.row.license&&scope.row.license.status == 0">
-                  <i class="nz-icon nz-icon-stop" style="color:#bebebe;"></i>
-                  <span>{{$t('licenseMange.notLicensed')}}</span>
+                <div v-else-if="scope.row.license && scope.row.license.status == 2">
+                  <i class="nz-icon nz-icon-stop" style="color:#ec7f66;"></i>
+                  <span>{{$t('overall.error')}}（{{$t('config.terminallog.statusItem.unknownError')}}）</span>
                 </div>
                 <div v-else>-</div>
               </div>
@@ -365,7 +369,7 @@ export default {
         }, {
           label: this.$t('licenseMange.licenseStatus'),
           prop: 'license',
-          minWidth: 150,
+          minWidth: 200,
           show: true
         }
       ]

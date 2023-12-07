@@ -73,13 +73,17 @@
           </span>
           <!-- status -->
           <template v-else-if="item.prop === 'status'">
-            <div v-if="scope.row.status == 1">
+            <div v-if="scope.row.status == 0">
+              <i class="nz-icon nz-icon-stop" style="color:#bebebe;"></i>
+              <span>{{$t('licenseMange.notLicensed')}}</span>
+            </div>
+            <div v-else-if="scope.row.status == 1">
               <i class="nz-icon nz-icon-import-success1" style="color:#8dcb4b;"></i>
               <span>{{$t('licenseMange.licensed')}}</span>
             </div>
-            <div v-else-if="scope.row.status == 0">
-              <i class="nz-icon nz-icon-stop" style="color:#bebebe;"></i>
-              <span>{{$t('licenseMange.notLicensed')}}</span>
+            <div v-else-if="scope.row.status == 2">
+              <i class="nz-icon nz-icon-stop" style="color:#ec7f66;"></i>
+              <span>{{$t('overall.error')}}（{{$t('config.terminallog.statusItem.unknownError')}}）</span>
             </div>
             <div v-else>-</div>
           </template>
@@ -197,7 +201,7 @@ export default {
         }, {
           label: this.$t('licenseMange.licenseStatus'),
           prop: 'status',
-          minWidth: 150,
+          minWidth: 200,
           show: true
         }, {
           label: this.$t('licenseMange.concurrency'),
