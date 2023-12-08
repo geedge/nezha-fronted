@@ -73,6 +73,9 @@ export default {
             if (typeof (itemValue) === 'string') {
               itemValue = Number(itemValue)
             }
+            // if (typeof (itemValue) !== 'undefined' && isNaN(itemValue)) {
+            //   itemValue = null
+            // }
             if (itemValue === null && nullValueMode !== 'null') {
               if (nullValueMode === 'zero') {
                 itemValue = 0
@@ -341,7 +344,10 @@ export default {
               paramsDot = 6
             }
             const val = typeof (item.value[1]) == 'undefined' ? 0 : formatScientificNotation(item.value[1], paramsDot)
-            const showVal = typeof (item.value[1]) == 'undefined' ? '' : chartDataFormat.getUnit(unit).compute(val, null, -1, decimals)
+            let showVal = typeof (item.value[1]) == 'undefined' ? '' : chartDataFormat.getUnit(unit).compute(val, null, -1, decimals)
+            if ((item.value[1] + '') === 'NaN') {
+              showVal = 'NaN'
+            }
             sum += isNaN(self.numberWithEConvent(val)) ? 0 : parseFloat(self.numberWithEConvent(val))
             let previousDom = ''
             if (previousItem) {
