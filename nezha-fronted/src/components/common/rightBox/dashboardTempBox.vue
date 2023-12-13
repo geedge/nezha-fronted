@@ -102,11 +102,23 @@ export default {
               return row.name.substring(0, 12) + '...'
             }
             return row.name
+          },
+          tip: function (row) {
+            return row.name
           }
         },
         {
           title: this.$t('dashboard.dashboard.chartForm.varType'),
           data: function (row) {
+            let str
+            switch (row.varType) {
+              case 0 : str = 'None'; break
+              case 1 : str = 'Asset'; break
+              case 2 : str = 'Endpoint'; break
+            }
+            return str
+          },
+          tip: function (row) {
             let str
             switch (row.varType) {
               case 0 : str = 'None'; break
@@ -123,6 +135,9 @@ export default {
               return row.remark.substring(0, 12) + '...'
             }
             return row.remark
+          },
+          tip: function (row) {
+            return row.remark
           }
         }
       ],
@@ -136,12 +151,18 @@ export default {
               return row.name.substring(0, 12) + '...'
             }
             return row.name
+          },
+          tip: function (row) {
+            return row.name
           }
         },
-        { title: this.$t('asset.manageIp'), data: 'manageIp' },
+        { title: this.$t('asset.manageIp'), data: 'manageIp', tip: 'manageIp' },
         {
           title: this.$t('overall.type'),
           data: (row) => {
+            return row.type ? row.type.name : ''
+          },
+          tip: function (row) {
             return row.type ? row.type.name : ''
           }
         },
@@ -149,11 +170,17 @@ export default {
           title: this.$t('asset.model'),
           data: (row) => {
             return row.model ? row.model.name : ''
+          },
+          tip: (row) => {
+            return row.model ? row.model.name : ''
           }
         },
         {
           title: this.$t('overall.dc'),
           data: (row) => {
+            return row.dc ? row.dc.name : ''
+          },
+          tip: (row) => {
             return row.dc ? row.dc.name : ''
           }
         }
@@ -168,11 +195,17 @@ export default {
               return row.name.substring(0, 12) + '...'
             }
             return row.name
+          },
+          tip: function (row) {
+            return row.name
           }
         },
         {
           title: this.$t('overall.project'),
           data: (row) => {
+            return row.project ? row.project.name : ''
+          },
+          tip: function (row) {
             return row.project ? row.project.name : ''
           }
         },
@@ -180,11 +213,17 @@ export default {
           title: this.$t('asset.asset'),
           data: (row) => {
             return row.asset ? row.asset.name : ''
+          },
+          tip: (row) => {
+            return row.asset ? row.asset.name : ''
           }
         },
         {
           title: this.$t('overall.module'),
           data: (row) => {
+            return row.module ? row.module.name : ''
+          },
+          tip: (row) => {
             return row.module ? row.module.name : ''
           }
         }

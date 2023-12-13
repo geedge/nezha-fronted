@@ -33,7 +33,7 @@ export default {
             key: idx,
             domProps: {
               innerHTML: this.renderColumn(val, col),
-              title: col.deep ? val[col.orjinNME].name : val[col.key]
+              title: this.renderTip(val, col)
             }
           })
         }))
@@ -46,6 +46,13 @@ export default {
       switch (typeof col.data) {
         case 'string': return row[col.data]
         case 'function': return col.data(row)
+      }
+    },
+    renderTip (row, col) {
+      if (!row || !Object.keys(row).length || !col || !col.tip) return ''
+      switch (typeof col.tip) {
+        case 'string': return row[col.tip]
+        case 'function': return col.tip(row)
       }
     }
   }
