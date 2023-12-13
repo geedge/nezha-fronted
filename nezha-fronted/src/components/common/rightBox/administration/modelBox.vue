@@ -25,27 +25,6 @@
               <el-option v-for="(item, index) in typeDataList" :key="index" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
-          <!-- ChartTemplate -->
-          <!-- <el-form-item :label="$t('overall.chartTemp')" prop="ChartTemplate">
-            <v-selectpage
-            :data="chartlList"
-            :tb-columns="ChartSearchShowFields"
-            :params="{
-              varType: 1, dashboardId: 0,
-               returnChildren:0,groupId:0,
-            }"
-            :multiple="true"
-           :language="language"
-            title="ChartSearch"
-            key-field="id"
-            :width="640"
-            v-model="editModel.chartIds"
-            show-field="name"
-            class="form-control"
-            @values="(data) => {editModel.chartIds = data.map(d => d.id).join(',')}"
-            :result-format="resultFormat"
-            ></v-selectpage>
-          </el-form-item> -->
            <!-- DashboardTemplate -->
            <el-form-item :label="$t('model.dashboardtemplate')" prop="dashboardId" ref="dashboardTemplate">
             <v-selectpage
@@ -121,16 +100,10 @@ export default {
       typeDataList: [],
       // chartlList: [], // chart 列表数据
       dashboardList: [], // dashboard 列表数据
-      // ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
-      //   { title: 'ID', data: 'id' },
-      //   { title: this.$t('overall.name'), data: 'name', key: 'name' },
-      //   { title: this.$t('overall.type'), data: 'type', key: 'type' },
-      //   { title: this.$t('overall.remark'), data: 'remark', key: 'remark' }
-      // ],
       DashboardSearchShowFields: [ // DashboardSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
-        { title: this.$t('overall.name'), data: 'name', key: 'name' },
-        { title: this.$t('overall.remark'), data: 'remark', key: 'remark' }
+        { title: this.$t('overall.name'), data: 'name', tip: 'name' },
+        { title: this.$t('overall.remark'), data: 'remark', tip: 'remark' }
       ],
       url: 'asset/model',
       brandUrl: 'asset/brand',

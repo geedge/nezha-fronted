@@ -192,7 +192,9 @@ export default {
             }
             return row.name
           },
-          key: 'name'
+          tip: function (row) {
+            return row.name
+          }
         },
         {
           title: this.$t('project.project.projectName'),
@@ -203,8 +205,9 @@ export default {
               return row.project.name
             }
           },
-          deep: true,
-          orjinNME: 'project'
+          tip: function (row) {
+            return row.project.name
+          }
         },
         {
           title: this.$t('overall.remark'),
@@ -212,9 +215,11 @@ export default {
             if (row.remark && row.remark.length > 15) {
               return row.remark.substring(0, 12) + '...'
             }
-            return row.remark = row.remark ? row.remark : ''
+            return row.remark ? row.remark : ''
           },
-          key: 'remark'
+          tip: function (row) {
+            return row.remark ? row.remark : ''
+          }
         }
       ],
       columns: [
@@ -227,32 +232,37 @@ export default {
             }
             return row.name
           },
-          key: 'name'
+          tip: function (row) {
+            return row.name
+          }
         },
-        { title: this.$t('asset.manageIp'), data: 'manageIp', key: 'manageIp' },
+        { title: this.$t('asset.manageIp'), data: 'manageIp', tip: 'manageIp' },
         {
           title: this.$t('overall.type'),
           data: (row) => {
             return row.type ? row.type.name : ''
           },
-          deep: true,
-          orjinNME: 'type'
+          tip: (row) => {
+            return row.type ? row.type.name : ''
+          }
         },
         {
           title: this.$t('asset.model'),
           data: (row) => {
             return row.model ? row.model.name : ''
           },
-          deep: true,
-          orjinNME: 'model'
+          tip: (row) => {
+            return row.model ? row.model.name : ''
+          }
         },
         {
           title: this.$t('overall.dc'),
           data: (row) => {
             return row.dc ? row.dc.name : ''
           },
-          deep: true,
-          orjinNME: 'dc'
+          tip: (row) => {
+            return row.dc ? row.dc.name : ''
+          }
         }
       ],
       object: {},

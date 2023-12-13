@@ -820,15 +820,21 @@ export default {
               return row.name.substring(0, 12) + '...'
             }
             return row.name
+          },
+          tip: function (row) {
+            return row.name
           }
         },
-        { title: this.$t('overall.type'), data: 'type' },
+        { title: this.$t('overall.type'), data: 'type', tip: 'type' },
         {
           title: this.$t('overall.remark'),
           data: function (row) {
             if (row.remark && row.remark.length > 15) {
               return row.remark.substring(0, 12) + '...'
             }
+            return row.remark
+          },
+          tip: function (row) {
             return row.remark
           }
         }
@@ -958,12 +964,18 @@ export default {
               return row.name.substring(0, 12) + '...'
             }
             return row.name
+          },
+          tip: function (row) {
+            return row.name
           }
         },
-        { title: this.$t('asset.manageIp'), data: 'manageIp' },
+        { title: this.$t('asset.manageIp'), data: 'manageIp', tip: 'manageIp' },
         {
           title: this.$t('overall.type'),
           data: (row) => {
+            return row.type ? row.type.name : ''
+          },
+          tip: (row) => {
             return row.type ? row.type.name : ''
           }
         },
@@ -971,11 +983,17 @@ export default {
           title: this.$t('asset.model'),
           data: (row) => {
             return row.model ? row.model.name : ''
+          },
+          tip: (row) => {
+            return row.model ? row.model.name : ''
           }
         },
         {
           title: this.$t('overall.dc'),
           data: (row) => {
+            return row.dc ? row.dc.name : ''
+          },
+          tip: (row) => {
             return row.dc ? row.dc.name : ''
           }
         }
@@ -989,17 +1007,26 @@ export default {
               return row.name.substring(0, 12) + '...'
             }
             return row.name
+          },
+          tip: function (row) {
+            return row.name
           }
         },
         {
           title: this.$t('softwareType.category'),
           data: (row) => {
             return row.type ? row.type.category : ''
+          },
+          tip: (row) => {
+            return row.type ? row.type.category : ''
           }
         },
         {
           title: this.$t('overall.type'),
           data: (row) => {
+            return row.type ? row.type.name : ''
+          },
+          tip: (row) => {
             return row.type ? row.type.name : ''
           }
         },
@@ -1009,6 +1036,9 @@ export default {
             if (row.remark.length > 15) {
               return row.remark.substring(0, 12) + '...'
             }
+            return row.remark
+          },
+          tip: function (row) {
             return row.remark
           }
         }
@@ -1134,7 +1164,7 @@ export default {
       })
     },
     getSoftwareAsset () {
-      this.$get('/asset/software', { pageSize: -1, projectIds: this.editEndpoint.projectId, assetIds:  this.editEndpoint.assetId }).then(res => {
+      this.$get('/asset/software', { pageSize: -1, projectIds: this.editEndpoint.projectId, assetIds: this.editEndpoint.assetId }).then(res => {
         this.softwareAssetList = res.data.list
       })
     },

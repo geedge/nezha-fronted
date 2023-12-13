@@ -62,22 +62,6 @@
           <el-form-item :label='$t("config.assetType.sshCollectScript")' prop="sshCollectScript">
             <el-input v-model="editAssetType.sshCollectScript" size="small" type="text"></el-input>
           </el-form-item>
-          <!-- ChartTemplate -->
-          <!-- <el-form-item :label="$t('config.type.ChartTemplate')" prop="ChartTemplate">
-            <v-selectpage
-            :data="chartlList"
-            :tb-columns="ChartSearchShowFields"
-            :max-select-limit="3"
-            :multiple="true"
-            title="ChartSearch"
-            placeholder="Please select item"
-            key-field="id"
-            v-model="editAssetType.chartIds"
-            show-field="name"
-            class="form-control"
-            @values="(data) => {editAssetType.chartIds = data.map(d => d.id).join(',')}"
-          ></v-selectpage>
-          </el-form-item> -->
         </el-form>
       </div>
     </div>
