@@ -1,57 +1,62 @@
 <template>
-  <nz-bottom-data-list
-    :showTitle='showTitle'
-    :obj='obj'
-    :targetTab.sync="targetTab"
-    :api="url"
-    style="height: 100%"
-    :custom-table-title.sync="tools.customTableTitle"
-    :layout="['searchInput', 'elementSet']"
-    :search-msg="searchMsg"
-    :tableId="tableId"
-    :tabs="tabs"
-    @search="search"
-    @changeTab="changeTab"
-  >
-    <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
-    <template v-slot>
-      <softwareAssetTable
-        ref="dataTable"
-        :orderByFa="orderBy"
-        v-my-loading="tools.loading"
-        :loading="tools.loading"
-        :api="url"
-        :custom-table-title="tools.customTableTitle"
-        :height="mainTableHeight"
-        :table-data="tableData"
-        @del="del"
-        @edit="edit"
-        @copy="copy"
-        @orderBy="tableDataSort"
-        @reload="getTableData"
-        @selectionChange="selectionChange"
-        @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></softwareAssetTable>
-    </template>
-    <template v-slot:pagination>
-      <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
-    </template>
-  </nz-bottom-data-list>
+  <div>
+    <nz-bottom-data-list
+      :showTitle='showTitle'
+      :obj='obj'
+      :targetTab.sync="targetTab"
+      :api="url"
+      style="height: 100%"
+      :custom-table-title.sync="tools.customTableTitle"
+      :layout="['searchInput', 'elementSet']"
+      :search-msg="searchMsg"
+      :tableId="tableId"
+      :tabs="tabs"
+      @search="search"
+      @changeTab="changeTab"
+    >
+      <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
+      <template v-slot>
+        <softwareAssetTable
+          ref="dataTable"
+          :orderByFa="orderBy"
+          v-my-loading="tools.loading"
+          :loading="tools.loading"
+          :api="url"
+          :custom-table-title="tools.customTableTitle"
+          :height="subTableHeight"
+          :table-data="tableData"
+          @del="del"
+          @edit="edit"
+          @copy="copy"
+          @orderBy="tableDataSort"
+          @reload="getTableData"
+          @selectionChange="selectionChange"
+          @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></softwareAssetTable>
+      </template>
+      <template v-slot:pagination>
+        <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+      </template>
+    </nz-bottom-data-list>
+    <transition name="right-box">
+      <softwareAssetBox v-if="rightBox.show" :obj="object" @close="closeRightBox"></softwareAssetBox>
+    </transition>
+  </div>
 </template>
 
 <script>
 import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
-import { fromRoute } from '@/components/common/js/constants'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 import softwareAssetTable from '@/components/common/table/settings/softwareAssetTable'
-
+import softwareAssetBox from '@/components/common/rightBox/software/softwareAssetBox'
 export default {
   name: 'softwareAssetTab',
   mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList,
-    softwareAssetTable
+    softwareAssetTable,
+    softwareAssetBox
   },
   computed: {
     externalTerminal () {
@@ -89,14 +94,6 @@ export default {
       },
       objectSilence: {},
       silenceBoxShow: false,
-      searchLabel: { dcIds: this.obj.id },
-      brandData: [],
-      modelData: [],
-      stateData: [],
-      typeData: [],
-      dcData: [],
-      snmpCredentialData: [],
-      fieldGroupData: [],
       needAlertDaysData: true,
       trendKey: 'assetId',
       fromBottom: true
@@ -163,19 +160,10 @@ export default {
           this.tableData = response.data.list
           const globalSearchId = this.$store.getters.getGlobalSearchId
           let detailViewRightObj = ''
-          if (this.tableId === 'notebookTable' && this.detailType === 'view') { // 防止详情视图编辑后切换到别的数据
-            const obj = this.tableData.find(item => item.id === this.detailViewRightObj.id)
-            if (obj) {
-              detailViewRightObj = obj
-            } else {
-              detailViewRightObj = this.tableData[0]
-            }
+          if (globalSearchId) {
+            detailViewRightObj = this.tableData.find(item => item.id === globalSearchId)
           } else {
-            if (globalSearchId) {
-              detailViewRightObj = this.tableData.find(item => item.id === globalSearchId)
-            } else {
-              detailViewRightObj = this.tableData[0]
-            }
+            detailViewRightObj = this.tableData[0]
           }
           this.detailViewRightObj = this.$lodash.cloneDeep(detailViewRightObj)
           this.pageObj.total = response.data.total
@@ -193,7 +181,7 @@ export default {
           this.$message.error(response.error || response.msg)
         }
       })
-    },
+    }
   },
   watch: {
     obj: {

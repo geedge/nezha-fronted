@@ -83,11 +83,11 @@
         <!-- notebook Tab -->
         <notebook-tab @getTableData="getTableData" v-if="from === fromRoute.notebook && targetTab === 'notebookTab'" :from="from" :obj="obj"  :tabs="tabs.notebook" @changeTab="changeTab" :targetTab.sync="targetTab"></notebook-tab>
         <!--softwareAsset列表的tab-->
-        <endpointTabNew v-if="from === fromRoute.softwareAsset && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="softwareAssetTbas" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
-        <licenseManagementTab v-if="from === fromRoute.softwareAsset && targetTab === 'licenseManagement'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="softwareAssetTbas" :targetTab="targetTab" @changeTab="changeTab"></licenseManagementTab>
+        <!-- <endpointTabNew v-if="from === fromRoute.softwareAsset && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="softwareAssetTbas" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew> -->
+        <!-- <licenseManagementTab v-if="from === fromRoute.softwareAsset && targetTab === 'licenseManagement'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="softwareAssetTbas" :targetTab="targetTab" @changeTab="changeTab"></licenseManagementTab> -->
 
         <!--softwareType 下滑-->
-        <softwareAsset v-if="(from === fromRoute.softwareType) && targetTab === 'softwareAsset'" :tabs="tabs.softwareType" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></softwareAsset>
+        <softwareAssetTab v-if="(from === fromRoute.softwareType) && targetTab === 'softwareAsset'" :tabs="tabs.softwareType" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></softwareAssetTab>
       </div>
     </div>
   </div>
@@ -126,7 +126,7 @@ import discoveryTab from '@/components/common/bottomBox/tabs/discoveryTab'
 import IpDetails from '@/components/common/bottomBox/tabs/IpDetails'
 import recordRuleEvalLog from '@/components/common/bottomBox/tabs/recordRuleEvalLog'
 import notebookTab from '@/components/common/bottomBox/tabs/notebookTab'
-import softwareAsset from '@/components/common/bottomBox/tabs/softwareAsset'
+import softwareAssetTab from '@/components/common/bottomBox/tabs/softwareAssetTab'
 import licenseManagementTab from '@/components/common/bottomBox/tabs/licenseManagementTab'
 
 export default {
@@ -163,7 +163,7 @@ export default {
     vsysBottomTab,
     rolesTab,
     notebookTab,
-    softwareAsset,
+    softwareAssetTab,
     licenseManagementTab
   },
   props: {

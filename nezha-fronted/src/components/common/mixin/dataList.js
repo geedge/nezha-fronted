@@ -834,10 +834,10 @@ export default {
           },
           jsonKey: 'val'
         },
-        dc: {
+        dcIds: {
           target: this.searchLabel,
           isSearchInput: true,
-          propertyName: 'dc',
+          propertyName: 'dcIds',
           type: 'number',
           defaultJson: {
             name: 'Date center',
@@ -1137,10 +1137,10 @@ export default {
           },
           jsonKey: 'val'
         },
-        dc: {
+        dcIds: {
           target: this.searchLabel,
           isSearchInput: true,
-          propertyName: 'dc',
+          propertyName: 'dcIds',
           type: 'number',
           defaultJson: {
             name: 'Date center',

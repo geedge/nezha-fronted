@@ -44,7 +44,8 @@
           <div class="form__sub-title" >
             <span>{{$t('softwareType.params')}}</span>
           </div>
-          <el-form-item prop="paramObj">
+          <!-- 此处属性只展示不可修改 -->
+          <el-form-item prop="paramObj" v-my-loading="loading">
             <div v-for="(label, i) in editSoftwareType.paramObj" :key="i" class="form__dotted-item form__dotted-item-required">
               <el-form-item :prop="'paramObj.' + i + '.value.0'" :rules="[]">
                 <template v-slot:label>
@@ -56,56 +57,59 @@
                   </div>
                 </template>
                 <template v-if="label.action !== 1">
+                  <!-- TEXT -->
                   <template v-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXT">
-                    <el-input v-model="label.value[0]" size="small"/>
+                    <el-input disabled v-model="label.value[0]" size="small"/>
                   </template>
+                  <!-- PASSWORD -->
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.PASSWORD">
-                    <el-input v-model="label.value[0]" type="password" size="small"/>
+                    <el-input disabled v-model="label.value[0]" type="password" size="small"/>
                   </template>
-                  <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.MULTITEXT">
-                    <div v-for="(value, i) in label.value" :key="i" class="label__multi-text">
-                      <el-input v-model="label.value[i]" size="small"/>
-                      <span @click="addMultiTextRow(label)" style="margin: 0 5px" :title="$t('tip.add')"><i class="nz-icon nz-icon-plus"></i></span>
-                      <span @click="removeMultiTextRow(label, i)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-minus"></i></span>
-                    </div>
-                  </template>
+                  <!-- TEXTAREA -->
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA">
-                    <el-input v-model="label.value[0]" :maxlength="4096" show-word-limit size="small" :rows="2" type="textarea"/>
+                    <el-input disabled v-model="label.value[0]" :maxlength="4096" show-word-limit size="small" :rows="2" type="textarea"/>
                   </template>
+                  <!-- RADIO -->
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.RADIO">
-                    <el-radio-group v-model="label.value[0]">
+                    <el-radio-group disabled v-model="label.value[0]">
                       <el-radio v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name">{{item.name}}</el-radio>
                     </el-radio-group>
                   </template>
+                  <!-- CHECKBOX -->
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.CHECKBOX">
-                    <el-checkbox-group v-model="label.value">
+                    <el-checkbox-group disabled v-model="label.value">
                       <el-checkbox v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name" :value="item.name"></el-checkbox>
                     </el-checkbox-group>
                   </template>
+                  <!-- SELECT -->
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.SELECT">
-                    <el-select v-model="label.value[0]" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small">
+                    <el-select disabled v-model="label.value[0]" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small">
                       <el-option v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name" :value="item.name"></el-option>
                     </el-select>
                   </template>
+                  <!-- INTEGER -->
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.INTEGER">
-                    <el-input v-model="label.value[0]" oninput="value=value.replace(/[^\d]/g,'')" size="small"></el-input>
+                    <el-input disabled v-model="label.value[0]" oninput="value=value.replace(/[^\d]/g,'')" size="small"></el-input>
                   </template>
+                  <!-- DOUBLE -->
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.DOUBLE">
-                    <el-input-number v-model="label.value[0]" :controls="false" size="small" :precision="JSON.parse(label.param).decimals" style="width: 100%;text-align: left" :max="10000000000000000000" :min="-10000000000000000000"></el-input-number>
+                    <el-input-number disabled v-model="label.value[0]" :controls="false" size="small" :precision="JSON.parse(label.param).decimals" style="width: 100%;text-align: left" :max="10000000000000000000" :min="-10000000000000000000"></el-input-number>
                   </template>
+                  <!-- DATETIME -->
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.DATETIME">
                     <template v-if="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.time">
                       <div v-if="JSON.parse(label.param).interval" style="display: flex; justify-content: space-between">
-                        <el-time-select v-model="label.value[0]" size="small"></el-time-select>
-                        <el-time-select v-model="label.value[1]" size="small"></el-time-select>
+                        <el-time-select disabled v-model="label.value[0]" size="small"></el-time-select>
+                        <el-time-select disabled v-model="label.value[1]" size="small"></el-time-select>
                       </div>
                       <template v-else>
-                        <el-time-select v-model="label.value[0]" size="small" style="width: 100%"></el-time-select>
+                        <el-time-select disabled v-model="label.value[0]" size="small" style="width: 100%"></el-time-select>
                       </template>
                     </template>
                     <template v-else>
                       <template v-if="JSON.parse(label.param).interval">
                         <my-date-picker
+                          disabled
                           id="asset-box-input-purchase-date"
                           v-model="label.value"
                           :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'daterange' : 'datetimerange'"
@@ -118,6 +122,7 @@
                       </template>
                       <template v-else>
                         <my-date-picker
+                          disabled
                           id="asset-box-input-parchase-date"
                           v-model="label.value[0]"
                           :type="JSON.parse(label.param).subType"
@@ -130,8 +135,9 @@
                       </template>
                     </template>
                   </template>
+                  <!-- EMAIL -->
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.EMAIL">
-                    <el-input v-model="label.value[0]" size="small"/>
+                    <el-input disabled v-model="label.value[0]" size="small"/>
                   </template>
                 </template>
               </el-form-item>
@@ -171,7 +177,7 @@ import editRigthBox from '../../mixin/editRigthBox'
 import { sysObjectIdInput } from '@/components/common/js/validate'
 import iconList from '@/components/common/js/iconList'
 import { asset as assetConstants } from '@/components/common/js/constants'
-
+import axios from 'axios'
 export default {
   name: 'softwareTypeBox',
   components: {
@@ -252,7 +258,8 @@ export default {
             })
           }
         }
-      }
+      },
+      loading: false
     }
   },
   watch: {
@@ -263,13 +270,8 @@ export default {
         this.isEdit = true
         const editSoftwareType = JSON.parse(JSON.stringify(n))
         this.imageUrl = editSoftwareType.icon
-        editSoftwareType.paramObj = []
-        if (editSoftwareType.params) {
-          Object.keys(editSoftwareType.params).forEach(key => {
-            editSoftwareType.paramObj.push(editSoftwareType.params[key])
-          })
-        }
         this.editSoftwareType = editSoftwareType
+        this.renderParams()
       }
     }
   },
@@ -279,6 +281,24 @@ export default {
     this.getFieldGroupData()
   },
   methods: {
+    // 根据key 请求Asset attributes
+    async renderParams () {
+      this.loading = true
+      const connectorAttributeKeys = this.$lodash.get(this.editSoftwareType, 'params.connectorAttributeKeys', [])
+      const requests = connectorAttributeKeys.map(key => {
+        return this.$get('asset/field/meta', { key: key })
+      })
+      const paramObj = []
+      const res = await axios.all(requests)
+      res.forEach(response => {
+        const data = this.$lodash.get(response, 'data.list.0')
+        if (data) {
+          paramObj.push({ ...data, value: this.blankLabelValue(data), action: 0 })
+        }
+      })
+      this.$set(this.editSoftwareType, 'paramObj', paramObj)
+      this.loading = false
+    },
     clickOutside () {
       this.esc(false)
     },
@@ -313,9 +333,11 @@ export default {
             ...this.editSoftwareType
           }
           params.icon = this.imageUrl
-          params.params = {}
+          params.params = {
+            connectorAttributeKeys: []
+          }
           params.paramObj.forEach(item => {
-            params.params[item.metaKey] = item
+            params.params.connectorAttributeKeys.push(item.metaKey)
           })
           if (this.editSoftwareType.id) {
             this.$put(this.url, params).then(res => {

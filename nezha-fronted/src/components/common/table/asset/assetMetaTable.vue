@@ -66,7 +66,7 @@
         </div>
         <div v-else-if=" item.prop === 'type' ">
           <div v-if="scope.row[item.prop].toUpperCase() == 'TEXT'"><i class="nz-icon nz-icon-text"></i>&nbsp;&nbsp;{{typeData[0].name}}</div>
-          <div v-else-if="scope.row[item.prop].toUpperCase() == 'MULTITEXT'"><i class="nz-icon nz-icon-multitext"></i>&nbsp;&nbsp;{{typeData[1].name}}</div>
+          <!-- <div v-else-if="scope.row[item.prop].toUpperCase() == 'MULTITEXT'"><i class="nz-icon nz-icon-multitext"></i>&nbsp;&nbsp;{{typeData[1].name}}</div> -->
           <div v-else-if="scope.row[item.prop].toUpperCase() == 'TEXTAREA'"><i class="nz-icon nz-icon-textarea"></i>&nbsp;&nbsp;{{typeData[1].name}}</div>
           <div v-else-if="scope.row[item.prop].toUpperCase() == 'RADIO'"><i class="nz-icon nz-icon-radio"></i>&nbsp;&nbsp;{{typeData[2].name}}</div>
           <div v-else-if="scope.row[item.prop].toUpperCase() == 'CHECKBOX'"><i class="nz-icon nz-icon-checkbox"></i>&nbsp;&nbsp;{{typeData[3].name}}</div>
@@ -245,7 +245,7 @@ export default {
           value: 'EMAIL',
           name: this.$t('config.assetLabel.email')
         }
-      ],
+      ]
     }
   },
   methods: {

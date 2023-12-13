@@ -989,6 +989,8 @@ export default {
               objectInfo.priority = val.valnum
             } else if (val.label === 'dashboardVarType') {
               objectInfo.varType = val.valnum
+            } else if (val.label === 'licenseStatus') {
+              objectInfo.licenseStatus = val.valnum
             } else if (typeof (val.valnum) === 'undefined' || val.valnum == '') {
               this.selectInfoList[val.label].forEach(item => {
                 if (item.label === val.val) {
@@ -1069,7 +1071,7 @@ export default {
           localStorage.setItem('nz-history-' + this.where, JSON.stringify(this.historyList))
         } else {
           this.historyList = JSON.parse(localStorage.getItem('nz-history-' + this.where))
-          const findIndex = this.historyList.findIndex(item=> JSON.stringify(item) ==  JSON.stringify(this.select_list))
+          const findIndex = this.historyList.findIndex(item => JSON.stringify(item) == JSON.stringify(this.select_list))
           if (findIndex !== -1) {
             this.historyList.splice(findIndex, 1)
           }

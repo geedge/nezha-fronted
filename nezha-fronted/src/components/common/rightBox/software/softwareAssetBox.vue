@@ -15,11 +15,12 @@
           </el-form-item>
           <!--type-->
           <el-form-item :label="$t('softwareType.text')" prop="typeId" class="select-warp">
-<!--            <el-input maxlength="128" show-word-limit v-model="editSoftwareAsset.type" size="small" type="text"></el-input>-->
+            <!-- <el-input maxlength="128" show-word-limit v-model="editSoftwareAsset.type" size="small" type="text"></el-input> -->
             <el-select v-model="editSoftwareAsset.typeId" size="small" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" @change="renderParams">
               <el-option v-for="item in softwareTypeArr" :key="item.id" :value="item.id" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
+          <!-- asset -->
           <el-form-item :label='$t("asset.asset")' label-width="125px" prop="assetId" v-if="!disabled">
             <v-selectpage
               :data="assetList"
@@ -40,12 +41,6 @@
               :result-format="resultFormat"
             ></v-selectpage>
           </el-form-item>
-          <!--project-->
-          <el-form-item :label='$t("project.project.projectName")' class="select-warp" prop="projectId">
-            <el-select id="add-endpoint-project" v-model="editSoftwareAsset.projectId" class="right-box__select" clearable placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
-              <el-option v-for="item in projectList" :id="'project-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
-          </el-form-item>
           <!--remark-->
           <el-form-item :label="$t('overall.remark')" prop="remark">
             <el-input maxlength="256" show-word-limit v-model="editSoftwareAsset.remark" size="small" :rows="2" type="textarea"></el-input>
@@ -57,7 +52,7 @@
 <!--          <el-form-item v-for="(value, key) in editSoftwareAsset.params" :label="key" :key="key">-->
 <!--            <el-input maxlength="128" show-word-limit v-model="editSoftwareAsset.params[key]" size="small" type="text" @input="$forceUpdate()"></el-input>-->
 <!--          </el-form-item>-->
-          <el-form-item prop="paramObj">
+          <el-form-item prop="paramObj" v-my-loading="loading">
             <div v-for="(label, i) in editSoftwareAsset.paramObj" :key="i" class="form__dotted-item form__dotted-item-required">
               <el-form-item :prop="'paramObj.' + i + '.value.0'" :rules="[ { required: JSON.parse(label.param).required === '1', message: $t('validate.required'), trigger: 'blur' }]">
                 <template v-slot:label>
@@ -160,7 +155,7 @@ import editRigthBox from '../../mixin/editRigthBox'
 import { sysObjectIdInput } from '@/components/common/js/validate'
 import iconList from '@/components/common/js/iconList'
 import { asset as assetConstants } from '@/components/common/js/constants'
-
+import axios from 'axios'
 export default {
   name: 'softwareAssetBox',
   components: {
@@ -190,7 +185,6 @@ export default {
         name: '',
         typeId: '',
         assetId: '',
-        projectId: '',
         params: {},
         remark: ''
       },
@@ -209,7 +203,6 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ]
       },
-      projectList: [],
       softwareTypeArr: [],
       assetList: [],
       columns: [
@@ -254,7 +247,8 @@ export default {
             return row.dc ? row.dc.name : ''
           }
         }
-      ]
+      ],
+      loading: false
     }
   },
   watch: {
@@ -264,23 +258,13 @@ export default {
       handler (n) {
         this.isEdit = true
         const editSoftwareAsset = JSON.parse(JSON.stringify(n))
-        editSoftwareAsset.paramObj = []
-        if (editSoftwareAsset.projectId === -1) {
-          editSoftwareAsset.projectId = ''
-        }
         editSoftwareAsset.assetId = ''
-        // if (editSoftwareAsset.params) {
-        //   Object.keys(editSoftwareAsset.params).forEach(key => {
-        //     editSoftwareAsset.paramObj.push(editSoftwareAsset.params[key])
-        //   })
-        // }
         this.editSoftwareAsset = editSoftwareAsset
         this.oldData = this.$lodash.cloneDeep(this.editSoftwareAsset)
       }
     }
   },
   created () {
-    this.getProjectList()
     this.getAsset()
     this.getSoftwareTypeList()
   },
@@ -316,15 +300,14 @@ export default {
           const params = {
             ...this.editSoftwareAsset
           }
-          params.params = {}
+          params.params = {
+            connectorAttributeKeys: []
+          }
           params.paramObj.forEach(item => {
-            if (item.type === 'CHECKBOX') {
-              params.params[item.metaKey] = item.value
-            } else if (item.type === 'DATETIME' && JSON.parse(item.param).interval) {
-              params.params[item.metaKey] = item.value
-            } else {
-              params.params[item.metaKey] = item.value[0]
-            }
+            params.params.connectorAttributeKeys.push({
+              key: item.metaKey,
+              value: item.value
+            })
           })
           params.icon = this.imageUrl
           if (this.editSoftwareAsset.id) {
@@ -354,14 +337,6 @@ export default {
         }
       })
     },
-    /* 获取project列表 */
-    getProjectList () {
-      this.$get('monitor/project', { pageSize: -1, pageNo: 1 }).then(response => {
-        if (response.code === 200) {
-          this.projectList = response.data.list
-        }
-      })
-    },
     /* 获取asset列表 */
     getAsset () {
       this.$get('asset/asset', { pageSize: -1 }).then(res => {
@@ -387,21 +362,58 @@ export default {
         return assetData
       }
     },
-    renderParams () {
-      this.editSoftwareAsset.paramObj = []
+    async renderParams () {
+      // 获取当前type的attributes key
+      this.loading = true
       const findItem = this.softwareTypeArr.find(item => item.id == this.editSoftwareAsset.typeId)
-      if (findItem.params) {
-        Object.keys(findItem.params).forEach(key => {
-          if (findItem.params[key].type === 'CHECKBOX') {
-            findItem.params[key].value = this.editSoftwareAsset.params[key] ? this.editSoftwareAsset.params[key] : findItem.params[key].value
-          } else if (findItem.params[key].type === 'DATETIME' && JSON.parse(findItem.params[key].param).interval) {
-            findItem.params[key].value = this.editSoftwareAsset.params[key] ? this.editSoftwareAsset.params[key] : findItem.params[key].value
-          } else {
-            findItem.params[key].value = this.editSoftwareAsset.params[key] ? [this.editSoftwareAsset.params[key]] : findItem.params[key].value
-          }
-          this.editSoftwareAsset.paramObj.push(findItem.params[key])
-        })
-        this.oldData = this.$lodash.cloneDeep(this.editSoftwareAsset)
+      const connectorAttributeKeys = this.$lodash.get(findItem, 'params.connectorAttributeKeys', [])
+      const requests = connectorAttributeKeys.map(key => {
+        return this.$get('asset/field/meta', { key: key })
+      })
+      const paramObj = []
+      const res = await axios.all(requests)
+      res.forEach(response => {
+        const data = this.$lodash.get(response, 'data.list.0')
+        if (data) {
+          paramObj.push({ ...data, value: this.blankLabelValue(data), action: 0 })
+        }
+      })
+      // 设置填写过的值
+      const keyValue = this.$lodash.get(this.editSoftwareAsset, 'params.connectorAttributeKeys', [])
+      paramObj.forEach(item => {
+        const findValue = keyValue.find(subItem => subItem.key == item.metaKey)?.value
+        findValue && (item.value = findValue)
+      })
+      this.$set(this.editSoftwareAsset, 'paramObj', paramObj)
+      this.oldData = this.$lodash.cloneDeep(this.editSoftwareAsset)
+      this.loading = false
+    },
+    blankLabelValue (label) {
+      const defaultValue = JSON.parse(label.param).default || ''
+      if (label.type.toUpperCase() === this.assetConstants.labelTypeData.CHECKBOX) {
+        const arr = []
+        if (label.param && JSON.parse(label.param).items) {
+          JSON.parse(label.param).items.forEach(item => {
+            if (item.check) {
+              arr.push(item.name)
+            }
+          })
+        }
+        return arr
+      } else if (label.type.toUpperCase() === this.assetConstants.labelTypeData.MULTITEXT || label.type.toUpperCase() === assetConstants.labelTypeData.TEXT || label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA) {
+        return [defaultValue]
+      } else if (label.type.toUpperCase() === this.assetConstants.labelTypeData.RADIO || label.type.toUpperCase() === assetConstants.labelTypeData.SELECT) {
+        const arr = ['']
+        if (label.param && JSON.parse(label.param).items) {
+          JSON.parse(label.param).items.forEach(item => {
+            if (item.check) {
+              arr[0] = item.name
+            }
+          })
+        }
+        return arr
+      } else {
+        return [defaultValue]
       }
     }
   }

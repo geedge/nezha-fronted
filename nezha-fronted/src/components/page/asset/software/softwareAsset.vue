@@ -97,6 +97,7 @@ export default {
   data () {
     return {
       url: '/asset/software',
+      tableId: 'softwareAssetTable',
       blankObject: { // 空白对象
         id: '',
         name: '',
@@ -106,7 +107,6 @@ export default {
         params: {},
         remark: ''
       },
-      tableId: 'softwareAssetTable',
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [{
           name: 'ID',
@@ -123,7 +123,44 @@ export default {
     }
   },
   created () {
-
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      ids: {
+        target: this.searchLabel,
+        isSearchInput: true,
+        propertyName: 'ids',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 'ids',
+          label: 'ids',
+          name: 'ID',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      name: {
+        target: this.searchLabel,
+        isSearchInput: true,
+        propertyName: 'name',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 'name',
+          label: 'name',
+          name: 'Name',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      }
+    }
+    this.initQueryFromPath(searchKeys)
   },
   computed: {
   },

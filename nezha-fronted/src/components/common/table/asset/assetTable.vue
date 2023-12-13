@@ -140,14 +140,56 @@
           </template>
           <template v-else-if="item.prop === 'brand'">{{scope.row.brand ? scope.row.brand.name : '-'}}</template>
           <template v-else-if="item.prop === 'purchaseDate'">{{scope.row.purchaseDate ? scope.row.purchaseDate : '-'}}</template>
+          <!-- license -->
+          <template v-else-if="item.prop === 'license'">
+            <el-popover
+              placement="left-start"
+              trigger="hover"
+              :open-delay="300"
+              popper-class="licenseStatus nz-tooltip-bac"
+              :disabled="!(scope.row.license&&scope.row.license.status==1)"
+            >
+              <div>
+                <!-- dateIssued -->
+                <div class="licenseStatus-title" style="margin-bottom:5px;">{{$t('licenseMange.dateIssue')}}</div>
+                <div class="licenseStatus-date">
+                  <i class="nz-icon nz-icon-date margin-r-5"/>
+                  <span>{{ scope.row.license&&scope.row.license.dateIssued ? momentTz(scope.row.license.dateIssued ) : '-'}}</span>
+                </div>
+                <!-- dateExpires -->
+                <div class="licenseStatus-title" style="margin-top:10px;margin-bottom:5px;">{{$t('licenseMange.dateExpire')}}</div>
+                <div class="licenseStatus-date">
+                  <i class="nz-icon nz-icon-date margin-r-5"/>
+                  <span v-if="scope.row.license && scope.row.license.dateExpires == -1">{{$t('license.permanent')}}</span>
+                  <span v-else>{{ scope.row.license && scope.row.license.dateExpires ? momentTz(scope.row.license.dateExpires ) : '-'}}</span>
+                </div>
+              </div>
+              <!-- status -->
+              <div slot="reference">
+                <div v-if="scope.row.license && scope.row.license.status == 0">
+                  <i class="nz-icon nz-icon-stop" style="color:#bebebe;"></i>
+                  <span>{{$t('licenseMange.notLicensed')}}</span>
+                </div>
+                <div v-else-if="scope.row.license && scope.row.license.status == 1">
+                  <i class="nz-icon nz-icon-import-success1" style="color:#8dcb4b;"></i>
+                  <span>{{$t('licenseMange.licensed')}}</span>
+                </div>
+                <div v-else-if="scope.row.license && scope.row.license.status == 2">
+                  <i class="nz-icon nz-icon-stop" style="color:#ec7f66;"></i>
+                  <span>{{$t('overall.error')}}（{{$t('config.terminallog.statusItem.unknownError')}}）</span>
+                </div>
+                <div v-else>-</div>
+              </div>
+            </el-popover>
+          </template>
           <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
           <template v-else>
-          <span v-if="scope.row.fields&&scope.row.fields.find(field => field.name === item.prop)">
-            {{scope.row.fields.find(field => field.name === item.prop).value.join(',')}}
-          </span>
-            <span v-else>
-             {{scope.row[item.prop]}}
-          </span>
+            <span v-if="scope.row.fields&&scope.row.fields.find(field => field.name === item.prop)">
+              {{scope.row.fields.find(field => field.name === item.prop).value.join(',')}}
+            </span>
+              <span v-else>
+              {{scope.row[item.prop]}}
+            </span>
           </template>
         </template>
       </el-table-column>
@@ -324,6 +366,11 @@ export default {
           prop: 'purchaseDate',
           show: false,
           minWidth: 120
+        }, {
+          label: this.$t('licenseMange.licenseStatus'),
+          prop: 'license',
+          minWidth: 200,
+          show: true
         }
       ]
     }

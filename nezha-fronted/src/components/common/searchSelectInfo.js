@@ -399,6 +399,15 @@ export default {
             value: 3,
             label: i18n.t('issue.low')
           }
+        ],
+        licenseStatus: [
+          {
+            value: 1,
+            label: i18n.t('licenseMange.licensed')
+          }, {
+            value: 0,
+            label: i18n.t('licenseMange.notLicensed')
+          }
         ]
       }
     }

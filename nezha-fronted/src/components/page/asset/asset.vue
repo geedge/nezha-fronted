@@ -336,6 +336,12 @@ export default {
           type: 'input',
           label: 'comment',
           disabled: false
+        }, {
+          name: this.$t('licenseMange.licenseStatus'),
+          type: 'select',
+          label: 'licenseStatus',
+          readonly: true,
+          disabled: false
         }]
       },
 
@@ -996,6 +1002,22 @@ export default {
           val: ''
         },
         jsonKey: 'val'
+      },
+      licenseStatus: {
+        target: this.searchLabel,
+        isSearchInput: true,
+        propertyName: 'licenseStatus',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          label: 'licenseStatus',
+          name: 'licenseStatus',
+          readonly: true,
+          type: 'select',
+          val: '',
+          listStr: 'licenseStatus'
+        },
+        jsonKey: 'valnum'
       },
       dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'string', target2: this.selectValue, type2: 'array' },
       typeIds: { target: this.searchCheckBox, propertyName: 'typeIds', type: 'string', target2: this.selectValue, type2: 'array' },

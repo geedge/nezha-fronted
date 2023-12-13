@@ -12,6 +12,9 @@ function stack (data, omit) {
       if (typeof (v) === 'undefined') {
         return accum[i]
       }
+      if (isNaN(v)) {
+        return accum[i]
+      }
       return (accum[i] += +v)
     }))
   }
