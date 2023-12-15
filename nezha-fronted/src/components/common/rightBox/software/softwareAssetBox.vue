@@ -214,12 +214,18 @@ export default {
               return row.name.substring(0, 12) + '...'
             }
             return row.name
+          },
+          tip: function (row) {
+            return row.name
           }
         },
-        { title: this.$t('asset.manageIp'), data: 'manageIp' },
+        { title: this.$t('asset.manageIp'), data: 'manageIp', tip: 'manageIp' },
         {
           title: this.$t('overall.type'),
           data: (row) => {
+            return row.type ? row.type.name : ''
+          },
+          tip: (row) => {
             return row.type ? row.type.name : ''
           }
         },
@@ -227,11 +233,17 @@ export default {
           title: this.$t('asset.model'),
           data: (row) => {
             return row.model ? row.model.name : ''
+          },
+          tip: (row) => {
+            return row.model ? row.model.name : ''
           }
         },
         {
           title: this.$t('overall.dc'),
           data: (row) => {
+            return row.dc ? row.dc.name : ''
+          },
+          tip: (row) => {
             return row.dc ? row.dc.name : ''
           }
         }

@@ -755,7 +755,9 @@ export default {
             }
             return row.name
           },
-          key: 'name'
+          tip: function (row) {
+            return row.name
+          }
         },
         {
           title: this.$t('overall.remark'),
@@ -765,7 +767,9 @@ export default {
             }
             return row.remark
           },
-          key: 'remark'
+          tip: function (row) {
+            return row.remark
+          }
         }
       ],
       showAllBasicOption: false,
