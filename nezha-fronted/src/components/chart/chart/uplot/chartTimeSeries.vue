@@ -57,7 +57,6 @@ import chartMixin from '@/components/chart/chartMixin'
 import renderChart from '@/components/chart/renderChart'
 import { chartLegendPlacement } from '@/components/common/js/constants'
 import { getChart, setChart, chartCache } from '@/components/common/js/common'
-import { initColor } from '@/components/chart/chart/tools'
 import UPlot from 'uplot'
 import chartTimeSeriesMixin from '@/components/chart/chart/uplot/chartTimeSeriesMixin'
 import chartDataFormat from '@/components/chart/chartDataFormat'
@@ -608,8 +607,6 @@ export default {
     }
   },
   mounted () {
-    this.chartOption.color || (this.chartOption.color = initColor(20))
-    this.colorList = this.chartOption.color
     try {
       this.isStack = !!this.chartInfo.param.stack
     } catch (e) {}

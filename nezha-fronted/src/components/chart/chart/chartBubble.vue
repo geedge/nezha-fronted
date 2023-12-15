@@ -58,9 +58,7 @@ import chartFormat from '@/components/chart/chartFormat'
 import * as d3 from 'd3'
 import { getMetricTypeValue } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/chart/chartDataFormat'
-import { initColor } from '@/components/chart/chart/tools'
 import lodash from 'lodash'
-
 export default {
   name: 'chart-bubble',
   components: {
@@ -122,10 +120,14 @@ export default {
             expressionIndex: expressionIndex,
             dataIndex: dataIndex,
             mapping: mapping,
-            background: mapping ? mapping.color.bac : this.colorList[colorIndex] // 气泡颜色
+            background: ''
           })
           colorIndex++
         })
+      })
+      this.setColorList(this.bubbleData)
+      this.bubbleData.forEach((item, index) => {
+        item.background = item.mapping ? item.mapping.color.bac : this.colorList[index]
       })
       this.$emit('chartIsNoData', this.isNoData)
     },
@@ -356,7 +358,6 @@ export default {
     }
   },
   mounted () {
-    this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart()
   },
   beforeDestroy () {

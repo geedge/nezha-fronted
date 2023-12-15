@@ -76,7 +76,7 @@
                 }"
               >
                 <i v-if="item.mapping && item.mapping.icon" :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
-                <span>{{item.mapping ? handleDisplay(item.mapping.display, { ...item.label, value: item.showValue }) : item.showValue}}</span>
+                <span>{{item.mapping ? handleDisplay(item.mapping.display, { ...item.labels, value: item.showValue }) : item.showValue}}</span>
               </p>
             </template>
           </li>
@@ -140,7 +140,7 @@
                 }"
               >
                 <i v-if="item.mapping && item.mapping.icon" :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
-                <span>{{item.mapping ? handleDisplay(item.mapping.display, { ...item.label, value: item.showValue }) : item.showValue}}</span>
+                <span>{{item.mapping ? handleDisplay(item.mapping.display, { ...item.labels, value: item.showValue }) : item.showValue}}</span>
               </p>
             </template>
           </li>
@@ -195,7 +195,7 @@
                 }"
               >
                 <i v-if="item.mapping && item.mapping.icon" :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
-                <span>{{item.mapping ? handleDisplay(item.mapping.display, { ...item.label, value: item.showValue }) : item.showValue}}</span>
+                <span>{{item.mapping ? handleDisplay(item.mapping.display, { ...item.labels, value: item.showValue }) : item.showValue}}</span>
               </p>
             </template>
           </li>
@@ -224,7 +224,7 @@
                 }"
               >
                 <i v-if="item.mapping && item.mapping.icon" :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
-                <span>{{item.mapping ? handleDisplay(item.mapping.display, { ...item.label, value: item.showValue }) : item.showValue}}</span>
+                <span>{{item.mapping ? handleDisplay(item.mapping.display, { ...item.labels, value: item.showValue }) : item.showValue}}</span>
               </p>
               <div class="bar-rect" :style="{height:item.height + 'px',}">
                 <div
@@ -383,7 +383,7 @@ export default {
 
           let valueText = ''
           if (item.mapping) {
-            valueText = this.handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })
+            valueText = this.handleDisplay(item.mapping.display, { ...item.labels, value: item.showValue })
             if (item.mapping.icon) {
               valueText += 'AA'
             }
@@ -420,7 +420,7 @@ export default {
 
           let valueText = ''
           if (item.mapping) {
-            valueText = this.handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })
+            valueText = this.handleDisplay(item.mapping.display, { ...item.labels, value: item.showValue })
             if (item.mapping.icon) {
               valueText += 'AA'
             }
@@ -472,7 +472,7 @@ export default {
 
           let valueText = ''
           if (item.mapping) {
-            valueText = this.handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })
+            valueText = this.handleDisplay(item.mapping.display, { ...item.labels, value: item.showValue })
             if (item.mapping.icon) {
               valueText += 'AA'
             }
@@ -518,7 +518,7 @@ export default {
 
           let valueText = ''
           if (item.mapping) {
-            valueText = this.handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })
+            valueText = this.handleDisplay(item.mapping.display, { ...item.labels, value: item.showValue })
             if (item.mapping.icon) {
               valueText += 'AA'
             }
@@ -564,30 +564,6 @@ export default {
       const optimalSize = Math.min(fontSizeBasedOnHeight, fontSizeBasedOnWidth)
       return Math.min(optimalSize, maxSize || optimalSize)
     },
-    getValuePercent (value, minValue, maxValue) {
-      // Need special logic for when minValue === maxValue === value to prevent returning NaN
-      const valueRatio = Math.min((value - minValue) / (maxValue - minValue), 1)
-      return isNaN(valueRatio) ? 0 : valueRatio
-    },
-    calcMax (arr) {
-      let maxNum = arr.reduce((maxValue, obj) => {
-        return Math.max(maxValue, obj.value)
-      }, 0)
-
-      if (maxNum <= 1) {
-        return 1
-      }
-
-      let bite = 1
-      while (maxNum >= 10) {
-        maxNum /= 10
-        if (maxNum > 1) {
-          bite += 1
-        }
-      }
-
-      return Math.pow(10, bite)
-    },
     initBarData (chartInfo, originalDatas) {
       this.barData = []
       let colorIndex = 0
@@ -602,7 +578,7 @@ export default {
           mapping && this.chartOption.color && (this.chartOption.color[colorIndex] = mapping.color.bac)
           const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
           this.barData.push({
-            value: Number(value),
+            value: parseFloat(value),
             realValue: value,
             showValue: showValue,
             name: legend.name,
@@ -614,10 +590,14 @@ export default {
             expressionIndex: expressionIndex,
             dataIndex: dataIndex,
             mapping: mapping,
-            background: mapping ? mapping.color.bac : this.colorList[colorIndex]
+            background: ''
           })
           colorIndex++
         })
+      })
+      this.setColorList(this.barData)
+      this.barData.forEach((item, index) => {
+        item.background = item.mapping ? item.mapping.color.bac : this.colorList[index]
       })
       this.$emit('chartIsNoData', this.isNoData)
     },
@@ -718,9 +698,6 @@ export default {
     }
   },
   mounted () {
-    // eslint-disable-next-line vue/no-mutating-props
-    this.chartOption.color || (this.chartOption.color = initColor(20))
-    this.colorList = this.chartOption.color
     this.chartInfo.loaded && this.initChart(this.chartOption)
   }
 }

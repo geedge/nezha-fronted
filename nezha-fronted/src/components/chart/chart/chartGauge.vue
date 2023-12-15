@@ -100,7 +100,7 @@ export default {
             const gauge = {
               value: '',
               showValue: '',
-              label: {},
+              labels: {},
               width: '',
               height: '',
               legend: '',
@@ -109,9 +109,9 @@ export default {
             }
             const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             gauge.value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
-            gauge.label = data.metric
+            gauge.labels = data.metric
             gauge.legend = legend.alias
-            gauge.label.legend = gauge.legend
+            gauge.labels.legend = gauge.legend
             gauge.expressionIndex = expressionIndex
             gauge.name = legend.name
             gauge.alias = legend.alias
@@ -123,28 +123,10 @@ export default {
           })
         })
         this.maxValue = this.calcMax(this.gaugeData)
+        this.setColorList(this.gaugeData)
         this.$emit('chartIsNoData', this.isNoData)
         resolve()
       })
-    },
-    calcMax (arr) {
-      let maxNum = arr.reduce((maxValue, obj) => {
-        return Math.max(maxValue, obj.value)
-      }, 0)
-
-      if (maxNum <= 1) {
-        return 1
-      }
-
-      let bite = 1
-      while (maxNum >= 10) {
-        maxNum /= 10
-        if (maxNum > 1) {
-          bite += 1
-        }
-      }
-
-      return Math.pow(10, bite)
     },
     calculateGridDimensions (parentWidth, parentHeight, numberOfChildren) {
       const vertical = this.calculateSizeOfChild(parentWidth, parentHeight, numberOfChildren)
@@ -224,7 +206,7 @@ export default {
       const gaugeWidth = Math.min(dimension / 5.5, 30)
       let showValue = data.showValue
       if (data.mapping) {
-        showValue = this.handleDisplay(data.mapping.display, { ...data.label, value: showValue })
+        showValue = this.handleDisplay(data.mapping.display, { ...data.labels, value: showValue })
       }
       const textWidth = dimension - (gaugeWidth * 4)
       const valueFontSize = this.calculateFontSize(showValue, textWidth, textWidth / 2, 1, gaugeWidth * 2)
@@ -264,7 +246,7 @@ export default {
             if (this.chartInfo.param.text === 'all' || this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
               let showValue = chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(params, null, -1, 2).trim()
               if (item.mapping) {
-                showValue = self.handleDisplay(item.mapping.display, { ...item.label, value: showValue })
+                showValue = self.handleDisplay(item.mapping.display, { ...item.labels, value: showValue })
               }
               str += showValue
             }
@@ -276,14 +258,8 @@ export default {
           },
           color: lodash.get(item, 'mapping.color.text', 'auto')
         }
-        if (index < 20) {
-          option.series[0].itemStyle = {
-            color: lodash.get(item, 'mapping.color.bac', this.colorList[index])
-          }
-        } else {
-          option.series[0].itemStyle = {
-            color: lodash.get(item, 'mapping.color.bac', randomcolor())
-          }
+        option.series[0].itemStyle = {
+          color: lodash.get(item, 'mapping.color.bac', this.colorList[index])
         }
         option.tooltip.formatter = this.formatterFunc
         option.tooltip.position = this.tooltipPosition
@@ -371,7 +347,7 @@ export default {
       this.toolbox.value = params.data.mapping && params.data.mapping.display ? this.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
       this.toolbox.mapping = params.data.mapping
       this.toolbox.show = true
-      this.toolbox.metric.labels = params.data.label
+      this.toolbox.metric.labels = params.data.labels
       this.toolbox.metric.expressionIndex = params.data.expressionIndex
       const e = params.event.event
       this.toolboxPosition(e)
@@ -383,8 +359,6 @@ export default {
     }
   },
   mounted () {
-    this.chartOption.color || (this.chartOption.color = initColor(20))
-    this.colorList = this.chartOption.color
     this.chartInfo.loaded && this.initChart()
   },
   beforeDestroy () {

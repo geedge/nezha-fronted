@@ -100,37 +100,31 @@ export default {
           originalData.forEach((data, dataIndex) => {
             this.isNoData = false
             const Hexagon = {
-              value: '',
-              showValue: '',
-              label: {},
               width: '',
               height: '',
-              legend: '',
-              oldValue: '',
-              mapping: {
-
-              }
+              value: '',
+              showValue: '',
+              name: '',
+              alias: '',
+              labels: {},
+              mapping: {}
             }
-            const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             Hexagon.value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
-            Hexagon.max = chartInfo.param.max || 100
-            Hexagon.min = chartInfo.param.min || 0
-            if (Hexagon.min === Hexagon.max) {
-              Hexagon.min = Hexagon.max / 2
-            }
-            Hexagon.label = data.metric
-            Hexagon.legend = legend.alias
-            Hexagon.label.legend = Hexagon.legend
-            Hexagon.expressionIndex = expressionIndex
+            Hexagon.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(Hexagon.value, null, -1, decimals)
+            const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             Hexagon.name = legend.name
             Hexagon.alias = legend.alias
-            Hexagon.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(Hexagon.value, null, -1, decimals)
-            // Hexagon.value = Hexagon.showValue
+            Hexagon.labels = {
+              ...data.metric,
+              legend: legend.alias
+            }
+            Hexagon.expressionIndex = expressionIndex
             Hexagon.mapping = this.selectMapping(Hexagon.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
             this.HexagonData.push(Hexagon)
             colorIndex++
           })
         })
+        this.setColorList(this.HexagonData)
         this.$emit('chartIsNoData', this.isNoData)
         resolve()
       })
@@ -149,8 +143,7 @@ export default {
           ...item,
           x: colIndex,
           y: rowIndex,
-          metrics: item.label,
-          label: item.legend
+          labels: item.labels
         }
       })
       const dom = document.getElementById(`chart-canvas-${this.chartId}`)
@@ -213,7 +206,7 @@ export default {
     },
     hexagonOver (that, e) { // 移入六边形
       this.tooltip.title = that.alias
-      this.tooltip.value = that.mapping && that.mapping.display ? this.handleDisplay(that.mapping.display, { ...that.metrics, legend: that.alias, value: that.showValue }) : that.showValue
+      this.tooltip.value = that.mapping && that.mapping.display ? this.handleDisplay(that.mapping.display, { ...that.labels, value: that.showValue }) : that.showValue
       this.tooltip.mapping = that.mapping
       this.tooltip.show = true
       this.setPosition(e)
@@ -276,10 +269,10 @@ export default {
       const textColor = point.mapping ? point.mapping.color.text : this.invertColor(color)
       if (this.chartInfo.param.text === 'all') {
         str += point.alias
-        valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.metrics, legend: point.alias, value: point.showValue }) : point.showValue
+        valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.labels, value: point.showValue }) : point.showValue
       }
       if (this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
-        valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.metrics, legend: point.alias, value: point.showValue }) : point.showValue
+        valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.labels, value: point.showValue }) : point.showValue
       }
       if (this.chartInfo.param.text === 'legend') {
         str += point.alias
@@ -492,10 +485,10 @@ export default {
         this.tooltip.show = false
 
         this.toolbox.title = data.alias
-        this.toolbox.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.metrics, legend: data.alias, value: data.showValue }) : data.showValue
+        this.toolbox.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.labels, value: data.showValue }) : data.showValue
         this.toolbox.mapping = data.mapping
         this.toolbox.show = true
-        this.toolbox.metric.labels = data.metrics
+        this.toolbox.metric.labels = data.labels
         this.toolbox.metric.expressionIndex = data.expressionIndex
         this.toolboxPosition(e)
       }
@@ -507,9 +500,6 @@ export default {
     }
   },
   mounted () {
-    // eslint-disable-next-line vue/no-mutating-props
-    this.chartOption.color || (this.chartOption.color = initColor(20))
-    this.colorList = this.chartOption.color
     this.chartInfo.loaded && this.initChart(this.chartOption)
   },
   beforeDestroy () {

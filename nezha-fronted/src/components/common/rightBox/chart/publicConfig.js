@@ -1,9 +1,10 @@
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import { getUUID, resetZIndex } from '@/components/common/js/common'
 import { randomcolor, ColorReverse } from '@/components/common/js/radomcolor/randomcolor'
-import { isStat } from '@/components/chart/chart/tools'
+import { isStat, initColor } from '@/components/chart/chart/tools'
 import lodash from 'lodash'
 import iconList from '@/components/common/js/iconList'
+import { colorScheme } from '@/components/common/js/constants'
 const rz = {
   methods: {
     rz (e) {
@@ -299,11 +300,30 @@ export default {
           id: 'month',
           name: this.$t('dashboard.chartForm.comparison.month')
         }
-      ]
+      ],
+      colorScheme
     }
   },
   mixins: [rz],
   methods: {
+    schemeTypeChange (val) {
+      const obj = this.$lodash.cloneDeep(this.chartConfig.param.color)
+      if (val === 'palette') {
+        obj.schemeType = 'palette'
+        obj.mode = 'palette'
+        obj.paletteColors = initColor(20)
+      } else if (val === 'fixed') {
+        obj.schemeType = 'fixed'
+        obj.mode = 'fixed'
+        obj.fixedColor = obj.fixedColor || randomcolor()
+      } else {
+        obj.schemeType = val
+        obj.mode = 'continuous'
+        obj.continuousType = val
+      }
+      this.$set(this.chartConfig.param, 'color', obj)
+      this.change()
+    },
     isStat,
     // icon点击
     iconActive (item, subItem, index) {
@@ -330,7 +350,7 @@ export default {
               state: this.expressionsShow[i].state,
               orderNum: i,
               step: this.expressionsShow[i].step,
-              queryType: this.expressionsShow[i].queryType,
+              queryType: this.expressionsShow[i].queryType
             })
           }
         })
@@ -558,6 +578,9 @@ export default {
       if (key === 'icon') {
         this.chartConfig.param.valueMapping[index].color.icon = val
         this.$set(this.chartConfig.param.valueMapping, index, this.chartConfig.param.valueMapping[index])
+      }
+      if (key === 'colorScheme') {
+        this.chartConfig.param.color.fixedColor = val
       }
       this.change()
     },

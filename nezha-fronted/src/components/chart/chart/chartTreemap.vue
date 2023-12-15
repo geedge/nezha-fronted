@@ -108,6 +108,13 @@ export default {
       this.setDataLink()
       this.legends = []
       this.series = chartOption.series = this.initTreeMapData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+      this.setColorList(this.series[0].data)
+      this.series[0].data.forEach((item, index) => {
+        item.itemStyle = {
+          color: item.mapping ? item.mapping.color.bac : this.colorList[index]
+        }
+        this.legends[index].color = item.mapping ? item.mapping.color.bac : this.colorList[index]
+      })
       chartOption.tooltip.formatter = this.formatterFunc
       chartOption.tooltip.position = this.tooltipPosition
       if (navigator.userAgent.match(/Mobi/i) ||
@@ -149,11 +156,9 @@ export default {
             const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
             const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, decimals)
             const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
-            // eslint-disable-next-line vue/no-mutating-props
-            this.chartOption.color && mapping && (this.chartOption.color[colorIndex] = mapping.color.bac)
             const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             s.data.push({
-              value: value,
+              value: parseFloat(value),
               realValue: value,
               showValue: showValue,
               name: legend.name,
@@ -170,7 +175,6 @@ export default {
                 color: mapping ? mapping.color.text : '#000000'
               },
               itemStyle: {
-                color: mapping ? mapping.color.bac : this.colorList[colorIndex]
               }
             })
             colorIndex++
@@ -244,8 +248,6 @@ export default {
   },
   mounted () {
     // eslint-disable-next-line vue/no-mutating-props
-    this.chartOption.color || (this.chartOption.color = initColor(20))
-    this.colorList = this.chartOption.color
     this.chartInfo.loaded && this.initChart(this.chartOption)
   }
 }

@@ -22,16 +22,16 @@
         <!-- all -->
         <template v-if="chartInfo.param.text==='all'">
           <div v-if="item.mapping">
-            <p class="stat-text" :style="{fontSize: item.titleFontSize + 'px'}">{{item.legend}}</p>
+            <p class="stat-text" :style="{fontSize: item.titleFontSize + 'px'}">{{item.alias}}</p>
             <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px',color:item.textColor}">
               <template v-if="item.mapping && item.mapping.icon">
                 <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
               </template>
-              <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
+              <span>{{handleDisplay(item.mapping.display, { ...item.labels, value: item.showValue })}}</span>
             </p>
           </div>
           <div v-else>
-            <p class="stat-text" :style="{fontSize: item.titleFontSize + 'px'}">{{item.legend}}</p>
+            <p class="stat-text" :style="{fontSize: item.titleFontSize + 'px'}">{{item.alias}}</p>
             <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px',color:item.textColor}">{{item.showValue}}</p>
           </div>
         </template>
@@ -42,11 +42,11 @@
               <template v-if="item.mapping && item.mapping.icon">
                 <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
               </template>
-              <span>{{item.legend}}</span>
+              <span>{{item.alias}}</span>
             </p>
           </div>
           <div v-else>
-            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px',color:item.textColor}">{{item.legend}}</p>
+            <p class="stat-text" :style="{fontSize: item.valueFontSize + 'px',color:item.textColor}">{{item.alias}}</p>
           </div>
         </template>
         <!-- value -->
@@ -56,7 +56,7 @@
               <template v-if="item.mapping && item.mapping.icon">
                 <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
               </template>
-              <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
+              <span>{{handleDisplay(item.mapping.display, { ...item.labels, value: item.showValue })}}</span>
             </p>
           </div>
           <div v-else>
@@ -137,7 +137,6 @@ import chartFormat from '@/components/chart/chartFormat'
 import { getMetricTypeValue } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
-import { initColor } from '@/components/chart/chart/tools'
 // import fontWidth from '@/components/chart/chart/options/fontWidth'
 import * as echarts from 'echarts'
 import chartSparklineOption from './options/chartSparkline'
@@ -159,7 +158,7 @@ export default {
       minFontSzie: 12,
       defaultUnit: 60, // 根据stat的长宽取 需要的字体 = (取最短的边 / defaultUnit) * fontSize 因为 需要的字体/fontSize = 实际宽 / defaultUnit
       sparkline: {},
-      maxValue: 0
+      maxYAxis: 0
     }
   },
   methods: {
@@ -189,23 +188,26 @@ export default {
           originalData.forEach((data, dataIndex) => {
             this.isNoData = false
             const stat = {
-              value: '',
-              showValue: '',
-              label: {},
               width: '',
               height: '',
-              legend: '',
+              value: '',
+              showValue: '',
               name: '',
+              alias: '',
+              labels: {},
               mapping: {},
               data: {}
             }
             stat.value = getMetricTypeValue(data.values, chartInfo.param.statistics)
-            stat.label = data.metric
-            stat.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
-            stat.label.legend = stat.legend
-            stat.expressionIndex = expressionIndex
-            stat.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
             stat.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(stat.value, null, -1, decimals)
+            const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+            stat.name = legend.name
+            stat.alias = legend.alias
+            stat.labels = {
+              ...data.metric,
+              legend: legend.alias
+            }
+            stat.expressionIndex = expressionIndex
             stat.mapping = this.selectMapping(stat.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
             stat.data = data.values
             // 判断是否是对比的数据
@@ -217,19 +219,19 @@ export default {
             colorIndex++
           })
         })
-        // 计算最大值
-        let maxValue = 0
+        // 计算sparkline最大值
+        let maxYAxis = 0
         if (this.statData.length > 0) {
-          maxValue = 0
+          maxYAxis = 0
           for (let j = 0; j < this.statData.length; j++) {
             for (let i = 0; i < this.statData[j].data.length; i++) {
               if (!isNaN(this.statData[j].data[i][1])) {
-                maxValue = (maxValue < Number(this.statData[j].data[i][1]) ? Number(this.statData[j].data[i][1]) : maxValue)
+                maxYAxis = (maxYAxis < Number(this.statData[j].data[i][1]) ? Number(this.statData[j].data[i][1]) : maxYAxis)
               }
             }
           }
         }
-        this.maxValue = maxValue
+        this.maxYAxis = maxYAxis
 
         // 计算同比变化量
         if (this.chartInfo.param.comparison && this.chartInfo.param.comparison !== 'none') {
@@ -259,11 +261,12 @@ export default {
             item.comparison = comparison
           })
         }
-
+        this.setColorList(this.statData)
         this.$emit('chartIsNoData', this.isNoData)
         resolve()
       })
     },
+
     calculateGridDimensions (parentWidth, parentHeight, numberOfChildren) {
       const vertical = this.calculateSizeOfChild(parentWidth, parentHeight, numberOfChildren)
       const horizontal = this.calculateSizeOfChild(parentHeight, parentWidth, numberOfChildren)
@@ -314,7 +317,7 @@ export default {
 
         let display = ''
         if (item.mapping) {
-          display = this.handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })
+          display = this.handleDisplay(item.mapping.display, { ...item.labels, value: item.showValue })
         }
         let titleFont = ''
         let valueFont = ''
@@ -323,7 +326,7 @@ export default {
         const padding = 10
         switch (this.chartInfo.param.text) {
           case 'all':
-            titleFont = item.legend
+            titleFont = item.alias
             if (item.mapping) {
               valueFont = display
               if (item.mapping.icon) {
@@ -337,7 +340,7 @@ export default {
             titleFontSize = Math.min(valueFontSize * 0.7, titleFontSize)
             break
           case 'legend':
-            titleFont = item.legend
+            titleFont = item.alias
             if (item.mapping) {
               if (item.mapping.icon) {
                 titleFont += 'AA'
@@ -432,7 +435,7 @@ export default {
             color: areaColor
           }
         }
-        chartOption.yAxis.max = this.maxValue
+        chartOption.yAxis.max = this.maxYAxis
         chart.setOption(chartOption)
         this.sparkline[index] = chart
       })
@@ -452,8 +455,8 @@ export default {
       }, 100)
     },
     statMouseEnter (data, e) {
-      this.tooltip.title = data.legend
-      this.tooltip.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.label, value: data.showValue }) : data.showValue
+      this.tooltip.title = data.alias
+      this.tooltip.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.labels, value: data.showValue }) : data.showValue
       this.tooltip.mapping = data.mapping
       this.tooltip.show = true
       this.setPosition(e)
@@ -555,11 +558,11 @@ export default {
       if (this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') {
         this.tooltip.show = false
 
-        this.toolbox.title = data.legend
-        this.toolbox.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.label, value: data.showValue }) : data.showValue
+        this.toolbox.title = data.alias
+        this.toolbox.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.labels, value: data.showValue }) : data.showValue
         this.toolbox.mapping = data.mapping
         this.toolbox.show = true
-        this.toolbox.metric.labels = data.label
+        this.toolbox.metric.labels = data.labels
         this.toolbox.metric.expressionIndex = data.expressionIndex
         this.toolboxPosition(e)
       }
@@ -571,7 +574,6 @@ export default {
     }
   },
   mounted () {
-    this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart()
   },
   beforeDestroy () {

@@ -153,7 +153,7 @@ export default {
           const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
           const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
           this.doughnutData.push({
-            value: Number(value),
+            value: parseFloat(value),
             realValue: value,
             showValue: showValue,
             name: legend.name,
@@ -165,11 +165,16 @@ export default {
             expressionIndex: expressionIndex,
             dataIndex: dataIndex,
             mapping: mapping,
-            background: mapping ? mapping.color.bac : this.colorList[colorIndex]
+            background: ''
 
           })
           colorIndex++
         })
+      })
+      this.setColorList(this.doughnutData)
+      this.doughnutData.forEach((item, index) => {
+        item.background = item.mapping ? item.mapping.color.bac : this.colorList[index]
+        this.legends[index].color = item.mapping ? item.mapping.color.bac : this.colorList[index]
       })
       this.$emit('chartIsNoData', this.isNoData)
     },
@@ -465,7 +470,6 @@ export default {
     }
   },
   mounted () {
-    this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart(true)
   },
   beforeDestroy () {

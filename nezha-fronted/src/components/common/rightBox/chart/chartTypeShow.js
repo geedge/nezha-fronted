@@ -231,12 +231,10 @@ export default {
     },
     isShowMinMax (type) {
       switch (type) {
-        case 'line':
-        case 'area':
-        case 'point':
-        case 'gauge':
-          return true
-        default: return false
+        case 'log' :
+        case 'table' :
+          return false
+        default: return true
       }
     },
     isTimeSeries (type) {
@@ -253,6 +251,14 @@ export default {
         case 'stat':
           return true
         default: return false
+      }
+    },
+    isShowColorScheme (type) {
+      switch (type) {
+        case 'log' :
+        case 'table' :
+          return false
+        default: return true
       }
     }
   }

@@ -105,6 +105,7 @@ import { fromRoute } from '@/components/common/js/constants'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
 import notebookList from '@/components/page/notebook/notebookList.vue'
+import { initColor } from '@/components/chart/chart/tools'
 export default {
   name: 'notebookTab',
   mixins: [subDataListMixin, detailViewRightMixin],
@@ -326,6 +327,15 @@ export default {
         case 'area':
         case 'point':
           param = {
+            min: undefined,
+            max: undefined,
+            color: {
+              schemeType: 'palette',
+              mode: 'palette',
+              paletteColors: initColor(20),
+              fixedColor: '',
+              continuousType: ''
+            },
             stack: 0,
             link: '',
             nullType: 'null',
@@ -370,13 +380,20 @@ export default {
         case 'rank':
         case 'funnel':
           param = {
+            min: undefined,
+            max: undefined,
+            color: {
+              schemeType: 'palette',
+              mode: 'palette',
+              paletteColors: initColor(20),
+              fixedColor: '',
+              continuousType: ''
+            },
             link: '',
             nullType: 'null',
             statistics: 'last',
             text: 'value',
             valueMapping: [],
-            min: 0,
-            max: 100,
             enable: {
               legend: true,
               valueMapping: false,
@@ -399,6 +416,15 @@ export default {
         case 'doughnut':
         case 'rose':
           param = {
+            min: undefined,
+            max: undefined,
+            color: {
+              schemeType: 'palette',
+              mode: 'palette',
+              paletteColors: initColor(20),
+              fixedColor: '',
+              continuousType: ''
+            },
             link: '',
             nullType: 'null',
             statistics: 'last',

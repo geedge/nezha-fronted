@@ -145,7 +145,7 @@ import panelChart from '@/components/chart/panelChart'
 import lodash from 'lodash'
 import bus from '@/libs/bus'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
-
+import { initColor } from '@/components/chart/chart/tools'
 const rz = {
   methods: {
     rz (e) {
@@ -263,6 +263,27 @@ export default {
         if (params.type !== 'bar') {
           delete params.param.orientation
           delete params.param.displayMode
+        }
+        if (this.isShowColorScheme(params.type)) {
+          if (params.param.color) {
+            const mode = params.param.color.mode
+            if (mode === 'palette') {
+              params.param.color = {
+                mode: mode,
+                paletteColors: params.param.color.paletteColors
+              }
+            } else if (mode === 'fixed') {
+              params.param.color = {
+                mode: mode,
+                fixedColor: params.param.color.fixedColor
+              }
+            } else {
+              params.param.color = {
+                mode: mode,
+                continuousType: params.param.color.continuousType
+              }
+            }
+          }
         }
         if (!params.x && !params.y && this.from === 'endpointQuery') { // endpointQuery 新增 放在最后
           params.x = 0
@@ -391,6 +412,15 @@ export default {
           type: 'line',
           elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined, queryType: 1 }],
           param: {
+            min: undefined,
+            max: undefined,
+            color: {
+              schemeType: 'palette',
+              mode: 'palette',
+              paletteColors: initColor(20),
+              fixedColor: '',
+              continuousType: ''
+            },
             stack: 0,
             nullType: 'null',
             legend: { placement: 'bottom', values: [] },
@@ -435,6 +465,15 @@ export default {
             type: 'line',
             elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined, queryType: 1 }],
             param: {
+              min: undefined,
+              max: undefined,
+              color: {
+                schemeType: 'palette',
+                mode: 'palette',
+                paletteColors: initColor(20),
+                fixedColor: '',
+                continuousType: ''
+              },
               stack: 0,
               nullType: 'null',
               legend: { placement: 'bottom', values: [] },
@@ -503,6 +542,15 @@ export default {
           unit: 2,
           type: 'stat',
           param: {
+            min: undefined,
+            max: undefined,
+            color: {
+              schemeType: 'palette',
+              mode: 'palette',
+              paletteColors: initColor(20),
+              fixedColor: '',
+              continuousType: ''
+            },
             refer: 0,
             nullType: 'null',
             statistics: 'last',
@@ -747,6 +795,26 @@ export default {
           if (obj.type === 'bar') {
             if (!obj.param.orientation) { obj.param.orientation = 'vertical' }
             if (!obj.param.displayMode) { obj.param.displayMode = 'basic' }
+          }
+          if (this.isShowColorScheme(obj.type)) {
+            if (!obj.param.color) {
+              obj.param.color = {
+                schemeType: 'palette',
+                mode: 'palette',
+                paletteColors: initColor(20),
+                fixedColor: '',
+                continuousType: ''
+              }
+            } else {
+              const mode = obj.param.color.mode
+              if (mode === 'palette') {
+                obj.param.color.schemeType = 'palette'
+              } else if (mode === 'fixed') {
+                obj.param.color.schemeType = 'fixed'
+              } else {
+                obj.param.color.schemeType = obj.param.color.continuousType
+              }
+            }
           }
         }
         if (obj.elements && obj.elements.length) {

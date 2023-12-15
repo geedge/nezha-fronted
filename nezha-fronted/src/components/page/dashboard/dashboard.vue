@@ -174,7 +174,7 @@ import panelVariables from '@/components/common/panel/panelVariables'
 import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
 import dashboardTempBox from '@/components/common/rightBox/dashboardTempBox'
 import playlist from '@/components/common/playlist'
-
+import { initColor } from '@/components/chart/chart/tools'
 // import FileSaver from 'file-saver'
 // import chartData from './testData'
 export default {
@@ -236,6 +236,15 @@ export default {
         height: 2,
         unit: 2,
         param: {
+          min: undefined,
+          max: undefined,
+          color: {
+            schemeType: 'palette',
+            mode: 'palette',
+            paletteColors: initColor(20),
+            fixedColor: '',
+            continuousType: ''
+          },
           stack: 0,
           nullType: 'null',
           legend: { placement: 'bottom', values: [], show: true },
@@ -268,7 +277,7 @@ export default {
           tooltip: {
             mode: 'all',
             sort: 'none'
-          },
+          }
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0, step: undefined, queryType: 1 }],
         panel: '',
@@ -359,7 +368,7 @@ export default {
         { value: 60, label: '1m' },
         { value: 300, label: '5m' },
         { value: 900, label: '15m' },
-        { value: 1800, label: '30m' },
+        { value: 1800, label: '30m' }
       ],
       playListControls: false, // 显示隐藏轮播按钮
       playlistObj: {} // 轮播仪表盘配置

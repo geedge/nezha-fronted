@@ -66,7 +66,6 @@ import chartFormat from '@/components/chart/chartFormat'
 import * as d3 from 'd3'
 import { getMetricTypeValue } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/chart/chartDataFormat'
-import { initColor } from '@/components/chart/chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -136,6 +135,7 @@ export default {
           colorIndex++
         })
       })
+      this.setColorList(this.rankData)
     },
 
     drawRankChart () {
@@ -371,7 +371,6 @@ export default {
     }
   },
   mounted () {
-    this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart()
   },
   beforeDestroy () {

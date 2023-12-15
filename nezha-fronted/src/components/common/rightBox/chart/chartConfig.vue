@@ -207,6 +207,69 @@
           </el-cascader>
         </el-form-item>
 
+        <!--min-->
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.min')" class="form-item--half-width" v-if="isShowMinMax(chartConfig.type)">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            show-word-limit
+            placeholder="Auto"
+            v-model="chartConfig.param.min"/>
+        </el-form-item>
+        <!--max-->
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.max')" class="form-item--half-width" v-if="isShowMinMax(chartConfig.type)">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            show-word-limit
+            placeholder="Auto"
+            v-model="chartConfig.param.max"/>
+        </el-form-item>
+        <!--decimals-->
+        <el-form-item :label="$t('overall.decimal')" class="form-item--half-width" v-if="isShowDecimals(chartConfig.type)">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            :placeholder="'Default 2'"
+            show-word-limit v-model="chartConfig.param.decimals"/>
+        </el-form-item>
+        <!--color Scheme-->
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.colorScheme')" class="colorScheme-form-item form-item--half-width" v-if="isShowColorScheme(chartConfig.type)">
+          <el-select
+            id="chart-box-type"
+            v-model="chartConfig.param.color.schemeType"
+            placeholder=""
+            popper-class="colorScheme-pop right-box-select-top prevent-clickoutside"
+            size="small"
+            @change="schemeTypeChange">
+            <el-option
+              v-for="item in colorScheme"
+              :key="item.name"
+              :label="$t(item.name)"
+              :value="item.value">
+              <div class="colorScheme-item">
+                <p class="colorScheme-name">{{$t(item.name)}}</p>
+                <div v-if="item.value!=='fixed'" :style="{background:item.background}" class="colorScheme-line"></div>
+                <!-- singleColor -->
+                <p v-else class="colorScheme-msg">{{$t('dashboard.dashboard.chartForm.singleColorMsg')}}</p>
+              </div>
+            </el-option>
+          </el-select>
+          <nezhaColor
+            v-if="chartConfig.param.color.schemeType=='fixed'"
+            :value-arr="[{name:'colorScheme',value:chartConfig.param.color.fixedColor}]"
+            :show-text="false"
+            :color-val="chartConfig.param.color.fixedColor"
+            @colorChange="(color,key)=>{colorChange(color,key)}"
+          />
+        </el-form-item>
+
         <!-- index -->
         <el-form-item
           v-show="isTable(chartConfig.type)"
@@ -282,7 +345,7 @@
           </el-select>
         </el-form-item>
 
-        <!--   nullType     -->
+        <!-- nullType -->
         <el-form-item
           :label="$t('dashboard.dashboard.chartForm.nullType')"
           class="form-item--half-width"
@@ -305,6 +368,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
+
         <!-- text -->
         <el-form-item
           :label="$t('config.assetLabel.display')"
@@ -328,77 +392,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-      </div>
 
-      <div class="form-items--half-width-group" v-if="isShowMinMax(chartConfig.type)">
-        <!--min-->
-        <el-form-item :label="$t('dashboard.dashboard.chartForm.min')" class="form-item--half-width">
-          <el-input-number
-            size="small"
-            style="margin-top: 2px"
-            :controls="false"
-            @change="change"
-            show-word-limit
-            :placeholder="chartConfig.param.min?'':'Auto'"
-            v-model="chartConfig.param.min"/>
-        </el-form-item>
-        <!--max-->
-        <el-form-item :label="$t('dashboard.dashboard.chartForm.max')" class="form-item--half-width">
-          <el-input-number
-            size="small"
-            style="margin-top: 2px"
-            :controls="false"
-            @change="change"
-            show-word-limit
-            :placeholder="chartConfig.param.max?'':'Auto'"
-            v-model="chartConfig.param.max"/>
-        </el-form-item>
-      </div>
-
-      <div class="form-items--half-width-group" v-if="isSankey(chartConfig.type)" key="sankey">
-        <!--Source label-->
-        <el-form-item class="form-item--half-width" :label="$t('dashboard.dashboard.chartForm.sourceLabel')" prop="param.sourceLabel"
-          :rules="[
-            { required: true, message: $t('validate.required'), trigger: 'blur'},
-            { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: $t('dashboard.dashboard.matchRegex'), trigger: 'blur'},
-            { validator: labelValidator,trigger: 'blur'},
-          ]"
-        >
-          <el-input
-            size="small"
-            style="margin-top: 2px"
-            :placeholder="$t('overall.placeHolder')"
-            @change="change"
-            v-model="chartConfig.param.sourceLabel"/>
-        </el-form-item>
-        <!--Target label-->
-        <el-form-item class="form-item--half-width" :label="$t('dashboard.dashboard.chartForm.targetLabel')" prop="param.targetLabel"
-          :rules="[
-            { required: true, message: $t('validate.required'), trigger: 'blur'},
-            { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: $t('dashboard.dashboard.matchRegex'), trigger: 'blur'},
-            { validator: labelValidator,trigger: 'blur'},
-          ]"
-        >
-          <el-input
-            size="small"
-            style="margin-top: 2px"
-            :placeholder="$t('overall.placeHolder')"
-            @change="change"
-            v-model="chartConfig.param.targetLabel"/>
-        </el-form-item>
-      </div>
-
-      <div class="form-items--half-width-group">
-        <!--decimals-->
-        <el-form-item :label="$t('overall.decimal')" class="form-item--half-width" v-if="isShowDecimals(chartConfig.type)">
-          <el-input-number
-            size="small"
-            style="margin-top: 2px"
-            :controls="false"
-            @change="change"
-            :placeholder="'Default 2'"
-            show-word-limit v-model="chartConfig.param.decimals"/>
-        </el-form-item>
         <!-- Sparkline mode -->
         <el-form-item :label="$t('dashboard.chartForm.sparklineMode')" class="form-item--half-width" v-if="isStat(chartConfig.type)">
           <el-select
@@ -446,6 +440,7 @@
             <el-option :label="$t('project.topology.bac')" value="background"></el-option>
           </el-select>
         </el-form-item>
+
         <!-- Layout orientation -->
         <el-form-item :label="$t('dashboard.chartForm.orientation')" class="form-item--half-width" v-if="chartConfig.type==='bar'">
           <el-select
@@ -459,6 +454,7 @@
             <el-option :label="$t('dashboard.chartForm.horizontal')" value="horizontal"></el-option>
           </el-select>
         </el-form-item>
+
         <!-- Display mode -->
         <el-form-item :label="$t('dashboard.chartForm.displayMode')" class="form-item--half-width" v-if="chartConfig.type==='bar'">
           <el-select
@@ -471,6 +467,39 @@
             <el-option :label="$t('dashboard.chartForm.basic')" value="basic"></el-option>
             <el-option :label="$t('dashboard.chartForm.retro')" value="led"></el-option>
           </el-select>
+        </el-form-item>
+      </div>
+
+      <div class="form-items--half-width-group" v-if="isSankey(chartConfig.type)" key="sankey">
+        <!--Source label-->
+        <el-form-item class="form-item--half-width" :label="$t('dashboard.dashboard.chartForm.sourceLabel')" prop="param.sourceLabel"
+          :rules="[
+            { required: true, message: $t('validate.required'), trigger: 'blur'},
+            { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: $t('dashboard.dashboard.matchRegex'), trigger: 'blur'},
+            { validator: labelValidator,trigger: 'blur'},
+          ]"
+        >
+          <el-input
+            size="small"
+            style="margin-top: 2px"
+            :placeholder="$t('overall.placeHolder')"
+            @change="change"
+            v-model="chartConfig.param.sourceLabel"/>
+        </el-form-item>
+        <!--Target label-->
+        <el-form-item class="form-item--half-width" :label="$t('dashboard.dashboard.chartForm.targetLabel')" prop="param.targetLabel"
+          :rules="[
+            { required: true, message: $t('validate.required'), trigger: 'blur'},
+            { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: $t('dashboard.dashboard.matchRegex'), trigger: 'blur'},
+            { validator: labelValidator,trigger: 'blur'},
+          ]"
+        >
+          <el-input
+            size="small"
+            style="margin-top: 2px"
+            :placeholder="$t('overall.placeHolder')"
+            @change="change"
+            v-model="chartConfig.param.targetLabel"/>
         </el-form-item>
       </div>
 
@@ -579,7 +608,7 @@
                 :controls="false"
                 @change="change"
                 show-word-limit
-                :placeholder="chartConfig.param.rightYAxis.min?'':'Auto'"
+                placeholder="Auto"
                 v-model="chartConfig.param.rightYAxis.min"/>
             </el-form-item>
             <!--max-->
@@ -594,7 +623,7 @@
                 :controls="false"
                 @change="change"
                 show-word-limit
-                :placeholder="chartConfig.param.rightYAxis.max?'':'Auto'"
+                placeholder="Auto"
                 v-model="chartConfig.param.rightYAxis.max"/>
             </el-form-item>
           </div>
@@ -1367,7 +1396,7 @@ import VueTagsInput from '@johmun/vue-tags-input'
 import draggable from 'vuedraggable'
 import { s8 } from '@/components/common/js/common'
 import { randomcolor, ColorReverse } from '@/components/common/js/radomcolor/randomcolor'
-import { isSankey } from '@/components/chart/chart/tools'
+import { isSankey, initColor } from '@/components/chart/chart/tools'
 
 export default {
   name: 'chartConfig',
@@ -1462,6 +1491,15 @@ export default {
             break
           }
           this.chartConfig.param = {
+            min: undefined,
+            max: undefined,
+            color: {
+              schemeType: 'palette',
+              mode: 'palette',
+              paletteColors: initColor(20),
+              fixedColor: '',
+              continuousType: ''
+            },
             stack: 0,
             link: this.chartConfig.param.link,
             nullType: this.chartConfig.param.nullType,
@@ -1512,13 +1550,20 @@ export default {
             break
           }
           this.chartConfig.param = {
+            min: undefined,
+            max: undefined,
+            color: {
+              schemeType: 'palette',
+              mode: 'palette',
+              paletteColors: initColor(20),
+              fixedColor: '',
+              continuousType: ''
+            },
             nullType: this.chartConfig.param.nullType,
             link: this.chartConfig.param.link,
             statistics: 'last',
             text: 'value',
             valueMapping: [],
-            min: 0,
-            max: 100,
             enable: {
               legend: true,
               valueMapping: false,
@@ -1547,14 +1592,21 @@ export default {
             break
           }
           this.chartConfig.param = {
+            min: undefined,
+            max: undefined,
+            color: {
+              schemeType: 'palette',
+              mode: 'palette',
+              paletteColors: initColor(20),
+              fixedColor: '',
+              continuousType: ''
+            },
             nullType: this.chartConfig.param.nullType,
             link: this.chartConfig.param.link,
             statistics: 'last',
             text: 'value',
             valueMapping: [],
             legend: { placement: 'bottom', values: [], show: true },
-            min: 0,
-            max: 100,
             enable: {
               legend: true,
               valueMapping: false,

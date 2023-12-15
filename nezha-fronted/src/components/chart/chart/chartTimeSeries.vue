@@ -248,7 +248,7 @@ export default {
       setTimeout(() => {
         const dom = document.getElementById(`chart-canvas-${this.chartId}`)
         if (!dom) {
-          return;
+          return
         }
         const myChart = this.isInit ? echarts.init(dom) : getChart(this.chartId)
         if (!myChart) {

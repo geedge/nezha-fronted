@@ -3675,7 +3675,7 @@ import './promqlparser/wasm_exec.js'
 import draggable from 'vuedraggable'
 import lineData from '@/components/chart/defaultLineData'
 import logData from '@/components/chart/defaultLogData'
-
+import { initColor } from '@/components/chart/chart/tools'
 export default {
   name: 'exploreItem',
   components: {
@@ -4644,6 +4644,15 @@ export default {
         height: 2,
         unit: 2,
         param: {
+          min: undefined,
+          max: undefined,
+          color: {
+            schemeType: 'palette',
+            mode: 'palette',
+            paletteColors: initColor(20),
+            fixedColor: '',
+            continuousType: ''
+          },
           stack: 0,
           nullType: 'null',
           legend: {

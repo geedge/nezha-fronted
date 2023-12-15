@@ -10,6 +10,8 @@ import {
   chartTimeSeriesScatterOption
 } from './chart/options/chartTimeSeries'
 import * as CSV from 'csv-string'
+import { initColor } from '@/components/chart/chart/tools'
+import { interpolateRgbBasis } from 'd3-interpolate'
 export default {
   data () {
     return {
@@ -92,7 +94,6 @@ export default {
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
           if (colorIndex >= 20 && !this.showAllData) {
-            colorIndex++
             return
           }
           this.isNoData = false
@@ -245,10 +246,6 @@ export default {
         statistics = statisticsTypes.map(type => {
           return { type, value: getMetricTypeValue(data.values, type) }
         })
-      }
-      if (colorIndex >= 20) {
-        const colorRandom = randomcolor()
-        this.colorList.push(colorRandom)
       }
       if (this.chartInfo.type !== 'line' && this.chartInfo.type !== 'area' && this.chartInfo.type !== 'point') {
         this.legends.push({ name, alias, statistics, color: this.colorList[colorIndex] })
@@ -648,16 +645,63 @@ export default {
         csv += '\n'
       })
       return csv
+    },
+    // 计算最大值向上取整
+    calcMax (arr) {
+      let maxNum = arr.reduce((maxValue, obj) => {
+        return Math.max(maxValue, obj.value)
+      }, 0)
+
+      if (maxNum <= 1) {
+        return 1
+      }
+
+      let bite = 1
+      while (maxNum >= 10) {
+        maxNum /= 10
+        if (maxNum > 1) {
+          bite += 1
+        }
+      }
+
+      return Math.pow(10, bite)
+    },
+    // 获取值百分比
+    getValuePercent (value, minValue, maxValue) {
+      // Need special logic for when minValue === maxValue === value to prevent returning NaN
+      const valueRatio = Math.min((value - minValue) / (maxValue - minValue), 1)
+      return isNaN(valueRatio) ? 0 : valueRatio
+    },
+    setColorList (arr) {
+      this.colorList = []
+      const initColorArr = initColor(20)
+      const mode = lodash.get(this.chartInfo, 'param.color.mode', 'palette')
+      arr.forEach((item, index) => {
+        let color = ''
+        if (mode === 'palette') {
+          color = initColorArr[index] || randomcolor()
+        } else if (mode === 'fixed') {
+          color = lodash.get(this.chartInfo, 'param.color.fixedColor')
+        } else if (mode === 'continuous') {
+          const continuousType = lodash.get(this.chartInfo, 'param.color.continuousType')
+          const min = lodash.get(this.chartInfo, 'param.min') || 0
+          const max = lodash.get(this.chartInfo, 'param.max') || this.calcMax(arr)
+          // 获取颜色数组
+          const colorArr = this.$CONSTANTS.colorScheme.find(item => item.value == continuousType).color
+          const value = parseFloat(item.value)
+          const valuePercent = this.getValuePercent(value, min, max)
+          // 创建插值函数
+          const interpolateColor = interpolateRgbBasis(colorArr)
+          color = interpolateColor(valuePercent)
+        }
+        this.colorList.push(color)
+      })
     }
   },
   watch: {
     chartData: {
       deep: true,
       handler (n) {
-        if (!this.isInit && this.chartOption.color) {
-          this.colorList = this.colorList.slice(0, 20)
-          this.chartOption.color = this.chartOption.color.slice(0, 20)
-        }
         if (!this.isInit) {
           this.initChart(this.chartOption)
           if (this.resize) {

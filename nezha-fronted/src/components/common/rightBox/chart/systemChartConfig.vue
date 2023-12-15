@@ -157,28 +157,92 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <!--refer-->
+        <!-- unit -->
         <el-form-item
-          :label="$t('dashboard.dashboard.chartForm.refer')"
+          v-show="!isTable(chartConfig.type)&&!isLog(chartConfig.type)"
+          :label="$t('dashboard.dashboard.chartForm.unit')"
           class="form-item--half-width"
-          prop="param.stack"
-          style="display: none"
+          prop="unit"
         >
-          <el-select
-            id="chart-box-height"
-            v-model="chartConfig.param.refer"
+          <el-cascader
+            id="chart-box-unit"
+            v-model="chartConfig.unit"
+            :options="unitOptions"
+            :props="{ expandTrigger: 'hover',emitPath:false }"
+            :show-all-levels="false" filterable
             placeholder=""
-            popper-class="right-box-select-top prevent-clickoutside"
+            popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
             size="small"
-            value-key="chartSpan"
-            @change="change"
+            style="width: 100%"
+            @change="unitSelected"
           >
-            <el-option :value="1" label="true">
-            </el-option>
-            <el-option :value="0" label="false">
+          </el-cascader>
+        </el-form-item>
+
+        <!--min-->
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.min')" class="form-item--half-width" v-if="isShowMinMax(chartConfig.type)">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            show-word-limit
+            placeholder="Auto"
+            v-model="chartConfig.param.min"/>
+        </el-form-item>
+        <!--max-->
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.max')" class="form-item--half-width" v-if="isShowMinMax(chartConfig.type)">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            show-word-limit
+            placeholder="Auto"
+            v-model="chartConfig.param.max"/>
+        </el-form-item>
+        <!--decimals-->
+        <el-form-item :label="$t('config.assetLabel.decimals')" class="form-item--half-width" v-if="isShowDecimals(chartConfig.type)">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            :placeholder="'Default 2'"
+            show-word-limit
+            v-model="chartConfig.param.decimals"/>
+        </el-form-item>
+        <!--color Scheme-->
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.colorScheme')" class="colorScheme-form-item form-item--half-width" v-if="isShowColorScheme(chartConfig.type)">
+          <el-select
+            id="chart-box-type"
+            v-model="chartConfig.param.color.schemeType"
+            placeholder=""
+            popper-class="colorScheme-pop right-box-select-top prevent-clickoutside"
+            size="small"
+            @change="schemeTypeChange">
+            <el-option
+              v-for="item in colorScheme"
+              :key="item.name"
+              :label="$t(item.name)"
+              :value="item.value">
+              <div class="colorScheme-item">
+                <p class="colorScheme-name">{{$t(item.name)}}</p>
+                <div v-if="item.value!=='fixed'" :style="{background:item.background}" class="colorScheme-line"></div>
+                <!-- singleColor -->
+                <p v-else class="colorScheme-msg">{{$t('dashboard.dashboard.chartForm.singleColorMsg')}}</p>
+              </div>
             </el-option>
           </el-select>
+          <nezhaColor
+            v-if="chartConfig.param.color.schemeType=='fixed'"
+            :value-arr="[{name:'colorScheme',value:chartConfig.param.color.fixedColor}]"
+            :show-text="false"
+            :color-val="chartConfig.param.color.fixedColor"
+            @colorChange="(color,key)=>{colorChange(color,key)}"
+          />
         </el-form-item>
+
         <!-- index -->
         <el-form-item
           v-show="isTable(chartConfig.type)"
@@ -193,50 +257,7 @@
             @tags-changed="(newTags)=>{tagsChange(newTags)}"
           />
         </el-form-item>
-        <!-- unit -->
-        <el-form-item
-          v-show="!isTable(chartConfig.type)&&!isLog(chartConfig.type)"
-          :label="$t('dashboard.dashboard.chartForm.unit')"
-          class="form-item--half-width"
-          prop="unit"
-        >
-          <el-cascader id="chart-box-unit"
-                       v-model="chartConfig.unit"
-                       :options="unitOptions"
-                       :props="{ expandTrigger: 'hover',emitPath:false }"
-                       :show-all-levels="false" filterable
-                       placeholder=""
-                       popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
-                       size="small"
-                       style="width: 100%"
-                       @change="unitSelected"
-          >
-          </el-cascader>
-        </el-form-item>
-      </div>
-      <div class="form-items--half-width-group" v-if="isGauge(chartConfig.type)">
-        <!--min-->
-        <el-form-item :label="$t('dashboard.dashboard.chartForm.min')" class="form-item--half-width">
-          <el-input-number
-            size="small"
-            style="margin-top: 2px"
-            :controls="false"
-            @change="change"
-            show-word-limit
-            v-model="chartConfig.param.min"/>
-        </el-form-item>
-        <!--max-->
-        <el-form-item :label="$t('dashboard.dashboard.chartForm.max')" class="form-item--half-width">
-          <el-input-number
-            size="small"
-            style="margin-top: 2px"
-            :controls="false"
-            @change="change"
-            show-word-limit
-            v-model="chartConfig.param.max"/>
-        </el-form-item>
-      </div>
-      <div class="form-items--half-width-group">
+
         <!-- text -->
         <el-form-item
           :label="$t('config.assetLabel.display')"
@@ -260,16 +281,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <!--decimals-->
-        <el-form-item v-if="isShowDecimals(chartConfig.type)" :label="$t('config.assetLabel.decimals')" class="form-item--half-width">
-          <el-input-number
-            size="small"
-            style="margin-top: 2px"
-            :controls="false"
-            @change="change"
-            :placeholder="'Default 2'"
-            show-word-limit v-model="chartConfig.param.decimals"/>
-        </el-form-item>
+
         <!-- colorMode -->
         <el-form-item :label="$t('dashboard.chartForm.colorMode')" class="form-item--half-width" v-if="isStat(chartConfig.type)">
           <el-select
@@ -310,6 +322,7 @@
           </el-select>
         </el-form-item>
       </div>
+
       <!--legend-->
       <div v-if="isShowLegend(chartConfig.type)">
         <!--legendConfig-->
@@ -1010,7 +1023,7 @@ import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import nezhaColor from '@/components/common/nezhaColor'
 import filterSearch from '@/components/common/filterSearch/filterSearch.vue'
 import VueTagsInput from '@johmun/vue-tags-input'
-import { isGauge } from '@/components/chart/chart/tools'
+import { isGauge, initColor } from '@/components/chart/chart/tools'
 import draggable from 'vuedraggable'
 export default {
   name: 'systemChartConfig',
@@ -1146,13 +1159,20 @@ export default {
             break
           }
           this.chartConfig.param = {
+            min: undefined,
+            max: undefined,
+            color: {
+              schemeType: 'palette',
+              mode: 'palette',
+              paletteColors: initColor(20),
+              fixedColor: '',
+              continuousType: ''
+            },
             nullType: this.chartConfig.param.nullType,
             link: this.chartConfig.param.link,
             statistics: 'last',
             text: 'value',
             valueMapping: [],
-            min: 0,
-            max: 100,
             enable: {
               legend: true,
               valueMapping: false,
@@ -1180,14 +1200,21 @@ export default {
             break
           }
           this.chartConfig.param = {
+            min: undefined,
+            max: undefined,
+            color: {
+              schemeType: 'palette',
+              mode: 'palette',
+              paletteColors: initColor(20),
+              fixedColor: '',
+              continuousType: ''
+            },
             nullType: this.chartConfig.param.nullType,
             link: this.chartConfig.param.link,
             statistics: 'last',
             text: 'value',
             valueMapping: [],
             legend: { placement: 'bottom', values: [], show: true },
-            min: 0,
-            max: 100,
             enable: {
               legend: true,
               valueMapping: false,

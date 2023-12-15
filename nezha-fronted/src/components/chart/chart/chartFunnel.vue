@@ -60,7 +60,7 @@ import { getMetricTypeValue } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import { initColor } from '@/components/chart/chart/tools'
 import lodash from 'lodash'
-
+import tinycolor from 'tinycolor2'
 export default {
   name: 'chart-funnel',
   components: {
@@ -109,7 +109,7 @@ export default {
           const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
           const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
           this.funnelData.push({
-            value: Number(value),
+            value: parseFloat(value),
             realValue: value,
             showValue: showValue,
             name: legend.name,
@@ -121,11 +121,14 @@ export default {
             expressionIndex: expressionIndex,
             dataIndex: dataIndex,
             mapping: mapping,
-            background: mapping ? mapping.color.bac.substr(0, 7) : this.colorList[colorIndex], // 仅限十六进制
-            label: legend.alias
+            background: ''
           })
           colorIndex++
         })
+      })
+      this.setColorList(this.funnelData)
+      this.funnelData.forEach((item, index) => {
+        item.background = item.mapping ? item.mapping.color.bac.substr(0, 7) : tinycolor(this.colorList[index]).toHexString() // 仅限十六进制
       })
       this.funnelData.sort((a, b) => b.value - a.value)
       this.$emit('chartIsNoData', this.isNoData)
@@ -350,24 +353,6 @@ export default {
       })
     },
     /**
-     * Convert a hex color to an RGB object.
-     *
-     * @param {string} color
-     *
-     * @returns {{R: Number, G: number, B: number}}
-     */
-    hexToRgb (color) {
-      let hex = color.slice(1)
-      if (hex.length === 3) {
-        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
-      }
-      const f = parseInt(hex, 16)
-      const R = f >> 16
-      const G = (f >> 8) & 0x00FF
-      const B = f & 0x0000FF
-      return { R, G, B }
-    },
-    /**
      * Shade a color to the given percentage.
      *
      * @param {string} color A hex color.
@@ -376,14 +361,14 @@ export default {
      * @return {string}
      */
     shade (color, shade) {
-      const { R, G, B } = this.hexToRgb(color)
+      const { r, g, b } = tinycolor(color).toRgb()
       const t = shade < 0 ? 0 : 255
       const p = shade < 0 ? shade * -1 : shade
 
       const converted = 0x1000000 +
-            ((Math.round((t - R) * p) + R) * 0x10000) +
-            ((Math.round((t - G) * p) + G) * 0x100) +
-            (Math.round((t - B) * p) + B)
+            ((Math.round((t - r) * p) + r) * 0x10000) +
+            ((Math.round((t - g) * p) + g) * 0x100) +
+            (Math.round((t - b) * p) + b)
 
       return `#${converted.toString(16).slice(1)}`
     },

@@ -10,10 +10,8 @@
     </div>
 
     <div class="color-show" v-if="!single" ref="colorShow" @click.stop="changeColor">
-      <div :style="{background:findColor('bac'),border:'2px solid '+findColor('line'),'line-height':'18px'}" class="color-show-left">
-        <span :style="{color:findColor('text')}" style="line-height: 18px;">
-                              T
-        </span>
+      <div :style="{background:findColor('bac'),'line-height':'18px'}" class="color-show-left">
+        <span :style="{color:findColor('text')}" style="line-height: 18px;">T</span>
       </div>
     </div>
 
@@ -130,7 +128,7 @@ export default {
       this.showColorPicker = !this.showColorPicker
       if (this.showColorPicker) {
         window.addEventListener('mousewheel', this.mousewheel)
-        setTimeout(() => {
+        this.$nextTick(() => {
           const position = this.$refs.colorShow.getBoundingClientRect()
           const colorBox = this.$refs.colorBox.getBoundingClientRect()
           const w = window.innerWidth

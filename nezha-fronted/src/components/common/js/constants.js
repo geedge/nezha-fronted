@@ -369,7 +369,7 @@ export const intervalList = [
   { value: 60, label: '1m' },
   { value: 300, label: '5m' },
   { value: 900, label: '15m' },
-  { value: 1800, label: '30m' },
+  { value: 1800, label: '30m' }
   // { value: 3600, label: '1h' },
   // { value: 7200, label: '2h' }
 ]
@@ -523,3 +523,16 @@ export const systemIcon = {
 }
 
 export const stackIconSvg = 'path://M538.112 998.4a25.6 25.6 0 0 1-11.776-2.88L39.424 743.232a25.6 25.6 0 1 1 23.552-45.44l474.368 245.824 422.592-245.248a25.6 25.6 0 0 1 25.728 44.288l-434.688 252.288a25.728 25.728 0 0 1-12.864 3.456z,M538.112 789.888a25.6 25.6 0 0 1-11.776-2.88L39.424 534.72a25.6 25.6 0 1 1 23.552-45.44l474.368 245.824 422.592-245.248a25.6 25.6 0 1 1 25.728 44.288l-434.688 252.288a25.728 25.728 0 0 1-12.864 3.456z,M538.112 581.312a25.6 25.6 0 0 1-11.776-2.88L39.424 326.144a25.6 25.6 0 0 1-1.088-44.928L473.088 28.928a25.344 25.344 0 0 1 24.64-0.576l486.848 252.288a25.6 25.6 0 0 1 1.088 44.928L550.976 577.856a25.728 25.728 0 0 1-12.864 3.456zM104.384 302.208l432.96 224.384 382.208-221.824-432.96-224.384-382.208 221.824z'
+
+export const colorScheme = [
+  { name: i18n.t('dashboard.dashboard.chartForm.singleColor'), value: 'fixed', background: '' },
+  { name: i18n.t('dashboard.dashboard.chartForm.classicPalette'), value: 'palette', background: 'linear-gradient(90deg, #3685FF 0%, #3685FF 5%, #00DCA2 5%, #00DCA2 10%, #00BFD0 10%, #00BFD0 15%, #954Eff 15%, #954Eff 20%, #FFCB01 20%, #FFCB01 25%, #f65A96 25%, #f65A96 30%, #FF9094 30%, #FF9094 35%, #00CCF5 35%, #00CCF5 40%, #FF8BEA 40%, #FF8BEA 45%, #4D7693 45%, #4D7693 50%, #72577C 50%, #72577C 55%, #99D750 55%, #99D750 60%, #DD8270 60%, #DD8270 65%, #C475EE 65%, #C475EE 70%, #7E83FB 70%, #7E83FB 75%, #7EB090 75%, #7EB090 80%, #CF6684 80%, #CF6684 85%, #4E55FF 85%, #4E55FF 90%, #FF8D00 90%, #FF8D00 95%, #FF5200 95%, #FF5200 100%)' },
+  { name: i18n.t('dashboard.dashboard.chartForm.greenYellowRed'), value: 'GrYlRd', color: ['rgb(86, 166, 75)', 'rgb(242, 204, 12)', 'rgb(224, 47, 68)'], background: 'linear-gradient(90deg, rgb(86, 166, 75), rgb(242, 204, 12), rgb(224, 47, 68))' },
+  { name: i18n.t('dashboard.dashboard.chartForm.redYellowGreen'), value: 'RdYlGr', color: ['rgb(224, 47, 68)', 'rgb(242, 204, 12)', 'rgb(86, 166, 75)'], background: 'linear-gradient(90deg, rgb(224, 47, 68), rgb(242, 204, 12), rgb(86, 166, 75))' },
+  { name: i18n.t('dashboard.dashboard.chartForm.blueYellowRed'), value: 'BlYlRd', color: ['rgb(18, 80, 176)', 'rgb(255, 238, 82)', 'rgb(173, 3, 23)'], background: 'linear-gradient(90deg, rgb(18, 80, 176), rgb(255, 238, 82), rgb(173, 3, 23))' },
+  { name: i18n.t('dashboard.dashboard.chartForm.yellowRed'), value: 'YlRd', color: ['rgb(255, 238, 82)', 'rgb(173, 3, 23)'], background: 'linear-gradient(90deg, rgb(255, 238, 82), rgb(173, 3, 23))' },
+  { name: i18n.t('dashboard.dashboard.chartForm.yellowBlue'), value: 'YlBl', color: ['rgb(255, 238, 82)', 'rgb(18, 80, 176)'], background: 'linear-gradient(90deg, rgb(255, 238, 82), rgb(18, 80, 176))' },
+  { name: i18n.t('dashboard.dashboard.chartForm.blues'), value: 'blues', color: ['rgb(255, 255, 255)', 'rgb(18, 80, 176)'], background: 'linear-gradient(90deg, rgb(255, 255, 255), rgb(18, 80, 176))' },
+  { name: i18n.t('dashboard.dashboard.chartForm.greens'), value: 'reds', color: ['rgb(255, 255, 255)', 'rgb(25, 115, 14)'], background: 'linear-gradient(90deg, rgb(255, 255, 255), rgb(25, 115, 14))' },
+  { name: i18n.t('dashboard.dashboard.chartForm.reds'), value: 'greens', color: ['rgb(255, 255, 255)', 'rgb(173, 3, 23)'], background: 'linear-gradient(90deg, rgb(255, 255, 255), rgb(173, 3, 23))' }
+]

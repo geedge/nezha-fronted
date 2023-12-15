@@ -156,7 +156,7 @@ import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
 import panelVariables from '@/components/common/panel/panelVariables'
 import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
-
+import { initColor } from '@/components/chart/chart/tools'
 export default {
   name: 'dashboardTab',
   mixins: [subDataListMixin, detailViewRightMixin, htmlToPdfMixin, exportHtmlMixin],
@@ -223,6 +223,15 @@ export default {
         height: 2,
         unit: 2,
         param: {
+          min: undefined,
+          max: undefined,
+          color: {
+            schemeType: 'palette',
+            mode: 'palette',
+            paletteColors: initColor(20),
+            fixedColor: '',
+            continuousType: ''
+          },
           stack: 0,
           nullType: 'null',
           legend: { placement: 'bottom', values: [], show: true },
@@ -255,7 +264,7 @@ export default {
           tooltip: {
             mode: 'all',
             sort: 'none'
-          },
+          }
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
         panel: '',
@@ -330,7 +339,7 @@ export default {
         { value: 60, label: '1m' },
         { value: 300, label: '5m' },
         { value: 900, label: '15m' },
-        { value: 1800, label: '30m' },
+        { value: 1800, label: '30m' }
       ]
     }
   },

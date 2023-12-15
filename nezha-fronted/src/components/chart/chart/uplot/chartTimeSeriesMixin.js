@@ -7,10 +7,12 @@ import bus from '@/libs/bus'
 import moment from 'moment-timezone'
 import { getChart } from '@/components/common/js/common'
 import uplot from 'uplot'
+import { interpolateRgbBasis } from 'd3-interpolate'
+import tinycolor from 'tinycolor2'
 export default {
   data () {
     return {
-      seriesColor: initColor(),
+      colorList: [],
       incrs: Incrs,
       dataIdx: null,
       seriesIdx: null,
@@ -95,19 +97,80 @@ export default {
       })
       this.chartIndex = chartIndex
       seriesData.unshift(time)
+      this.setColorList(seriesAll, seriesData)
       this.series = seriesAll
       return {
         seriesData,
         seriesAll
       }
     },
+    setColorList (seriesAll, seriesData) {
+      let dataArr = lodash.cloneDeep(seriesData)
+      dataArr.shift()
+      // 取最后一个非空值
+      dataArr = dataArr.map(item => {
+        let value = 0
+        for (let i = item.length - 1; i >= 0; i--) {
+          if (item[i]) {
+            value = item[i]
+            break
+          }
+        }
+        return {
+          value
+        }
+      })
+      this.colorList = []
+      const initColorArr = initColor(20)
+      const mode = lodash.get(this.chartInfo, 'param.color.mode', 'palette')
+      seriesAll.forEach((item, index) => {
+        let color = ''
+        if (mode === 'palette') {
+          color = initColorArr[index] || randomcolor()
+        } else if (mode === 'fixed') {
+          color = lodash.get(this.chartInfo, 'param.color.fixedColor')
+        } else if (mode === 'continuous') {
+          const continuousType = lodash.get(this.chartInfo, 'param.color.continuousType')
+          let min = lodash.get(this.chartInfo, 'param.min') || 0
+          let max = lodash.get(this.chartInfo, 'param.max') || this.calcMax(dataArr)
+          if (item.yAxisIndex == 1) {
+            min = lodash.get(this.chartInfo, 'param.rightYAxis.min') || 0
+            max = lodash.get(this.chartInfo, 'param.rightYAxis.max') || this.calcMax(dataArr)
+          }
+          // 获取颜色数组
+          const colorArr = this.$CONSTANTS.colorScheme.find(item => item.value == continuousType).color
+          const value = parseFloat(dataArr[index].value)
+          const valuePercent = this.getValuePercent(value, min, max)
+          // 创建插值函数
+          const interpolateColor = interpolateRgbBasis(colorArr)
+          color = interpolateColor(valuePercent)
+        }
+        // 设置图表颜色
+        const chartType = item.yAxisIndex == 1 ? lodash.get(this.chartInfo, 'param.rightYAxis.style', 'line') : this.chartInfo.type
+        item.stroke = color
+        if (chartType === 'area') {
+          // 使用 tinycolor 转换为十六进制
+          const hexColor = tinycolor(color).toHexString()
+          item.fill = hexColor + '20' // 面积图使用
+        }
+        if (chartType === 'point') {
+          item.points = {
+            show: true,
+            size: 6,
+            width: 3,
+            fill: color,
+            stroke: color
+          }
+          item.width = 0
+        }
+        this.colorList.push(color)
+        this.legends[index].color = color
+      })
+    },
     renderSeries (series, expressionIndex, dataIndex, chartIndex) {
       const leftUnit = this.chartInfo.unit
       const leftUnitCompute = chartDataFormat.getUnit(leftUnit)
       const decimals = this.chartInfo.param.decimals || 2
-      if (chartIndex > 19) {
-        this.seriesColor.push(randomcolor())
-      }
       const legend = this.handleLegend(this.chartInfo, series, expressionIndex, dataIndex, chartIndex)
       let isRight
       if (this.chartInfo.param.enable.rightYAxis) {
@@ -117,7 +180,6 @@ export default {
       const name = legend.name
       const alias = legend.alias
       const statistics = series.statistics
-      const chartType = this.chartInfo.type
 
       const obj = {
         name: name,
@@ -125,7 +187,6 @@ export default {
         scale: isRight ? 'right' : 'left', // right
         yAxisIndex: isRight, // right
         // values: (u, v) => series.elements.name + JSON.stringify(series.metric),
-        stroke: this.seriesColor[chartIndex],
         width: 1 / devicePixelRatio,
         expressionIndex: series.expressionIndex,
         paths (taht, seriesIdx, idx0, idx1, filtIdxs) {
@@ -133,20 +194,7 @@ export default {
         },
         spanGaps: true
       }
-      if (chartType === 'area') {
-        obj.fill = this.seriesColor[chartIndex] + '20' // 面积图使用
-      }
-      if (chartType === 'point') {
-        obj.points = {
-          show: true,
-          size: 6,
-          width: 3,
-          fill: this.seriesColor[chartIndex],
-          stroke: this.seriesColor[chartIndex]
-        }
-        obj.width = 0
-      }
-      this.legends.push({ name, alias, statistics, color: this.seriesColor[chartIndex] })
+      this.legends.push({ name, alias, statistics, color: this.colorList[chartIndex] })
       return obj
     },
     tooltipPlugin ({ onclick, shiftX = 10, shiftY = 10 }) {

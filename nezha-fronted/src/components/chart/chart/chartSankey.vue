@@ -199,17 +199,16 @@ export default {
         links: linksData
       })
 
+      this.setColorList(nodes)
+
       // 设置节点颜色
       nodes.forEach((item, index) => {
-        if (index >= 20) {
-          const colorRandom = randomcolor()
-          this.colorList.push(colorRandom)
-        }
-        const mapping = this.selectMapping(item.value, this.chartInfo.param.valueMapping, this.chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
+        const value = !allZero ? item.value : 0
+        const mapping = this.selectMapping(value, this.chartInfo.param.valueMapping, this.chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
         item.mapping = mapping
         item.background = mapping ? mapping.color.bac : this.colorList[index]
         const decimals = this.chartInfo.param.decimals || 2
-        item.showValue = chartDataFormat.getUnit(this.chartInfo.unit ? this.chartInfo.unit : 2).compute(!allZero ? item.value : 0, null, -1, decimals)
+        item.showValue = chartDataFormat.getUnit(this.chartInfo.unit ? this.chartInfo.unit : 2).compute(value, null, -1, decimals)
       })
 
       // 创建一个连线绘制组，绑定连线数据(links)
@@ -471,7 +470,6 @@ export default {
     }
   },
   mounted () {
-    this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart()
   },
   beforeDestroy () {
