@@ -305,6 +305,12 @@ export default {
     }
   },
   mixins: [rz],
+  computed: {
+    colorByValue () {
+      const mode = lodash.get(this.chartConfig, 'param.color.mode', 'palette')
+      return mode == 'continuous'
+    }
+  },
   methods: {
     schemeTypeChange (val) {
       const obj = this.$lodash.cloneDeep(this.chartConfig.param.color)
@@ -315,7 +321,7 @@ export default {
       } else if (val === 'fixed') {
         obj.schemeType = 'fixed'
         obj.mode = 'fixed'
-        obj.fixedColor = obj.fixedColor || randomcolor()
+        obj.fixedColor = obj.fixedColor || '#56a64b'
       } else {
         obj.schemeType = val
         obj.mode = 'continuous'
@@ -507,7 +513,7 @@ export default {
         type: 'value',
         show: true,
         value: undefined,
-        display: '',
+        display: '{{value}}',
         color: {
           bac: bacColor + 'FF',
           text: ColorReverse(bacColor) + 'FF',

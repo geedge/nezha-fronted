@@ -231,10 +231,12 @@ export default {
     },
     isShowMinMax (type) {
       switch (type) {
-        case 'log' :
-        case 'table' :
-          return false
-        default: return true
+        case 'line':
+        case 'area':
+        case 'point':
+        case 'gauge':
+          return true
+        default: return false
       }
     },
     isTimeSeries (type) {

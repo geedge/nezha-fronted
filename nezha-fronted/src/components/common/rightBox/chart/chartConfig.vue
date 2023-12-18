@@ -207,38 +207,6 @@
           </el-cascader>
         </el-form-item>
 
-        <!--min-->
-        <el-form-item :label="$t('dashboard.dashboard.chartForm.min')" class="form-item--half-width" v-if="isShowMinMax(chartConfig.type)">
-          <el-input-number
-            size="small"
-            style="margin-top: 2px"
-            :controls="false"
-            @change="change"
-            show-word-limit
-            placeholder="Auto"
-            v-model="chartConfig.param.min"/>
-        </el-form-item>
-        <!--max-->
-        <el-form-item :label="$t('dashboard.dashboard.chartForm.max')" class="form-item--half-width" v-if="isShowMinMax(chartConfig.type)">
-          <el-input-number
-            size="small"
-            style="margin-top: 2px"
-            :controls="false"
-            @change="change"
-            show-word-limit
-            placeholder="Auto"
-            v-model="chartConfig.param.max"/>
-        </el-form-item>
-        <!--decimals-->
-        <el-form-item :label="$t('overall.decimal')" class="form-item--half-width" v-if="isShowDecimals(chartConfig.type)">
-          <el-input-number
-            size="small"
-            style="margin-top: 2px"
-            :controls="false"
-            @change="change"
-            :placeholder="'Default 2'"
-            show-word-limit v-model="chartConfig.param.decimals"/>
-        </el-form-item>
         <!--color Scheme-->
         <el-form-item :label="$t('dashboard.dashboard.chartForm.colorScheme')" class="colorScheme-form-item form-item--half-width" v-if="isShowColorScheme(chartConfig.type)">
           <el-select
@@ -268,6 +236,38 @@
             :color-val="chartConfig.param.color.fixedColor"
             @colorChange="(color,key)=>{colorChange(color,key)}"
           />
+        </el-form-item>
+        <!--decimals-->
+        <el-form-item :label="$t('overall.decimal')" class="form-item--half-width" v-if="isShowDecimals(chartConfig.type)">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            :placeholder="'Default 2'"
+            show-word-limit v-model="chartConfig.param.decimals"/>
+        </el-form-item>
+        <!--min-->
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.min')" class="form-item--half-width" v-if="isShowMinMax(chartConfig.type) || colorByValue">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            show-word-limit
+            placeholder="Auto"
+            v-model="chartConfig.param.min"/>
+        </el-form-item>
+        <!--max-->
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.max')" class="form-item--half-width" v-if="isShowMinMax(chartConfig.type) || colorByValue">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            show-word-limit
+            placeholder="Auto"
+            v-model="chartConfig.param.max"/>
         </el-form-item>
 
         <!-- index -->
@@ -1157,7 +1157,7 @@
                       </div>
                     </div>
                     <el-form-item :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
-                      <el-input v-model="item.display" style="margin-right: 10px" placeholder="" size="small" @change="change('valueMapping', index)" class="mapping-display-input">
+                      <el-input v-model="item.display" style="margin-right: 10px" size="small" @change="change('valueMapping', index)" class="mapping-display-input text-transform-none" :placeholder="'{{value}}'">
                         <el-dropdown trigger="click" slot="prefix" placement="top-start">
                           <div class="el-dropdown-link">
                             <i v-if="item.icon" class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>

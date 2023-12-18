@@ -572,7 +572,8 @@ textarea {
 }
 
 .newAlert-notification{
-  width: auto;
+  box-sizing: border-box;
+  width: 460px;
   padding: 15px 55px 15px 18px;
   align-items: center;
   background: $--background-color-2;
@@ -866,6 +867,9 @@ i.nz-icon-override{
 }
 input::placeholder{
   text-transform:capitalize;
+}
+.text-transform-none input::placeholder{
+  text-transform:none;
 }
 .vue-tags-input {
   .ti-tag.ti-valid {

@@ -57,12 +57,12 @@ export default {
       type: Array,
       default () {
         return [
-          '#19730E', '#37872D', '#73BF69',
-          '#CC9D00', '#E0B400', '#FADE2A',
-          '#AD0317', '#C4162A', '#F2495C',
-          '#1250B0', '#1F60C4', '#5794F2',
-          '#E55400', '#FA6400', '#FF9830',
-          '#7C2EA3', '#8F3BB8', '#B877D9'
+          '#ad0317', '#e02f44', '#ff7383',
+          '#e55400', '#ff780a', '#ffb357',
+          '#cc9d00', '#f2cc0c', '#ffee52',
+          '#19730e', '#56a64b', '#96d98d',
+          '#124fb0', '#3274d9', '#8ab8ff',
+          '#7c2ea3', '#a352cc', '#ca95e5'
         ]
       }
     },
@@ -96,8 +96,13 @@ export default {
   },
   mounted () {
     if (!this.isTopo) {
-      this.keyName = this.valueArr[0].name
-      this.colors = this.valueArr[0].value || randomcolor() + 'FF'
+      // 默认选中background
+      let index = this.valueArr.findIndex(item => item.key === 'bac')
+      if (index == -1) {
+        index = 0
+      }
+      this.keyName = this.valueArr[index].name
+      this.colors = this.valueArr[index].value || randomcolor() + 'FF'
       this.$emit('colorChange', this.colors, this.keyName)
     } else {
       this.keyName = this.valueArr[0].name
