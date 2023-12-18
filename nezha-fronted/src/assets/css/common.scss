@@ -614,6 +614,19 @@ textarea {
     }
   }
 }
+.newAlert-notification{
+  &.el-notification-fade-leave-active {
+    opacity: 1;
+    &.right {
+      right: 0;
+      transform: translateX(100%);
+    }
+    &.left {
+      left: 0;
+      transform: translateX(-100%);
+    }
+  }
+}
 
 .document-copy-block {
   display: flex;
