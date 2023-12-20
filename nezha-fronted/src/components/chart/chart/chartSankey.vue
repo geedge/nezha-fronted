@@ -170,17 +170,18 @@ export default {
       }
       const width = svgDom.getBoundingClientRect().width
       const height = svgDom.getBoundingClientRect().height
-      const margin1 = 100
-      const margin2 = 50
+      const vertical = 20
+      const left = 20
+      const right = 80
       this.svg = d3.select(`#sankey-svg-${this.chartId}`)
-      const chart = this.svg.append('g').attr('transform', `translate(${margin2}, ${margin2})`)
+      const chart = this.svg.append('g').attr('transform', `translate(${left}, ${vertical})`)
 
       // 创建桑基图生成器
       const sankey = d3Sankey
         .sankey()
         .nodeWidth(20)
         .nodePadding(20)
-        .size([width - 2 * margin1, height - 2 * margin2])
+        .size([width - 2 * left - right, height - 2 * vertical])
         .nodeId((d) => d.node)
       const nodesData = lodash.cloneDeep(this.nodesData)
       const linksData = lodash.cloneDeep(this.linksData)

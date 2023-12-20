@@ -153,8 +153,9 @@ export default {
       // 计算svg高度
       const height = this.rankData.length * (barHeight + margin) + margin
       this.svg = d3.select(`#rank-svg-${this.chartId}`).attr('height', height)
-      const bodyX = 50
-      const bodyWidth = width - 3 * bodyX
+      const left = 20
+      const right = 80
+      const bodyWidth = width - left - right
 
       // 从大到小排序
       let rankData = lodash.cloneDeep(this.rankData)
@@ -176,7 +177,7 @@ export default {
       const minWidth = 2
       // 渲染柱形
       const bars = this.svg.append('g')
-        .attr('transform', `translate(${bodyX})`)
+        .attr('transform', `translate(${left})`)
         .selectAll()
         .data(rankData)
       bars.enter()
@@ -200,7 +201,7 @@ export default {
 
       // 文本标签
       this.svg.append('g')
-        .attr('transform', `translate(${bodyX})`)
+        .attr('transform', `translate(${left})`)
         .selectAll()
         .data(rankData)
         .enter()
@@ -230,7 +231,7 @@ export default {
 
       // 生成标签和矩形
       this.svg.append('g')
-        .attr('transform', `translate(${bodyX})`)
+        .attr('transform', `translate(${left})`)
         .selectAll('text')
         .data(rankData)
         .enter()
