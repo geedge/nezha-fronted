@@ -209,7 +209,7 @@ export default {
         .attr('height', height)
         .attr('viewBox', [-width / 2, -height / 2, width, height])
 
-      const outerRadius = (Math.min(width, height) / 2) * 0.8 // outer radius of pie, in pixels
+      const outerRadius = (Math.min(width, height) / 2) * 0.9 // outer radius of pie, in pixels
       const innerRadius = outerRadius * (this.chartInfo.type === 'doughnut' ? 0.67 : 0) // inner radius of pie, in pixels (non-zero for donut)
       const padAngle = 0 // angular separation between wedges
       const arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius)
