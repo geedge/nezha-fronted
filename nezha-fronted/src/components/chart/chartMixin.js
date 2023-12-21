@@ -471,10 +471,22 @@ export default {
     },
     copyExpr () {
       const expr = this.chartInfo.elements[this.toolbox.metric.expressionIndex].expression || ''
-      this.$copyText(expr).then(() => {
-        this.$message.success({ message: this.$t('overall.copySuccess') })
-        this.clickout()
+      const domUrl = document.createElement('input')
+      domUrl.value = expr
+      domUrl.id = 'creatDom'
+      document.body.appendChild(domUrl)
+      // 延迟执行选择和复制操作
+      setTimeout(() => {
+        domUrl.select() // 选择对象
+        document.execCommand('Copy') // 执行浏览器复制命令
+        // 延迟执行删除操作
+        setTimeout(() => {
+          const creatDom = document.getElementById('creatDom')
+          creatDom.parentNode.removeChild(creatDom)
+        })
       })
+      this.$message.success({ message: this.$t('overall.copySuccess') })
+      this.clickout()
     },
     beforeDownloadCSV (chart) {
       let csv = ''
