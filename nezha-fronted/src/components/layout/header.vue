@@ -232,6 +232,8 @@ export default {
               localStorage.setItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`, currentTheme)
               const body = document.getElementsByTagName('body')[0]
               body.setAttribute('class', `theme-${currentTheme}`)
+              // 改变地图图表的主题
+              bus.$emit('headerThemeChange', currentTheme)
               this.$message.success(this.$t('tip.saveSuccess'))
             } else {
               this.$message.error(res.msg)

@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import bus from '@/libs/bus'
 import chartMixin from '@/components/chart/chartMixin'
 import chartFormat from '@/components/chart/chartFormat'
 import axios from 'axios'
@@ -88,8 +89,14 @@ export default {
   },
   mounted () {
     this.chartInfo.loaded && this.initChart()
+    // 监听header改变主题
+    bus.$on('headerThemeChange', this.themeChange)
   },
   methods: {
+    themeChange (theme) {
+      this.theme = theme
+      this.resize()
+    },
     initChart () {
       this.initMap()
     },
@@ -346,6 +353,7 @@ export default {
     }
   },
   beforeDestroy () {
+    bus.$off('headerThemeChange', this.themeChange)
     if (this.timer) {
       clearTimeout(this.timer)
       this.timer = null
