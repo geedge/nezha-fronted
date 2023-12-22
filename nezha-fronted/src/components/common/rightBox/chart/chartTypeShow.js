@@ -235,6 +235,7 @@ export default {
         case 'area':
         case 'point':
         case 'gauge':
+        case 'bar':
           return true
         default: return false
       }
