@@ -15,7 +15,7 @@
           </el-form-item>
           <!--brand-->
           <el-form-item :label='$t("asset.brand")' prop="brandId">
-            <el-select value-key="id" allow-create :maxlength="64" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" :filterable="true" v-model="editModel.brandId" placeholder="" size="small" id="module-box-input-project">
+            <el-select value-key="id" allow-create :maxlength="64" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" :filterable="true" v-model="editModel.brandId" :placeholder="$t('placeholder.newBrand')" size="small" id="module-box-input-project">
               <el-option :id="'module-project-'+item.id" v-for="item in brandList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>

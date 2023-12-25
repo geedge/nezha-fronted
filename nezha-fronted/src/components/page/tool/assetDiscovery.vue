@@ -50,7 +50,7 @@
                 </el-select>
               </el-form-item>
               <!-- retries -->
-              <el-form-item prop="retries" style="margin-bottom:14px" :label="$t('Retries')">
+              <el-form-item prop="retries" style="margin-bottom:14px" :label="$t('overall.retries')">
                 <div class="wrap" style="height:32px">
                   <el-input v-model.number="discoveryForm.retries" placeholder="">
                   </el-input>
@@ -249,8 +249,12 @@ export default {
   mounted () {
   },
   methods: {
-    closeRightBox () {
+    closeRightBox (refresh) {
       this.rightBox.show = false
+      if (refresh) {
+        const  findItem  = this.tableData.find(item=> item.ip ===  this.object.manageIp)
+        findItem.imported = 1
+      }
     },
     async uploadAsset (row) {
       this.object = this.newObject()

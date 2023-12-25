@@ -22,10 +22,17 @@
       :series="series"
       :is-fullscreen="isFullscreen"
     ></chart-legend>
-    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
-      <div v-html="tooltip.tooltipHtml"></div>
+    <!-- toolbox -->
+    <div :id="`chart-toolbox-${chartId}`" class="chart-canvas-tooltip no-style-class chart-toolbox" :style="{left:toolbox.x+'px',top:toolbox.y+'px'}" v-if="toolbox.show" v-clickoutside="clickout">
+      <div v-html="toolbox.tooltipHtml"></div>
       <!-- dataLink -->
-      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+      <div class="chart-dataLink-list">
+        <!-- 复制表达式 -->
+        <div class="chart-dataLink-item select-series" v-if="chartInfo.datasource==='metrics'||chartInfo.datasource==='logs'" @click="copyExpr">
+          <i class="nz-icon nz-icon-override"></i>
+          <span v-if="chartInfo.datasource==='metrics'">{{$t('overall.copy')}} PromQL</span>
+          <span v-else>{{$t('overall.copy')}} LogQL</span>
+        </div>
         <!-- 只有一条数据时显示 -->
         <div class="chart-dataLink-item select-series" v-if="isGrey.filter(value => value === false).length==1" @click="showAllSeries">
           <i class="nz-icon nz-icon-a-Showallseries"></i>
@@ -79,14 +86,13 @@ export default {
       hasRightYAxis: false,
       chartLoading: false,
       cursorDefault: false,
-      tooltip: {
+      toolbox: {
         x: 0,
         y: 0,
         title: 0,
         value: 0,
         mapping: {},
         show: false,
-        dataLinkShow: '',
         metric: {},
         activeIndex: undefined,
         clickIndex: undefined
@@ -95,6 +101,9 @@ export default {
     }
   },
   computed: {
+    lineOption () {
+      return this.nzDefaultConfig.option
+    },
     hasLegend () {
       try {
         return [chartLegendPlacement.bottom, chartLegendPlacement.left, chartLegendPlacement.right].indexOf(this.chartInfo.param.legend.placement) > -1 && this.chartInfo.param.enable.legend
@@ -125,6 +134,9 @@ export default {
   // 监听当前鼠标所在的图表id变化
     '$store.state.panel.currentMousemove': {
       handler (n) {
+        if (this.isConnect !== 'crosshair') {
+          return
+        }
         // 判断是否是当前鼠标所在的图表
         if (n === this.chartId) {
           let option = {}
@@ -171,8 +183,16 @@ export default {
         chartOption.grid.top = 70
         chartOption.toolbox.top = 20
       }
+
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+
+      chartOption.series.forEach(item => {
+        if (item.lineStyle) {
+          item.lineStyle.width = this.lineOption.lineWidth
+        }
+        item.symbolSize = this.lineOption.pointSize
+      })
 
       this.isGrey = this.legends.map(() => false)
       chartOption.color = this.colorList
@@ -188,6 +208,23 @@ export default {
       chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime, maxTime)// 需转为毫秒
       chartOption.tooltip.formatter = this.tooltipFormatter(this.chartInfo.param.stack)
       chartOption.tooltip.position = this.tooltipPosition
+      if (this.isFullscreen) {
+        chartOption.grid.bottom = 50
+        chartOption.dataZoom = [
+          {
+            type: 'inside',
+            start: 0,
+            end: 100,
+            zoomOnMouseWheel: 'shift'
+          },
+          {
+            start: 0,
+            end: 100,
+            bottom: 15,
+            labelFormatter: this.xAxisLabelFormatter(minTime, maxTime)
+          }
+        ]
+      }
       if (navigator.userAgent.match(/Mobi/i) ||
         navigator.userAgent.match(/Android/i) ||
         navigator.userAgent.match(/iPhone/i)) {
@@ -216,9 +253,8 @@ export default {
         // timeSeries类型图表设置group 用于多表联动
         if (this.isInit && !this.isFullscreen) {
           myChart.group = 'timeSeriesGroup'
-          if (this.isConnect === 'crosshair') {
+          if (this.isConnect !== 'none') {
             myChart.getZr().on('mousemove', params => {
-              // crosshair 模式才会执行
               if (this.$store.state.panel.currentMousemove !== this.chartId) {
                 this.$store.commit('setCurrentMousemove', this.chartId)
               }
@@ -228,7 +264,7 @@ export default {
 
         // 点击图表显示dataLink
         if (this.isInit) {
-          // 未设置dataLink的图表 鼠标样式为default
+          // 不可点击的样式为default
           myChart.getZr().on('mousemove', (params) => {
           // 获取鼠标在图表中的坐标
             const pointInPixel = [params.offsetX, params.offsetY]
@@ -241,60 +277,96 @@ export default {
               this.cursorDefault = false
             }
           })
-          // 设置dataLink的图表 或存在多条数据时 划过节点时鼠标样式为pointer（可点击）
-          if (this.dataLink.length || this.series.length > 1) {
-            myChart.on('mousemove', () => {
-              this.cursorDefault = false
-            })
-            myChart.on('click', this.chartClick)
-            myChart.on('mousedown', (params) => {
-              if (this.tooltip.dataLinkShow) {
-                const e = params.event.event
-                e.stopPropagation()
+
+          myChart.on('click', this.chartClick)
+          // 鼠标滑过当前symbol 改变样式
+          myChart.on('mousemove', (params) => {
+            this.cursorDefault = false
+            const option = myChart.getOption()
+            const series = this.$lodash.cloneDeep(option.series)
+            if (series[params.seriesIndex].type !== 'scatter') {
+              series[params.seriesIndex].data[params.dataIndex] = {
+                symbol: 'circle',
+                itemStyle: {
+                  borderColor: this.hexToRgb(params.color, 0.4),
+                  borderWidth: 5
+                },
+                value: params.value
               }
-            })
+              myChart.setOption({ series })
+              const arr = []
+              series.forEach(item => {
+                if (item.type !== 'scatter') {
+                  arr.push(item.name)
+                }
+              })
+              myChart.dispatchAction(
+                {
+                  type: 'highlight',
+                  dataIndex: params.dataIndex,
+                  seriesName: arr
+                }
+              )
+            }
+            this.toolbox.activeIndex = params.seriesIndex
+          })
+          myChart.on('mouseout', (params) => {
+            const option = myChart.getOption()
+            const series = this.$lodash.cloneDeep(option.series)
+            if (series[params.seriesIndex].type !== 'scatter') {
+              series.forEach(s => {
+                s.data.forEach((item, index) => {
+                  if (item.itemStyle) {
+                    s.data[index] = item.value
+                  }
+                })
+              })
+              myChart.setOption({ series })
+            }
+            this.toolbox.activeIndex = undefined
+          })
+
+          if (!this.isFullscreen) {
+            // 修复echarts bug(dataZoom设置为inside 未按住shift 页面无法滚动)
+            // 监听按键按下事件
+            document.addEventListener('keydown', this.keydown)
+            // 监听按键松开事件
+            document.addEventListener('keyup', this.keyup)
           }
-
-          myChart.on('mouseover', (params) => {
-            this.tooltip.activeIndex = params.seriesIndex
-          })
-          myChart.on('mouseout', () => {
-            this.tooltip.activeIndex = undefined
-          })
-
-          // 修复echarts bug(dataZoom设置为inside 未按住ctrl 页面无法滚动)
-          // 监听按键按下事件
-          document.addEventListener('keydown', this.keydown)
-          // 监听按键松开事件
-          document.addEventListener('keyup', this.keyup)
         }
         this.chartLoading = false
         this.isInit = false
       }, 200)
     },
     keydown (event) {
-      // 监听按键按下事件
-      // 判断是否按下了Ctrl键
-      if (event.ctrlKey) {
-        // 如果按下了Ctrl键，则启用Echarts的dataZoom功能
-        getChart(this.chartId).setOption({
-          dataZoom: [{
-            disabled: false
-          }]
-        })
-      }
+      clearTimeout(this.timer1)
+      this.timer1 = setTimeout(() => {
+        // 监听按键按下事件
+        // 判断是否按下了shift键
+        if (event.shiftKey) {
+          // 如果按下了shift键，则启用Echarts的dataZoom功能
+          getChart(this.chartId).setOption({
+            dataZoom: [{
+              disabled: false
+            }]
+          })
+        }
+      }, 50)
     },
     keyup (event) {
-      // 监听按键松开事件
-      // 判断是否释放了Ctrl键
-      if (!event.ctrlKey) {
-        // 如果释放了Ctrl键，则禁用Echarts的dataZoom功能
-        getChart(this.chartId).setOption({
-          dataZoom: [{
-            disabled: true
-          }]
-        })
-      }
+      clearTimeout(this.timer2)
+      this.timer2 = setTimeout(() => {
+        // 监听按键松开事件
+        // 判断是否释放了shift键
+        if (!event.shiftKey) {
+          // 如果释放了shift键，则禁用Echarts的dataZoom功能
+          getChart(this.chartId).setOption({
+            dataZoom: [{
+              disabled: true
+            }]
+          })
+        }
+      }, 50)
     },
     xAxisLabelFormatter (minTime, maxTime) {
       const self = this
@@ -335,8 +407,7 @@ export default {
             return str
           }
         } else {
-          return [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('/') + '\n' +
-            [hour, minute].join(':')
+          return [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('/') + '\n' + [hour, minute].join(':')
         }
       }
     },
@@ -382,7 +453,7 @@ export default {
             }
             const seriesName = nameArr.join('-')
             if (i === 0 && item.seriesName.indexOf('Previous') === -1 && type == 'left') {
-              const value = bus.computeTimezone(item.data[0] * 1000)
+              const value = bus.computeTimezone(item.value[0] * 1000)
               const tData = new Date(value)
               str += '<div class="tooltip-title" style="margin-bottom: 5px">'
               str += bus.timeFormate(tData)
@@ -394,7 +465,7 @@ export default {
             }
             if (item.seriesName.indexOf('Previous') === -1 && type == 'right') {
               if (i == 0 && (rightYAxisIndex == 0 || (arr.some(item => item.seriesName.indexOf('Previous') !== -1)))) {
-                const value = bus.computeTimezone(item.data[0] * 1000)
+                const value = bus.computeTimezone(item.value[0] * 1000)
                 const tData = new Date(value)
                 str += '<div class="tooltip-title" style="margin-bottom: 5px">'
                 str += bus.timeFormate(tData)
@@ -407,7 +478,7 @@ export default {
             }
             if (flag && item.seriesName.indexOf('Previous') !== -1) {
               flag = false
-              const value = bus.computeTimezone(item.data[0] * 1000 - self.minusTime)
+              const value = bus.computeTimezone(item.value[0] * 1000 - self.minusTime)
               const tData = new Date(value)
               str += '<div class="tooltip-title" style="margin-bottom: 5px">'
               str += bus.timeFormate(tData)
@@ -415,17 +486,17 @@ export default {
             }
             const color = self.colorList[item.seriesIndex]
             const previousItem = arr.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
-            let paramsDot = bus.countDecimals(item.data[1])
-            if (paramsDot < self.chartDot) {
-              paramsDot = self.chartDot
+            let paramsDot = bus.countDecimals(item.value[1])
+            if (paramsDot < decimals) {
+              paramsDot = decimals
             } else if (paramsDot > 6) {
               paramsDot = 6
             }
-            const val = formatScientificNotation(item.data[1], paramsDot)
+            const val = formatScientificNotation(item.value[1], paramsDot)
             sum += isNaN(self.numberWithEConvent(val)) ? 0 : parseFloat(self.numberWithEConvent(val))
             let previousDom = ''
             if (previousItem) {
-              const previousVal = formatScientificNotation(previousItem.data[1], paramsDot)
+              const previousVal = formatScientificNotation(previousItem.value[1], paramsDot)
               let minusVal = 0
               let operator
               if (previousVal <= val) {
@@ -450,7 +521,7 @@ export default {
 
             // 鼠标悬浮 series data symbol 时，tooltip 中相应的legend 高亮显示
             str += `
-            <div class="${(self.tooltip.activeIndex == item.seriesIndex && self.isGrey.filter(value => value === false).length > 1) ? 'tooltip__row highlight' : 'tooltip__row'}" title="${seriesName}">
+            <div class="${(self.toolbox.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}" title="${seriesName}">
               <div class="row__label">
                 <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${seriesName}</span>
@@ -492,7 +563,7 @@ export default {
                 <span>${self.$t('dashboard.dashboard.chartTotal')}</span>
               </div>
               <div class="row__value">
-                <span>${chartDataFormat.getUnit(unit).compute(sum, null, decimals)}</span>
+                <span>${chartDataFormat.getUnit(unit).compute(sum, null, -1, decimals)}</span>
               </div>
             </div>
           `
@@ -551,45 +622,37 @@ export default {
         this.hasRightYAxis = true
       }
     },
-    datalinkPosition (e) {
+    toolboxPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
       this.$nextTick(() => {
-        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        const box = document.getElementById(`chart-toolbox-${this.chartId}`)
         const left = e.pageX - this.$refs['timeSeries-chart-box'].getBoundingClientRect().left
         const top = e.pageY - this.$refs['timeSeries-chart-box'].getBoundingClientRect().top
         if (box) {
           const boxWidth = box.offsetWidth
           const boxHeight = box.offsetHeight
           if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-            this.tooltip.x = left + 15
+            this.toolbox.x = left + 15
           } else {
-            this.tooltip.x = left - boxWidth - 15
+            this.toolbox.x = left - boxWidth - 15
           }
           if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
-            this.tooltip.y = top + 15
+            this.toolbox.y = top + 15
           } else {
-            this.tooltip.y = top - boxHeight - 10
+            this.toolbox.y = top - boxHeight - 10
           }
         }
       })
     },
     chartClick (params) {
       // 先取消多表联动 防止其它图表setOption
-      if (this.isConnect !== 'none') {
+      if (this.isConnect && this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }
-      const option = {
-        tooltip: {
-          extraCssText: 'z-index:99999999;visibility:hidden;transition:none;',
-          hideDelay: 0
-        }
-      }
-      getChart(this.chartId).setOption(option)
       getChart(this.chartId).dispatchAction({
         type: 'hideTip'
       })
-      // 生成dataLink tooltip
       const nameArr = params.seriesName.split('-')
       if (nameArr.length > 1) {
         nameArr.splice(nameArr.length - 1, 1)
@@ -604,16 +667,16 @@ export default {
         unit = lodash.get(this, 'chartInfo.param.rightYAxis.unit', 2)
       }
       // title
-      const value = bus.computeTimezone(params.data[0] * 1000)
+      const value = bus.computeTimezone(params.value[0] * 1000)
       const tData = new Date(value)
       // value
-      let paramsDot = bus.countDecimals(params.data[1])
+      let paramsDot = bus.countDecimals(params.value[1])
       if (paramsDot < this.chartDot) {
         paramsDot = this.chartDot
       } else if (paramsDot > 6) {
         paramsDot = 6
       }
-      const val = formatScientificNotation(params.data[1], paramsDot)
+      const val = formatScientificNotation(params.value[1], paramsDot)
       // 根据左右轴设置图标
       let className = 'row__color-block'
       if (params.yAxisIndex == 0) {
@@ -622,7 +685,7 @@ export default {
         className = 'yAxis-icon nz-icon nz-icon-youzongzhou'
       }
       const color = this.colorList[params.seriesIndex]
-      this.tooltip.tooltipHtml = `
+      this.toolbox.tooltipHtml = `
         <div class="nz-chart__tooltip">
           <div class="tooltip-title" style="margin-bottom: 5px">${bus.timeFormate(tData)}</div>
           <div class="tooltip__row">
@@ -636,35 +699,27 @@ export default {
           </div>
         </div>
         `
-      this.tooltip.show = true
-      this.tooltip.dataLinkShow = true
-      this.tooltip.metric.labels = this.series[params.seriesIndex].labels
-      this.tooltip.metric.expressionIndex = this.series[params.seriesIndex].expressionIndex
-      this.tooltip.clickIndex = params.seriesIndex
+      this.toolbox.show = true
+      this.toolbox.metric.labels = this.series[params.seriesIndex].labels
+      this.toolbox.metric.expressionIndex = this.series[params.seriesIndex].expressionIndex
+      this.toolbox.clickIndex = params.seriesIndex
       const e = params.event.event
-      this.datalinkPosition(e)
-      if (this.isConnect !== 'none') {
+      this.toolboxPosition(e)
+      if (this.isConnect && this.isConnect !== 'none') {
         echarts.connect('timeSeriesGroup')
       }
     },
     clickout () {
-      if (this.dataLink.length || this.series.length > 1) {
-        this.tooltip.show = false
-        this.tooltip.dataLinkShow = false
-        const option = {
-          tooltip: {
-            extraCssText: 'z-index:99999999;visibility:visible;'
-          }
-        }
-        getChart(this.chartId).setOption(option)
+      if (this.toolbox.show) {
+        this.toolbox.show = false
       }
     },
     showSelectedSeries () {
-      if (this.isConnect !== 'none') {
+      if (this.isConnect && this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }
       this.legends.forEach((item, index) => {
-        if (index == this.tooltip.clickIndex) {
+        if (index == this.toolbox.clickIndex) {
           getChart(this.chartId).dispatchAction({
             type: 'legendSelect',
             name: item.name
@@ -676,7 +731,7 @@ export default {
           })
         }
       })
-      this.isGrey = this.isGrey.map((g, i) => i !== this.tooltip.clickIndex)
+      this.isGrey = this.isGrey.map((g, i) => i !== this.toolbox.clickIndex)
       this.$refs.legend.isGrey = this.isGrey
 
       // 点击后 处理Y轴的刻度边的
@@ -690,13 +745,13 @@ export default {
         ]
       })
 
-      if (this.isConnect !== 'none') {
-        echarts.disconnect('timeSeriesGroup')
+      if (this.isConnect && this.isConnect !== 'none') {
+        echarts.connect('timeSeriesGroup')
       }
       this.clickout()
     },
     showAllSeries () {
-      if (this.isConnect !== 'none') {
+      if (this.isConnect && this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }
       getChart(this.chartId).dispatchAction({
@@ -716,8 +771,8 @@ export default {
         ]
       })
 
-      if (this.isConnect !== 'none') {
-        echarts.disconnect('timeSeriesGroup')
+      if (this.isConnect && this.isConnect !== 'none') {
+        echarts.connect('timeSeriesGroup')
       }
       this.clickout()
     }

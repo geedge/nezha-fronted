@@ -5,9 +5,9 @@
         <div v-if="item.key === 'detail' && activeName === 'detail'">
           <alert-message-info-detail :info-data="infoData"/>
         </div>
-        <div v-else-if="item.key === 'dashboard' && activeName === 'dashboard'" class="alert-message-info-dashboard">
-          <dashboard :temp-id="infoData.alertRule.dashboardId" :showImport="false" :showName="false" :url-type="'dashboard'" :time="timeRange" class="message-info-dashboard" :from="fromRoute.dashboard"></dashboard>
-        </div>
+<!--        <div v-else-if="item.key === 'dashboard' && activeName === 'dashboard'" class="alert-message-info-dashboard">-->
+<!--          <dashboard :temp-id="infoData.alertRule.dashboardId" :showImport="false" :showName="false" :url-type="'dashboard'" :time="timeRange" class="message-info-dashboard" :from="fromRoute.dashboard"></dashboard>-->
+<!--        </div>-->
         <div v-else-if="(activeName === item.key) && infoData[item.key]" class="no-position-alert-label">
 <!--          <searchItemInfo :obj="findData(item.key)" :severityData="severityData" :fa-loading="false"></searchItemInfo>-->
           <alertLabel
@@ -118,13 +118,13 @@ export default {
           })
           // && n.alertRule.dashboardId
           // n.alertRule && (n.alertRule.dashboardId = 101534)
-          if (n.alertRule && n.alertRule.dashboardId && n.alertRule.dashboardId != -1) {
-            //
-            this.cardNames.push({
-              key: 'dashboard',
-              label: this.$t('overall.dashboard')
-            })
-          }
+          // if (n.alertRule && n.alertRule.dashboardId && n.alertRule.dashboardId != -1) {
+          //   //
+          //   this.cardNames.push({
+          //     key: 'dashboard',
+          //     label: this.$t('overall.dashboard')
+          //   })
+          // }
           if (n.alertRule && n.alertRule.trbShot && n.alertRule.trbShot != '<div  class="editor-core ql-container ql-snow"><div class="ql-editor"><p><br></p></div></div>') {
             this.cardNames.push({
               key: 'trbShot',

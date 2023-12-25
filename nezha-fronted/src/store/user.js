@@ -102,6 +102,12 @@ const user = {
       localStorage.setItem('nz-history-size', res.data.history_size ? res.data.history_size : 100)
       store.commit('setLanguage', res.data.user.lang || defaultAppearance.language)
       store.commit('setTimeFormatMain', localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss')
+
+      if (res.data.user.preferences.notification) {
+        const newAlertMessage = JSON.parse(res.data.user.preferences.notification).newAlertMessage.enable
+        localStorage.setItem(`nz-notification-${res.data.user.id}`, newAlertMessage ? 1 : 0)
+      }
+
       // 获取可选语言
       get('/sys/dict/all?type=lang').then(response => {
         if (response.code === 200) {

@@ -129,11 +129,6 @@ export default {
     }
   },
   methods: {
-    onCopy (txt) {
-      this.$copyText(txt).then(() => {
-        this.$message.success({ message: this.$t('overall.copySuccess') })
-      })
-    },
     clickLegend (legendName, index) {
       /* 点击legend
           * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
@@ -272,11 +267,24 @@ export default {
       this.$emit('clickLegendD3', this.isGrey)
     },
     hoverLegend (legendName, index, type) {
+      // legend 已经取消显示，鼠标悬浮，不开启 高亮效果
+      if (this.isGrey[index]) {
+        return false
+      }
       if (this.chartInfo.type === 'pie' || this.chartInfo.type === 'doughnut' || this.chartInfo.type === 'rose') {
-        if (!this.isGrey[index]) {
-          this.$emit('hoverLegendD3', legendName, index, type)
-        }
+        this.$emit('hoverLegendD3', legendName, index, type)
       } else if (this.isTimeSeries) {
+        if (type == 'highlight' && getChart(this.chartId)) {
+          const option = getChart(this.chartId).getOption()
+          const series = this.$lodash.cloneDeep(option.series)
+          series[index].emphasis.focus = 'series'
+          getChart(this.chartId).setOption({ series })
+        } else if (getChart(this.chartId)) {
+          const option = getChart(this.chartId).getOption()
+          const series = this.$lodash.cloneDeep(option.series)
+          series[index].emphasis.focus = 'none'
+          getChart(this.chartId).setOption({ series })
+        }
         getChart(this.chartId) && getChart(this.chartId).dispatchAction({
           type: type,
           seriesIndex: index,

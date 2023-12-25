@@ -35,7 +35,18 @@
       </pick-time>
     </template>
     <template v-slot>
-      <log-tab ref="logDetail" v-my-loading="loading" :loading-bottom="endpointLoading" :time-range="filterTime" :log-data="logData" :tab-index="9" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+      <log-tab
+        ref="logDetail"
+        v-my-loading="loading"
+        :loading-bottom="endpointLoading"
+        :time-range="filterTime"
+        :log-data="logData"
+        :tab-index="9"
+        @exportLog="exportLog"
+        @limitChange="queryLogData"
+        :supplementaryData="supplementaryData"
+        >
+      </log-tab>
 <!--      <div v-my-loading="loading" v-if="!logData" style="height: 300px; width: 100%; display: flex; justify-content: center; align-items: center; color: #999;">No Data</div>-->
     </template>
   </nz-bottom-data-list>
@@ -49,10 +60,10 @@ import axios from 'axios'
 import bus from '@/libs/bus'
 import { fromRoute } from '@/components/common/js/constants'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
-
+import promqlInputMixin from '@/components/common/mixin/promqlInput'
 export default {
   name: 'logBottomTab',
-  mixins: [subDataListMixin, detailViewRightMixin],
+  mixins: [subDataListMixin, detailViewRightMixin, promqlInputMixin],
   components: {
     nzBottomDataList,
     logTab
@@ -74,7 +85,8 @@ export default {
       loading: true,
       endpointLoading: false,
       limit: 100,
-      nowTimeType: {}
+      nowTimeType: {},
+      supplementaryData: []
     }
   },
   computed: {
@@ -89,8 +101,8 @@ export default {
     exportLog ({ limit, descending }) {
       const params = {
         logql: this.expressions,
-        start: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])),
-        end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])),
+        start: this.momentStrToTimestamp(this.filterTime[0]),
+        end: this.momentStrToTimestamp(this.filterTime[1]),
         direction: descending ? 'backward' : 'forward',
         limit
       }
@@ -169,7 +181,36 @@ export default {
       }
       this.$refs.pickTime.$refs.timePicker.searchTime = this.filterTime
     },
+    supplementaryLog () {
+      const requestArr = []
+      const start = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0]))
+      const end = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))
+      // 当不是 指标查询表达式时，除直接查询 用户输入表达式外，另查询 sum by (level) (count_over_time($_expression[$_step]))
+      this.expressions.forEach((item, index) => {
+        const isMetric = this.validateMetric(item)
+        if (!isMetric) {
+          const step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
+          const supplementaryExpr = `sum by (level) (count_over_time(${item}[${step}]))`
+          requestArr.push(this.$get('/logs/loki/api/v1/query_range?query=' + encodeURIComponent(supplementaryExpr) + '&start=' + start + '&end=' + end))
+        }
+      })
+      this.supplementaryData = []
+      axios.all(requestArr).then(res => {
+        res = res.filter((r, i) => r.code === 200)
+        if (res.length > 0) {
+          const logData = res.map(r => r.data)
+          logData.forEach((response) => {
+            const data = response.result
+            if (!data || data.length < 1) {
+              return
+            }
+            this.supplementaryData.push(data)
+          })
+        }
+      })
+    },
     queryLogData (limit) { // log的chart和table是一个请求
+      this.supplementaryLog()
       this.loading = true
       if (limit) {
         this.limit = limit

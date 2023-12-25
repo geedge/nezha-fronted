@@ -6,7 +6,7 @@
     ref="alertLabels"
   >
     <div class="alert-label-header-title">
-      <span style="margin-right: 5px"><i class="nz-icon" :class="statusClass(alertLabelData.status)" style="font-size: 16px"/></span>
+      <span style="margin-right: 5px;line-height: 24px;width: 24px;height: 24px"><i class="nz-icon" :class="statusClass(alertLabelData.status)" style="font-size: 24px"/></span>
       <div class="alert-label-header-name">
         {{getRemoteText(alertLabelData)}}
       </div>
@@ -33,11 +33,10 @@
           {{ alertLabelData && alertLabelData.username ? alertLabelData.username: "--" }}
         </div>
       </div>
-      <div class="alert-label-box">
+      <div class="alert-label-box document-copy-block">
         <div class="alert-label-title">{{$t('ping.sourceIp')}}</div>
-        <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.remoteAddr ? alertLabelData.remoteAddr: "--" }}
-        </div>
+        <div class="alert-label-value document-copy-text" :title="alertLabelData && alertLabelData.remoteAddr ? alertLabelData.remoteAddr : '--'">{{alertLabelData && alertLabelData.remoteAddr ? alertLabelData.remoteAddr : '--'}}</div>
+        <i v-if="alertLabelData && alertLabelData.remoteAddr" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.remoteAddr)" :title="$t('overall.copyText')"></i>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('config.terminallog.loginUser')}}</div>
@@ -51,11 +50,10 @@
           {{ alertLabelData && alertLabelData.host ? alertLabelData.host: "--" }}
         </div>
       </div>
-      <div class="alert-label-box">
+      <div class="alert-label-box document-copy-block">
         <div class="alert-label-title">{{$t('config.terminallog.remote')}}</div>
-        <div class="alert-label-value">
-          {{getRemoteText(alertLabelData)}}
-        </div>
+        <div class="alert-label-value document-copy-text" :title="getRemoteText(alertLabelData)">{{getRemoteText(alertLabelData)}}</div>
+        <i v-if="getRemoteText(alertLabelData)" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(getRemoteText(alertLabelData))" :title="$t('overall.copyText')"></i>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('webshell.protocol')}}</div>

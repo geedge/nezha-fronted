@@ -39,18 +39,23 @@
             <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append" style="height:32px" :title="$t('overall.increaseTime')"><i class="el-icon-d-arrow-right"></i></button>
           </div>
           <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light" style="height: 28px;">
-            <button class="nz-btn nz-btn-size-normal nz-btn-style-light" :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}" @click="viewGraph" :title="$t('overall.showLineChart')">
-              <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
+            <button class="top-tool-btn"
+                    style="border-right: none;"
+                    :disabled="!selectedEndpoints.length"
+                    :class="selectedEndpoints.length > 0 ? '': 'nz-btn-disabled'"
+                    type="button" @click="viewGraph"
+                    :title="$t('overall.showLineChart')">
+              <i class="nz-icon nz-icon-chart" ></i>
             </button>
-            <button @click="dropdownHandler(dropdownShow)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
-            <i class="nz-icon nz-icon-arrow-down"></i>
-            <transition name="el-zoom-in-top">
-              <div v-if="dropdownShow" class="endpoint-query-dropdown el-popover" style="right: 11px;top: 33px;z-index: 1000;">
-                <span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span>
-                <el-switch v-model="hideSameLabels" size="small"></el-switch>
-              </div>
-            </transition>
-          </button>
+            <button @click="dropdownHandler(dropdownShow)" class="top-tool-btn margin-r-20" id="browser-go" style="border-radius: 0 2px 2px 0;">
+              <i class="nz-icon nz-icon-arrow-down"></i>
+              <transition name="el-zoom-in-top">
+                <div v-if="dropdownShow" class="recordRules-query-dropdown el-popover" style="right: 40px;top: 40px;">
+                  <span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span>
+                  <el-switch v-model="hideSameLabels" size="small"></el-switch>
+                </div>
+              </transition>
+            </button>
           </div>
         </div>
       </template>

@@ -5,7 +5,7 @@
     class="nz-chart__component nz-chart__component--time-series" @mouseenter="mouseEnterChart"
     @mouseleave="mouseLeaveChart"
   >
-    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" :class="{'chart-cursor-default':!dataLink.length}"></div>
+    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" :class="{'chart-cursor-default':!(dataLink.length || chartInfo.datasource === 'metrics' || chartInfo.datasource === 'logs')}"></div>
     <chart-legend
       v-if="hasLegend"
       :chart-data="chartData"
@@ -14,20 +14,26 @@
       :series="series"
       :is-fullscreen="isFullscreen"
     ></chart-legend>
-
-    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
-      <div class="chart-canvas-tooltip-title tooltip-title" :title="tooltip.title">{{tooltip.title}}</div>
+    <!-- toolbox -->
+    <div :id="`chart-toolbox-${chartId}`" class="chart-canvas-tooltip no-style-class chart-toolbox" :style="{left:toolbox.x+'px',top:toolbox.y+'px'}" v-if="toolbox.show" v-clickoutside="clickout">
+      <div class="chart-canvas-tooltip-title tooltip-title" :title="toolbox.title">{{toolbox.title}}</div>
       <div class="chart-canvas-tooltip-content">
         <div>value</div>
         <div>
-          <div v-if="tooltip.mapping && tooltip.mapping.icon" style="display: inline-block">
-            <i :class="tooltip.mapping.icon" :style="{color: tooltip.mapping.color.icon}"></i>
+          <div v-if="toolbox.mapping && toolbox.mapping.icon" style="display: inline-block">
+            <i :class="toolbox.mapping.icon" :style="{color: toolbox.mapping.color.icon}"></i>
           </div>
-          <div style="display: inline-block">{{tooltip.value}}</div>
+          <div style="display: inline-block">{{toolbox.value}}</div>
         </div>
       </div>
       <!-- dataLink -->
-      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+      <div class="chart-dataLink-list">
+        <!-- 复制表达式 -->
+        <div class="chart-dataLink-item select-series" v-if="chartInfo.datasource==='metrics'||chartInfo.datasource==='logs'" @click="copyExpr">
+          <i class="nz-icon nz-icon-override"></i>
+          <span v-if="chartInfo.datasource==='metrics'">{{$t('overall.copy')}} PromQL</span>
+          <span v-else>{{$t('overall.copy')}} LogQL</span>
+        </div>
         <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
@@ -152,14 +158,8 @@ export default {
         }
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
-        if (this.isInit && this.dataLink.length) {
+        if (this.isInit && (this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs')) {
           myChart.on('click', this.chartClick)
-          myChart.on('mousedown', (params) => {
-            if (this.tooltip.dataLinkShow) {
-              const e = params.event.event
-              e.stopPropagation()
-            }
-          })
         }
         this.isInit = false
       }, 200)
@@ -225,56 +225,45 @@ export default {
               </div>
                `
     },
-    datalinkPosition (e) {
+    toolboxPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
       this.$nextTick(() => {
-        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        const box = document.getElementById(`chart-toolbox-${this.chartId}`)
         const left = e.pageX - this.$refs['bar-chart-box'].getBoundingClientRect().left
         const top = e.pageY - this.$refs['bar-chart-box'].getBoundingClientRect().top
         if (box) {
           const boxWidth = box.offsetWidth
           const boxHeight = box.offsetHeight
           if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-            this.tooltip.x = left + 15
+            this.toolbox.x = left + 15
           } else {
-            this.tooltip.x = left - boxWidth - 15
+            this.toolbox.x = left - boxWidth - 15
           }
           if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
-            this.tooltip.y = top + 15
+            this.toolbox.y = top + 15
           } else {
-            this.tooltip.y = top - boxHeight - 10
+            this.toolbox.y = top - boxHeight - 10
           }
         }
       })
     },
     chartClick (params) {
-      const option = {
-        tooltip: {
-          extraCssText: 'z-index:99999999;visibility:hidden;transition:none;'
-        }
-      }
-      getChart(this.chartId).setOption(option)
-      this.tooltip.title = params.data.alias
-      this.tooltip.value = params.data.mapping && params.data.mapping.display ? this.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
-      this.tooltip.mapping = params.data.mapping
-      this.tooltip.show = true
-      this.tooltip.dataLinkShow = true
-      this.tooltip.metric.labels = params.data.labels
-      this.tooltip.metric.expressionIndex = params.data.expressionIndex
+      getChart(this.chartId).dispatchAction({
+        type: 'hideTip'
+      })
+      this.toolbox.title = params.data.alias
+      this.toolbox.value = params.data.mapping && params.data.mapping.display ? this.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
+      this.toolbox.mapping = params.data.mapping
+      this.toolbox.show = true
+      this.toolbox.metric.labels = params.data.labels
+      this.toolbox.metric.expressionIndex = params.data.expressionIndex
       const e = params.event.event
-      this.datalinkPosition(e)
+      this.toolboxPosition(e)
     },
     clickout () {
-      if (this.dataLink.length) {
-        this.tooltip.show = false
-        this.tooltip.dataLinkShow = false
-        const option = {
-          tooltip: {
-            extraCssText: 'z-index:99999999;visibility:visible;'
-          }
-        }
-        getChart(this.chartId).setOption(option)
+      if ((this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') && this.toolbox.show) {
+        this.toolbox.show = false
       }
     }
   },

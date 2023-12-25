@@ -20,6 +20,7 @@
       @refresh="refresh"
       @sync="chartSync"
       :showTool="showTool"
+      @downloadCSV="beforeDownloadCSV"
       @groupShow="groupShow"
       @showFullscreen="showFullscreen"
     ></chart-header>
@@ -52,6 +53,7 @@
       :isExportHtml="isExportHtml"
       :filter="filter"
       :from="from"
+      :showTool="showTool"
       @refreshLogs="refreshLogs"
       :show-header="showHeader"
       :isError="isError"
@@ -190,7 +192,11 @@ export default {
         this.minusTime = ''
         this.multipleTime = false
       }
-      this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
+      if (this.chartInfo.type === 'diagram') {
+        this.chartInfo.loaded && this.query(elements, startTime, endTime, step, '', true)
+      } else {
+        this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
+      }
     },
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh, params) { // 获取chart的数据前的准备 主要用于处理时间参数
@@ -234,12 +240,19 @@ export default {
       this.variablesHandle()
       const elements = this.chartInfo.elements || []
       if (this.isExportHtml) {
-        this.chartInfo.loaded && this.queryData(elements, startTime, endTime, step, params)
+        this.chartInfo.loaded && this.queryData(elements, startTime, endTime, step, params, isRefresh)
         return
       }
-      this.chartInfo.loaded && this.query(elements, startTime, endTime, step, params)
+      this.chartInfo.loaded && this.query(elements, startTime, endTime, step, params, isRefresh)
     },
-    query (elements, startTime, endTime, step, params) { // 获取chart的数据
+    getIemStep (element, step) {
+      let myStep = step
+      if (element.step) {
+        myStep = element.step + 's'
+      }
+      return myStep
+    },
+    query (elements, startTime, endTime, step, params, isRefresh) { // 获取chart的数据
       this.isError = false
       this.allDataLength = 0
       // this.chartData = this.chartInfo.chartData
@@ -266,10 +279,11 @@ export default {
               urlPre += '/logs/loki'
             }
             let requests = elements.map((element) => {
+              const myStep = this.getIemStep(element, step)
               if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
                 return chartTempData
               }
-              let query = `${urlPre}/api/v1/query_range?start=${startTime}&end=${endTime}&step=${step}`
+              let query = `${urlPre}/api/v1/query_range?start=${startTime}&end=${endTime}&step=${myStep}`
               if (isTimeSeries(this.chartInfo.type)) {
                 let nullType = this.chartInfo.param.nullType || 'null'
                 nullType = (nullType === 'connected' ? 'null' : nullType)
@@ -280,6 +294,8 @@ export default {
               }
               if (this.chartInfo.datasource === 'logs') {
                 query += '&format=1'
+              }
+              if (this.chartInfo.type === 'log') {
                 if (!params || params.descending) {
                   this.chartInfo.descending = true
                   query += '&direction=backward'
@@ -287,16 +303,19 @@ export default {
                   this.chartInfo.descending = false
                   query += '&direction=forward'
                 }
+                const limit = this.$lodash.get(this.chartInfo, 'param.limit', 100)
+                query += `&limit=${limit}`
               }
               query += `&query=${encodeURIComponent(this.variablesReplace(element.expression))}`
               return this.$get(query)
             })
             if (this.multipleTime) {
               const multipleRequests = elements.map((element) => {
+                const myStep = this.getIemStep(element, step)
                 if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
                   return chartTempData
                 }
-                let query = `${urlPre}/api/v1/query_range?start=${startTime - this.minusTime / 1000}&end=${endTime - this.minusTime / 1000}&step=${step}`
+                let query = `${urlPre}/api/v1/query_range?start=${startTime - this.minusTime / 1000}&end=${endTime - this.minusTime / 1000}&step=${myStep}`
                 if (isTimeSeries(this.chartInfo.type)) {
                   let nullType = this.chartInfo.param.nullType || 'null'
                   nullType = (nullType === 'connected' ? 'null' : nullType)
@@ -346,7 +365,8 @@ export default {
               }
               if (comparisonSt && comparisonEt) {
                 const comparisonRequests = elements.map((element) => {
-                  let query = `${urlPre}/api/v1/query_range?start=${comparisonSt}&end=${comparisonEt}&step=${step}`
+                  const myStep = this.getIemStep(element, step)
+                  let query = `${urlPre}/api/v1/query_range?start=${comparisonSt}&end=${comparisonEt}&step=${myStep}`
                   if (element.filter) {
                     query += `&filter=${element.filter}`
                   }
@@ -506,6 +526,12 @@ export default {
                 this.chartData = []
               } else {
                 this.chartData = [this.chartInfo.param.topo]
+              }
+              if (isRefresh) {
+                const dom = this.$refs.chart.$refs['chart' + this.chartInfo.id]
+                if (dom) {
+                  dom.refresh([startTime * 1000, endTime * 1000])
+                }
               }
             }
             if (this.chartInfo.type === 'group') {
@@ -872,6 +898,9 @@ export default {
         // 发送数据
         xhr.send()
       })
+    },
+    beforeDownloadCSV () {
+      this.$refs.chart && this.$refs.chart.$refs['chart' + this.chartInfo.id].beforeDownloadCSV(this.chartInfo)
     }
   },
   watch: {

@@ -33,13 +33,13 @@
     <div class="collapse-btn" :class="{'isCollapse-btn':isShrink}" :style="{height:copyright==1?'52px':'46px'}" @click="shrink">
       <template v-if="copyright==1">
         <div class="copy-right" v-show="!isShrink">
-          <span>Copyright © 2019 - 2023</span>
-          <span>Geedge Networks. All rights reserved.</span>
+          <span>{{$t('overall.copyright')}} © 2019 - 2023</span>
+          <span>Geedge Networks. {{$t('overall.allRightsReserved')}}.</span>
         </div>
       </template>
       <template v-else>
         <div class="collapse-text" v-show="!isShrink">
-          <span>Collapse sidebar</span>
+          <span>{{$t('overall.collapseSidebar')}}</span>
         </div>
       </template>
       <i class="collapse-icon nz-icon nz-icon-drop-down"></i>

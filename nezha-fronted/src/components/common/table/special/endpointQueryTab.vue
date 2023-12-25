@@ -371,6 +371,7 @@ export default {
     },
     saveChart (chart) { // 新增chart
       this.getPanelData().then(() => {
+        delete chart.oldElements
         chart.id = ''
         chart.name = ''
         chart.panelName = ''

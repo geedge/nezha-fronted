@@ -50,6 +50,7 @@
       :id="alertLabelId"
       :that="alertLabelObj"
       :type="alertLabelType"
+      @tipHover='tipHover'
       :detail-list="true"
     ></alertLabel>
   </div>

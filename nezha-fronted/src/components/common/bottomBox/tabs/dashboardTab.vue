@@ -9,7 +9,7 @@
       :targetTab="targetTab"
       @changeTab="changeTab"
       class="full-width-height"
-      :customClassName="'dashboard-tab-temp'"
+      :customClassName="paramsType === 'template' ? 'dashboard-tab-temp dashboard-tab-template' : 'dashboard-tab-temp'"
       :showPagination="false"
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
@@ -250,7 +250,7 @@ export default {
             min: undefined,
             max: undefined
           },
-          dataLink: []
+          dataLink: [],
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
         panel: '',
@@ -433,16 +433,6 @@ export default {
         if (this.chart.type === 'group' && !this.chart.param.collapse == undefined) {
           this.chart.param.collapse = false
         }
-        if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point') && !this.chart.param.rightYAxis) {
-          this.chart.param.rightYAxis = {
-            elementNames: [],
-            style: 'line',
-            unit: 2,
-            label: '',
-            min: undefined,
-            max: undefined
-          }
-        }
         if (this.chart.type === 'stat') {
           if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }
           if (!this.chart.param.comparison) { this.chart.param.comparison = 'none' }
@@ -479,16 +469,6 @@ export default {
             }
             if (this.chart.type === 'group' && !this.chart.param.collapse == undefined) {
               this.chart.param.collapse = false
-            }
-            if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point') && !this.chart.param.rightYAxis) {
-              this.chart.param.rightYAxis = {
-                elementNames: [],
-                style: 'line',
-                unit: 2,
-                label: '',
-                min: undefined,
-                max: undefined
-              }
             }
             if (this.chart.type === 'stat') {
               if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }

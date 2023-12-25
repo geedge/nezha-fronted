@@ -190,6 +190,7 @@
         :panelLock="panelLock"
         :chart-data="chartData"
         :chart-info="chartInfo"
+        :showTool="showTool"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
         :chart-option="chartOption"
@@ -344,6 +345,10 @@ export default {
     isExportHtml: {
       type: Boolean,
       default: false
+    },
+    showTool: {
+      type: Boolean,
+      default: true
     },
     globalVariables: {}
   },

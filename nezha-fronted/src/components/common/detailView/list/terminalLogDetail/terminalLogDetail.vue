@@ -49,6 +49,7 @@
       :that="alertLabelObj"
       :detailList="true"
       :type="alertLabelType"
+      :width="305"
       @tipHover='tipHover'
       ref="nzTooltip"
       class="data-column__"

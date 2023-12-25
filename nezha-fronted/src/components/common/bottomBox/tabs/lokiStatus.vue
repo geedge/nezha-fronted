@@ -17,6 +17,7 @@
           :ringTableData='ringTableData'
           :configTableData='configTableData'
           :servicesTableData='servicesTableData'
+          :servicesTableTitle='servicesTableTitle'
           @configval='configval'>
           </loki-status-table>
         </div>
@@ -69,9 +70,11 @@ export default {
       configMode: 'defaults',
       configTableData: [],
       servicesTableData: [],
+      servicesTableTitle: [],
       ringTableData: [],
       readyTableData: '',
-      loading: false
+      loading: false,
+      fromBottom: true
     }
   },
   mounted () {
@@ -114,12 +117,26 @@ export default {
       })
     },
     async getservicesTableData () {
+      this.servicesTableData = []
       const response = await this.$get('agent/' + this.obj.id + '/loki/services')
       if (response.code === 200) {
         const serObj = {}
+        let arr = []
         response.data.list.forEach(item => {
           serObj[item.service] = item.status
+          arr.push({
+            label: item.service,
+            prop: item.service,
+            minWidth: 180
+          })
+          if (arr.length >= 6) {
+            this.servicesTableTitle.push(this.$lodash.cloneDeep(arr))
+            arr = []
+          }
         })
+        if (arr.length) {
+          this.servicesTableTitle.push(arr)
+        }
         serObj.ready = this.readyTableData
         this.servicesTableData.push(serObj)
       }

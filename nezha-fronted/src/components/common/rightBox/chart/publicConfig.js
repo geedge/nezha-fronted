@@ -327,7 +327,8 @@ export default {
               legend: this.expressionsShow[i].legend,
               name: this.expressionName[i],
               state: this.expressionsShow[i].state,
-              orderNum: i
+              orderNum: i,
+              step: this.expressionsShow[i].step
             })
           }
         })
@@ -401,26 +402,30 @@ export default {
         const expressionName = this.getExpressionName()
         this.expressionName.push(expressionName)
         this.expressionsShow.push({
+          id: getUUID(),
           show: true,
           hideInput: true,
           oldName: expressionName,
           error: '',
           legend: '',
           elementId: '',
-          state: 1
+          state: 1,
+          step: undefined
         })
         this.expressionChange()
       } else {
         this.expressions.push(item.expression)
         this.expressionName.push(item.name)
         this.expressionsShow.push({
+          id: getUUID(),
           show: true,
           hideInput: true,
           oldName: item.name,
           error: '',
           elementId: item.id,
           legend: item.legend,
-          state: item.state
+          state: item.state,
+          step: item.step
         })
       }
     },
@@ -431,6 +436,7 @@ export default {
       this.expressionsShow.push(
         {
           ...this.expressionsShow[index],
+          id: getUUID(),
           show: true,
           hideInput: true,
           oldName: expressionName,

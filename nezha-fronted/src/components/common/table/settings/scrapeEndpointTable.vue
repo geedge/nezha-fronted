@@ -35,7 +35,7 @@
     </template>
     <template slot-scope="scope" :column="item">
       <template v-if="item.prop === 'endpoint'">{{scope.row.discoveredLabels.endpoint ? scope.row.discoveredLabels.endpoint : '-'}}</template>
-      <template v-else-if="item.prop === 'lastScrape'">{{lastScrapeFormate(scope.row.lastScrape)}}</template>
+      <template v-else-if="item.prop === 'lastScrape'">{{scope.row.lastScrape}}</template>
       <template v-else-if="item.prop === 'labels'" class="labels">
           <span v-for="(item, i) in labelsSort(scope.row.labels)" :key="i">
             <span>
@@ -70,10 +70,10 @@
       <template v-else-if="item.prop === 'lastScrapeDuration'">
         <el-tooltip effect="light" placement="right">
           <div slot="content">
-            <div><span>Interval:&nbsp;</span>{{ scope.row.discoveredLabels._scrape_interval_ ? scope.row.discoveredLabels._scrape_interval_ + 's' : '0s' }}</div>
-            <div><span>Timeout:&nbsp;</span>{{ scope.row.discoveredLabels._scrape_timeout_ ? scope.row.discoveredLabels._scrape_timeout_ + 's' : '0s'}}</div>
+            <div><span>Interval:&nbsp;</span>{{ scope.row.discoveredLabels.__scrape_interval__ ? scope.row.discoveredLabels.__scrape_interval__ : '0s' }}</div>
+            <div><span>Timeout:&nbsp;</span>{{ scope.row.discoveredLabels.__scrape_timeout__ ? scope.row.discoveredLabels.__scrape_timeout__  : '0s'}}</div>
           </div>
-          <span>{{ lastScrapeDurationTimer(scope.row.lastScrapeDuration) }}</span>
+          <span>{{ scope.row.lastScrapeDuration }}</span>
         </el-tooltip>
       </template>
       <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
@@ -226,11 +226,6 @@ export default {
     lastScrapeFormate (time) {
       const lastScrape = new Date(time).getTime()
       return bus.timeFormate(lastScrape, this.timeFormatMain)
-    },
-    // scrape duration
-    lastScrapeDurationTimer (time) {
-      const date = (time * 1000).toFixed(3)
-      return date + 'ms'
     },
     tableDataSort (orderBy) {
       this.$emit('orderBy', orderBy)

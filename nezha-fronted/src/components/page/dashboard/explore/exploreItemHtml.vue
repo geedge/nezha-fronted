@@ -163,7 +163,18 @@
             </div>
           </el-collapse-item>
           <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
-            <log-tab ref="logDetail" :timeRange="filterTime" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="0" v-my-loading="chartLoading"></log-tab>
+            <log-tab
+              :unit="chartUnitType"
+              ref="logDetail"
+              :timeRange="filterTime"
+              :log-data="logData"
+              :explore-log-table="logTabNoData"
+              :explore-item="true"
+              :tab-index="0"
+              v-my-loading="chartLoading"
+              :supplementaryData="supplementaryData"
+              >
+            </log-tab>
           </el-collapse-item>
         </template>
       </el-collapse>
@@ -221,7 +232,8 @@ export default {
       logTabNoData: [],
       storedTableData: [],
       tableMode: 'table',
-      expandResults: false
+      expandResults: false,
+      supplementaryData: []
     }
   },
   mounted () {
@@ -408,17 +420,28 @@ export default {
             }
             data.forEach((result, i) => {
               const seriesItem = {
+                type: 'line',
                 name: '',
                 symbol: 'emptyCircle', // 去掉点
-                symbolSize: [2, 2],
+                symbolSize: 8,
                 showSymbol: false,
                 smooth: 0.2, // 曲线变平滑
                 data: [],
                 lineStyle: {
-                  width: 1,
+                  width: 2,
                   opacity: 0.9
                 },
-                type: 'line'
+                emphasis: {
+                  focus: 'none'
+                },
+                blur: {
+                  lineStyle: {
+                    opacity: 0.3
+                  },
+                  itemStyle: {
+                    opacity: 1
+                  }
+                }
               }
               let legendName = ''
               seriesItem.data = result.values.map((item) => {
@@ -601,9 +624,16 @@ export default {
       const graphData = this.logData.filter(l => l.resultType === 'matrix')
       if (graphData && graphData.length > 0) {
         this.$refs.logChart.startLoading()
+        const promqlInputIndexs = []
         const queryExpression = []
         let series = []
         const legend = []
+        this.dataJson.data.forEach((item, index) => {
+          if (item.expression !== '' && item.state) {
+            promqlInputIndexs.push(index)
+            queryExpression.push(item.expression)
+          }
+        })
         this.logData.forEach((response, index) => {
           if (response.resultType === 'matrix') {
             const data = response.result
@@ -612,17 +642,28 @@ export default {
             }
             data.forEach((result, i) => {
               const seriesItem = {
+                type: 'line',
                 name: '',
                 symbol: 'emptyCircle', // 去掉点
-                symbolSize: [2, 2],
+                symbolSize: 8,
                 showSymbol: false,
                 smooth: 0.2, // 曲线变平滑
                 data: [],
                 lineStyle: {
-                  width: 1,
+                  width: 2,
                   opacity: 0.9
                 },
-                type: 'line'
+                emphasis: {
+                  focus: 'none'
+                },
+                blur: {
+                  lineStyle: {
+                    opacity: 0.3
+                  },
+                  itemStyle: {
+                    opacity: 1
+                  }
+                }
               }
               let legendName = ''
               seriesItem.data = result.values.map((item) => {

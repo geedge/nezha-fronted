@@ -10,21 +10,21 @@
            top: menuPosition.top + 'px'
         }"
       >
-        <div>
-          <span @click="copySelection()">{{$t('overall.duplicate')}}</span>
+        <div class="terminal-menu-item">
+          <span @click="copySelection()"><i class="nz-icon nz-icon-override"/>{{$t('overall.duplicate')}}</span>
         </div>
-        <div v-if="showPaste">
-          <span @click="paste()">{{$t('project.topology.paste')}}</span>
+        <div class="terminal-menu-item" :class="showPaste ? '': 'terminal-menu-item-disabled'">
+          <span @click="paste()"> <i class="nz-icon nz-icon-putongwenjianlianjie"/> {{$t('project.topology.paste')}}</span>
         </div>
-        <div>
-          <span @click="clearTerminal()">{{$t('terminal.clear')}}</span>
+        <div class="terminal-menu-item">
+          <span @click="clearTerminal()"> <i class="nz-icon nz-icon-Clear"/> {{$t('terminal.clear')}}</span>
         </div>
         <div class="line"></div>
-        <div>
-          <span @click="showFileDir(true)">{{$t('terminal.sftp')}}</span>
+        <div class="terminal-menu-item">
+          <span @click="showFileDir(true)"> <i class="nz-icon nz-icon-SFTP"/> {{$t('terminal.sftp')}}</span>
         </div>
-        <div>
-          <span @click="closeTerminal(true)"> {{$t('overall.close')}}</span>
+        <div class="terminal-menu-item">
+          <span @click="closeTerminal(true)"><i class="nz-icon nz-icon-guanbi2"/> {{$t('overall.close')}}</span>
         </div>
       </div>
     </div>
@@ -400,6 +400,9 @@ export default {
       }
     },
     async paste () {
+      if (!this.showPaste) {
+        return
+      }
       if (!document.execCommand('paste')) {
         const text = await navigator.clipboard.readText()
         this.term.write(text)

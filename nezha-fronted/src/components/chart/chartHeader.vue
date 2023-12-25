@@ -41,8 +41,10 @@
      </el-popover>
     </span>
     <div class="chart-header__title" v-if="!isGroup" :title="nameFormate">{{nameFormate}}</div>
-    <div class="chart-header__title groupTitle" :title="chartData ? chartData.length : 0" v-else >
-      <span @click="groupShow" style="cursor:pointer"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-right': 'nz-icon-arrow-down'"></i></span>
+    <div class="chart-header__title groupTitle" v-else :title="chartData ? chartData.length : 0" style="cursor:pointer" @click="groupShow">
+      <span>
+        <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-right': 'nz-icon-arrow-down'"></i>
+      </span>
       {{nameFormate}}
       <span v-show="chartInfo.param.collapse" class="collapse-content">({{chartData ? chartData.length : 0}} charts)</span>
     </div>
@@ -87,6 +89,10 @@
              <li v-has="'main_delete'" class="el-dropdown-menu__item" @click="removeChart">
               <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>
               <span>{{$t('overall.delete')}}</span>
+            </li>
+            <li v-has="'main_add'" class="el-dropdown-menu__item" @click="downloadCSV" v-if="showDownloadCsv(chartInfo.type)">
+              <i class="nz-icon nz-icon-download1" style="font-size: 16px;"></i>
+              <span>{{$t('overall.downloadCSV')}}</span>
             </li>
             <li v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.pid" v-has="'main_edit'" class="el-dropdown-menu__item" @click="sync">
               <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>

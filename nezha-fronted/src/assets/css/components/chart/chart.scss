@@ -412,6 +412,9 @@
       .nz-icon{
         color: $--background-color-1 !important;
       }
+      .nz-icon-override{
+        color: $--color-text-regular !important;
+      }
     }
   }
   .nz-icon-override{
@@ -419,6 +422,7 @@
     font-size: 15px;
     margin-left: 5px;
     vertical-align: middle;
+    color: $--color-text-regular !important;
   }
   .legend-item:hover {
     background-color: $--background-color-1;
@@ -503,6 +507,7 @@
     font-weight: bold;
   }
 }
+
 .endpoint-query-metrics.chart-fullscreen.nz-dialog,.recordRules-query-metrics.chart-fullscreen.nz-dialog {
   .chart-screen-header .chart-header__tools #browser-go {
     margin-left: 5px;
@@ -678,10 +683,10 @@
   }
 }
 
-.chart-dataLink-tooltip{
-  position: absolute;
-  padding-bottom: 2px;
-  z-index: 999999999;
+.chart-toolbox{
+  position: absolute !important;
+  padding-bottom: 2px !important;
+  z-index: 9999;
   pointer-events: auto;
   .chart-dataLink-list{
     width: calc(100% + 20px);
@@ -711,6 +716,23 @@
       border-top: 1px solid $--border-color-light;
     }
   }
+}
+
+.chart-expolre-tooltip{
+  display: block;
+  border-style: solid;
+  white-space: nowrap;
+  will-change: transform;
+  box-shadow: rgba(0, 0, 0, 0.2) 1px 2px 10px;
+  transition: opacity 0.2s cubic-bezier(0.23, 1, 0.32, 1) 0s, visibility 0.2s cubic-bezier(0.23, 1, 0.32, 1) 0s, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s;
+  background-color: $--background-color-empty;
+  border-width: 1px;
+  border-radius: 4px;
+  color: rgb(0, 0, 0);
+  font: 14px / 21px "Microsoft YaHei";
+  padding: 10px;
+  border-color: rgb(221, 228, 237);
+  color: $--color-text-regular !important;
 }
 
 .graph-icon-info-box{

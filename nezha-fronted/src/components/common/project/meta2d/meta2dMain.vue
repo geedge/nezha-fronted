@@ -137,6 +137,11 @@ export default {
       option: this.option
     }
   },
+  computed: {
+    filterTime () {
+      return this.$store.getters.getTimeRange
+    },
+  },
   props: {
     meta2dId: {}, // 唯一id 不可重复
     iconArray: {
@@ -152,7 +157,7 @@ export default {
     },
     minScale: {
       type: Number,
-      default: 0.25
+      default: 0.001
     },
     querysArray: {},
     params: {},
@@ -172,7 +177,9 @@ export default {
     paddingTop: {
       type: Number,
       default: 20
-    }
+    },
+    timeRange: {},
+    nowTimeType: {}
   },
   data () {
     return {
@@ -187,8 +194,6 @@ export default {
         map: false
       },
     }
-  },
-  computed: {
   },
   components: {
     meta2dHeader,

@@ -37,29 +37,30 @@
     <el-table-column :resizable="false" fixed="right"
     width="165px"
     >
-      <div
-        v-if="isConfigurations"
-        slot-scope="scope"
-        class="table-operation-items"
-      >
-        <button class="table-operation-button" @click="backupNow(scope.row)" :title="$t('config.backup')">
-         <i class="nz-icon-beifen nz-icon"></i>
-        </button>
-        <button class="table-operation-edit" @click="edit(scope.row)" :title="$t('backup.edit')">
-         <i class="nz-icon-gear nz-icon"></i>
-        </button>
-      </div>
-      <div v-if="!isConfigurations" slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" :title="$t('overall.download')" v-has="'backup_download'" @click="downloadBackup(scope.row)"><i class="nz-icon nz-icon-download"></i></button>
-        <el-dropdown size="medium" v-has="['backup_restore','backup_del']" trigger="click" @command="tableOperation">
-          <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
-            <i class="nz-icon nz-icon-more3"></i>
-          </div>
-          <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
-            <el-dropdown-item v-has="'backup_restore'" :command="['restore', scope.row]" disabled><i class="nz-icon-shujubeifenhuifu nz-icon"></i><span>{{$t('backup.RestoreNow')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'backup_del'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true,from:'backups'}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+      <div  slot-scope="scope">
+        <div
+          v-if="isConfigurations"
+          class="table-operation-items"
+        >
+          <button class="table-operation-button" @click="backupNow(scope.row)" :title="$t('config.backup')">
+            <i class="nz-icon-beifen nz-icon"></i>
+          </button>
+          <button class="table-operation-edit" @click="edit(scope.row)" :title="$t('backup.edit')">
+            <i class="nz-icon-gear nz-icon"></i>
+          </button>
+        </div>
+        <div v-if="!isConfigurations" class="table-operation-items">
+          <button class="table-operation-item" :title="$t('overall.download')" v-has="'backup_download'" @click="downloadBackup(scope.row)"><i class="nz-icon nz-icon-download"></i></button>
+          <el-dropdown size="medium" v-has="['backup_restore','backup_del']" trigger="click" @command="tableOperation">
+            <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
+              <i class="nz-icon nz-icon-more3"></i>
+            </div>
+            <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
+              <el-dropdown-item v-has="'backup_restore'" :command="['restore', scope.row]" disabled><i class="nz-icon-shujubeifenhuifu nz-icon"></i><span>{{$t('backup.RestoreNow')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'backup_del'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true,from:'backups'}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
       </div>
     </el-table-column>
      <template slot="empty">

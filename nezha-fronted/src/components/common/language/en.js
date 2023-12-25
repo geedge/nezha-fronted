@@ -590,7 +590,7 @@ const en = {
   },
   validate: { // 校验规则
     required: 'Required', // '必填项'
-    number: 'Numberic', // '必须是数字'
+    number: 'Numeric', // '必须是数字'
     integer: 'Integer',
     positiveInteger: 'Positive integer',
     email: 'Invalid email', // '不合法的E-mail地址'

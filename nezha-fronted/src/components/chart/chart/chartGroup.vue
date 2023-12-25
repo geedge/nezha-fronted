@@ -12,6 +12,7 @@
       :from="from"
       :panel-lock="panelLock"
       :isGroup="true"
+      :showTool="showTool"
       :time-range="searchTime"
       :groupInfo="chartInfo"
       @on-refresh-time="refreshTime"
@@ -29,7 +30,11 @@ export default {
   props: {
     panelLock: Boolean,
     from: String,
-    filter: {}
+    filter: {},
+    showTool: {
+      type: Boolean,
+      default: true
+    }
   },
   mixins: [chartMixin, chartFormat],
   computed: {

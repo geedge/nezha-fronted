@@ -32,7 +32,7 @@
           class="element-item form-row-item thresholds-from-item"
           style="margin-bottom: 10px !important"
           v-for="index of chartConfig.elements.length"
-          :key="expressionName[index-1] + index"
+          :key="expressionsShow[index-1].id"
         >
           <div class="chart-title chart-title-config">
             <span class="chart-title-content el-form-item" :class="{
@@ -104,7 +104,14 @@
                   </el-popover>
                 </el-col>
                 <el-col style="flex: 1">
-                  <el-input maxlength="512" show-word-limit size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
+                  <el-input maxlength="512" size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
+                </el-col>
+                <el-col class="legend-title" style="margin-left: 10px">
+                  <span class="legend-title__span">{{$t('overall.step')}}&nbsp;</span>
+                </el-col>
+                <el-col style="flex: 1">
+                  <el-input-number @change="expressionChange" v-model="expressionsShow[index-1].step" size="small" :min="minStep" :precision="0" :controls="false" class="append_unit" :placeholder="$t('overall.auto')" :data-unit="$t('overall.seconds')">
+                  </el-input-number>
                 </el-col>
               </el-row>
             </el-row>
@@ -174,7 +181,6 @@
         >
           <vue-tags-input
             v-model="tag"
-            :maxlength="32"
             :placeholder="$t('tagsInput.placeholder')"
             :tags="chartConfig.param.tags"
             @tags-changed="(newTags)=>{tagsChange(newTags)}"
@@ -188,6 +194,8 @@
           class="form-item--half-width"
           prop="param.limit">
           <el-input-number
+            :min="100"
+            :max="2000"
             size="small"
             :placeholder="$t('placeholder.log.limit')"
             v-model.number="chartConfig.param.limit"
@@ -448,7 +456,7 @@
       </div>
 
       <!-- Right Y Axis   -->
-      <div v-if="isShowRightYAxis(chartConfig.type)">
+      <div v-if="isTimeSeries(chartConfig.type)">
         <div class="form__sub-title">
           <span>{{$t('dashboard.dashboard.chartForm.rightYAxis')}}</span>
           <el-switch
@@ -755,9 +763,9 @@
                     <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside">
                       <div class="columns-dispaly-pop" style="width:396px">
                         <div class="columns-dispaly-title" v-pre>{{&lt;expression name&gt;.$labels.&lt;label name&gt;}}</div>
-                        <div class="columns-dispaly-msg">{{$t('tip.expressionLabel')}}{{$t('tip.$labels')}}</div>
+                        <div class="columns-dispaly-msg">{{$t('tip.expressionLabel',{expr:"\{\{A.$labels.asset\}\}"})}}</div>
                         <div class="columns-dispaly-title" v-pre>{{&lt;expression name&gt;.$value}}</div>
-                        <div class="columns-dispaly-msg">{{$t('tip.expressionValue')}}</div>
+                        <div class="columns-dispaly-msg">{{$t('tip.expressionValue',{expr:"\{\{A.$value\}\}"})}}</div>
                       </div>
                       <span slot="reference">
                         <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
@@ -1303,7 +1311,11 @@ export default {
     }
   },
   mixins: [promqlInputMixin, publicConfig, chartTypeShow],
-  computed: {},
+  computed: {
+    minStep () {
+      return this.nzDefaultConfig.minStep
+    }
+  },
   data () {
     return {
       rules: {

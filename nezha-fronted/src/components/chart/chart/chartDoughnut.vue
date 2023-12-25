@@ -4,7 +4,7 @@
     ref="doughnut-chart-box"
     class="nz-chart__component"
   >
-    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" :class="{'chart-cursor-default':!dataLink.length}" style="overflow: hidden;"></div>
+    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" :class="{'chart-cursor-default':!(dataLink.length || chartInfo.datasource === 'metrics' || chartInfo.datasource === 'logs')}" style="overflow: hidden;"></div>
 
     <chart-legend
       v-if="hasLegend"
@@ -15,8 +15,8 @@
       @clickLegendD3="clickLegendD3"
       @hoverLegendD3="hoverLegendD3"
     ></chart-legend>
-
-    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
+    <!-- tooltip -->
+    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
       <div class="chart-canvas-tooltip-title tooltip-title" :title="tooltip.title">
         {{tooltip.title}}
       </div>
@@ -33,8 +33,33 @@
         <div>percent</div>
         <div>{{tooltip.percent}}%</div>
       </div>
+    </div>
+    <!-- toolbox -->
+    <div :id="`chart-toolbox-${chartId}`" class="chart-canvas-tooltip no-style-class chart-toolbox" :style="{left:toolbox.x+'px',top:toolbox.y+'px'}" v-if="toolbox.show" v-clickoutside="clickout">
+      <div class="chart-canvas-tooltip-title tooltip-title" :title="toolbox.title">
+        {{toolbox.title}}
+      </div>
+      <div class="chart-canvas-tooltip-content">
+        <div>value</div>
+        <div>
+          <div v-if="toolbox.mapping && toolbox.mapping.icon" style="display: inline-block">
+            <i :class="toolbox.mapping.icon" :style="{color: toolbox.mapping.color.icon}"></i>
+          </div>
+          <div style="display: inline-block">{{toolbox.value}}</div>
+        </div>
+      </div>
+      <div class="chart-canvas-tooltip-content">
+        <div>percent</div>
+        <div>{{toolbox.percent}}%</div>
+      </div>
       <!-- dataLink -->
-      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+      <div class="chart-dataLink-list">
+        <!-- 复制表达式 -->
+        <div class="chart-dataLink-item select-series" v-if="chartInfo.datasource==='metrics'||chartInfo.datasource==='logs'" @click="copyExpr">
+          <i class="nz-icon nz-icon-override"></i>
+          <span v-if="chartInfo.datasource==='metrics'">{{$t('overall.copy')}} PromQL</span>
+          <span v-else>{{$t('overall.copy')}} LogQL</span>
+        </div>
         <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
@@ -231,7 +256,6 @@ export default {
         .on('mousemove', this.doughnutMove)
         .on('mouseleave', this.doughnutLeave)
         .on('click', this.chartClick)
-        .on('mousedown', this.chartMousedown)
         .transition().duration(animate === true ? 600 : 0)
         .attrTween('d', function (d) {
           const i = d3.interpolate({ startAngle: 0, endAngle: 0 }, d)
@@ -257,7 +281,6 @@ export default {
         .on('mousemove', this.doughnutMove)
         .on('mouseleave', this.doughnutLeave)
         .on('click', this.chartClick)
-        .on('mousedown', this.chartMousedown)
         .style('opacity', 0)
         .html((d) => {
           return d.endAngle - d.startAngle > 0.25 ? this.formatterLabel(d) : ''
@@ -318,7 +341,6 @@ export default {
       }
     },
     doughnutEnter (e, node) {
-      if (this.tooltip.dataLinkShow) { return }
       this.tooltip.title = node.data.alias
       this.tooltip.value = node.data.mapping && node.data.mapping.display ? this.handleDisplay(node.data.mapping.display, { ...node.data.labels, value: node.data.showValue }) : node.data.showValue
       this.tooltip.percent = node.percent
@@ -327,12 +349,10 @@ export default {
       this.setPosition(e)
     },
     doughnutMove (e) {
-      if (this.tooltip.dataLinkShow) { return }
       this.tooltip.show = true
       this.setPosition(e)
     },
     doughnutLeave () {
-      if (this.tooltip.dataLinkShow) { return }
       this.tooltip.show = false
     },
     setPosition (e) {
@@ -391,62 +411,56 @@ export default {
         this.svg.selectAll('path').on('mousemove', null)
         this.svg.selectAll('path').on('mouseleave', null)
         this.svg.selectAll('path').on('click', null)
-        this.svg.selectAll('path').on('mousedown', null)
         this.svg.selectAll('foreignObject').on('mouseover', null)
         this.svg.selectAll('foreignObject').on('mouseout', null)
         this.svg.selectAll('foreignObject').on('mouseenter', null)
         this.svg.selectAll('foreignObject').on('mousemove', null)
         this.svg.selectAll('foreignObject').on('mouseleave', null)
         this.svg.selectAll('foreignObject').on('click', null)
-        this.svg.selectAll('foreignObject').on('mousedown', null)
         this.svg.remove()
         this.svg = null
       }
     },
-    datalinkPosition (e) {
+    toolboxPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
       this.$nextTick(() => {
-        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        const box = document.getElementById(`chart-toolbox-${this.chartId}`)
         const left = e.pageX - this.$refs['doughnut-chart-box'].getBoundingClientRect().left
         const top = e.pageY - this.$refs['doughnut-chart-box'].getBoundingClientRect().top
         if (box) {
           const boxWidth = box.offsetWidth
           const boxHeight = box.offsetHeight
           if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-            this.tooltip.x = left + 15
+            this.toolbox.x = left + 15
           } else {
-            this.tooltip.x = left - boxWidth - 15
+            this.toolbox.x = left - boxWidth - 15
           }
           if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
-            this.tooltip.y = top + 15
+            this.toolbox.y = top + 15
           } else {
-            this.tooltip.y = top - boxHeight - 10
+            this.toolbox.y = top - boxHeight - 10
           }
         }
       })
     },
     chartClick (e, data) {
-      if (this.dataLink.length) {
-        this.tooltip.title = data.data.alias
-        this.tooltip.value = data.data.mapping && data.data.mapping.display ? this.handleDisplay(data.data.mapping.display, { ...data.data.labels, value: data.data.showValue }) : data.data.showValue
-        this.tooltip.mapping = data.data.mapping
-        this.tooltip.show = true
-        this.tooltip.dataLinkShow = true
-        this.tooltip.metric.labels = data.data.labels
-        this.tooltip.metric.expressionIndex = data.data.expressionIndex
-        this.datalinkPosition(e)
-      }
-    },
-    chartMousedown (e) {
-      if (this.dataLink.length && this.tooltip.dataLinkShow) {
-        e.stopPropagation()
+      if (this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') {
+        this.tooltip.show = false
+
+        this.toolbox.title = data.data.alias
+        this.toolbox.value = data.data.mapping && data.data.mapping.display ? this.handleDisplay(data.data.mapping.display, { ...data.data.labels, value: data.data.showValue }) : data.data.showValue
+        this.toolbox.percent = data.percent
+        this.toolbox.mapping = data.data.mapping
+        this.toolbox.show = true
+        this.toolbox.metric.labels = data.data.labels
+        this.toolbox.metric.expressionIndex = data.data.expressionIndex
+        this.toolboxPosition(e)
       }
     },
     clickout () {
-      if (this.dataLink.length && this.tooltip.dataLinkShow) {
-        this.tooltip.show = false
-        this.tooltip.dataLinkShow = false
+      if ((this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') && this.toolbox.show) {
+        this.toolbox.show = false
       }
     }
   },

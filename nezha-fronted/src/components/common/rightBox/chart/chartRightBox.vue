@@ -106,7 +106,7 @@
       v-if="previewShow"
       :visible.sync="previewShow"
       :show-close="false"
-      class="nz-dialog chart-fullscreen"
+      class="nz-dialog chart-fullscreen no-transform-dialog"
       destroy-on-close
       fullscreen
       :modal-append-to-body="false"
@@ -381,7 +381,7 @@ export default {
           height: 4,
           unit: 2,
           type: 'line',
-          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }],
           param: {
             stack: 0,
             nullType: 'null',
@@ -408,7 +408,7 @@ export default {
               min: undefined,
               max: undefined
             },
-            dataLink: []
+            dataLink: [],
           }
         }
       }
@@ -419,7 +419,7 @@ export default {
           height: 4,
           unit: 2,
           type: 'log',
-          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, step: undefined }],
           param: {
             enable: {
               thresholds: false,
@@ -629,6 +629,18 @@ export default {
             delete item.buildIn
             delete item.chartId
           })
+        }
+        if ((obj.type === 'line' || obj.type === 'area' || obj.type === 'point')) {
+          if (!obj.param.rightYAxis) {
+            obj.param.rightYAxis = {
+              elementNames: [],
+              style: 'line',
+              unit: 2,
+              label: '',
+              min: undefined,
+              max: undefined
+            }
+          }
         }
         this.editChart = this.$lodash.cloneDeep(obj)
         this.oldData = this.$lodash.cloneDeep(obj)

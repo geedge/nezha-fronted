@@ -37,23 +37,28 @@
           <div class="col-resize-area"></div>
         </template>
         <template slot-scope="scope" :column="item">
-        <span v-if="item.prop === 'time'">
-                {{scope.row[item.prop]}} ms
-              </span>
+        <span v-if="item.prop === 'time'">{{scope.row[item.prop]}} ms</span>
           <span v-else-if="item.prop === 'username'">{{formatUsername(scope.row)}}</span>
           <span v-else-if="item.prop === 'createDate'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
-          <span v-else-if="item.prop === 'response'"  @mouseenter="labelHover(scope.row, 'response', true, false, $event)"
-                @mouseleave="labelHover(scope.row, 'response', false, false)">
-          <div class="text-ellipsis" style="width: 100%" :title="scope.row[item.prop]">
+          <span
+            v-else-if="item.prop === 'response'"
+            @mouseenter="labelHover(scope.row, 'response', true, false, $event)"
+            @mouseleave="labelHover(scope.row, 'response', false, false)"
+          >
+          <div class="text-ellipsis" style="width: 100%">
             {{scope.row[item.prop]}}
           </div>
         </span>
-          <span v-else-if="item.prop === 'params'"  @mouseenter="labelHover(scope.row, 'params', true, false, $event)"
-                @mouseleave="labelHover(scope.row, 'params', false, false)">
-          <div class="text-ellipsis" style="width: 100%" :title="scope.row[item.prop]">
+          <span
+            v-else-if="item.prop === 'params'"
+            @mouseenter="labelHover(scope.row, 'params', true, false, $event)"
+            @mouseleave="labelHover(scope.row, 'params', false, false)"
+          >
+          <div class="text-ellipsis" style="width: 100%">
             {{scope.row[item.prop]}}
           </div>
         </span>
+          <span v-else-if="item.prop === 'operation'">{{formatOperation(scope.row)}}</span>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
           <span v-else>-</span>
         </template>
@@ -91,9 +96,10 @@
 <script>
 import table from '@/components/common/mixin/table'
 import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
+import searchSelectMixin from '@/components/common/searchSelectInfo'
 export default {
   name: 'operationLog',
-  mixins: [table, alertLabelMixin],
+  mixins: [table, alertLabelMixin, searchSelectMixin],
   props: {
     loading: Boolean
   },
@@ -185,6 +191,14 @@ export default {
         return row.username
       } else if (row.operation === 'login' && !row.username) { // 如果是登录 且登录失败
         return JSON.parse(row.params).username
+      } else {
+        return '-'
+      }
+    },
+    formatOperation (row) {
+      const findItem = this.searchSelectInfo.operation.find(item => item.value === row.operation)
+      if (findItem) {
+        return findItem.label
       } else {
         return '-'
       }

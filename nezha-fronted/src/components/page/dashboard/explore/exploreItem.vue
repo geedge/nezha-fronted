@@ -253,13 +253,26 @@
             </template>
             <!--log-->
             <template v-else>
-              <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+              <el-collapse-item v-show="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
                 <div class="chart-room">
                   <chart ref="logChart" :unit="chartUnit" v-my-loading="chartLoading" :timeRange="filterTime"></chart>
                 </div>
               </el-collapse-item>
-              <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
-                <log-tab ref="logDetail" :timeRange="filterTime" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData" v-my-loading="chartLoading"></log-tab>
+              <el-collapse-item v-show="showTab.indexOf('2') > -1" name="2" title="Logs">
+                <log-tab
+                  ref="logDetail"
+                  :unit="chartUnit"
+                  :timeRange="filterTime"
+                  :log-data="logData"
+                  :explore-log-table="logTabNoData"
+                  :explore-item="true"
+                  :tab-index="tabIndex"
+                  @exportLog="exportLog"
+                  @limitChange="queryLogData"
+                  v-my-loading="chartLoading"
+                  :supplementaryData="supplementaryData"
+                  >
+                </log-tab>
               </el-collapse-item>
             </template>
           </el-collapse>
@@ -3623,7 +3636,8 @@ export default {
       ],
       tableHover: false,
       showTopBtn: false, // top按钮
-      scrollbarWrap: null
+      scrollbarWrap: null,
+      supplementaryData: []
     }
   },
   async created () {
@@ -3722,8 +3736,8 @@ export default {
     exportLog ({ limit, descending }) {
       const params = {
         logql: this.expressions,
-        start: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])),
-        end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])),
+        start: this.momentStrToTimestamp(this.filterTime[0]) / 1000,
+        end: this.momentStrToTimestamp(this.filterTime[1]) / 1000,
         direction: descending ? 'backward' : 'forward',
         limit
       }
@@ -3757,7 +3771,38 @@ export default {
         reader.readAsText(error.response.data)
       })
     },
-    queryLogData (limit) { // log的chart和table是一个请求
+    supplementaryLog () {
+      const requestArr = []
+      const start = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0]))
+      const end = this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))
+      // 当不是 指标查询表达式时，除直接查询 用户输入表达式外，另查询 sum by (level) (count_over_time($_expression[$_step]))
+      this.expressions.forEach((item, index) => {
+        if (item != '' && this.promqlKeys[index].state) {
+          const isMetric = this.validateMetric(item)
+          if (!isMetric) {
+            const step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
+            const supplementaryExpr = `sum by (level) (count_over_time(${item}[${step}]))`
+            requestArr.push(this.$get('/logs/loki/api/v1/query_range?query=' + encodeURIComponent(supplementaryExpr) + '&start=' + start + '&end=' + end))
+          }
+        }
+      })
+      this.supplementaryData = []
+      axios.all(requestArr).then(res => {
+        res = res.filter((r, i) => r.code === 200)
+        if (res.length > 0) {
+          const logData = res.map(r => r.data)
+          logData.forEach((response) => {
+            const data = response.result
+            if (!data || data.length < 1) {
+              return
+            }
+            this.supplementaryData.push(data)
+          })
+        }
+      })
+    },
+    queryLogData (limit) {
+      this.supplementaryLog()
       this.chartLoading = true
       if (!limit) {
         limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
@@ -3836,7 +3881,7 @@ export default {
         let series = []
         const legend = []
         this.expressions.forEach((item, index) => {
-          if (item !== '') {
+          if (item !== '' && this.promqlKeys[index].state) {
             promqlInputIndexs.push(index)
             queryExpression.push(item)
           }
@@ -3850,17 +3895,28 @@ export default {
             }
             data.forEach((result, i) => {
               const seriesItem = {
+                type: 'line',
                 name: '',
                 symbol: 'emptyCircle', // 去掉点
-                symbolSize: [2, 2],
+                symbolSize: 8,
                 showSymbol: false,
                 smooth: 0.2, // 曲线变平滑
                 data: [],
                 lineStyle: {
-                  width: 1,
+                  width: 2,
                   opacity: 0.9
                 },
-                type: 'line'
+                emphasis: {
+                  focus: 'none'
+                },
+                blur: {
+                  lineStyle: {
+                    opacity: 0.3
+                  },
+                  itemStyle: {
+                    opacity: 1
+                  }
+                }
               }
               let legendName = ''
               seriesItem.data = result.values.map((item) => {
@@ -3932,17 +3988,28 @@ export default {
                 }
                 data.forEach((result, i) => {
                   const seriesItem = {
+                    type: 'line',
                     name: '',
                     symbol: 'emptyCircle', // 去掉点
-                    symbolSize: [2, 2],
+                    symbolSize: 8,
                     showSymbol: false,
                     smooth: 0.2, // 曲线变平滑
                     data: [],
                     lineStyle: {
-                      width: 1,
+                      width: 2,
                       opacity: 0.9
                     },
-                    type: 'line'
+                    emphasis: {
+                      focus: 'none'
+                    },
+                    blur: {
+                      lineStyle: {
+                        opacity: 0.3
+                      },
+                      itemStyle: {
+                        opacity: 1
+                      }
+                    }
                   }
                   let legendName = ''
                   seriesItem.data = result.values.map((item) => {
@@ -4381,7 +4448,24 @@ export default {
           nullType: 'null',
           legend: { placement: 'bottom', values: [], show: true },
           thresholdShow: true,
-          thresholds: [{ value: undefined, color: '#eeeeeeff' }]
+          thresholds: [{ value: undefined, color: '#eeeeeeff' }],
+          showHeader: 1,
+          visibility: {
+            varName: '',
+            operator: 'equal',
+            varValue: '',
+            result: 'show'
+          },
+          rightYAxis: {
+            elementNames: [],
+            style: 'line',
+            unit: 2,
+            label: '',
+            min: undefined,
+            max: undefined
+          },
+          dataLink: [],
+          option: undefined
         },
         elements: [],
         panel: '',

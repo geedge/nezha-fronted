@@ -45,7 +45,7 @@ export default {
       if (!leftInfo.copies) {
         chartOption.yAxis[0].min = 0
         chartOption.yAxis[0].max = 1
-      } else {
+      } else if (!chartOption.yAxis[0].max) {
         chartOption.yAxis[0].max = undefined
       }
       if (leftInfo.unit.type == 'Time' || chartOption.yAxis[0].maxInterval === 1) {
@@ -79,7 +79,7 @@ export default {
         if (!rightInfo.copies) {
           chartOption.yAxis[1].min = 0
           chartOption.yAxis[1].max = 1
-        } else {
+        } else if (!chartOption.yAxis[1].max) {
           chartOption.yAxis[1].max = undefined
         }
         if (rightInfo.unit.type == 'Time' || chartOption.yAxis[1].maxInterval === 1) {

@@ -105,6 +105,9 @@ Vue.mixin({
     },
     $routePath () {
       return this.$route.path
+    },
+    nzDefaultConfig () {
+      return this.$store.getters.getNzDefaultConfig
     }
   },
   ...mainMixin

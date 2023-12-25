@@ -257,6 +257,11 @@ export default {
   computed: {
     getDuration () {
       return function (record) {
+        // 当 state = active | silence 时，duration = 当前服务器时间（result.time）- startAt
+        if (record.state == 1 || record.state == 2) {
+          console.log(record.startAt, this.nowTime, record.endAt)
+          return calcDurationByStringTimeB(record.startAt, this.nowTime)
+        }
         if (record.endAt) {
           return calcDurationByStringTimeB(record.startAt, record.endAt)
         }
@@ -325,7 +330,7 @@ export default {
                       smooth: 0.2, // 曲线变平滑
                       name: '',
                       lineStyle: {
-                        width: 1,
+                        width: 2,
                         opacity: 0.9
                       },
                       markLine: {

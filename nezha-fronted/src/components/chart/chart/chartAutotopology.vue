@@ -19,6 +19,7 @@
               class="meta2d-chart"
               :is-chart="true"
               :iconArray="iconArray"
+              :time-range="filterTime"
               :ref="'topology' + index"
               :paddingTop="40"
             />
@@ -134,7 +135,7 @@ export default {
     },
     resize () {
       this.allProject.forEach((item, index) => {
-        this.$refs['topology' + index][0] && this.$refs['topology' + index][0].topoResize()
+        this.$refs['topology' + index] && this.$refs['topology' + index][0] && this.$refs['topology' + index][0].topoResize('autoTopology' + item.id + (this.isFullscreen ? 'screen' : ''))
       })
     }
   },

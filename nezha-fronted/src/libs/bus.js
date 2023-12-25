@@ -1,5 +1,9 @@
 import Vue from 'vue'
 import moment from 'moment-timezone'
+import { get } from '../http'
+import store from '../store'
+import router from '../router'
+import audioUrl from '@/assets/audio/new_alert_message.mp3'
 Date.prototype.setStart = function () {
   this.setHours(0)
   this.setMinutes(0)
@@ -27,7 +31,9 @@ export default new Vue({
       // 创建图表信息
       chartAddInfo: {
         metricTarget: []
-      }
+      },
+      newAlertTimer: undefined,
+      lastId: -1
     }
   },
   methods: {
@@ -334,6 +340,113 @@ export default new Vue({
         return newArr
       }
       return handler(tempArr)
+    },
+    // 开启系统通知
+    async openNotification () {
+      const userId = localStorage.getItem('nz-user-id')
+      const enable = localStorage.getItem(`nz-notification-${userId}`)
+      if (enable != 1 || this.newAlertTimer) {
+        return
+      }
+      const queryParams = {
+        pageSize: 1,
+        orderBy: '-id'
+      }
+      this.newAlertTimer = true
+      const response = await get('/alert/message/query', queryParams, { headers: { notCancel: true } })
+      this.lastId = this.$lodash.get(response, 'data.list[0].id', -1)
+      const interval = store.state.nzDefaultConfig.interval
+      this.getNewAlert(interval || 10)
+    },
+    // 查询告警消息
+    getNewAlert (interval = 10) {
+      if (this.newAlertTimer !== true) {
+        return
+      }
+      const ms = parseInt(interval) * 1000
+      this.newAlertTimer = setInterval(async () => {
+        const queryParams = {
+          body: encodeURIComponent(JSON.stringify({
+            id: ['>' + this.lastId],
+            state: 1
+          })),
+          orderBy: '-id'
+        }
+        const response = await get('/alert/message/query', queryParams, { headers: { notCancel: true } })
+        // 防止正在请求时关闭 此时不再执行
+        if (this.newAlertTimer === null) {
+          return
+        }
+        if (response.code == 200) {
+          if (!this.audio) {
+            this.audio = new Audio(audioUrl)
+          }
+          if (response.data.list && response.data.list.length) {
+            this.lastId = response.data.list.reduce(function (max, obj) {
+              return obj.id > max ? obj.id : max
+            }, -1)
+            const h = this.$createElement
+            const self = this
+            response.data.list.forEach((item, index) => {
+              setTimeout(() => {
+                this.$notify({
+                  offset: 90,
+                  duration: 5000,
+                  iconClass: 'nz-icon nz-icon-Notification',
+                  dangerouslyUseHTMLString: true,
+                  message: h('div', [
+                    h('p',
+                      {
+                        class: 'notification-summary',
+                        attrs: {
+                          title: item.summary
+                        },
+                        on: {
+                          click: self.toAlertPage
+                        }
+                      },
+                      item.summary || '-'
+                    ),
+                    h('p',
+                      {
+                        class: 'notification-description',
+                        attrs: {
+                          title: item.description
+                        }
+                      },
+                      item.description || '-'
+                    )
+                  ]),
+                  customClass: 'newAlert-notification'
+                })
+              }, 10 * index)
+            })
+            let playCount = 0
+            const audioLoop = store.state.nzDefaultConfig.audioLoop || 3
+            const maxPlayCount = parseInt(audioLoop) // 设置希望播放的次数
+            if (maxPlayCount) {
+              this.audio.play()
+            }
+            this.audio.addEventListener('ended', () => {
+              playCount++
+              if (playCount < maxPlayCount) {
+                this.audio.play()
+              }
+            })
+          }
+        }
+      }, ms)
+    },
+    toAlertPage () {
+      if (router.currentRoute.path === '/alertMessage') {
+        store.commit('setIsRouteLive')
+      }
+      router.push({ path: '/alertMessage' })
+      this.$notify.closeAll()
+    },
+    closeNotification () {
+      clearInterval(this.newAlertTimer)
+      this.newAlertTimer = null
     }
   },
   created () {

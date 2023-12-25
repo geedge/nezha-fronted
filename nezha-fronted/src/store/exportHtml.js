@@ -44,9 +44,19 @@ const store = new Vuex.Store({
     globalSearchId: '',
     isRouteLive: true,
     nowPath: '',
-    myEvent: new Event('resize')
+    myEvent: new Event('resize'),
+    nzDefaultConfig: {
+      minStep: 60,
+      option: {
+        lineWidth: 2,
+        pointSize: 8
+      }
+    }
   },
   getters: {
+    getNzDefaultConfig (state) {
+      return state.nzDefaultConfig
+    },
     getGlobalSearchId (state) {
       return state.globalSearchId
     },

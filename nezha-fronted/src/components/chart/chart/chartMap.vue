@@ -329,9 +329,9 @@ export default {
       clearTimeout(this.timer)
       this.timer = null
     }
-    this.map.off('load', this.mapLoad)
-    this.map.off('mouseenter', 'pointLayer', this.pointEnter)
-    this.map.off('mouseleave', 'pointLayer', this.pointLeave)
+    this.map && this.map.off('load', this.mapLoad)
+    this.map && this.map.off('mouseenter', 'pointLayer', this.pointEnter)
+    this.map && this.map.off('mouseleave', 'pointLayer', this.pointLeave)
     this.map && this.map.remove()
     this.map = null
   }

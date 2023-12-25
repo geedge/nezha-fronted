@@ -79,7 +79,7 @@ export default {
   methods: {
     initChart (chartOption = this.chartOption) {
       this.legends = []
-      chartOption.series = this.initPieData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+      this.series = chartOption.series = this.initPieData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       if (this.isNoData) {
         return
       }

@@ -9,7 +9,18 @@
 <!--      :isPanel="true"-->
 <!--      ref="diagram"-->
 <!--      :chartInfo="chartInfo" />-->
-    <meta2dMain ref="diagram" v-if="iconArrayLoad" :showHeader="false" :meta2dId="chartInfo.id + '-' + isFullscreen" :topoData="chartInfo.param.topo" :querysArray="querysArray" :params="{ timeType: 5}" :iconArray="iconArray" :isChart="true"/>
+    <meta2dMain
+      ref="diagram"
+      v-if="iconArrayLoad"
+      :showHeader="false"
+      :meta2dId="chartInfo.id + '-' + isFullscreen"
+      :topoData="chartInfo.param.topo"
+      :querysArray="querysArray"
+      :params="{ timeType: 5}"
+      :timeRange="timeRange"
+      :iconArray="iconArray"
+      :isChart="true"
+    />
   </div>
 </template>
 
@@ -35,7 +46,8 @@ export default {
         querysArray: {},
         currentProject: {},
         params: {}
-      }
+      },
+      timeRange: ['', '']
     }
   },
   created () {
@@ -43,6 +55,10 @@ export default {
       this.iconArray = [...res.data.list]
       this.iconArrayLoad = true
     })
+    const timeRange = this.$lodash.cloneDeep(this.filterTime)
+    timeRange[0] = this.momentStrToTimestamp(timeRange[0])
+    timeRange[1] = this.momentStrToTimestamp(timeRange[1])
+    this.timeRange = timeRange
   },
   mounted () {
     bus.$on('showMeta2dPreview', (params) => {
@@ -53,6 +69,10 @@ export default {
   methods: {
     resize () {
       this.$refs.diagram.resize()
+    },
+    refresh (timeRange) {
+      this.timeRange = timeRange
+      this.reload(true)
     }
   },
   destroyed () {

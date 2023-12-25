@@ -30,7 +30,6 @@
         <el-form-item :label="$t('config.system.monitor.interface_name')" prop="interface_name">
           <vue-tags-input
                         v-model="tag"
-                        :maxlength="32"
                         :class="monitor.interface_name.length !== 0 ? 'interface-name' : ''"
                         :placeholder="$t('tagsInput.placeholder')"
                         :tags="monitor.interface_name"

@@ -18,7 +18,7 @@
 <!--        <button id="asset-filter" :class="[dataListLayout.indexOf('clickSearch') > -1?'is-focus':'' ]" class="top-tool-btn margin-r-10" @click.stop="showClickSearch" :title="$t('dashboard.dashboard.chartForm.filter')">-->
 <!--          <i class="nz-icon nz-icon-funnel"></i>-->
 <!--        </button>-->
-        <pick-time ref="pickTime" v-model="searchTime" sign="message" :default-pick="defaultPick" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
+        <pick-time ref="pickTime" v-model="searchTime" sign="message" :default-pick="defaultPick" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="true"></pick-time>
         <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcel')" class="top-tool-btn margin-r-10" type="button" @click="showExportDialog">
           <i class="nz-icon-download1 nz-icon"></i>
         </button>
@@ -214,6 +214,7 @@ export default {
   mixins: [dataListMixin, routerPathParams],
   data () {
     return {
+      orderBy: '-id',
       chartLoading: false,
       chartInfo: {},
       alertMessageNzTableHeightOffset: 242,
@@ -405,7 +406,9 @@ export default {
       ],
       errorContent: '',
       isError: false,
-      defaultPick: 10
+      defaultPick: 10,
+      defaultPickType: 'date',
+      defaultPickVal: 7
     }
   },
   computed: {
@@ -449,56 +452,87 @@ export default {
   },
   methods: {
     renderDefaultParams () {
+      sessionStorage.setItem('nz-reload', 0)
       const q = JSON.parse(this.$route.query.body)
       this.state = q.state
       this.searchTime[0] = q.startAt ? this.momentTz(q.startAt) : ''
       this.searchTime[1] = q.endAt ? this.momentTz(q.endAt) : ''
       this.searchTime[2] = q.timeType
-      if (!q.startAt) {
-        this.searchTime[2] = 'all'
+      if (!q.startAt && !q.timeType) {
+        this.searchTime = ['', '', 'all']
+      } else if (q.timeType === 'all') {
+        this.searchTime = ['', '', 'all']
       }
       switch (this.searchTime[2]) {
         case '5m' :
           this.defaultPick = 1
+          this.defaultPickType = 'minute'
+          this.defaultPickVal = 5
           break
         case '15m' :
           this.defaultPick = 2
+          this.defaultPickType = 'minute'
+          this.defaultPickVal = 15
           break
         case '30m' :
           this.defaultPick = 3
+          this.defaultPickType = 'minute'
+          this.defaultPickVal = 30
           break
         case '1h' :
           this.defaultPick = 4
+          this.defaultPickType = 'hour'
+          this.defaultPickVal = 1
           break
         case '3h' :
           this.defaultPick = 5
+          this.defaultPickType = 'hour'
+          this.defaultPickVal = 3
           break
         case '6h' :
           this.defaultPick = 6
+          this.defaultPickType = 'hour'
+          this.defaultPickVal = 6
           break
         case '12h' :
           this.defaultPick = 7
+          this.defaultPickType = 'hour'
+          this.defaultPickVal = 12
           break
-        case '1d' :
-          this.defaultPick = 8
-          break
+        // case '1d' :
+        //   this.defaultPick = 8
+        //   this.defaultPickType = 'hour'
+        //   break
         case '24h' :
           this.defaultPick = 8
+          this.defaultPickType = 'hour'
+          this.defaultPickVal = 24
           break
         case '2d' :
           this.defaultPick = 9
+          this.defaultPickType = 'date'
+          this.defaultPickVal = 2
           break
         case '7d' :
           this.defaultPick = 10
+          this.defaultPickType = 'date'
+          this.defaultPickVal = 7
           break
         case '30d' :
           this.defaultPick = 11
+          this.defaultPickType = 'date'
+          this.defaultPickVal = 30
           break
         case 'all' :
           this.defaultPick = 12
+          this.defaultPickType = 'all'
+          this.defaultPickVal = 'all'
           break
         default:
           this.defaultPick = 0
+      }
+      if (this.defaultPick && this.defaultPick !== 12) {
+        this.setDefaultSearchTime('')
       }
       // this.defaultPick = 11
     },
@@ -564,7 +598,7 @@ export default {
         })
         arrState.forEach(state => {
           const batchDeleteArr = this.batchDeleteObjs.filter(m => m.state === state)
-          promiseArr.push(this.$delete(this.url + '?ids=' + batchDeleteArr.map(m => m.id).join(',') + '&state=' + state))
+          promiseArr.push(this.$delete('/alert/message' + '?ids=' + batchDeleteArr.map(m => m.id).join(',') + '&state=' + state))
         })
         Promise.all(promiseArr)
           .then(res => {
@@ -595,7 +629,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete(this.url + '?ids=' + row.id + '&state=' + row.state).then(response => {
+        this.$delete('/alert/message' + '?ids=' + row.id + '&state=' + row.state).then(response => {
           if (response.code === 200) {
             this.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
@@ -761,12 +795,12 @@ export default {
               const seriesItem = {
                 name: '',
                 symbol: 'emptyCircle', // 去掉点
-                symbolSize: [2, 2],
+                symbolSize: 8,
                 showSymbol: false,
                 smooth: 0.2, // 曲线变平滑
                 data: [],
                 lineStyle: {
-                  width: 1,
+                  width: 2,
                   opacity: 0.9
                 },
                 type: 'line'
@@ -824,6 +858,30 @@ export default {
       this.setSearchTime('searchTime')
       this.getTableData()
     },
+    setDefaultSearchTime () {
+      const type = this.defaultPickType
+      const val = this.defaultPickVal
+      const key = 'searchTime'
+      if (type === 'minute') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+        this.$set(this[key], 0, startTime)
+        this.$set(this[key], 1, endTime)
+        this.$set(this[key], 2, val + 'm')
+      } else if (type === 'hour') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+        this.$set(this[key], 0, startTime)
+        this.$set(this[key], 1, endTime)
+        this.$set(this[key], 2, val + 'h')
+      } else if (type === 'date') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+        this.$set(this[key], 0, startTime)
+        this.$set(this[key], 1, endTime)
+        this.$set(this[key], 2, val + 'd')
+      }
+    },
     getTableData (state) {
       if (state) {
         this.state = state
@@ -861,10 +919,15 @@ export default {
         ...this.searchLabel
       }
       const path = this.fromRoute.alertMessage
-      const routePathParams = this.$lodash.cloneDeep(param)
+      const routePathParams = JSON.parse(JSON.stringify(param))
       delete routePathParams.statistics
-      routePathParams.body.startAt = this.searchTime[0] ? this.momentStrToTimestamp(this.searchTime[0]) : ''
-      routePathParams.body.endAt = this.searchTime[1] ? this.momentStrToTimestamp(this.searchTime[1]) : ''
+      if (!this.searchTime[2]) {
+        routePathParams.body.startAt = this.searchTime[0] ? this.momentStrToTimestamp(this.searchTime[0]) : ''
+        routePathParams.body.endAt = this.searchTime[1] ? this.momentStrToTimestamp(this.searchTime[1]) : ''
+      } else {
+        delete routePathParams.body.startAt
+        delete routePathParams.body.endAt
+      }
       routePathParams.body.timeType = this.searchTime[2]
       routePathParams.body = JSON.stringify(routePathParams.body)
       this.updatePath(routePathParams, path)
@@ -875,7 +938,7 @@ export default {
       this.$get('/alert/message/query', { ...queryParams }).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
-          this.nowTime = this.utcTimeToTimezoneStr(response.time)
+          this.nowTime = response.time
           response.data.list.forEach((item) => {
             const labels = JSON.parse(item.labels)
             if (labels) {
@@ -1055,6 +1118,7 @@ export default {
           }
         })
       }
+      searchLabel.body = encodeURIComponent(JSON.stringify(this.searchLabel.body))
       this.$set(searchLabel, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
       this.exportExcel('alert/message/export', { ...searchLabel, state: this.state })
       this.closeDialog()
@@ -1077,6 +1141,7 @@ export default {
           }
         })
       }
+      temp.body = encodeURIComponent(JSON.stringify(this.searchLabel.body))
       this.$set(temp, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
       this.exportExcel('alert/message/export', { ...temp, state: this.state })
       this.closeDialog()
@@ -1220,6 +1285,7 @@ export default {
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
       params.ids = this.batchDeleteObjs.map(item => item.id).join(',')
+      params.body = encodeURIComponent(JSON.stringify(this.searchLabel.body))
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
     },

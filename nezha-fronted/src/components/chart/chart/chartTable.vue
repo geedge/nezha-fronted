@@ -33,16 +33,15 @@
             }"
             class="value-mapping-table"
             :title="showValueMapping(scope.row,col.title, col)"
-            :class="{'chart-cursor-pointer':dataLink.length}"
+            :class="{'chart-cursor-pointer':(dataLink.length || chartInfo.datasource === 'metrics' || chartInfo.datasource === 'logs')}"
             @click="chartClick($event,col,scope.row)"
-            @mousedown="chartMousedown($event)"
           >
             <template v-if="scope.row.valueMapping && scope.row.valueMapping[col.title + 'mapping']">
               <i :class="scope.row.valueMapping[col.title + 'mapping'].icon" :style="{color: scope.row.valueMapping[col.title + 'mapping'].color.icon}"></i>
             </template>
             {{showValueMapping(scope.row,col.title, col)}}
           </div>
-          <div v-else class="value-mapping-table"  :title="scope.row.display[col.title + 'display'].display"  :class="{'chart-cursor-pointer':dataLink.length}" @click="chartClick($event,col,scope.row)" @mousedown="chartMousedown($event)">
+          <div v-else class="value-mapping-table"  :title="scope.row.display[col.title + 'display'].display"  :class="{'chart-cursor-pointer':(dataLink.length || chartInfo.datasource === 'metrics' || chartInfo.datasource === 'logs')}" @click="chartClick($event,col,scope.row)">
             {{scope.row.display[col.title + 'display'].display}}
           </div>
         </template>
@@ -60,14 +59,20 @@
       >
       </el-pagination>
     </div>
-    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
-      <div class="chart-canvas-tooltip-title tooltip-title" :title="tooltip.title">{{tooltip.title}}</div>
+    <div :id="`chart-toolbox-${chartId}`" class="chart-canvas-tooltip no-style-class chart-toolbox" :style="{left:toolbox.x+'px',top:toolbox.y+'px'}" v-if="toolbox.show" v-clickoutside="clickout">
+      <div class="chart-canvas-tooltip-title tooltip-title" :title="toolbox.title">{{toolbox.title}}</div>
       <div class="chart-canvas-tooltip-content">
         <div>value</div>
-        <div>{{tooltip.value}}</div>
+        <div>{{toolbox.value}}</div>
       </div>
       <!-- dataLink -->
-      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+      <div class="chart-dataLink-list">
+        <!-- 复制表达式 -->
+        <div class="chart-dataLink-item select-series" v-if="chartInfo.datasource==='metrics'||chartInfo.datasource==='logs'" @click="copyExpr">
+          <i class="nz-icon nz-icon-override"></i>
+          <span v-if="chartInfo.datasource==='metrics'">{{$t('overall.copy')}} PromQL</span>
+          <span v-else>{{$t('overall.copy')}} LogQL</span>
+        </div>
         <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
@@ -135,10 +140,15 @@ export default {
     // 设置默认排序
     setDefaultSort () {
       const columns = this.chartInfo.param.columns
-      const defaultSortColumn = lodash.get(this, 'chartInfo.param.tableOptions.defaultSortColumn', columns[0].title)
-      const defaultSort = lodash.get(this, 'chartInfo.param.tableOptions.defaultSort', 'asc')
-      const order = defaultSort === 'asc' ? 'ascending' : 'descending'
-      this.$refs.dataTable.sort(defaultSortColumn, order)
+      if (columns.length) {
+        let defaultSortColumn = lodash.get(this, 'chartInfo.param.tableOptions.defaultSortColumn', undefined)
+        if (!defaultSortColumn) {
+          defaultSortColumn = columns[0].title
+        }
+        const defaultSort = lodash.get(this, 'chartInfo.param.tableOptions.defaultSort', 'asc')
+        const order = defaultSort === 'asc' ? 'ascending' : 'descending'
+        this.$refs.dataTable.sort(defaultSortColumn, order)
+      }
     },
     // 设置pageSize
     setPageSize () {
@@ -290,6 +300,7 @@ export default {
           oldValue: ''
         }
         const display = this.globalVariablesReplace(column.display)
+        console.log(column, display, /\{\{.+\}\}/.test(display), params)
         if (/\{\{.+\}\}/.test(display)) {
           const labelValue = display.replace(/(\{\{.+?\}\})/g, function (i) {
             const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
@@ -299,7 +310,8 @@ export default {
               if (label.indexOf('$value') !== -1) {
                 value = chartDataFormat.getUnit(column.unit ? column.unit : 2).compute(value, null, -1, 2)
               }
-              if (!((typeof value) == 'string' && value.constructor == String)) {
+              console.log(value)
+              if (!((typeof value) == 'string' && value.constructor == String) && isNaN(value)) {
                 let legend = ''
                 if (value.__name__) {
                   legend += `${value.__name__}{`
@@ -326,7 +338,7 @@ export default {
             let value = null
             if (lodash.get(params, label)) {
               value = lodash.get(params, label)
-              if (!((typeof value) == 'string' && value.constructor == String)) {
+              if (!((typeof value) == 'string' && value.constructor == String) && isNaN(value)) {
                 let legend = ''
                 if (value.__name__) {
                   legend += `${value.__name__}{`
@@ -348,6 +360,7 @@ export default {
             }
             return value || ''
           })
+          console.log(labelValue)
           obj[column.title + 'display'] = {
             display: labelValue,
             oldValue: oldLabelValue
@@ -381,7 +394,7 @@ export default {
             if (label.indexOf('$value') !== -1) {
               value = chartDataFormat.getUnit(col.unit ? col.unit : 2).compute(value, null, -1, 2)
             }
-            if (!((typeof value) == 'string' && value.constructor == String)) {
+            if (!((typeof value) == 'string' && value.constructor == String) && isNaN(value)) {
               let legend = ''
               if (value.__name__) {
                 legend += `${value.__name__}{`
@@ -464,31 +477,31 @@ export default {
         }
       }
     },
-    datalinkPosition (e) {
+    toolboxPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
       this.$nextTick(() => {
-        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        const box = document.getElementById(`chart-toolbox-${this.chartId}`)
         const left = e.pageX - this.$refs['tabel-chart-box'].getBoundingClientRect().left
         const top = e.pageY - this.$refs['tabel-chart-box'].getBoundingClientRect().top
         if (box) {
           const boxWidth = box.offsetWidth
           const boxHeight = box.offsetHeight
           if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-            this.tooltip.x = left + 15
+            this.toolbox.x = left + 15
           } else {
-            this.tooltip.x = left - boxWidth - 15
+            this.toolbox.x = left - boxWidth - 15
           }
           if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
-            this.tooltip.y = top + 15
+            this.toolbox.y = top + 15
           } else {
-            this.tooltip.y = top - boxHeight - 10
+            this.toolbox.y = top - boxHeight - 10
           }
         }
       })
     },
     chartClick (e, col, row) {
-      if (this.dataLink.length) {
+      if (this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') {
         // 对象扁平化
         let flattenedObject
         for (const key in row) {
@@ -496,31 +509,24 @@ export default {
             flattenedObject = { ...row[key] }
           }
         }
-        this.tooltip.title = col.title
+        this.toolbox.title = col.title
         if (row.valueMapping && row.valueMapping[col.title + 'mapping']) {
-          this.tooltip.value = this.showValueMapping(row, col.title, col)
+          this.toolbox.value = this.showValueMapping(row, col.title, col)
         } else {
-          this.tooltip.value = row.display[col.title + 'display'].display
+          this.toolbox.value = row.display[col.title + 'display'].display
         }
-        this.tooltip.show = true
-        this.tooltip.dataLinkShow = true
-        this.tooltip.metric.labels = {
+        this.toolbox.show = true
+        this.toolbox.metric.labels = {
           ...flattenedObject.metric,
           legend: flattenedObject.$legend
         }
-        this.tooltip.metric.expressionIndex = flattenedObject.expressionIndex
-        this.datalinkPosition(e)
-      }
-    },
-    chartMousedown (e) {
-      if (this.dataLink.length && this.tooltip.dataLinkShow) {
-        e.stopPropagation()
+        this.toolbox.metric.expressionIndex = flattenedObject.expressionIndex
+        this.toolboxPosition(e)
       }
     },
     clickout () {
-      if (this.dataLink.length && this.tooltip.dataLinkShow) {
-        this.tooltip.show = false
-        this.tooltip.dataLinkShow = false
+      if ((this.dataLink.length || this.chartInfo.datasource === 'metrics' || this.chartInfo.datasource === 'logs') && this.toolbox.show) {
+        this.toolbox.show = false
       }
     }
   },

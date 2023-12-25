@@ -43,7 +43,7 @@
                        v-model="editProfile.theme"
                        popper-class="right-box-select-top prevent-clickoutside"
                        size="small">
-                <el-option v-for="item in theme" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in theme" :key="item.value" :label="item.label === 'light' ? $t('theme.light'):$t('theme.dark')" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('profile.source')" prop="source">
@@ -66,7 +66,7 @@
 <script>
 import editRigthBox from '@/components/common/mixin/editRigthBox'
 import { theme } from '@/components/common/js/constants'
-import bus from "@/libs/bus";
+import bus from '@/libs/bus'
 
 export default {
   name: 'profilebox',
@@ -134,6 +134,7 @@ export default {
                   localStorage.setItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`, currentTheme)
                   const body = document.getElementsByTagName('body')[0]
                   body.setAttribute('class', `theme-${currentTheme}`)
+                  bus.$emit('themeChange', currentTheme)
                 }
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
