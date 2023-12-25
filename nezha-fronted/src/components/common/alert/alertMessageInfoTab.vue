@@ -174,7 +174,7 @@ export default {
 
           this.detailArr = []
           this.sysArr.forEach(item => {
-            if (n[item.key]) {
+            if (n[item.key] && n[item.key].id != -1) {
               this.detailArr.push(item)
             }
           })
