@@ -112,7 +112,7 @@ export default {
             label: this.$t('overall.detail')
           }]
           this.sysArr.forEach(item => {
-            if (n[item.key]) {
+            if (n[item.key] && n[item.key].id != -1) {
               this.cardNames.push(item)
             }
           })
