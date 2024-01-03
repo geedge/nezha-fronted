@@ -74,7 +74,7 @@ export default {
     },
     fatherNowTimeType () {
       return this.$store.getters.getNowTimeType
-    }
+    },
   },
   data () {
     return {
@@ -191,6 +191,7 @@ export default {
     fatherNowTimeType: {
       immediate: true,
       handler (n) {
+        console.log(n)
         this.nowType = lodash.cloneDeep(n)
       }
     }
@@ -204,6 +205,9 @@ export default {
       this.searchTime[1] = bus.timeFormate(this.timeRange[1])
       this.nowType.start_time = this.searchTime[0]
       this.nowType.end_time = this.searchTime[1]
+      if (this.isPreview) {
+        return
+      }
       if (!this.nowTimeType) {
         this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
         this.setSearchTime('searchTime', this.nowType, '', false)

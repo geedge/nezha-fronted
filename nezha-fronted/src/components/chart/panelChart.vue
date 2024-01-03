@@ -34,6 +34,7 @@
     <!-- 全屏的header -->
     <chart-screen-header
       v-if="isFullscreen"
+      :isPreview="isPreview"
       :is-group="isGroup(chartInfo.type)"
       :isExportHtml="isExportHtml"
       :isError="isError"
@@ -130,6 +131,10 @@ export default {
     },
     hiddenText: { // 隐藏图表的悬浮文字
       type: String
+    },
+    isPreview: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

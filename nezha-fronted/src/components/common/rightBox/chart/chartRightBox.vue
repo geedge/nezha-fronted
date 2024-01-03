@@ -115,6 +115,7 @@
     >
       <panel-chart
         v-if="prevChart"
+        :isPreview="true"
         :nowTimeType="{
           id: 4,
           type: 'hour',

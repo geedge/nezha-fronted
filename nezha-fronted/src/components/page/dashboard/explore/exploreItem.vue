@@ -4873,7 +4873,33 @@ export default {
 
     },
     end () {
-
+      this.expressions = []
+      this.expressionName = []
+      if (!this.promqlKeys.length) {
+        this.addExpression()
+      } else {
+        const expressionsShow = this.$lodash.cloneDeep(this.expressionsShow)
+        this.promqlKeys.forEach((item, index) => {
+          this.expressions.push(item.expression)
+          this.expressionName.push(item.name)
+          // 更新promqlInput视图
+          setTimeout(() => {
+            this.$refs[`promql-${index}`][0].promqlInputChange(item)
+          })
+          // 设置orderNum排序
+          item.orderNum = index
+          // expressionsShow调整顺序
+          expressionsShow.forEach((subItem) => {
+            if (item.name == subItem.oldName) {
+              this.$set(this.expressionsShow, index, this.$lodash.cloneDeep(subItem))
+            }
+          })
+        })
+        const arr = this.promqlKeys.map((item, index) => 'elements.' + (index) + '.expression')
+        // this.$refs.chartForm.clearValidate(arr)
+      }
+      // this.change()
+      // document.body.classList.remove('isDrag')
     }
   },
   computed: {

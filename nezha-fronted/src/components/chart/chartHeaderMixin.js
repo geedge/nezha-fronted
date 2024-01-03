@@ -36,6 +36,10 @@ export default {
     },
     hiddenText: { // 隐藏图表的悬浮文字
       type: String
+    },
+    isPreview: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
