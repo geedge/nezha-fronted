@@ -693,10 +693,14 @@ export default {
     },
     renderThresholds () { // 画阈值线
       const u = getChart(this.chartId)
+      console.log(u)
+
       const thresholdsEnable = this.$lodash.get(this.chartInfo, 'param.enable.thresholds', false)
       if (!thresholdsEnable || !u) {
         return
       }
+      const leftYaxisMin = u.scales.left.min
+      const leftYaxisMax = u.scales.left.max
       const thresholdsArr = this.$lodash.get(this.chartInfo, 'param.thresholds', [])
       const ctx = u.ctx
       ctx.save()
@@ -706,7 +710,7 @@ export default {
       const x0 = u.valToPos(xd[i0], 'x', true)
       const x1 = u.valToPos(xd[i1], 'x', true)
       thresholdsArr.forEach(item => {
-        if (item.value > this.leftYaxisMin && item.value < this.leftYaxisMax) {
+        if (item.value > leftYaxisMin && item.value < leftYaxisMax) {
           const y0 = u.valToPos(item.value, 'left', true)
           const y1 = u.valToPos(item.value, 'left', true)
           ctx.beginPath()
