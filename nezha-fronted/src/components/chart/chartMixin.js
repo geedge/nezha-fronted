@@ -100,15 +100,17 @@ export default {
 
           // 设置右y轴
           if (chartInfo.param.enable.rightYAxis) {
-            chartInfo.param.rightYAxis && chartInfo.param.rightYAxis.elementNames.forEach(item => {
-              if ((data.elements.name == item) && !s.yAxisIndex) {
+            if (chartInfo.param.rightYAxis) {
+              const findItem = chartInfo.param.rightYAxis.elementNames.find(item => data.elements.name == item)
+              console.log(findItem)
+              if (findItem) {
                 s.yAxisIndex = 1
                 data.yAxisIndex = 1
               } else {
                 s.yAxisIndex = 0
                 data.yAxisIndex = 0
               }
-            })
+            }
           }
 
           // 右y轴数据类型
