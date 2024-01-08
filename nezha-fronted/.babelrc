@@ -27,13 +27,6 @@
         "useESModules": false
       }
     ],
-    [
-      "component",
-      {
-        "libraryName": "element-ui",
-        "styleLibraryName": "theme-chalk"
-      }
-    ],
     "@babel/plugin-proposal-optional-chaining"
   ],
   "env": {
