@@ -20,7 +20,18 @@
     box-sizing: border-box;
     background-color: $--background-color-base;
     &>div {
+      background-color: $--chart-box-background-color;
+      &>.table-list-box {
+        background-color: $--chart-box-background-color;
+      }
+      .vue-grid-item {
+        background-color: $--chart-background-color-base
+      }
+    }
+    .panel-top-tools {
       background-color: $--background-color-empty;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
     }
     .nz-table-list>div{
       height: 100%;
