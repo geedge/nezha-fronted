@@ -210,4 +210,10 @@
     margin-bottom: 0 !important;
     flex: 1;
   }
+
+  .summary-form-item{
+    .el-form-item__label{
+      display: flex;
+    }
+  }
 }

@@ -165,11 +165,31 @@
           <!-- notification -->
           <div class="alert-rule-split-title">{{ $t('alert.config.notificationConfig') }}</div>
           <!--summary-->
-          <el-form-item :label="$t('alert.summary')" prop="summary">
+          <el-form-item :label="$t('alert.summary')" prop="summary" class="summary-form-item">
+            <div slot="label">
+              <span>{{$t('alert.summary')}}</span>
+              <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside">
+                <div style="white-space: pre-wrap;">{{$t('alert.config.labelTip')}}</div>
+                <div style="white-space: pre-wrap;marginTop:2px;">{{$t('alert.config.valueTip')}}</div>
+                <span slot="reference">
+                  <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                </span>
+              </el-popover>
+            </div>
             <el-input id="alert-box-input-summary" v-model="editAlertRule.summary" maxlength="512" placeholder="" rows="2" show-word-limit size="small" type="textarea"></el-input>
           </el-form-item>
           <!--description-->
           <el-form-item :label="$t('overall.remark')" prop="description">
+            <div slot="label">
+              <span>{{$t('overall.remark')}}</span>
+              <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside">
+                <div style="white-space: pre-wrap;">{{$t('alert.config.labelTip')}}</div>
+                <div style="white-space: pre-wrap;marginTop:2px;">{{$t('alert.config.valueTip')}}</div>
+                <span slot="reference">
+                  <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                </span>
+              </el-popover>
+            </div>
             <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="256" placeholder="" rows="2" show-word-limit size="small" type="textarea"></el-input>
           </el-form-item>
           <!--notifyActive-->
