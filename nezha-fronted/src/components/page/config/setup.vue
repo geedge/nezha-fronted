@@ -389,12 +389,14 @@ export default {
       switch (step) {
         case 0:
           this.activeStep = 0
+          this.step = 0
           break
         case 1:
           if (this.prevent_next) { return }
           this.prevent_next = true
           if (this.activeStep > 1) {
             this.activeStep = 1
+            this.step = 1
             this.prevent_next = false
           } else {
             this.getValidateCode()
@@ -430,6 +432,7 @@ export default {
           this.prevent_next = true
           if (this.activeStep > 2) {
             this.activeStep = 2
+            this.step = 2
             this.prevent_next = false
           } else {
             this.$refs['db-form'].validate((valid) => {
