@@ -38,7 +38,7 @@
         :table-class="true"
       ></element-set>
     </transition>
-    <div class="sub-container">
+    <div class="sub-container" :class="subBoxClass">
       <div :class="subContentClass">
         <slot></slot>
       </div>
@@ -106,6 +106,9 @@ export default {
     hideHeader: {
       type: Boolean,
       default: false
+    },
+    subBoxClass: {
+      type: String
     }
   },
   computed: {

@@ -44,9 +44,23 @@
         overflow: hidden;
       }
     }
+    &>.chart-list-box{
+      &>.table-list-box {
+        background-color: $--chart-box-background-color;
+      }
+      .vue-grid-item {
+        background-color: $--chart-background-color-base
+      }
+    }
   }
   & > .bottom-dashboard {
     padding: 15px 10px 0px 10px !important;
+  }
+}
+.bottom-data-list  .chart-list-box {
+  background-color: $--chart-box-background-color;
+  .nz-table-list{
+    background-color: $--chart-box-background-color;
   }
 }
 .sub-top-tools .top-tool-btn-txt .nz-icon {
