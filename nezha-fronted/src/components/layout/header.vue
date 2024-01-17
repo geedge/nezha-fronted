@@ -52,9 +52,9 @@
       <el-dropdown trigger="click">
         <div class="personal-avatar"><span>{{name ? name.substr(0, 1) : ''}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
         <el-dropdown-menu slot="dropdown" class="personal-dropdown-menu right-public-box-select-top right-public-box-dropdown-top">
-          <div class="personal-dropdown">
-            <div class="personal-dropdown__username" :title="name">{{name}}</div>
-            <div class="personal-dropdown__name" :title="username">@{{username}}</div>
+          <div class="personal-nameBox">
+            <div class="personal-name" :title="name">{{name}}</div>
+            <div class="personal-username" :title="username">@{{username}}</div>
           </div>
           <div class="item-divide"></div>
           <el-dropdown-item>
