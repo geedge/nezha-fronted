@@ -198,7 +198,7 @@ const en = {
       header: 'Welcome to Nezha setup wizard!',
       guid: 'What will the wizard do for you?',
       guid_1: 'Create a basic configuration',
-      guid_2: 'Tries to find problems within your Database and Redis setup',
+      guid_2: 'Tries to find problems within your Database',
       toContinue: 'To continue',
       creatFile: 'For security reasons you need to authenticate for the installation by creating the file',
       createFileTip: 'This can be done by executing the following command',

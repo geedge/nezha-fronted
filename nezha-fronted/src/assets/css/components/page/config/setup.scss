@@ -55,9 +55,9 @@
   }
   .setup-inner .setup-help {
     width: calc(100% - 710px);;
-    height:calc(100% - 50px);
+    height:calc(100% - 30px);
     position: absolute;
-    top: 20px;
+    top: 0px;
     right: 0;
     border-left: 1px solid $--border-color-light;
     padding-left: 30px;
@@ -120,11 +120,9 @@
   }
   .setup-bottom-btn {
     width: 100%;
-    height: 49px;
     position: absolute;
-    bottom: 0;
+    bottom: 20px;
     right: 20px;
-    padding-top: 20px;
     text-align: right;
   }
   /* 步骤条样式 */
@@ -168,5 +166,53 @@
     border-bottom: unset !important;
     color: $--color-text-primary;
     background-color: transparent;
+  }
+
+  .setup-urlWrap{
+    .url-item{
+      display: flex;
+      margin-bottom: 12px;
+      &>.el-form-item__content{
+        width: 100%;
+        display: flex;
+      }
+      &:last-of-type{
+        margin-bottom: 0;
+      }
+      .el-form-item{
+        margin-bottom: 0;
+        &.url-ip{
+          width: 70%;
+          .el-input__inner{
+            border-radius: 2px 0 0 2px;
+          }
+        }
+        &.url-port{
+          width: 30%;
+          .el-input__inner{
+            border-radius: 0 2px 2px 0;
+          }
+        }
+      }
+    }
+  }
+  .setup-form-title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    margin-bottom: 10px;
+    line-height: 32px;
+    font-size: 14px;
+    font-weight: bold;
+    color: $--color-text-primary;
+    background-color: $--right-box-sub-title-background-color;
+    border: 1px solid $--right-box-sub-title-border-color;
+  }
+  .form-scroll-wrap{
+    width:680px;
+    height:calc(100% - 30px);
+    overflow-y: auto;
+    box-sizing: border-box;
   }
 }

@@ -192,7 +192,7 @@ const cn = {
       header: '欢迎使用哪吒安装向导！',
       guid: '向导将为您做什么?',
       guid_1: '创建基本的配置',
-      guid_2: '尝试在数据库和Redis设置中查找问题',
+      guid_2: '尝试在数据库中查找问题',
       toContinue: '继续',
       creatFile: '出于安全原因，您需要通过创建文件来验证安装',
       createFileTip: '这可以通过执行以下命令来完成',

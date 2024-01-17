@@ -320,12 +320,12 @@ td .nz-icon-gear:before {
 .el-message-box {
   background-color: $--background-color-empty !important;
   border: 1px solid $--border-color-light;
-  .el-button:nth-of-type(1) {
+  .el-button:nth-of-type(1):not(:last-child) {
     background-color: $--button-light-hover-background-color;
     border: 1px solid $--button-light-border-color;
     color: $--button-light-color;
   }
-  .el-button:nth-of-type(1):hover {
+  .el-button:nth-of-type(1):not(:last-child):hover {
     background-color: $--button-light-hover-background-color !important;
     border: 1px solid $--button-primary-hover-background-color !important;
     color: $--button-primary-background-color !important;
