@@ -31,7 +31,6 @@
           <el-steps direction="vertical" space=0 :active="step" finish-status="success">
             <el-step :title="$t('setup.step0')" ></el-step>
             <el-step :title="$t('setup.step1')" ></el-step>
-            <el-step :title="$t('setup.step2')"></el-step>
             <el-step :title="$t('overall.system')" ></el-step>
           </el-steps>
         </div>
@@ -117,29 +116,6 @@
           </template>
           <template v-if="activeStep == 2">
             <div class="setup-config">
-              <el-form ref="redis-form" :model="redis" label-width="80px" :rules="redisRules" label-position="top" size="small" style="width: 600px" :validate-on-rule-change="false" >
-                <el-form-item :label="$t('asset.host')" prop="host" key="rdhost" >
-                  <el-input v-model="redis.host"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('asset.port')" prop="port" key="rdport" >
-                  <el-input v-model="redis.port"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('login.pin')" prop="pin" key="rdpassword" >
-                  <el-input v-model="redis.pin" type="password" auto-complete="new-password"  show-password ></el-input>
-                </el-form-item>
-              </el-form>
-              <div class="setup-help">
-                <div class="help-header">
-                  {{ $t("setup.redis.configTitle") }}
-                </div>
-                <div class="help-body">
-                  {{ $t("setup.redis.configTip") }}
-                </div>
-              </div>
-            </div>
-          </template>
-          <template v-if="activeStep == 3">
-            <div class="setup-config">
               <el-form ref="sys-form" :model="system" label-width="80px" :rules="sysRules" label-position="top" size="small" style="width: 640px" :validate-on-rule-change="false" >
                 <el-form-item :label="$t('profile.username')" prop="host" key="syshost" >
                   <el-input v-model="system.username"></el-input>
@@ -169,10 +145,10 @@
             <button v-if="activeStep != 0" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="background-color:#fff;color:#333;border:1px solid rgba(0,0,0,0.15);" @click="preStep">
               <span>{{$t('overall.back')}}</span>
             </button>
-            <button v-if="activeStep != 3"  :class="{'nz-btn-disabled':prevent_next}" :disabled="prevent_next" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="nextStep">
+            <button v-if="activeStep != 2"  :class="{'nz-btn-disabled':prevent_next}" :disabled="prevent_next" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="nextStep">
               <span>{{$t('setup.next')}}</span>
             </button>
-            <button  v-if="activeStep == 3" :class="{'nz-btn-disabled':prevent_finish}" :disabled="prevent_finish" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="finishStep">
+            <button  v-if="activeStep == 2" :class="{'nz-btn-disabled':prevent_finish}" :disabled="prevent_finish" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="finishStep">
               <span>{{$t('setup.finish')}}</span>
             </button>
           </div>
@@ -215,22 +191,6 @@ export default {
         name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
-      },
-      redis: {
-        host: '',
-        port: 6379,
-        pin: ''
-      },
-      redisRules: {
-        host: [
-          {
-            required: true,
-            message: this.$t('validate.required'),
-            trigger: 'blur'
-          },
-          { validator: host, trigger: 'blur' }
-        ],
-        port: [{ validator: port, trigger: 'blur' }]
       },
       system: {
         username: '',
@@ -328,68 +288,33 @@ export default {
           }
           break
         case 3:
-          if (this.prevent_next) { return }
-          this.prevent_next = true
-          if (this.activeStep > 3) {
-            this.activeStep = 3
-            this.prevent_next = false
-          } else {
-            this.$refs['redis-form'].validate((valid) => {
-              if (valid) {
-                this.getValidateCode()
-                this.$post('setup/checkRedis', { redis: this.redis, code: this.validateCode }).then(response => {
-                  if (response.code == 200) {
-                    this.activeStep = 3
-                    this.step = 3
-                  } else {
-                    this.activeStep = 2
-                    this.step = 2
-                    if (response.code == 574004) { // 密码无效
-                      this.$alert(this.$t('setup.invalidPin'), { type: 'warning' })
-                    } else if (response.code == 574005) {
-                      this.$alert(this.$t('setup.requirePin'), { type: 'warning' })
-                    } else if (response.code == 574002) {
-                      this.$alert(this.$t('setup.invalidCode', { page: this.$t('setup.welcomePage') }), { type: 'warning' })
-                    } else {
-                      this.$alert(this.$t('setup.invalidRedis'), { type: 'warning' })
-                    }
-                  }
-                  this.prevent_next = false
-                })
-              } else {
-                this.prevent_next = false
-              }
-            })
-          }
-          break
-        case 4:
           if (this.prevent_finish) { return }
-          this.prevent_next = true
+          this.prevent_finish = true
           this.$refs['sys-form'].validate((valid) => {
             if (valid) {
               this.getValidateCode()
               const params = {
                 database: this.database,
-                redis: this.redis,
                 system: this.system,
                 code: this.validateCode
               }
               this.$post('setup/config', params).then(response => {
                 if (response.code == 200) {
-                  this.activeStep = 3
-                  this.step = 4
+                  this.activeStep = 2
+                  this.step = 3
                   this.$alert(this.$t('setup.wait'), { type: 'success' })
                   this.reloadTimeout = setTimeout(this.jumpToLogin, this.reloadTime)
                 } else {
-                  this.activeStep = 3
-                  this.step = 3
+                  this.activeStep = 2
+                  this.step = 2
                   if (response.code == 574002) {
                     this.$alert(this.$t('setup.invalidCode', { page: this.$t('setup.welcomePage') }), { type: 'warning' })
                   }
                 }
+                this.prevent_finish = false
               })
             } else {
-              this.prevent_next = false
+              this.prevent_finish = false
             }
           })
           break
@@ -420,7 +345,7 @@ export default {
       this.changeStep(this.activeStep - 1)
     },
     finishStep: function () {
-      this.changeStep(4)
+      this.changeStep(3)
     },
     getValidateCode: function () {
       const saveValidateCodeFunc = function (validateCode) {
@@ -464,17 +389,6 @@ export default {
         name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
-      }
-      this.redisRules = {
-        host: [
-          {
-            required: true,
-            message: this.$t('validate.required'),
-            trigger: 'blur'
-          },
-          { validator: host, trigger: 'blur' }
-        ],
-        port: [{ validator: port, trigger: 'blur' }]
       }
       this.sysRules = {
         username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
