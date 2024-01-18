@@ -171,6 +171,34 @@
   text-transform: capitalize;
 }
 
+.personal-dropdown {
+  border-bottom: 1px solid $--border-color-light;
+  padding: 0 20px;
+  .personal-dropdown__username {
+    max-width: 109px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: middle;
+    font-family: Roboto-Regular;
+    font-size: 15px;
+    color: $--color-text-primary;
+    font-weight: 400;
+  }
+  .personal-dropdown__name {
+    max-width: 109px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: middle;
+    font-family: Roboto-Regular;
+    font-size: 14px;
+    color: $--color-text-secondary;
+    font-weight: 400;
+    padding-bottom: 10px;
+  }
+}
+
 .personal-dropdown-menu{
   margin-top: 14px !important;
   width: 240px;
@@ -183,9 +211,9 @@
     font-size: 14px;
     color: $--color-text-regular;
   }
-  .personal-dropdown {
+  .personal-nameBox {
     padding: 8px 12px;
-    .personal-dropdown__username {
+    .personal-name {
       max-width: 216px;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -197,7 +225,7 @@
       font-weight: bold;
       line-height: 20px;
     }
-    .personal-dropdown__name {
+    .personal-username {
       max-width: 216px;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -292,12 +320,12 @@ td .nz-icon-gear:before {
 .el-message-box {
   background-color: $--background-color-empty !important;
   border: 1px solid $--border-color-light;
-  .el-button:nth-of-type(1) {
+  .el-button:nth-of-type(1):not(:last-child) {
     background-color: $--button-light-hover-background-color;
     border: 1px solid $--button-light-border-color;
     color: $--button-light-color;
   }
-  .el-button:nth-of-type(1):hover {
+  .el-button:nth-of-type(1):not(:last-child):hover {
     background-color: $--button-light-hover-background-color !important;
     border: 1px solid $--button-primary-hover-background-color !important;
     color: $--button-primary-background-color !important;
