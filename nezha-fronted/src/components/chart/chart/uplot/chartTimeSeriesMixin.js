@@ -693,8 +693,6 @@ export default {
     },
     renderThresholds () { // 画阈值线
       const u = getChart(this.chartId)
-      console.log(u)
-
       const thresholdsEnable = this.$lodash.get(this.chartInfo, 'param.enable.thresholds', false)
       if (!thresholdsEnable || !u) {
         return

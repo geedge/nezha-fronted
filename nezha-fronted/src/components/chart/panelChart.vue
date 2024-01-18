@@ -935,7 +935,6 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        // console.log(n)
         if (window.dataJson && this.loading) {
           this.loading = false
         }

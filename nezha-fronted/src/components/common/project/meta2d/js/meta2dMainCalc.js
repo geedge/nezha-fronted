@@ -394,7 +394,13 @@ export default {
             boxHeight = null
           })
           this.position.show = true
-          // this.$refs.meta2dTooltip.$refs.panelChart && (this.$refs.meta2dTooltip.$refs.panelChart.loading = false)
+          setTimeout(()=>{
+            if (this.$refs.meta2dTooltip && this.$refs.meta2dTooltip.$refs.panelChart) {
+              this.$refs.meta2dTooltip.$refs.panelChart.loading = false
+              // console.log(this.chartParams)
+              // this.$refs.meta2dTooltip.$refs.panelChart.$refs.chart.$refs['chart' + this.meta2dId + 'meta2DTooltip'].chartLoading = false
+            }
+          }, 100)
           clearTimeout(this.timer3)
         }, 100)
       }

@@ -663,7 +663,6 @@ export default {
             return mergedArray
           }
           n.forEach((data) => {
-            console.log(data)
             data.forEach((result, i) => {
               seriesItem.name = 'logs'
               const values = result.values.map((item) => {

@@ -123,7 +123,7 @@ export default {
             const mapConfig = JSON.parse(response.data.paramValue)
             mapStyle.center = [Number(mapConfig.longitude), Number(mapConfig.latitude)]
             mapStyle.zoom = Number(mapConfig.zoom)
-            const mapId = this.mapId = this.isFullscreen ? document.getElementById('map-screen-' + this.chartInfo.id) : document.getElementById('map' + this.chartInfo.id)
+            const mapId = this.mapId = this.isFullscreen ? ('map-screen-' + this.chartInfo.id) : ('map' + this.chartInfo.id)
             let map = getChart(mapId) || null
             if (map) {
               map.remove()

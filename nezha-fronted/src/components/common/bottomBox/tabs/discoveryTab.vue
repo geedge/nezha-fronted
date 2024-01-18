@@ -154,7 +154,6 @@ export default {
       })
     },
     uploadAsset (row) {
-      console.log(row)
     }
   }
 }

@@ -193,7 +193,6 @@ export default {
   },
   methods: {
     fn () {
-      console.log(666)
     },
     ...mapActions(['logoutSuccess']),
     // 测试是否能自动播放 若不能 点击开关时弹窗
@@ -201,7 +200,6 @@ export default {
       const audio = new Audio(audioUrl)
       audio.muted = true
       audio.play().then(() => {
-        console.log('autoplay')
         this.operationTutorial = false
       }).catch((err) => {
         console.log(err)

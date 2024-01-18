@@ -1225,7 +1225,6 @@ export default {
           chartCache[key].setOption(option)
         }
         this.$store.commit('setCurrentMousemove', 0)
-        console.log(value)
         if (value && value !== 'none') {
           this.$store.commit('setConnect', value)
           // echarts.connect('timeSeriesGroup')

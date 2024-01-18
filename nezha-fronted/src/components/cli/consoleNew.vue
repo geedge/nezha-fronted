@@ -380,9 +380,7 @@ export default {
       if (this.terminalSetting.copyTrimEnd) {
         str = str.replace(/(\s*$)/g, '')
       }
-      this.$copyText(str).then((res) => {
-        console.log(res)
-      })
+      this.$copyText(str).then((res) => {})
     },
     async contextmenu (event) {
       event.preventDefault()

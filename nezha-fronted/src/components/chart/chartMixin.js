@@ -103,7 +103,6 @@ export default {
           if (chartInfo.param.enable.rightYAxis) {
             if (chartInfo.param.rightYAxis) {
               const findItem = chartInfo.param.rightYAxis.elementNames.find(item => data.elements.name == item)
-              console.log(findItem)
               if (findItem) {
                 s.yAxisIndex = 1
                 data.yAxisIndex = 1

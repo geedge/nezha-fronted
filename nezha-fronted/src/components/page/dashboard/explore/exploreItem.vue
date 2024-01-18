@@ -4178,7 +4178,6 @@ export default {
                 }
               }
             })
-            console.log(this.uplotChartInfo.elements, this.uplotChartData)
             // this.series = series
             // this.$refs.exploreChart?.setLegend(legend)
             // this.$refs.exploreChart?.setRandomColors(series.length)
@@ -4420,9 +4419,7 @@ export default {
               promiseArr.push('')
             }
           })
-          Promise.all(promiseArr).then(res => {
-            console.log(res)
-          })
+          Promise.all(promiseArr).then(res => {})
           this.queryLogData()
         }
       }

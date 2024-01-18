@@ -588,7 +588,6 @@ export default {
             if (res !== null) {
               historyItems.options = historyItems.options.concat(res.options)
             }
-            // console.log(historyItems)
             return historyItems
           })
         }

@@ -191,7 +191,6 @@ export default {
     fatherNowTimeType: {
       immediate: true,
       handler (n) {
-        console.log(n)
         this.nowType = lodash.cloneDeep(n)
       }
     }

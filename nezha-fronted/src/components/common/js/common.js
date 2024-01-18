@@ -38,7 +38,6 @@ export function getHexagon (key) {
 export let topologyCache = {}
 
 export function getTopology (key) {
-  // console.log(topologyCache, 'topologyCache')
   return topologyCache[`topology${key}`]
 }
 

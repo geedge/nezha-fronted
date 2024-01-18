@@ -243,7 +243,6 @@ export default {
         plugins: [
           this.tooltipPlugin({
             onclick (u, seriesIdx, dataIdx) {
-              console.log(u, seriesIdx, dataIdx, 'nz-tooltipClick')
             }
           })
         ],
@@ -405,6 +404,7 @@ export default {
         chartUplot = new UPlot(opts, data, document.getElementById(`chart-canvas-${this.chartId}`))
         setChart(this.chartId, chartUplot)
         this.isInit = false
+        this.chartLoading = false
       }, 100)
     },
     renderMinMax (opts) {

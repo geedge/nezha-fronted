@@ -57,6 +57,7 @@ export default {
         }
         this.chartInfo.type = this.params.chartType || 'line'
         this.chartInfo.id = this.meta2dId + 'meta2DTooltip'
+        // this.chartInfo.loaded = true
         const chartData = []
         const elements = []
         const source = this.queryValues.find(query => query.name === this.params.legend && query.parent === this.params.parent)
@@ -100,8 +101,12 @@ export default {
           this.chartInfo.elements = elements
           this.$refs.panelChart.chartData = chartData
           this.$refs.panelChart.loading = false
+          if (this.$refs.panelChart.$refs.chart && this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id]) {
+            this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id].isInit = true
+          }
           this.$nextTick(() => {
             this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id].chartLoading = true
+
             this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id].initChart()
             this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id].resize()
           })
