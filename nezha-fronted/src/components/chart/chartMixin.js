@@ -546,24 +546,26 @@ export default {
       const data = this.series
       let csv = '"time","legend","value"\n'
       data.forEach((item, index) => {
-        item.data.forEach(value => {
-          let val = formatScientificNotation(value[1], this.$lodash.get(chartInfo, 'param.decimals', 2))
-          let unit = ''
-          if (item.yAxisIndex) {
-            unit = chartDataFormat.getUnit(this.$lodash.get(chartInfo, 'param.rightYAxis.unit', 2))
-          } else {
-            unit = chartDataFormat.getUnit(this.$lodash.get(chartInfo, 'unit', 2))
-          }
-          val = unit.compute(val, index, -1, chartInfo.param.decimals || 2)
-          let legend = this.yasuo(this.legends[index].alias)
-          try {
-            val = val.trim()
-            legend = legend.trim()
-          } catch (e) {
-            console.log(e)
-          }
-          csv += `"${this.momentTz(value[0] * 1000)}","${legend}","${val}"\n`
-        })
+        if (this.seriesData[index + 1]) {
+          this.seriesData[index].forEach((value, timeIndex) => {
+            let val = formatScientificNotation(value, this.$lodash.get(chartInfo, 'param.decimals', 2))
+            let unit = ''
+            if (item.yAxisIndex) {
+              unit = chartDataFormat.getUnit(this.$lodash.get(chartInfo, 'param.rightYAxis.unit', 2))
+            } else {
+              unit = chartDataFormat.getUnit(this.$lodash.get(chartInfo, 'unit', 2))
+            }
+            val = unit.compute(val, index, -1, chartInfo.param.decimals || 2)
+            let legend = this.yasuo(this.legends[index].alias)
+            try {
+              val = val.trim()
+              legend = legend.trim()
+            } catch (e) {
+              console.log(e)
+            }
+            csv += `"${this.momentTz(this.seriesData[0][timeIndex] * 1000)}","${legend}","${val}"\n`
+          })
+        }
       })
       return csv
     },
@@ -583,7 +585,7 @@ export default {
           break
         case 'bar' :
           legend = 'alias'
-          keyByData = 'series[0].data'
+          keyByData = 'barData'
           break
         case 'pie' :
           legend = 'alias'
@@ -627,7 +629,7 @@ export default {
       }
       this.$lodash.get(this, keyByData, []).forEach(item => {
         let val = item.showValue
-        let legends = this.yasuo(item[legend])
+        let legends = this.yasuo(item[legend] || item.alias)
         try {
           val = val.trim()
           legends = legends.trim()
