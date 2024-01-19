@@ -9,6 +9,9 @@
     <div class="showMore" v-if="chartIndex !== legends.length && from == 'explore'"><i class="nz-icon nz-icon-jinggao"></i>{{$t("dashboard.dashboard.moreTitle")}} <span class="moreChart" @click="showMore">{{$t("dashboard.dashboard.showAll")+ (chartIndex+1)}}</span></div>
     <div class="chart__canvas" style="position:relative" :class="{'chart-cursor-default':cursorDefault}">
       <div :id="`chart-canvas-${chartId}`"></div>
+      <p class="rightYAxis-name" v-if="hasRightYAxis">
+        <span>{{chartInfo.param.rightYAxis.label}}</span>
+      </p>
     </div>
     <chart-legend
       ref="legend"
@@ -61,6 +64,7 @@ import UPlot from 'uplot'
 import chartTimeSeriesMixin from '@/components/chart/chart/uplot/chartTimeSeriesMixin'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import getStackedOpts from './stack'
+import bus from "@/libs/bus";
 
 export default {
   name: 'chartTimeSeries',
@@ -74,10 +78,12 @@ export default {
   },
   mixins: [chartMixin, renderChart, chartTimeSeriesMixin],
   data () {
+    const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
     return {
       stackTotalColor: null,
       stackTotalColorRight: null,
       isStack: false,
+      theme,
       hasRightYAxis: false,
       chartLoading: false,
       cursorDefault: false,
@@ -96,7 +102,17 @@ export default {
       isGrey: [],
       seriesData: [],
       leftYaxisMin: undefined,
-      leftYaxisMax: undefined
+      leftYaxisMax: undefined,
+      color: {
+        light: {
+          label: '#333333',
+          grid: 'rgba(76,76,76,0.15)'
+        },
+        dark: {
+          label: '#D8D8D8',
+          grid: 'rgba(199,199,199,0.15)'
+        }
+      }
     }
   },
   computed: {
@@ -127,7 +143,8 @@ export default {
     // timeSeries类型图表联动
     isConnect () {
       return this.$store.state.panel.isConnect
-    }
+    },
+
   },
   watch: {
     // 监听当前鼠标所在的图表id变化
@@ -164,6 +181,7 @@ export default {
   },
   methods: {
     initChart (chartOptions = this.chartOption) {
+      console.log(123123)
       this.setDataLink()
       try {
         this.isStack = !!this.chartInfo.param.stack
@@ -179,6 +197,7 @@ export default {
       const cursLeft = -10
       const cursTop = -10
       const { seriesData, seriesAll } = this.initSeriesData(this.chartData)
+      console.log(seriesData)
       this.isNoData = false
       if (!seriesData.length || seriesData.length == 1) {
         this.isNoData = true
@@ -187,6 +206,8 @@ export default {
       if (this.isNoData) {
         return
       }
+      this.hasRightYAxis = !!seriesAll.find(series => series.scale === 'right')
+      this.series = seriesAll
       // .compute(minusVal, null, -1, decimals)
       let opts = {
         id: `chart-canvas-${this.chartId}-uplot`,
@@ -263,9 +284,10 @@ export default {
           {
             scale: 'x',
             gap: 5,
+            stroke: self.color[self.theme].label,
             grid: {
               show: true,
-              stroke: 'rgba(0, 10, 23, 0.09)',
+              stroke: self.color[self.theme].grid,
               width: 1
             }
           },
@@ -274,9 +296,10 @@ export default {
             values: (u, vals, space) => vals.map(v => leftUnitCompute.compute(v, null, -1, decimals) + ''),
             incrs: incrs,
             gap: 5,
+            stroke: self.color[self.theme].label,
             grid: {
               show: true,
-              stroke: 'rgba(0, 10, 23, 0.09)',
+              stroke: self.color[self.theme].grid,
               width: 1
             },
             // space: (self) => {
@@ -307,9 +330,10 @@ export default {
           {
             show: true,
             side: 1,
+            stroke: self.color[self.theme].label,
             grid: {
               show: false,
-              stroke: 'rgba(0, 10, 23, 0.09)',
+              stroke: self.color[self.theme].grid,
               width: 1
             },
             scale: 'right',
@@ -396,6 +420,7 @@ export default {
         if (!dom) {
           return
         }
+        console.log(dom.offsetWidth, dom.offsetHeight)
         const width = dom.offsetWidth
         const height = dom.offsetHeight
         opts.width = width
@@ -569,11 +594,12 @@ export default {
       this.renderYaxis()
     },
     resize () {
+      console.log(123132123, 'resize')
       setTimeout(() => {
-        const dom = this.$refs['timeSeries-chart-box']
+        const dom = document.getElementById(`chart-canvas-${this.chartId}`)
         const width = dom.offsetWidth
-        const legendHeight = this.$lodash.get(this.$refs, 'legend.$el.offsetHeight', 40)
-        const height = dom.offsetHeight - legendHeight
+        // const legendHeight = this.$lodash.get(this.$refs, 'legend.$el.offsetHeight', 40)
+        const height = dom.offsetHeight
         const u = getChart(this.chartId)
         if (u) {
           u.setSize({ width, height })
@@ -599,20 +625,31 @@ export default {
       } else {
         u.axes[2].grid.show = false
       }
+      if (rightShow) {
+        this.hasRightYAxis = true
+      } else {
+        this.hasRightYAxis = false
+      }
       u.redraw(false, true)
     },
     showMore () {
       // this.showAllData = true
       this.initChart()
-    }
+    },
+    themeChange (theme) {
+      this.theme = theme
+      this.initChart()
+    },
   },
   mounted () {
     try {
       this.isStack = !!this.chartInfo.param.stack
     } catch (e) {}
     this.chartInfo.loaded && this.initChart(this.chartOption)
+    bus.$on('headerThemeChange', this.themeChange)
   },
   beforeDestroy () {
+    bus.$off('headerThemeChange', this.themeChange)
     const chart = getChart(this.chartId)
     if (chart) {
       const over = chart.over
