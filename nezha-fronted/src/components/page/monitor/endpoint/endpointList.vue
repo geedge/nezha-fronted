@@ -2,7 +2,7 @@
   <div id="endpoint-list" v-my-loading="preferenceLoading">
     <nzDetailView
       v-my-loading="detailViewLoading || tools.loading"
-      v-if="detailType !== 'list'&&!preferenceLoading"
+      v-if="detailType !== 'list' "
       :api="url"
       ref="detailList"
       :layout="dataListLayout"
@@ -71,7 +71,7 @@
     <nz-data-list
       v-my-loading="detailViewLoading"
       ref="dataList"
-      v-if="detailType === 'list'&&!preferenceLoading"
+      v-if="detailType === 'list' "
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.endpoint"

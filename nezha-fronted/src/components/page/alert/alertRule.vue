@@ -2,7 +2,7 @@
   <div>
     <nzDetailView
       v-my-loading="detailViewLoading || tools.loading"
-      v-if="detailType !== 'list'"
+      v-if="detailType !== 'list' "
       :api="url"
       ref="detailList"
       :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
@@ -72,6 +72,7 @@
     <nz-data-list
       ref="dataList"
       :api="url"
+      v-if="detailType === 'list' "
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.alertRule"
       :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"

@@ -2,7 +2,7 @@
   <div style="height: 100%" id="asset-batch-table" v-my-loading="preferenceLoading">
     <nzDetailView
       v-my-loading="detailViewLoading || tools.loading"
-      v-if="detailType !== 'list'&&!preferenceLoading"
+      v-if="detailType !== 'list' "
       :api="url"
       ref="detailList"
       :layout="dataListLayout"
@@ -73,8 +73,7 @@
       </template>
     </nzDetailView>
     <nz-data-list
-      v-my-loading="detailViewLoading"
-      v-if="detailType === 'list'&&!preferenceLoading"
+      v-if="detailType === 'list' "
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
