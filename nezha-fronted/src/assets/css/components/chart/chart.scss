@@ -259,6 +259,7 @@
 
     .chart__canvas {
       flex: 1;
+      overflow: hidden;
     }
     &.nz-chart__component--bottom {
       flex-direction: column;

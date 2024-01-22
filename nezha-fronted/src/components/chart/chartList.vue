@@ -17,7 +17,8 @@
       :vertical-compact="true"
       :use-css-transforms="false"
       :style="{
-        'margin-top': layoutMargintop
+        'margin-top': layoutMargintop,
+        'paddingBottom': layoutPaddingBottom,
       }"
     >
       <grid-item
@@ -45,6 +46,8 @@
         @moveEvent="moveEvent"
         @moved="movedEvent"
         @container-resized="containerResizedEvent"
+        @resizestart="resizestart"
+        @resizeend="resizeend"
       >
         <panel-chart
           :variablesInit="variablesInit"
@@ -192,7 +195,8 @@ export default {
       // 变量比较结果 图表是否显示/隐藏
       showHidden: {},
       tempList: [],
-      isPhone: false
+      isPhone: false,
+      layoutPaddingBottom: '20px'
     }
   },
   methods: {
@@ -249,6 +253,12 @@ export default {
         })
         this.onScroll(this.scrollTop)
       }, 100)
+    },
+    resizestart () {
+      this.layoutPaddingBottom = '80px'
+    },
+    resizeend () {
+      this.layoutPaddingBottom = '20px'
     },
     moveEvent (i, newX, newY) {
       if (this.isGroup) {

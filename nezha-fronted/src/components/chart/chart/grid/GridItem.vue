@@ -514,6 +514,7 @@ export default {
           newSize.height = pos.height
           this.resizing = newSize
           this.isResizing = true
+          this.$emit('resizestart')
           break
         }
         case 'resizemove': {
@@ -538,6 +539,7 @@ export default {
           //                        console.log("### resize end => " + JSON.stringify(newSize));
           this.resizing = null
           this.isResizing = false
+          this.$emit('resizeend')
           break
         }
       }
