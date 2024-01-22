@@ -20,7 +20,37 @@
               <span>  {{dateFormat(dataJson.start * 1000)}} - {{dateFormat(dataJson.end * 1000)}} ({{dataJson.timezone}})</span>
             </div>
           </div>
-          <div v-if="dataJson.type === 'dashboard'" id="dashboardScrollbar" class="box-content"  ref="dashboardScrollbar" style='overflow:hidden; overflow-y: auto;height: calc(100% - 72px);display: flex;flex-direction: column'>
+
+          <div v-if="dataJson.type == 1 || dataJson.type == 2 || dataJson.type == 'explore' " id="explore" class="explores" style='overflow:hidden;background: #fffffe; height: calc(100% - 72px);display: flex;flex-direction: column'>
+            <exploreItem
+              ref="exploreItem"
+              :key="dataJson.type"
+              :closable="false"
+              :tab-index="dataJson.type"
+            >
+            </exploreItem>
+          </div>
+
+          <div v-else-if="dataJson.type==='notebook'" ref="scrollbar" class="notebook-scrollWrap" style='background: #fffffe; height: calc(100% - 0px);'>
+            <div class="notebook-content">
+              <div style="margin-top:20px;padding-bottom:20px;border-bottom:1px solid #e7eaed;">
+                <h1 style="font-size: 24px;font-weight: 600;color: #333;line-height: 40px;">{{dataJson.notebook.data.name}}</h1>
+                <p style="font-size:16px;line-height: 100%;color: #666;">{{dateFormat(dataJson.start * 1000)}} - {{dateFormat(dataJson.end * 1000)}} ({{dataJson.timezone}})</p>
+              </div>
+              <notebook-list
+                ref="notebookList"
+                :from="'notebook'"
+                :data-list="dataJson.charts.data.list"
+                :dataJson = "dataJson.chartsData"
+                :is-export-html="true"
+                :time-range="searchTime"
+                :nowTimeType="nowTimeType"
+              >
+              </notebook-list>
+            </div>
+          </div>
+
+          <div v-else id="dashboardScrollbar" class="box-content"  ref="dashboardScrollbar" style='overflow:hidden; overflow-y: auto;height: calc(100% - 72px);display: flex;flex-direction: column'>
             <chartList
               ref="chartList"
               name="dashboard"
@@ -39,34 +69,6 @@
               @refreshPanel="refreshPanel"
               :loading="chartListLoading"
             />
-          </div>
-          <div v-if="dataJson.type == 1 || dataJson.type == 2 || dataJson.type == 'explore' " id="explore" class="explores" style='overflow:hidden;background: #fffffe; height: calc(100% - 72px);display: flex;flex-direction: column'>
-            <exploreItem
-              ref="exploreItem"
-              :key="dataJson.type"
-              :closable="false"
-              :tab-index="dataJson.type"
-            >
-            </exploreItem>
-          </div>
-
-          <div v-if="dataJson.type==='notebook'" ref="scrollbar" class="notebook-scrollWrap" style='background: #fffffe; height: calc(100% - 0px);'>
-            <div class="notebook-content">
-              <div style="margin-top:20px;padding-bottom:20px;border-bottom:1px solid #e7eaed;">
-                <h1 style="font-size: 24px;font-weight: 600;color: #333;line-height: 40px;">{{dataJson.notebook.data.name}}</h1>
-                <p style="font-size:16px;line-height: 100%;color: #666;">{{dateFormat(dataJson.start * 1000)}} - {{dateFormat(dataJson.end * 1000)}} ({{dataJson.timezone}})</p>
-              </div>
-              <notebook-list
-                ref="notebookList"
-                :from="'notebook'"
-                :data-list="dataJson.charts.data.list"
-                :dataJson = "dataJson.chartsData"
-                :is-export-html="true"
-                :time-range="searchTime"
-                :nowTimeType="nowTimeType"
-              >
-              </notebook-list>
-            </div>
           </div>
 
         </div>
