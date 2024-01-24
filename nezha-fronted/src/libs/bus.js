@@ -3,7 +3,6 @@ import moment from 'moment-timezone'
 import { get } from '../http'
 import store from '../store'
 import router from '../router'
-import audioUrl from '@/assets/audio/new_alert_message.mp3'
 Date.prototype.setStart = function () {
   this.setHours(0)
   this.setMinutes(0)
@@ -391,7 +390,7 @@ export default new Vue({
         }
         if (response.code == 200) {
           if (!this.audio) {
-            this.audio = new Audio(audioUrl)
+            this.audio = new Audio('/static/audio/new_alert_message.mp3')
           }
           if (response.data.list && response.data.list.length) {
             this.lastId = response.data.list.reduce(function (max, obj) {
@@ -434,7 +433,7 @@ export default new Vue({
               }, 10 * index)
             })
             let playCount = 0
-            const audioLoop = store.state.nzDefaultConfig.audioLoop || 3
+            const audioLoop = store.state.nzDefaultConfig.audioLoop || 1
             const maxPlayCount = parseInt(audioLoop) // 设置希望播放的次数
             if (maxPlayCount) {
               this.audio.play()
