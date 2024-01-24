@@ -54,6 +54,24 @@ export default {
       },
       activities: [
         {
+          timestamp: 'Release 24.01 - Jan 2024',
+          content: [{
+            chinese: '[FEATURE] 新增软件资产管理功能',
+            english: '[FEATURE] Added software asset management function'
+          }, {
+            chinese: '[FEATURE] 支持Active-Active高可用部署',
+            english: '[FEATURE] Support Active-Active high availability deployment'
+          }, {
+            chinese: '[FEATURE] 新增告警消息通知，当有新消息时发出告警音',
+            english: '[FEATURE] Added alert message notification, an alarm sound will be emitted when there is a new message'
+          }, {
+            chinese: '[ENHANCEMENT] 仪表盘样式优化，图表新增配色方案配置项',
+            english: '[ENHANCEMENT] Dashboard style optimization, new color scheme configuration items for charts'
+          }, {
+            chinese: '[ENHANCEMENT] 时序图表重构，支持鼠标框选缩放',
+            english: '[ENHANCEMENT] Time series chart reconstruction, support mouse frame selection zooming'
+          }]
+        }, {
           timestamp: 'Release 23.10 - Oct 2023',
           content: [{
             chinese: '[FEATURE] 笔记本功能允许您将多种图表组合起来，以构建可共享的、数据丰富的文档。使用笔记本，您可以对事件进行故障排除，创建事后分析，并构建运行手册',
