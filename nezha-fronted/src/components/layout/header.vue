@@ -113,7 +113,6 @@ import { mapActions } from 'vuex'
 import guide from '@/components/common/popBox/guide'
 import intro from '@/components/common/intro'
 import imageUrl from '@/assets/img/system-sound-settings.gif'
-import audioUrl from '@/assets/audio/new_alert_message.mp3'
 export default {
   name: 'Header',
   components: {
@@ -198,7 +197,7 @@ export default {
     ...mapActions(['logoutSuccess']),
     // 测试是否能自动播放 若不能 点击开关时弹窗
     testAutoplay () {
-      const audio = new Audio(audioUrl)
+      const audio = new Audio('/static/audio/new_alert_message.mp3')
       audio.muted = true
       audio.play().then(() => {
         console.log('autoplay')
