@@ -167,6 +167,22 @@ export default {
   mounted () {
   },
   methods: {
+    copy (u, copyParams) {
+      const copyName = this.$lodash.get(copyParams, 'copyName', '-copy')
+      this.object = {
+        name: u.name + copyName,
+        id: '',
+        typeId: u.typeId,
+        assetId: u.assetId,
+        remark: u.remark,
+        params: u.params
+      }
+      if (this.object.name.length > 64) {
+        const length = this.object.name.length - 64
+        this.object.name = u.name.substring(0, u.name.length - length) + copyName
+      }
+      this.rightBox.show = true
+    }
   },
   beforeDestroy () {
   }
