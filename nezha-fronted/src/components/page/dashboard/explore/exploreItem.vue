@@ -4867,7 +4867,9 @@ export default {
       })
     },
     start () {
-
+      this.promqlKeys.forEach((item, index)=> {
+        item.expression = this.expressions[index]
+      })
     },
     end () {
       this.expressions = []

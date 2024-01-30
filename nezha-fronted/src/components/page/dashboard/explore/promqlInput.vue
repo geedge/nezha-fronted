@@ -250,7 +250,7 @@
 import selectAlertSilence from '../../../common/alert/selectAlertSilence'
 import { get } from '@/http'
 import { PromQLExtension } from '@prometheus-io/codemirror-promql'
-import { baseTheme, promqlHighlighter, lightTheme } from './CMTheme.tsx'
+import { baseTheme, promqlHighlighter, lightTheme, darkTheme } from './CMTheme.tsx'
 import { newCompleteStrategy } from '@prometheus-io/codemirror-promql/dist/esm/complete'
 import { analyzeCompletion, computeStartCompletePosition, ContextKind } from '@prometheus-io/codemirror-promql/dist/esm/complete/hybrid'
 import { aggregateOpModifierTerms, aggregateOpTerms, atModifierTerms, binOpModifierTerms, binOpTerms, durationTerms, functionIdentifierTerms, matchOpTerms, numberTerms } from '@prometheus-io/codemirror-promql/dist/esm/complete/promql.terms'
