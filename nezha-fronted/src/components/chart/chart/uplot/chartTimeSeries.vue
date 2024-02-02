@@ -64,7 +64,7 @@ import UPlot from 'uplot'
 import chartTimeSeriesMixin from '@/components/chart/chart/uplot/chartTimeSeriesMixin'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import getStackedOpts from './stack'
-import bus from "@/libs/bus";
+import bus from '@/libs/bus'
 
 export default {
   name: 'chartTimeSeries',
@@ -143,7 +143,7 @@ export default {
     // timeSeries类型图表联动
     isConnect () {
       return this.$store.state.panel.isConnect
-    },
+    }
 
   },
   watch: {
@@ -633,13 +633,13 @@ export default {
       u.redraw(false, true)
     },
     showMore () {
-      // this.showAllData = true
+      this.showAllData = true
       this.initChart()
     },
     themeChange (theme) {
       this.theme = theme
       this.initChart()
-    },
+    }
   },
   mounted () {
     try {
