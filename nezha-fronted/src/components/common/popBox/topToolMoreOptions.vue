@@ -589,7 +589,7 @@ export default {
         delete params.id
         delete params.searchName
         delete params.value
-        params.ids = params.dashboardId
+        params.ids = params.dashboardId || params.ids
         delete params.dashboardId
       }
       params.language = localStorage.getItem('nz-language') || 'en'
