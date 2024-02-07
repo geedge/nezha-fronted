@@ -221,15 +221,15 @@ export default {
         let x = 0
         let y = 0
         if (self.mousePosition.left < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-          tooltip.style.left = (tooltipLeftOffset + lft + shiftX) + 'px'
+          tooltip.style.left = (self.mousePosition.left + shiftX) + 'px'
         } else {
-          tooltip.style.left = (tooltipLeftOffset + lft - shiftX) + 'px'
+          tooltip.style.left = (self.mousePosition.left - shiftX) + 'px'
           x = '-100%'
         }
         if (self.mousePosition.top + 50 < windowHeight / 2) { // 说明鼠标上面放不下提示框
-          tooltip.style.top = (tooltipTopOffset + top + shiftY) + 'px'
+          tooltip.style.top = (self.mousePosition.top + shiftY) + 'px'
         } else {
-          tooltip.style.top = (tooltipTopOffset + top - shiftY) + 'px'
+          tooltip.style.top = (self.mousePosition.top - shiftY) + 'px'
           y = '-100%'
         }
         tooltip.style.transform = `translate(${x},${y})`
@@ -558,7 +558,7 @@ export default {
         }
       }
     },
-    uplotMouseenter () {
+    uplotMouseenter (e) {
       const chart = getChart(this.chartId)
       const over = chart.over
       const root = chart.root.querySelector('.u-wrap')
@@ -566,6 +566,10 @@ export default {
       if (tooltip.length) {
         tooltip = tooltip[0]
         // tooltip.style.display = 'block'
+      }
+      this.mousePosition = {
+        left: e.pageX,
+        top: e.pageY
       }
       over.addEventListener('mouseleave', this.uplotMouseleave)
       over.addEventListener('mousemove', this.uplotMousemove)

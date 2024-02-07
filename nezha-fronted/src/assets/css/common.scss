@@ -538,7 +538,7 @@ td .nz-icon-gear:before {
   position: absolute;
 }
 .chart-time-series-tooltip {
-  position: absolute;
+  position: fixed;
   display: block;
   border-style: solid;
   white-space: nowrap;
