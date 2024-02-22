@@ -21,6 +21,7 @@
               class="selectDashboard"
               @deletePanel="del"
               @editPanel="edit"
+              @copyPanel="copy"
               @selectDashboard="panelChange"
               @startPlay="startPlay"
             >
@@ -535,6 +536,23 @@ export default {
         }
       })
       // this.panel = Object.assign({}, u)
+    },
+    copy (u) {
+      this.$confirm(this.$t('tip.confirmDuplicateDashboard'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$post('/visual/dashboard/duplicate/' + u.id).then(res => {
+          if (res.code === 200) {
+            this.getTableData()
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }).catch(() => {
+      })
     },
     toAdd () {
       if (!this.hasButton('dashboard_view')) {

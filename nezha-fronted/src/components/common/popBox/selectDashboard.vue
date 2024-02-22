@@ -49,6 +49,9 @@
                         <el-dropdown-item>
                           <div @click="deletePanel(data)" v-has="'main_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</div>
                         </el-dropdown-item>
+                        <el-dropdown-item>
+                          <div @click="copyPanel(data)" v-has="'main_add'"><i class="nz-icon nz-icon-override"></i>{{$t('overall.duplicate')}}</div>
+                        </el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
                     <template>
@@ -87,6 +90,9 @@
                         </el-dropdown-item>
                         <el-dropdown-item>
                           <div @click="deletePanel(data)" v-has="'main_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</div>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                          <div @click="copyPanel(data)" v-has="'main_add'"><i class="nz-icon nz-icon-override"></i>{{$t('overall.duplicate')}}</div>
                         </el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
@@ -449,6 +455,9 @@ export default {
     editPanel (data) {
       this.$emit('editPanel', data)
       this.esc()
+    },
+    copyPanel (data) {
+      this.$emit('copyPanel', data)
     },
     esc () {
       this.popBox.show = false
