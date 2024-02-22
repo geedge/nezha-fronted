@@ -47,10 +47,10 @@
                           <div @click="editPanel(data)" v-has="'main_edit'"><i  class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</div>
                         </el-dropdown-item>
                         <el-dropdown-item>
-                          <div @click="deletePanel(data)" v-has="'main_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</div>
+                          <div @click="copyPanel(data)" v-has="'main_add'"><i class="nz-icon nz-icon-override"></i>{{$t('overall.duplicate')}}</div>
                         </el-dropdown-item>
                         <el-dropdown-item>
-                          <div @click="copyPanel(data)" v-has="'main_add'"><i class="nz-icon nz-icon-override"></i>{{$t('overall.duplicate')}}</div>
+                          <div @click="deletePanel(data)" v-has="'main_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</div>
                         </el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
@@ -89,10 +89,10 @@
                           <div @click="editPanel(data)" v-has="'main_edit'"><i  class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</div>
                         </el-dropdown-item>
                         <el-dropdown-item>
-                          <div @click="deletePanel(data)" v-has="'main_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</div>
+                          <div @click="copyPanel(data)" v-has="'main_add'"><i class="nz-icon nz-icon-override"></i>{{$t('overall.duplicate')}}</div>
                         </el-dropdown-item>
                         <el-dropdown-item>
-                          <div @click="copyPanel(data)" v-has="'main_add'"><i class="nz-icon nz-icon-override"></i>{{$t('overall.duplicate')}}</div>
+                          <div @click="deletePanel(data)" v-has="'main_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</div>
                         </el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
