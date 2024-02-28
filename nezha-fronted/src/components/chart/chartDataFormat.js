@@ -58,35 +58,21 @@ function localFormat (value, index, type = 1, dot = 2) {
   return result
 }
 function bits (value, index, type = 1, dot = 0) {
-  const num = value / 8
-  if (value < 8) {
-    return value + 'b'
-  }
-  if (num < 1024) {
-    return num + 'B'
-  }
   if (type == 1) {
-    return asciiCompute(num, 1024, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0)
+    return asciiCompute(value, 1024, ['b', 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0, true)
   } else if (type == -1) {
-    return asciiCompute(num, 1024, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot)
+    return asciiCompute(value, 1024, ['b', 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot, true)
   } else {
-    return asciiCompute(num, 1024, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
+    return asciiCompute(value, 1024, ['b', 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2, true)
   }
 }
 function bitsSI (value, index, type = 1, dot = 0) {
-  const num = value / 8
-  if (value < 8) {
-    return value + 'b'
-  }
-  if (num < 1000) {
-    return num + 'B'
-  }
   if (type == 1) {
-    return asciiCompute(num, 1000, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0)
+    return asciiCompute(value, 1000, ['b', 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0, true)
   } else if (type == -1) {
-    return asciiCompute(num, 1000, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot)
+    return asciiCompute(value, 1000, ['b', 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot, true)
   } else {
-    return asciiCompute(num, 1000, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
+    return asciiCompute(value, 1000, ['b', 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2, true)
   }
 }
 function bytes (value, index, type = 1, dot) {
@@ -207,19 +193,12 @@ function packetsSec (value, index, type = 1, dot) {
   }
 }
 function bitsSec (value, index, type = 1, dot) {
-  const num = value / 8
-  if (value < 8) {
-    return value + 'b'
-  }
-  if (num < 1024) {
-    return num + 'B'
-  }
   if (type == 1) {
-    return asciiCompute(value, 1024, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 1)
+    return asciiCompute(value, 1024, ['bps', 'Bbps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 1, true)
   } else if (type == -1) {
-    return asciiCompute(value, 1024, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], dot)
+    return asciiCompute(value, 1024, ['bps', 'Bbps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], dot, true)
   } else {
-    return asciiCompute(value, 1024, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 2)
+    return asciiCompute(value, 1024, ['bps', 'Bbps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 2, true)
   }
 }
 function bytesSec (value, index, type = 1, dot) {
@@ -322,19 +301,12 @@ function petabitsSec (value, index, type = 1, dot) {
   }
 }
 function bitsSecSI (value, index, type = 1, dot) {
-  const num = value / 8
-  if (value < 8) {
-    return value + 'b'
-  }
-  if (num < 1000) {
-    return num + 'B'
-  }
   if (type == 1) {
-    return asciiCompute(value, 1000, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 1)
+    return asciiCompute(value, 1000, ['bps', 'Bbps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 1, true)
   } else if (type == -1) {
-    return asciiCompute(value, 1000, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], dot)
+    return asciiCompute(value, 1000, ['bps', 'Bbps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], dot, true)
   } else {
-    return asciiCompute(value, 1000, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 2)
+    return asciiCompute(value, 1000, ['bps', 'Bbps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 2, true)
   }
 }
 function bytesSecSI (value, index, type = 1, dot) {
@@ -545,18 +517,27 @@ function numberWithEConvent (num) {
 * units：单位列表
 * dot：保留的小数位，
 * */
-function asciiCompute (num, ascii, units, dot = 2) {
+function asciiCompute (num, ascii, units, dot = 2, isBits = false) {
   if (isNaN(num) || num === null) {
     return num
   }
   const scientificNotationValue = formatScientificNotation(num, dot)
   if (!numberWithEConvent(scientificNotationValue)) {
-    return scientificNotationValue
+    return scientificNotationValue + ' ' + units[0]
   }
   if (!num && num !== 0 && num !== '0') {
     return ''
   }
   num = Number(num)
+  if (isBits) {
+    num = num / 8
+    if (num < 8) {
+      return num.toFixed(dot) + ' ' + units[0]
+    }
+    if (num < ascii) {
+      return num.toFixed(dot) + ' ' + units[1]
+    }
+  }
   const SIGN = num > 0 ? 1 : -1
   num = Math.abs(num)
   let carry = 0
