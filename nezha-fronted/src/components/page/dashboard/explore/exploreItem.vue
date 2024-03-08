@@ -4088,6 +4088,7 @@ export default {
             }
             promqlInputIndexs.push(index)
             queryExpression.push(item)
+            this.promqlKeys[index].expression = item
             if (this.promqlKeys[index].queryType === 2) {
               requestArr.push(this.$get('/prom/api/v1/query_instant?query=' + encodeURIComponent(item) + '&time=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))))
             } else {

@@ -174,7 +174,7 @@ export default {
           })
           this.isGrey = this.isGrey.map(() => false)
         } else {
-          echarts.setSeries(index + 1, { show: true, focus: false })
+          echarts.setSeries(index + 1, { show: this.isGrey[index], focus: false })
           this.$set(this.isGrey, index, !this.isGrey[index])
         }
         this.$emit('legendChange', this.isGrey)

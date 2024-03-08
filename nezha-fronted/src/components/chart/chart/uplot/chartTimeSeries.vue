@@ -181,7 +181,6 @@ export default {
   },
   methods: {
     initChart (chartOptions = this.chartOption) {
-      console.log(123123)
       this.setDataLink()
       try {
         this.isStack = !!this.chartInfo.param.stack
@@ -197,7 +196,6 @@ export default {
       const cursLeft = -10
       const cursTop = -10
       const { seriesData, seriesAll } = this.initSeriesData(this.chartData)
-      console.log(seriesData)
       this.isNoData = false
       if (!seriesData.length || seriesData.length == 1) {
         this.isNoData = true
@@ -420,7 +418,6 @@ export default {
         if (!dom) {
           return
         }
-        console.log(dom.offsetWidth, dom.offsetHeight)
         const width = dom.offsetWidth
         const height = dom.offsetHeight
         opts.width = width
@@ -594,7 +591,6 @@ export default {
       this.renderYaxis()
     },
     resize () {
-      console.log(123132123, 'resize')
       setTimeout(() => {
         const dom = document.getElementById(`chart-canvas-${this.chartId}`)
         const width = dom.offsetWidth
