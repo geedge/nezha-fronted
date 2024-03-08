@@ -104,28 +104,6 @@ export default {
     closeDialog () {
       this.$emit('close')
     },
-    // setSearchTime (type, val, nowTimeType) { // 设置searchTime
-    //   if (type === 'minute') {
-    //     const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
-    //     const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
-    //     this.$set(this.searchTime, 0, startTime)
-    //     this.$set(this.searchTime, 1, endTime)
-    //     this.$set(this.searchTime, 2, val + 'm')
-    //   } else if (type === 'hour') {
-    //     const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
-    //     const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
-    //     this.$set(this.searchTime, 0, startTime)
-    //     this.$set(this.searchTime, 1, endTime)
-    //     this.$set(this.searchTime, 2, val + 'h')
-    //   } else if (type === 'date') {
-    //     const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
-    //     const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
-    //     this.$set(this.searchTime, 0, startTime)
-    //     this.$set(this.searchTime, 1, endTime)
-    //     this.$set(this.searchTime, 2, val + 'd')
-    //   }
-    //   this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime
-    // },
     showTime (type) {
       switch (type) {
         case 'line' :

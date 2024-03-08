@@ -217,7 +217,7 @@ export default {
       let startTime = ''
       let endTime = ''
       // todo 刷新 需要判断是否是相对时间
-      if (isRefresh) { // 刷新则视情况更新时间范围
+      if (isRefresh || this.isFullscreen) { // 刷新则视情况更新时间范围
         const now = new Date(bus.computeTimezone(new Date().getTime()))
         const origin = new Date(bus.timeFormate(bus.formateTimeToTime(this.timeRange[1]), 'YYYY-MM-DD HH:mm:ss'))
         const numInterval = now.getTime() - origin.getTime()
@@ -229,7 +229,7 @@ export default {
         } else {
           nowTimeType = JSON.parse(nowTimeType)
         }
-        if (numInterval >= 60000 && nowTimeType.value !== -1) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变
+        if (numInterval >= 15000 && nowTimeType.value !== -1) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变
           startTime = bus.getNewTime(bus.formateTimeToTime(this.timeRange[0]), numInterval, 'YYYY-MM-DD HH:mm:ss')
           endTime = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
         } else {
