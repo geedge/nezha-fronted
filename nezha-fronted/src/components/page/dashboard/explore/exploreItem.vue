@@ -7,7 +7,7 @@
           <span @click="split"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
         </div>
         <!-- 顶部工具栏 -->
-        <div class="top-tools" style="z-index: 2">
+        <div class="top-tools" style="position:unset;">
           <el-row class="block-col-2" style="width: 300px;">
             <el-col>
               <el-dropdown trigger="click">
@@ -4868,7 +4868,7 @@ export default {
       })
     },
     start () {
-      this.promqlKeys.forEach((item, index)=> {
+      this.promqlKeys.forEach((item, index) => {
         item.expression = this.expressions[index]
       })
     },
