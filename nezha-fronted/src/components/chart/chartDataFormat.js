@@ -194,11 +194,11 @@ function packetsSec (value, index, type = 1, dot) {
 }
 function bitsSec (value, index, type = 1, dot) {
   if (type == 1) {
-    return asciiCompute(value, 1024, ['bps', 'Bbps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 1, true)
+    return asciiCompute(value, 1024, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 1, false)
   } else if (type == -1) {
-    return asciiCompute(value, 1024, ['bps', 'Bbps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], dot, true)
+    return asciiCompute(value, 1024, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], dot, false)
   } else {
-    return asciiCompute(value, 1024, ['bps', 'Bbps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 2, true)
+    return asciiCompute(value, 1024, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 2, false)
   }
 }
 function bytesSec (value, index, type = 1, dot) {
@@ -302,11 +302,11 @@ function petabitsSec (value, index, type = 1, dot) {
 }
 function bitsSecSI (value, index, type = 1, dot) {
   if (type == 1) {
-    return asciiCompute(value, 1000, ['bps', 'Bbps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 1, true)
+    return asciiCompute(value, 1000, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 1, false)
   } else if (type == -1) {
-    return asciiCompute(value, 1000, ['bps', 'Bbps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], dot, true)
+    return asciiCompute(value, 1000, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], dot, false)
   } else {
-    return asciiCompute(value, 1000, ['bps', 'Bbps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 2, true)
+    return asciiCompute(value, 1000, ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Epps', 'Zpps', 'Ypps'], 2, false)
   }
 }
 function bytesSecSI (value, index, type = 1, dot) {
