@@ -30,6 +30,10 @@
   .cm-tooltip.cm-tooltip-autocomplete{
     max-width: 600px !important;
   }
+  .el-tabs__content{
+    overflow-x: clip;
+    overflow-y: unset;
+  }
 }
 .right-box__container{
   .chart-config{
