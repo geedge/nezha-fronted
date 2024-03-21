@@ -478,7 +478,7 @@ export default {
               linkId = this.chartDetailInfo && this.chartDetailInfo.id
             }
             if (this.chartInfo.type === 'assetInfo') {
-              this.$get('asset/asset/' + linkId).then(res => {
+              this.$get('asset/asset/' + linkId + '?feature=1').then(res => {
                 this.chartData = res.data
                 this.loading = false
               })

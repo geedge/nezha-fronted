@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2112052",
+      "name": "磁盘",
+      "font_class": "disk",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "4843814",
+      "name": "基本信息",
+      "font_class": "basic-info",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "6582325",
+      "name": "网络2",
+      "font_class": "network",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "20009305",
+      "name": "cpu处理器",
+      "font_class": "cpu",
+      "unicode": "e6de",
+      "unicode_decimal": 59102
+    },
+    {
+      "icon_id": "37552061",
+      "name": "内存",
+      "font_class": "memory",
+      "unicode": "e7b1",
+      "unicode_decimal": 59313
+    },
+    {
       "icon_id": "38284763",
       "name": "Notification",
       "font_class": "Notification",
