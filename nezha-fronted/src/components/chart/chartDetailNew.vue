@@ -11,23 +11,23 @@
             </div>
           </template>
           <div class="asset-info-list">
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="chartDetail.feature.os&&chartDetail.feature.os.hostName">
               <div class="asset-info-title">{{$t('license.hostname')}}</div>
-              <div class="asset-info-value">{{chartDetail.feature.os.hostname}}</div>
+              <div class="asset-info-value">{{chartDetail.feature.os.hostName}}</div>
             </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="chartDetail.feature.os&&chartDetail.feature.os.bootTime">
               <div class="asset-info-title">{{$t('asset.boottime')}}</div>
-              <div class="asset-info-value">{{utcTimeToTimezoneStr(chartDetail.feature.os.boottime)}}</div>
+              <div class="asset-info-value">{{momentTz(chartDetail.feature.os.bootTime*1000)}}</div>
             </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="chartDetail.feature.os&&chartDetail.feature.os.platform">
               <div class="asset-info-title">{{$t('asset.platform')}}</div>
               <div class="asset-info-value">{{chartDetail.feature.os.platform}}</div>
             </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="chartDetail.feature.os&&chartDetail.feature.os.family">
               <div class="asset-info-title">{{$t('asset.platformFamily')}}</div>
               <div class="asset-info-value">{{chartDetail.feature.os.family}}</div>
             </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="chartDetail.feature.os&&chartDetail.feature.os.versionInfo">
               <div class="asset-info-title">{{$t('asset.platformVersion')}}</div>
               <div class="asset-info-value">{{chartDetail.feature.os.versionInfo}}</div>
             </div>
@@ -39,31 +39,25 @@
             <div class="asset-info-collapse">
               <i class="nz-icon nz-icon-cpu"></i>
               <span>{{$t('asset.cpu')}}</span>
-              <span v-for="(item,index) in chartDetail.feature.cpu" :key="index">
-                {{item.name}}
-              </span>
+              <span>{{chartDetail.feature.cpu.name}} * {{chartDetail.feature.cpu.physicalPackageCount}}</span>
             </div>
           </template>
-          <div class="asset-info-list" v-for="(item,index) in chartDetail.feature.cpu" :key="index">
-            <div class="asset-info-row">
+          <div class="asset-info-list">
+            <div class="asset-info-row" v-if="chartDetail.feature.cpu&&chartDetail.feature.cpu.vendor">
               <div class="asset-info-title">{{$t('asset.vendorID')}}</div>
-              <div class="asset-info-value">{{item.vendor}}</div>
+              <div class="asset-info-value">{{chartDetail.feature.cpu.vendor}}</div>
             </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="chartDetail.feature.cpu&&chartDetail.feature.cpu.name">
               <div class="asset-info-title">{{$t('asset.moduleName')}}</div>
-              <div class="asset-info-value">{{item.name}}</div>
+              <div class="asset-info-value">{{chartDetail.feature.cpu.name}}</div>
             </div>
-            <div class="asset-info-row">
-              <div class="asset-info-title">{{$t('asset.packageCount')}}</div>
-              <div class="asset-info-value">{{item.physicalPackageCount}}</div>
-            </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="chartDetail.feature.cpu&&chartDetail.feature.cpu.physicalProcessorCount">
               <div class="asset-info-title">{{$t('asset.processorCount')}}</div>
-              <div class="asset-info-value">{{item.physicalProcessorCount}}</div>
+              <div class="asset-info-value">{{chartDetail.feature.cpu.physicalProcessorCount}}</div>
             </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="chartDetail.feature.cpu&&chartDetail.feature.cpu.maxFreq">
               <div class="asset-info-title">{{$t('backup.frequency')}}</div>
-              <div class="asset-info-value">{{Hertz(item.logicalProcessorCount,0,0)}}</div>
+              <div class="asset-info-value">{{Hertz(chartDetail.feature.cpu.maxFreq,0,0)}}</div>
             </div>
           </div>
         </el-collapse-item>
@@ -73,21 +67,21 @@
             <div class="asset-info-collapse">
               <i class="nz-icon nz-icon-memory"></i>
               <span>{{$t('asset.memory')}}</span>
-              <span>{{bits(chartDetail.feature.memory.total,0,0)}}</span>
+              <span>{{bytes(chartDetail.feature.memory.total,0,0)}}</span>
             </div>
           </template>
           <div class="asset-info-list">
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="chartDetail.feature.memory&&chartDetail.feature.memory.total">
               <div class="asset-info-title">{{$t('asset.memorySize')}}</div>
-              <div class="asset-info-value">{{bits(chartDetail.feature.memory.total,0,0)}}</div>
+              <div class="asset-info-value">{{bytes(chartDetail.feature.memory.total,0,0)}}</div>
             </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="chartDetail.feature.memory&&chartDetail.feature.memory.swapTotal">
               <div class="asset-info-title">{{$t('asset.swaptotal')}}</div>
-              <div class="asset-info-value">{{bits(chartDetail.feature.memory.swaptotal,0,0)}}</div>
+              <div class="asset-info-value">{{bytes(chartDetail.feature.memory.swapTotal,0,0)}}</div>
             </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="chartDetail.feature.memory&&chartDetail.feature.memory.pageSize">
               <div class="asset-info-title">{{$t('asset.pagesize')}}</div>
-              <div class="asset-info-value">{{bits(chartDetail.feature.memory.pagesize,0,0)}}</div>
+              <div class="asset-info-value">{{bytes(chartDetail.feature.memory.pageSize,0,0)}}</div>
             </div>
           </div>
         </el-collapse-item>
@@ -97,21 +91,21 @@
             <div class="asset-info-collapse">
               <i class="nz-icon nz-icon-disk"></i>
               <span>{{$t('asset.disk')}}</span>
-              <span>{{bits(calcTotal(chartDetail.feature.disk, 'size'),0,0)}}</span>
+              <span>{{bytes(calcTotal(chartDetail.feature.disk, 'size'),0,0)}}</span>
             </div>
           </template>
           <div class="asset-info-list" v-for="(item,index) in chartDetail.feature.disk" :key="index">
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="item&&item.name">
               <div class="asset-info-title">{{$t('asset.diskName')}}</div>
               <div class="asset-info-value">{{item.name}}</div>
             </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="item&&item.model">
               <div class="asset-info-title">{{$t('asset.diskModel')}}</div>
               <div class="asset-info-value">{{item.model}}</div>
             </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="item&&item.size">
               <div class="asset-info-title">{{$t('asset.diskSize')}}</div>
-              <div class="asset-info-value">{{bits(item.size,0,0)}}</div>
+              <div class="asset-info-value">{{bytes(item.size,0,0)}}</div>
             </div>
           </div>
         </el-collapse-item>
@@ -124,31 +118,31 @@
             </div>
           </template>
           <div class="asset-info-list" v-for="(item,index) in chartDetail.feature.interface" :key="index">
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="item&&item.name">
               <div class="asset-info-title">{{$t('asset.interfaceName')}}</div>
               <div class="asset-info-value">{{item.name}}</div>
             </div>
-            <div class="asset-info-row">
-              <div class="asset-info-title">iPv4addr</div>
+            <div class="asset-info-row" v-if="item&&item.iPv4addr">
+              <div class="asset-info-title">IPv4 {{$t('overall.address')}}</div>
               <div class="asset-info-value">{{item.iPv4addr}}</div>
             </div>
-            <div class="asset-info-row">
-              <div class="asset-info-title">iPv6addr</div>
+            <div class="asset-info-row" v-if="item&&item.iPv6addr">
+              <div class="asset-info-title">IPv6 {{$t('overall.address')}}</div>
               <div class="asset-info-value">{{item.iPv6addr}}</div>
             </div>
-            <div class="asset-info-row">
-              <div class="asset-info-title">macaddr</div>
+            <div class="asset-info-row" v-if="item&&item.macaddr">
+              <div class="asset-info-title">MAC {{$t('overall.address')}}</div>
               <div class="asset-info-value">{{item.macaddr}}</div>
             </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="item&&item.subnetMasks">
               <div class="asset-info-title">{{$t('asset.subnetMasks')}}</div>
               <div class="asset-info-value">{{item.subnetMasks}}</div>
             </div>
-            <div class="asset-info-row">
-              <div class="asset-info-title">mtu</div>
+            <div class="asset-info-row" v-if="item&&item.mtu">
+              <div class="asset-info-title">MTU</div>
               <div class="asset-info-value">{{item.mtu}}</div>
             </div>
-            <div class="asset-info-row">
+            <div class="asset-info-row" v-if="item&&item.ifOperStatus">
               <div class="asset-info-title">{{$t('asset.ifOperStatus')}}</div>
               <div class="asset-info-value">
                 <span v-if="item.ifOperStatus==1">up</span>
@@ -169,6 +163,7 @@
 
 <script>
 import chartDataFormat from '@/components/chart/chartDataFormat'
+import bus from '@/libs/bus'
 export default {
   name: 'chartDetailNew',
   props: {
@@ -181,7 +176,7 @@ export default {
     }
   },
   methods: {
-    bits: chartDataFormat.getUnit(6).compute,
+    bytes: chartDataFormat.getUnit(7).compute,
     Hertz: chartDataFormat.getUnit(26).compute,
     calcTotal (arr, key) {
       return arr.reduce((acc, curr) => acc + Number(curr[key]), 0)

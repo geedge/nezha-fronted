@@ -1077,22 +1077,53 @@
         background: transparent;
         border-color: $--border-color-light;
         .el-collapse-item__content{
-          padding: 15px 53px;
+          padding: 0;
+          display: flex;
+          flex-wrap: wrap;
           .asset-info-list{
+            flex-grow: 1;
+            box-sizing: border-box;
+            padding: 15px 50px;
+            min-width: 50%;
+            border-left: 1px solid $--border-color-light;
+            border-top: 1px solid $--border-color-light;
+            margin-left: -1px;
+            margin-top: -1px;
             .asset-info-row{
               margin-bottom: 15px;
               display: flex;
               align-items: center;
               .asset-info-title{
-                font-size: 14px;
                 width: 150px;
+                font-size: 14px;
               }
               .asset-info-value{
+                word-break: break-word;
+                box-sizing: border-box;
+                max-width: calc(100% - 150px);
                 font-size: 14px;
                 background: $--background-color-2;
-                padding: 0 5px;
-                height: 32px;
-                line-height: 32px;
+                padding: 4px;
+                line-height: 1.5;
+                .label-table {
+                  display: flex;
+                  border: 1px solid #409eef;
+                  height: 20px;
+                  font-size: 12px;
+                  line-height: 20px;
+                  border-radius: 4px;
+                  margin: 4px 5px 4px 0;
+                  box-sizing: content-box;
+                  .label-table-value {
+                    flex: 1;
+                    padding: 0 4px;
+                  }
+                  .label-table-name {
+                    color: #fff;
+                    background-color: #409eef;
+                    padding: 0 4px;
+                  }
+                }
               }
             }
           }
