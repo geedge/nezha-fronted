@@ -1094,8 +1094,9 @@
               display: flex;
               align-items: center;
               .asset-info-title{
-                width: 150px;
+                width: 180px;
                 font-size: 14px;
+                word-break: break-word;
               }
               .asset-info-value{
                 word-break: break-word;

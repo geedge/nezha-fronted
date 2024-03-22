@@ -7,7 +7,7 @@
             <div class="asset-info-collapse">
               <i class="nz-icon nz-icon-basic-info"></i>
               <span>{{$t('asset.information')}}</span>
-              <span>{{chartDetail.feature.os.hostname}}</span>
+              <span>{{chartDetail.feature.os.hostName}}</span>
             </div>
           </template>
           <div class="asset-info-list">
@@ -51,13 +51,17 @@
               <div class="asset-info-title">{{$t('asset.moduleName')}}</div>
               <div class="asset-info-value">{{chartDetail.feature.cpu.name}}</div>
             </div>
+            <div class="asset-info-row" v-if="chartDetail.feature.cpu&&chartDetail.feature.cpu.physicalPackageCount">
+              <div class="asset-info-title">{{$t('asset.physicalPackageCount')}}</div>
+              <div class="asset-info-value">{{chartDetail.feature.cpu.physicalPackageCount}}</div>
+            </div>
             <div class="asset-info-row" v-if="chartDetail.feature.cpu&&chartDetail.feature.cpu.physicalProcessorCount">
-              <div class="asset-info-title">{{$t('asset.processorCount')}}</div>
+              <div class="asset-info-title">{{$t('asset.physicalProcessorCount')}}</div>
               <div class="asset-info-value">{{chartDetail.feature.cpu.physicalProcessorCount}}</div>
             </div>
-            <div class="asset-info-row" v-if="chartDetail.feature.cpu&&chartDetail.feature.cpu.maxFreq">
-              <div class="asset-info-title">{{$t('backup.frequency')}}</div>
-              <div class="asset-info-value">{{Hertz(chartDetail.feature.cpu.maxFreq,0,0)}}</div>
+            <div class="asset-info-row" v-if="chartDetail.feature.cpu&&chartDetail.feature.cpu.logicalProcessorCount">
+              <div class="asset-info-title">{{$t('asset.logicalProcessorCount')}}</div>
+              <div class="asset-info-value">{{chartDetail.feature.cpu.logicalProcessorCount}}</div>
             </div>
           </div>
         </el-collapse-item>
@@ -81,7 +85,7 @@
             </div>
             <div class="asset-info-row" v-if="chartDetail.feature.memory&&chartDetail.feature.memory.pageSize">
               <div class="asset-info-title">{{$t('asset.pagesize')}}</div>
-              <div class="asset-info-value">{{bytes(chartDetail.feature.memory.pageSize,0,0)}}</div>
+              <div class="asset-info-value">{{chartDetail.feature.memory.pageSize}}</div>
             </div>
           </div>
         </el-collapse-item>
