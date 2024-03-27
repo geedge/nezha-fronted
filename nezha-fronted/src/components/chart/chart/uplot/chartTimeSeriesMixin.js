@@ -532,9 +532,6 @@ export default {
         let minute = tData.getMinutes()
         minute = minute > 9 ? minute : '0' + minute // 如果分钟小于10,则在前面加0补充为两位数字
         if (minTime !== null && maxTime !== null) {
-          const diffSec = (maxTime - minTime)
-          const secOneDay = 12 * 60 * 60// 0.5天的秒数
-          const secOneMonth = secOneDay * 30// 30天的秒数
           const dateFormatStr = self.timeFormatMain.split(' ')[0]
           let str = ''
           const month = tData.getMonth() + 1
@@ -546,9 +543,15 @@ export default {
           } else {
             str += [month, day].join('-')
           }
-          if (diffSec <= secOneDay - 100) { // 同一天
+
+          const moment1 = moment((minTime * 1000 - localOffset + offset * 60 * 1000))
+          const moment2 = moment((maxTime * 1000 - localOffset + offset * 60 * 1000))
+          const isSameDay = moment1.isSame(moment2, 'day')
+          const isSameMonth = moment1.isSame(moment2, 'month')
+
+          if (isSameDay) { // 同一天
             return [hour, minute].join(':')
-          } else if (diffSec < secOneMonth) { // 大于1天，小于30天
+          } else if (isSameMonth) { // 同一月
             return str + '\n' + [hour, minute].join(':')
           } else { // 大于等于30天
             return str
