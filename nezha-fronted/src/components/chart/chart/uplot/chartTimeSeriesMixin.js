@@ -526,7 +526,7 @@ export default {
         // if (window.dataJson) {
         //   offset = new Date().getTimezoneOffset() * -1 / 60
         // }
-        const tData = new Date(value - localOffset + offset * 60 * 1000)
+        const tData = new Date(value)
         let hour = tData.getHours()
         hour = hour > 9 ? hour : '0' + hour // 加0补充为两位数字
         let minute = tData.getMinutes()
