@@ -422,19 +422,17 @@ export const bottomBoxWindow = {
 export function stringTimeParseToUnix (stringTime) {
   let time = new Date(stringTime).getTime()
   let offset = localStorage.getItem('nz-sys-timezone')
-  offset = moment.tz(offset).format('Z')
-  offset = Number.parseInt(offset)
+  offset = moment.tz(offset).utcOffset()
   const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
-  time = time + localOffset - offset * 60 * 60 * 1000
+  time = time + localOffset - offset * 60 * 1000
   return parseInt(time / 1000)
 }
 export function stringTimeParseToUnixMs (stringTime) {
   let time = new Date(stringTime).getTime()
   let offset = localStorage.getItem('nz-sys-timezone')
-  offset = moment.tz(offset).format('Z')
-  offset = Number.parseInt(offset)
+  offset = moment.tz(offset).utcOffset()
   const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
-  time = time + localOffset - offset * 60 * 60 * 1000
+  time = time + localOffset - offset * 60 * 1000
   return parseInt(time)
 }
 export function getTime (size, unit) { // 计算时间
@@ -1148,7 +1146,7 @@ export const watermark = {
     const height = binding.value.height || 200
     const textRotate = binding.value.textRotate || -20
     addWaterMarker(el, text, font, textColor, width, height, textRotate, show, text1)
-  },
+  }
 }
 function addWaterMarker (parentNode, text, font, textColor, width, height, textRotate, show, text1) {
   const can = document.createElement('canvas')
