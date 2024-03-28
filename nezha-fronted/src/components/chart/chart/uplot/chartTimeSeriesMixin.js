@@ -151,6 +151,7 @@ export default {
         // 设置图表颜色
         const chartType = item.yAxisIndex == 1 ? lodash.get(this.chartInfo, 'param.rightYAxis.style', 'line') : this.chartInfo.type
         item.stroke = color
+        item.spanGaps = this.chartInfo.param.nullType != 'null'
         if (chartType === 'area') {
           // 使用 tinycolor 转换为十六进制
           const hexColor = tinycolor(color).toHexString()

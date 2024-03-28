@@ -39,7 +39,8 @@
             <div class="asset-info-collapse">
               <i class="nz-icon nz-icon-cpu"></i>
               <span>{{$t('asset.cpu')}}</span>
-              <span>{{chartDetail.feature.cpu.name}} * {{chartDetail.feature.cpu.physicalPackageCount}}</span>
+              <span>{{chartDetail.feature.cpu.name}}</span>
+              <span v-if="chartDetail.feature.cpu.physicalPackageCount>1">* {{chartDetail.feature.cpu.physicalPackageCount}}</span>
             </div>
           </template>
           <div class="asset-info-list">
