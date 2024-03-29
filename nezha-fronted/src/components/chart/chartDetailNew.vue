@@ -40,7 +40,7 @@
               <i class="nz-icon nz-icon-cpu"></i>
               <span>{{$t('asset.cpu')}}</span>
               <span>{{chartDetail.feature.cpu.name}}</span>
-              <span v-if="chartDetail.feature.cpu.physicalPackageCount>1">* {{chartDetail.feature.cpu.physicalPackageCount}}</span>
+              <span v-if="chartDetail.feature.cpu.physicalPackageCount > 1">* {{chartDetail.feature.cpu.physicalPackageCount}}</span>
             </div>
           </template>
           <div class="asset-info-list">
@@ -72,7 +72,7 @@
             <div class="asset-info-collapse">
               <i class="nz-icon nz-icon-memory"></i>
               <span>{{$t('asset.memory')}}</span>
-              <span>{{bytes(chartDetail.feature.memory.total,0,0)}}</span>
+              <span v-if="chartDetail.feature.memory.total>0">{{bytes(chartDetail.feature.memory.total,0,0)}}</span>
             </div>
           </template>
           <div class="asset-info-list">
@@ -96,7 +96,7 @@
             <div class="asset-info-collapse">
               <i class="nz-icon nz-icon-disk"></i>
               <span>{{$t('asset.disk')}}</span>
-              <span>{{bytes(calcTotal(chartDetail.feature.disk, 'size'),0,0)}}</span>
+              <span v-if="calcTotal(chartDetail.feature.disk, 'size')>0">{{bytes(calcTotal(chartDetail.feature.disk, 'size'),0,0)}}</span>
             </div>
           </template>
           <div class="asset-info-list" v-for="(item,index) in chartDetail.feature.disk" :key="index">
@@ -113,6 +113,8 @@
               <div class="asset-info-value">{{bytes(item.size,0,0)}}</div>
             </div>
           </div>
+          <!-- 补充边距 -->
+          <div class="asset-info-list" v-if="!(chartDetail.feature.disk && chartDetail.feature.disk.length)"></div>
         </el-collapse-item>
 
         <el-collapse-item>
@@ -160,6 +162,8 @@
               </div>
             </div>
           </div>
+          <!-- 补充边距 -->
+          <div class="asset-info-list" v-if="!(chartDetail.feature.disk && chartDetail.feature.disk.length)"></div>
         </el-collapse-item>
       </el-collapse>
     </div>
@@ -182,7 +186,6 @@ export default {
   },
   methods: {
     bytes: chartDataFormat.getUnit(7).compute,
-    Hertz: chartDataFormat.getUnit(26).compute,
     calcTotal (arr, key) {
       return arr.reduce((acc, curr) => acc + Number(curr[key]), 0)
     }
