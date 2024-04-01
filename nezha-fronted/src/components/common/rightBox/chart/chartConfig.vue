@@ -942,6 +942,7 @@
               :placeholder="$t('overall.auto')"
               popper-class="right-box-select-top prevent-clickoutside"
               size="small"
+              clearable
               @change="change"
               >
               <el-option
@@ -965,6 +966,7 @@
               :placeholder="$t('overall.auto')"
               popper-class="right-box-select-top prevent-clickoutside"
               size="small"
+              clearable
               @change="change"
               >
               <el-option :label="$t('dashboard.dashboard.chartForm.asc')" value="asc"></el-option>
