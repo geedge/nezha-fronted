@@ -404,8 +404,7 @@ export default {
               this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.onScroll(scrollTop, top)
               return
             }
-            if (item.type === 'group' && !item.loaded) {
-              item.loaded = true
+            if (item.type === 'group') {
               this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].getChartData()
             }
             if (item.loaded) {
