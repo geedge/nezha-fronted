@@ -259,7 +259,6 @@ export default {
       return function (record) {
         // 当 state = active | silence 时，duration = 当前服务器时间（result.time）- startAt
         if (record.state == 1 || record.state == 2) {
-          console.log(record.startAt, this.nowTime, record.endAt)
           return calcDurationByStringTimeB(record.startAt, this.nowTime)
         }
         if (record.endAt) {

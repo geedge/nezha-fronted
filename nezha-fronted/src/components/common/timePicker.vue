@@ -237,7 +237,6 @@ export default {
     this.getUtcStr()
     this.getRangeHistoryArr()
     const timeTemp = this.$lodash.cloneDeep(this.searchTime)
-    console.log(this.searchTime)
     this.oldSearchTime[0] = timeTemp[0] || ''
     this.oldSearchTime[1] = timeTemp[1] || ''
     // 监听dateFormat变化 改变日期格式

@@ -848,11 +848,11 @@ export const tableSet = {
     }
   },
   // 本地正序
-  asce (prop) {
+  asce (prop, useOldValue) {
     return function (obj1, obj2) {
       let val1 = obj1[prop]
       let val2 = obj2[prop]
-      if (prop === 'value') {
+      if (prop === 'value' || useOldValue) {
         val1 = obj1.oldValue
         val2 = obj2.oldValue
       }

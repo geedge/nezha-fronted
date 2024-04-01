@@ -237,6 +237,7 @@ export default {
       this.seriesItem = this.filterShowData(this.storedTableData, this.pageObj, 'series')
     },
     filterShowData (source, pageObj, from) {
+      console.log(123123123)
       let orderBy = null
       let sourceData = null
       if (from === 'series') {
@@ -251,10 +252,12 @@ export default {
         source = Object.assign([], sourceData)
       } else { // 排序之后的顺序
         if (orderBy.order === 'ascending') {
-          source = source.sort(this.$tableSet.asce(orderBy.prop))
+          console.log(source)
+          source = source.sort(this.$tableSet.asce(orderBy.prop, true))
         }
         if (orderBy.order === 'descending') {
-          source = source.sort(this.$tableSet.desc(orderBy.prop))
+          console.log(source)
+          source = source.sort(this.$tableSet.desc(orderBy.prop, true))
         }
       }
       return source.slice((pageObj.pageNo - 1) * pageObj.pageSize, pageObj.pageNo * pageObj.pageSize)
@@ -604,6 +607,7 @@ export default {
     },
     // 数据排序
     tableDataSort (item) {
+      console.log(item)
       this.orderBy = { order: item.order, prop: item.prop }
       this.seriesItem = this.filterShowData(this.storedTableData, this.pageObj, 'series')
     },

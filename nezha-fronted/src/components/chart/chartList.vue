@@ -11,7 +11,7 @@
       :col-num="12"
       :is-draggable="!panelLock"
       :is-resizable="!panelLock"
-      :layout.sync="copyDataList"git config –global credential.helper store
+      :layout.sync="copyDataList"
       :margin="isGroup ? [10, 10] : [10, 10]"
       :row-height="stepWidth"
       :vertical-compact="true"

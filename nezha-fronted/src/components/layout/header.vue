@@ -200,7 +200,6 @@ export default {
       const audio = new Audio('/static/audio/new_alert_message.mp3')
       audio.muted = true
       audio.play().then(() => {
-        console.log('autoplay')
         this.operationTutorial = false
       }).catch((err) => {
         console.log(err)
