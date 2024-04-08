@@ -190,6 +190,7 @@ export default {
         label: alias,
         scale: isRight ? 'right' : 'left', // right
         yAxisIndex: isRight, // right
+        labels: series.metric ? series.metric : {},
         // values: (u, v) => series.elements.name + JSON.stringify(series.metric),
         width: 1 / devicePixelRatio,
         expressionIndex: series.expressionIndex,
@@ -680,6 +681,7 @@ export default {
         className = 'yAxis-icon nz-icon nz-icon-youzongzhou'
       }
       const color = this.colorList[params.seriesIndex]
+      const showValue = chartDataFormat.getUnit(unit).compute(val, null, -1, decimals)
       this.toolbox.tooltipHtml = `
         <div class="nz-chart__tooltip">
           <div class="tooltip-title" style="margin-bottom: 5px">${bus.timeFormate(tData)}</div>
@@ -689,13 +691,15 @@ export default {
               <span>${seriesName}</span>
             </div>
             <div class="row__value">
-              <span>${chartDataFormat.getUnit(unit).compute(val, null, -1, decimals)}</span>
+              <span>${showValue}</span>
             </div>
           </div>
         </div>
         `
       this.toolbox.show = true
       this.toolbox.metric.labels = this.series[params.seriesIndex].labels
+      this.toolbox.metric.labels.showValue = showValue
+      this.toolbox.metric.labels.value = val
       this.toolbox.metric.expressionIndex = this.series[params.seriesIndex].expressionIndex
       this.toolbox.clickIndex = params.seriesIndex
     },
