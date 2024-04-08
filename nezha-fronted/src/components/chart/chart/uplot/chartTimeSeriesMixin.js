@@ -216,12 +216,17 @@ export default {
         tooltip.style.display = 'none'
         over.style.cursor = null
         isRender = false
-        const { top } = u.cursor
+        const { top, left } = u.cursor
         const lft = u.valToPos(u.data[0][self.dataIdx], 'x')
         const windowWidth = window.innerWidth// 窗口宽度
         const windowHeight = window.innerHeight// 窗口高度
         let x = 0
         let y = 0
+        if (self.chartId != self.currentMousemove) {
+          self.mousePosition.left = u.root.getBoundingClientRect().left + left + u._padding[1] + 2 * shiftX
+          self.mousePosition.top = u.root.getBoundingClientRect().top + top + 10
+        }
+        tooltip.style.position = 'fixed'
         if (self.mousePosition.left < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
           tooltip.style.left = (self.mousePosition.left + shiftX) + 'px'
         } else {
@@ -234,7 +239,12 @@ export default {
           tooltip.style.top = (self.mousePosition.top - shiftY) + 'px'
           y = '-100%'
         }
+
+
+
         tooltip.style.transform = `translate(${x},${y})`
+
+
         if (!self.$lodash.get(self.chartInfo, 'param.enable.tooltip', true)) {
           return
         }

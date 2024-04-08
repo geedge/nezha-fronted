@@ -163,7 +163,7 @@ export default {
             if (chartCache[key] === getChart(this.chartId)) {
               option = {
                 tooltip: {
-                  className: 'chart-time-series'
+                  className: 'chart-time-series',
                 }
               }
             } else {
