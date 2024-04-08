@@ -543,10 +543,7 @@ function asciiCompute (num, ascii, units, dot = 2, isBits = false) {
   let carry = 0
   if (num > 1) {
     let log = Math.log(num) / Math.log(ascii)
-    if (!numberWithEConvent(log)) {
-      log = 0
-    }
-    carry = parseInt(log)
+    carry = Math.floor(log)
     num = num / Math.pow(ascii, carry)
   }
   // if (num > 255) {
