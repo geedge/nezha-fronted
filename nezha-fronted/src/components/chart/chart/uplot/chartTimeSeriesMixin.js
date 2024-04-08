@@ -94,7 +94,7 @@ export default {
           }
           item.expressionIndex = expressionIndex
           seriesData.push(Object.keys(seriesObjTime).map(time => seriesObjTime[time]))
-          seriesAll.push(this.renderSeries(item, expressionIndex, seriesIndex, chartIndex))
+          seriesAll.push(this.renderSeries(item, expressionIndex, seriesIndex, chartIndex,nullValueMode))
           chartIndex++
         })
       })
@@ -171,7 +171,7 @@ export default {
         this.legends[index].color = color
       })
     },
-    renderSeries (series, expressionIndex, dataIndex, chartIndex) {
+    renderSeries (series, expressionIndex, dataIndex, chartIndex, nullValueMode) {
       const leftUnit = this.chartInfo.unit
       const leftUnitCompute = chartDataFormat.getUnit(leftUnit)
       const decimals = this.chartInfo.param.decimals || 2
@@ -197,7 +197,7 @@ export default {
         paths (taht, seriesIdx, idx0, idx1, filtIdxs) {
           return uplot.paths.spline(taht)(taht, seriesIdx, idx0, idx1, filtIdxs)
         },
-        spanGaps: true
+        spanGaps: nullValueMode !== 'null'
       }
       this.legends.push({ name, alias, statistics, color: this.colorList[chartIndex] })
       return obj
