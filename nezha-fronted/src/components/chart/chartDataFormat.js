@@ -542,7 +542,10 @@ function asciiCompute (num, ascii, units, dot = 2, isBits = false) {
   num = Math.abs(num)
   let carry = 0
   if (num > 1) {
-    const log = Math.log(num) / Math.log(ascii)
+    let log = Math.log(num) / Math.log(ascii)
+    if (!numberWithEConvent(log)) {
+      log = 0
+    }
     carry = parseInt(log)
     num = num / Math.pow(ascii, carry)
   }
@@ -554,6 +557,10 @@ function asciiCompute (num, ascii, units, dot = 2, isBits = false) {
   if (Number.isInteger(num)) {
     return num * SIGN + ' ' + units[carry]
   } else {
+    if (!numberWithEConvent(num)) {
+      console.log(units, carry)
+      return num * SIGN + ' ' + units[carry]
+    }
     return num.toFixed(dot) * SIGN + ' ' + units[carry]
   }
 }

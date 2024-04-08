@@ -188,6 +188,7 @@ export default {
       const self = this
       const leftUnit = this.chartInfo.unit
       const leftUnitCompute = chartDataFormat.getUnit(leftUnit)
+      console.log(leftUnitCompute)
       const rightUnit = this.$lodash.get(this.chartInfo, 'param.rightYAxis.unit', 2)
       const rightUnitCompute = chartDataFormat.getUnit(rightUnit)
       const incrs = leftUnitCompute.ascii == 1024 ? this.incrs : undefined
@@ -291,7 +292,10 @@ export default {
           },
           {
             scale: 'left',
-            values: (u, vals, space) => vals.map(v => leftUnitCompute.compute(v, null, -1, decimals) + ''),
+            values: (u, vals, space) => vals.map(v => {
+              console.log(v)
+              return leftUnitCompute.compute(v, null, -1, decimals) + ''
+            }),
             incrs: incrs,
             gap: 5,
             stroke: self.color[self.theme].label,
