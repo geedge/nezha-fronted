@@ -70,7 +70,7 @@
           <template v-if="editData.editType === assetConstants.editTypeData.label">
             <div class="form__sub-title">{{$t('overall.labels')}}</div>
             <div v-for="(label, i) in editData.fields" :key="i" class="form__dotted-item">
-              <el-form-item :prop="'fields.' + i + '.value'" :rules="[ { required: JSON.parse(label.param).required, message: $t('validate.required'), trigger: 'blur' }]">
+              <el-form-item :prop="'fields.' + i + '.value.0'" :rules="[ { required: JSON.parse(label.param).required == 1, message: $t('validate.required'), trigger: 'blur' }]">
                 <template v-slot:label>
                   <div class="form__labels-label">
                     <span>{{label.name}}</span>
@@ -383,7 +383,7 @@ export default {
       this.getTableData()
     },
     assetBatch () {
-      this.$refs.transfer.clear()
+      this.$refs.transfer && this.$refs.transfer.clear()
       this.getTableData()
     },
     esc (refresh) {
@@ -511,7 +511,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        this.$refs.transfer.clear()
+        this.$refs.transfer && this.$refs.transfer.clear()
         this.getTableData()
       }
     },
