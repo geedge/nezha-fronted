@@ -550,7 +550,7 @@ export default {
       this.$forceUpdate()
     },
     addParam () {
-      if (this.editAssetMeta.param.items.length >= 20) {
+      if (this.editAssetMeta.param.items.length >= 100) {
         this.$message.error(this.$t('config.assetLabel.moreOptionsError'))
         return
       }
@@ -575,6 +575,10 @@ export default {
       this.$forceUpdate()
     },
     copyParam (index) {
+      if (this.editAssetMeta.param.items.length >= 100) {
+        this.$message.error(this.$t('config.assetLabel.moreOptionsError'))
+        return
+      }
       if (this.editAssetMeta.type.toUpperCase() !== 'CHECKBOX') {
         this.editAssetMeta.param.items.push({
           name: this.editAssetMeta.param.items[index].name,
