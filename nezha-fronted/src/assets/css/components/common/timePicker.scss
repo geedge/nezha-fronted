@@ -317,7 +317,7 @@
     }
   }
 }
-@media (max-height: 900px) {
+@media (max-height: 768px) {
   .date-range-panel {
     .date-range-panel-content-right {
       .date-range-item {
@@ -334,7 +334,7 @@
 .date-range-panel--top {
   top: -460px;
 }
-@media (max-height: 900px) {
+@media (max-height: 768px) {
   .date-range-panel--top {
     top: -215px;
   }
