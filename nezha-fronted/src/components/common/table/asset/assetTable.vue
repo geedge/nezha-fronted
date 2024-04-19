@@ -56,10 +56,7 @@
                 <template slot="copy-text">
                   <i
                     class="ip-icon nz-icon nz-icon-mgt"
-                    :class="{
-                      'green-color':scope.row.pingInfo && scope.row.pingInfo.status == 1,
-                      'red-color':!scope.row.pingInfo || scope.row.pingInfo.status == 0,
-                    }"
+                    :class="ipColorClass(scope.row, scope.row.manageIp)"
                   ></i>
                   {{scope.row.manageIp ? scope.row.manageIp : '-'}}
                 </template>
@@ -68,10 +65,7 @@
                 <template slot="copy-text">
                   <i
                     class="ip-icon nz-icon nz-icon-ipmi"
-                    :class="{
-                      'green-color':scope.row.pingInfo && scope.row.pingInfo.status == 1,
-                      'red-color':!scope.row.pingInfo || scope.row.pingInfo.status == 0,
-                    }"
+                    :class="ipColorClass(scope.row, scope.row.ipmiIp)"
                   ></i>
                   {{scope.row.ipmiIp ? scope.row.ipmiIp : ''}}
                 </template>
@@ -447,6 +441,25 @@ export default {
         return ''
       }
       return `[${start}-${end}]`
+    },
+    ipColorClass(row,ip){
+      console.log(row,666);
+      let status = 0
+
+      // 获取ip对应的ping status
+      if(row.pingInfo && row.pingInfo.length){
+        row.pingInfo.forEach(item=>{
+          if(item.host == ip){
+            status = item.status
+          }
+        })
+      }
+
+      if(status == 1){
+        return 'green-color'
+      }else if(status == 0){
+        return 'red-color'
+      }
     }
   }
 }
