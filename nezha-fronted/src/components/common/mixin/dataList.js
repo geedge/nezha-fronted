@@ -878,6 +878,20 @@ export default {
             val: ''
           },
           jsonKey: 'val'
+        },
+        host: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'host',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'host',
+            name: 'IP',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
         }
       }
     } else if (path === 'roles') {

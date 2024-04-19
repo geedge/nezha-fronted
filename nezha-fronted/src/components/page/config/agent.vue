@@ -151,35 +151,42 @@ export default {
       dcData: [],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
-        searchLabelList: [{
-          name: 'ID',
-          type: 'input',
-          label: 'ids',
-          disabled: false
-        },
-        {
-          name: this.$t('overall.name'),
-          type: 'input',
-          label: 'name',
-          disabled: false
-        }, {
-          name: this.$t('overall.dc'),
-          type: 'dc',
-          label: 'dcIds',
-          disabled: false
-        }, {
-          name: this.$t('overall.type'),
-          type: 'select',
-          label: 'promType',
-          readonly: true,
-          disabled: false
-        }, {
-          name: this.$t('overall.state'),
-          type: 'select',
-          label: 'promState',
-          readonly: true,
-          disabled: false
-        }]
+        searchLabelList: [
+          {
+            name: 'ID',
+            type: 'input',
+            label: 'ids',
+            disabled: false
+          },
+          {
+            name: this.$t('overall.name'),
+            type: 'input',
+            label: 'name',
+            disabled: false
+          }, {
+            name: this.$t('overall.dc'),
+            type: 'dc',
+            label: 'dcIds',
+            disabled: false
+          }, {
+            name: this.$t('overall.type'),
+            type: 'select',
+            label: 'promType',
+            readonly: true,
+            disabled: false
+          }, {
+            name: this.$t('overall.state'),
+            type: 'select',
+            label: 'promState',
+            readonly: true,
+            disabled: false
+          }, {
+            name: 'IP',
+            type: 'input',
+            label: 'host',
+            disabled: false
+          }
+        ]
       },
       promServerType: null,
       showAgentDownload: false,
