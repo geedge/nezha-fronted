@@ -237,6 +237,12 @@ export default {
             label: 'dcState',
             readonly: true,
             disabled: false
+          },
+          {
+            name: this.$t('overall.remark'),
+            type: 'input',
+            label: 'remark',
+            disabled: false
           }
         ]
       },

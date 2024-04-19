@@ -576,6 +576,20 @@ export default {
             val: ''
           },
           jsonKey: 'val'
+        },
+        remark: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'remark',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'remark',
+            name: this.$t('overall.remark'),
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
         }
       }
     } else if (path === 'i18n') {
