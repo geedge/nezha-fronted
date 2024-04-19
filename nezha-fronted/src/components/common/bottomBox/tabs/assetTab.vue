@@ -105,9 +105,9 @@ export default {
           label: 'sn',
           disabled: false
         }, {
-          name: 'IP',
+          name: this.$t('config.operationlog.ip'),
           type: 'input',
-          label: 'manageIp',
+          label: 'ip',
           disabled: false
         }, {
           name: this.$t('overall.state'),
@@ -233,7 +233,7 @@ export default {
       // this.$store.commit('addConsole', consoleParam)
     },
     getTableData (params) {
-      let url  = this.url
+      let url = this.url
       if (params && Object.keys(params).length > 0) {
         for (const key in params) {
           this.$set(this.searchLabel, key, params[key])

@@ -44,6 +44,9 @@
           <el-form-item :label="$t('asset.manageIp')" prop="manageIp">
             <el-input  maxlength="64" show-word-limit v-model="editAsset.manageIp" size="small"/>
           </el-form-item>
+          <el-form-item :label="$t('asset.ipmiIp')" prop="ipmiIp">
+            <el-input  maxlength="64" show-word-limit v-model="editAsset.ipmiIp" size="small"/>
+          </el-form-item>
           <el-form-item :label="$t('asset.sn')" prop="sn">
             <el-input  maxlength="128" show-word-limit v-model="editAsset.sn" size="small"/>
           </el-form-item>

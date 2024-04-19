@@ -1,7 +1,7 @@
 <template>
   <div class="document-copy-block">
     <span class="document-copy-text">
-        <slot name="copy-text"></slot>
+      <slot name="copy-text"></slot>
     </span>
     <i v-if="showInfo" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(copyData)" :title="$t('overall.copyText')"></i>
   </div>

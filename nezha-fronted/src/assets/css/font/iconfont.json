@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "40012174",
+      "name": "MGT",
+      "font_class": "mgt",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "40012142",
+      "name": "IPMI",
+      "font_class": "ipmi",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
       "icon_id": "2112052",
       "name": "磁盘",
       "font_class": "disk",

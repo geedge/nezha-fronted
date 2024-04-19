@@ -46,16 +46,41 @@
             </div> -->
             <copy :copyData='scope.row.name' :showInfo='scope.row.name'>
               <template slot="copy-text">
-                 {{scope.row.name ? scope.row.name : '-'}}
+                {{scope.row.name ? scope.row.name : '-'}}
               </template>
             </copy>
           </template>
-           <template v-else-if="item.prop === 'manageIp'">
-            <copy :copyData='scope.row.manageIp' :showInfo='scope.row.manageIp'>
-              <template slot="copy-text">
-                 {{scope.row.manageIp ? scope.row.manageIp : '-'}}
-              </template>
-            </copy>
+           <template v-else-if="item.prop === 'ip'">
+            <div class="ip-info">
+              <copy :copyData='scope.row.manageIp' :showInfo='scope.row.manageIp' v-if="scope.row.manageIp">
+                <template slot="copy-text">
+                  <i
+                    class="ip-icon nz-icon nz-icon-mgt"
+                    :class="{
+                      'green-color':scope.row.pingInfo && scope.row.pingInfo.status == 1,
+                      'red-color':!scope.row.pingInfo || scope.row.pingInfo.status == 0,
+                    }"
+                  ></i>
+                  {{scope.row.manageIp ? scope.row.manageIp : '-'}}
+                </template>
+              </copy>
+              <copy :copyData='scope.row.ipmiIp' :showInfo='scope.row.ipmiIp' v-if="scope.row.ipmiIp">
+                <template slot="copy-text">
+                  <i
+                    class="ip-icon nz-icon nz-icon-ipmi"
+                    :class="{
+                      'green-color':scope.row.pingInfo && scope.row.pingInfo.status == 1,
+                      'red-color':!scope.row.pingInfo || scope.row.pingInfo.status == 0,
+                    }"
+                  ></i>
+                  {{scope.row.ipmiIp ? scope.row.ipmiIp : ''}}
+                </template>
+              </copy>
+              <div class="active-icon-content" v-if="scope.row.pingInfo">
+                <p v-if="scope.row.pingInfo.rtt">{{$t('asset.rtt') + (scope.row.pingInfo.rtt ? scope.row.pingInfo.rtt + 'ms':'')}}</p>
+                <p>{{$t('asset.assetStatPre') + (scope.row.pingInfo.lastUpdate ? utcTimeToTimezoneStr(scope.row.pingInfo.lastUpdate) : $t('asset.assetStatDown'))}}</p>
+              </div>
+            </div>
           </template>
           <template v-else-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
           <template v-else-if="item.prop === 'state'">{{scope.row.state ? scope.row.state.name : '-'}}</template>
@@ -87,14 +112,14 @@
             <span v-if="scope.row.cabinet && scope.row.cabinet !== '--'">{{scope.row.cabinet.name}}&nbsp;{{returnCabinet( scope.row.cabinetStart, scope.row.cabinetEnd)}}</span>
             <span v-else >-</span>
           </template>
-          <template v-else-if="item.prop === 'pingInfo'">
+          <!-- <template v-else-if="item.prop === 'pingInfo'">
             <div class="ping-info" v-if="scope.row.pingInfo">
               <div :class="{'active-icon green-bg':scope.row.pingInfo.status == 1,'active-icon red-bg':scope.row.pingInfo.status == 0}" style="position: relative">
               </div>
-              <div class="active-icon-content">{{$t('asset.assetStatPre')+(scope.row.pingInfo.lastUpdate?utcTimeToTimezoneStr(scope.row.pingInfo.lastUpdate):$t('asset.assetStatDown'))}}</div>
+              <div class="active-icon-content">{{$t('asset.assetStatPre')+(scope.row.pingInfo.lastUpdate ? utcTimeToTimezoneStr(scope.row.pingInfo.lastUpdate) : $t('asset.assetStatDown'))}}</div>
               {{scope.row.pingInfo.rtt?scope.row.pingInfo.rtt+'ms':''}}
             </div>
-          </template>
+          </template> -->
           <template v-else-if="item.prop === 'model'">{{scope.row.model ? scope.row.model.name : '-'}}</template>
           <template v-else-if="item.prop === 'parent'">
           <span
@@ -281,10 +306,10 @@ export default {
           minWidth: 150,
           sortable: 'custom'
         }, {
-          label: this.$t('asset.manageIp'),
-          prop: 'manageIp',
+          label: this.$t('config.operationlog.ip'),
+          prop: 'ip',
           show: true,
-          minWidth: 140,
+          minWidth: 200,
           sortable: 'custom'
         }, {
           label: this.$t('asset.parent'),
@@ -308,11 +333,6 @@ export default {
           show: true,
           minWidth: 110,
           sortable: 'custom'
-        }, {
-          label: this.$t('asset.pingInfo'),
-          prop: 'pingInfo',
-          show: true,
-          minWidth: 110
         }, {
           label: this.$t('overall.dc'),
           prop: 'dc',

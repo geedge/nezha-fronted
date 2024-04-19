@@ -29,6 +29,28 @@
       display: block;
     }
   }
+
+  .ip-info{
+    .ip-icon{
+      font-size: 16px;
+      margin-right: 4px;
+    }
+    .red-color {
+      color: $--color-danger !important;
+    }
+    .green-color {
+      color: $--color-success !important;
+    }
+    .document-copy-text{
+      display: flex;
+    }
+  }
+  .ip-info:hover {
+    .active-icon-content {
+      display: block;
+    }
+  }
+
 }
 
 .licenseStatus{

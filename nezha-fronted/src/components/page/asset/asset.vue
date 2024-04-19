@@ -317,10 +317,10 @@ export default {
           id: 'sn',
           disabled: false
         }, {
-          name: 'IP',
+          name: this.$t('config.operationlog.ip'),
           type: 'input',
-          label: 'manageIp',
-          id: 'manageIp',
+          label: 'ip',
+          id: 'ip',
           disabled: false
         }, {
           name: this.$t('overall.state'),
@@ -954,16 +954,16 @@ export default {
         },
         jsonKey: 'val'
       },
-      manageIp: {
+      ip: {
         target: this.searchLabel,
         isSearchInput: true,
-        propertyName: 'manageIp',
-        type: 'number',
+        propertyName: 'ip',
+        type: 'string',
         defaultJson: {
           disabled: false,
-          id: 'manageIp',
-          label: 'manageIp',
-          name: 'IP',
+          id: 'ip',
+          label: 'ip',
+          name: this.$t('config.operationlog.ip'),
           type: 'input',
           val: ''
         },
