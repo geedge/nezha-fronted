@@ -399,6 +399,9 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: host, trigger: 'blur' }
         ],
+        ipmiIp: [
+          { validator: host, trigger: 'blur' }
+        ],
         modelId: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],

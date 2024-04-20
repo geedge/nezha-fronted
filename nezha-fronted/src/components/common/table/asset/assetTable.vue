@@ -50,7 +50,7 @@
               </template>
             </copy>
           </template>
-           <template v-else-if="item.prop === 'ip'">
+          <template v-else-if="item.prop === 'ip'">
             <div class="ip-info">
               <copy :copyData='scope.row.manageIp' :showInfo='scope.row.manageIp' v-if="scope.row.manageIp">
                 <template slot="copy-text">
@@ -61,6 +61,16 @@
                   {{scope.row.manageIp ? scope.row.manageIp : '-'}}
                 </template>
               </copy>
+              <div class="active-icon-content" v-if="getPingInfo(scope.row, scope.row.manageIp)">
+                <p v-if="getPingInfo(scope.row, scope.row.manageIp).rtt">
+                  {{$t('asset.rtt') + (getPingInfo(scope.row, scope.row.manageIp).rtt + 'ms')}}
+                </p>
+                <p>
+                  {{$t('asset.assetStatPre') + (getPingInfo(scope.row, scope.row.manageIp).lastUpdate ? utcTimeToTimezoneStr(getPingInfo(scope.row, scope.row.manageIp).lastUpdate) : $t('asset.assetStatDown'))}}
+                </p>
+              </div>
+            </div>
+            <div class="ip-info">
               <copy :copyData='scope.row.ipmiIp' :showInfo='scope.row.ipmiIp' v-if="scope.row.ipmiIp">
                 <template slot="copy-text">
                   <i
@@ -70,9 +80,13 @@
                   {{scope.row.ipmiIp ? scope.row.ipmiIp : ''}}
                 </template>
               </copy>
-              <div class="active-icon-content" v-if="scope.row.pingInfo">
-                <p v-if="scope.row.pingInfo.rtt">{{$t('asset.rtt') + (scope.row.pingInfo.rtt ? scope.row.pingInfo.rtt + 'ms':'')}}</p>
-                <p>{{$t('asset.assetStatPre') + (scope.row.pingInfo.lastUpdate ? utcTimeToTimezoneStr(scope.row.pingInfo.lastUpdate) : $t('asset.assetStatDown'))}}</p>
+              <div class="active-icon-content" v-if="getPingInfo(scope.row, scope.row.ipmiIp)">
+                <p v-if="getPingInfo(scope.row, scope.row.ipmiIp).rtt">
+                  {{$t('asset.rtt') + (getPingInfo(scope.row, scope.row.ipmiIp).rtt + 'ms')}}
+                </p>
+                <p>
+                  {{$t('asset.assetStatPre') + (getPingInfo(scope.row, scope.row.ipmiIp).lastUpdate ? utcTimeToTimezoneStr(getPingInfo(scope.row, scope.row.ipmiIp).lastUpdate) : $t('asset.assetStatDown'))}}
+                </p>
               </div>
             </div>
           </template>
@@ -300,7 +314,7 @@ export default {
           minWidth: 150,
           sortable: 'custom'
         }, {
-          label: this.$t('config.operationlog.ip'),
+          label: this.$t('asset.ip'),
           prop: 'ip',
           show: true,
           minWidth: 200,
@@ -442,24 +456,30 @@ export default {
       }
       return `[${start}-${end}]`
     },
-    ipColorClass(row,ip){
-      console.log(row,666);
-      let status = 0
 
+    ipColorClass (row, ip) {
+      let status = 0
       // 获取ip对应的ping status
-      if(row.pingInfo && row.pingInfo.length){
-        row.pingInfo.forEach(item=>{
-          if(item.host == ip){
+      if (row.pingInfo && row.pingInfo.length) {
+        row.pingInfo.forEach(item => {
+          if (item.host == ip) {
             status = item.status
           }
         })
       }
 
-      if(status == 1){
+      if (status == 1) {
         return 'green-color'
-      }else if(status == 0){
+      } else if (status == 0) {
         return 'red-color'
       }
+    },
+    getPingInfo (row, ip) {
+      if (!row.pingInfo || !row.pingInfo.length) {
+        return false
+      }
+      const info = row.pingInfo.find(item => item.host == ip)
+      return info
     }
   }
 }
