@@ -188,12 +188,14 @@ export default {
           prop: 'asset',
           minWidth: 200,
           show: true
-        }, {
-          label: this.$t('licenseMange.dateIssue'),
-          prop: 'dateIssued',
-          minWidth: 200,
-          show: true
-        }, {
+        },
+        // {
+        //   label: this.$t('licenseMange.dateIssue'),
+        //   prop: 'dateIssued',
+        //   minWidth: 200,
+        //   show: true
+        // },
+        {
           label: this.$t('licenseMange.dateExpire'),
           prop: 'dateExpires',
           minWidth: 200,
