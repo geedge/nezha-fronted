@@ -1152,6 +1152,10 @@ export default {
         this.searchTime = this.timePickerRange.time
         this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.searchTime)
         this.setSearchTime('searchTime')
+        this.$store.dispatch('dispatchPanelTime', {
+          time: this.searchTime,
+          nowTimeType: this.nowTimeType
+        })
       })
     },
     // 设置默认刷新
