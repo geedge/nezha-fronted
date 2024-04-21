@@ -48,7 +48,7 @@
             <div slot="reference" style="width: 80px" @mouseenter="labelHover(JSON.parse(scope.row.statusInfo), 'agent', true, $event)"
              @mouseleave="labelHover(JSON.parse(scope.row.statusInfo), 'agent', false)">
               <span :class="{'active-icon green-bg':scope.row[item.prop] == '1','active-icon red-bg':scope.row[item.prop] == '0' || scope.row[item.prop] == '-1' || scope.row[item.prop] == '-2'}"></span>
-              <span>{{scope.row[item.prop] == '1' ? 'UP' : 'Down'}}</span>
+              <span>{{scope.row[item.prop] == '1' ? 'Up' : 'Down'}}</span>
             </div>
           <!-- </el-popover> -->
         </span>

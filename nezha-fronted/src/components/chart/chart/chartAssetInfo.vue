@@ -24,8 +24,20 @@ export default {
     }
   },
   methods: {
+    // 数据全为空 展示原组件
     isEmpty (obj) {
-      return lodash.isEmpty(obj)
+      let flag = true // 是否为空
+      for (const key in obj) {
+        if (obj[key] && (!lodash.isEmpty(obj[key]) || obj[key].length)) {
+          if (key === 'cpu' && !obj[key].name) {
+            flag = true
+          } else {
+            flag = false
+            return false
+          }
+        }
+      }
+      return flag
     }
   },
   watch: {
