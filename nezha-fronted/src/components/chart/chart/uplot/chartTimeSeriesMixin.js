@@ -94,7 +94,7 @@ export default {
           }
           item.expressionIndex = expressionIndex
           seriesData.push(Object.keys(seriesObjTime).map(time => seriesObjTime[time]))
-          seriesAll.push(this.renderSeries(item, expressionIndex, seriesIndex, chartIndex,nullValueMode))
+          seriesAll.push(this.renderSeries(item, expressionIndex, seriesIndex, chartIndex, nullValueMode))
           chartIndex++
         })
       })
@@ -240,10 +240,7 @@ export default {
           y = '-100%'
         }
 
-
-
         tooltip.style.transform = `translate(${x},${y})`
-
 
         if (!self.$lodash.get(self.chartInfo, 'param.enable.tooltip', true)) {
           return
@@ -660,9 +657,9 @@ export default {
         return
       }
       const nameArr = params.seriesName.split('-')
-      if (nameArr.length > 1) {
-        nameArr.splice(nameArr.length - 1, 1)
-      }
+      // if (nameArr.length > 1) {
+      //   nameArr.splice(nameArr.length - 1, 1)
+      // }
       const seriesName = nameArr.join('-')
       if (this.series[params.seriesIndex]) {
         params.yAxisIndex = this.series[params.seriesIndex].yAxisIndex
