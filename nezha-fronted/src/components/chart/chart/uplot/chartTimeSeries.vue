@@ -163,7 +163,7 @@ export default {
             if (chartCache[key] === getChart(this.chartId)) {
               option = {
                 tooltip: {
-                  className: 'chart-time-series',
+                  className: 'chart-time-series'
                 }
               }
             } else {
@@ -293,7 +293,6 @@ export default {
           {
             scale: 'left',
             values: (u, vals, space) => vals.map(v => {
-              console.log(v)
               return leftUnitCompute.compute(v, null, -1, decimals) + ''
             }),
             incrs: incrs,

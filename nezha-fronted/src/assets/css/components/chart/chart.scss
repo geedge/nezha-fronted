@@ -17,12 +17,13 @@
   position: relative;
   flex-direction: column;
   &:hover > .chart-header.chart-header--float{
-    background-color: $--chart-title-hover-background-color;
     height: 39px;
     opacity: 1;
   }
   .chart-header {
+    position: relative;
     &.chart-header--float {
+      background-color: $--chart-title-hover-background-color;
       position: absolute;
       top: 0;
       width: 100%;
@@ -30,32 +31,30 @@
       box-sizing: border-box;
       height: 0px;
       opacity: 0;
-      transition: all linear .3s;
+      transition: height linear 0.3s, opacity linear 0.3s;
       .chart-header__tools {
         .chart-header__tool .tool__icon {
-          visibility: visible;
+          // visibility: visible;
         }
       }
     }
     display: flex;
-    justify-content:space-between;
     align-items:center;
     padding: 0 10px;
     height: 39px;
     font-size: 14px;
-    line-height: 40px;
     color: $--color-text-primary;
-    transition: all 0.2s;
     &:hover {
       background-color: $--chart-title-hover-background-color;
       .chart-header__tools {
+        background-color: $--chart-title-hover-background-color;
         .chart-header__tool .tool__icon {
           visibility: visible;
         }
       }
     }
     .chart-header__title {
-      max-width: calc(100% - 100px);
+      max-width: 100%;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
@@ -66,8 +65,11 @@
       z-index: 10;
     }
     .chart-header__tools {
+      height: 100%;
+      position: absolute;
+      top: 0;
+      right: 10px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
 
       .chart-header__tool {

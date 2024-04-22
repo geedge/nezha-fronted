@@ -56,17 +56,17 @@
                 <template slot="copy-text">
                   <i
                     class="ip-icon nz-icon nz-icon-mgt"
-                    :class="ipColorClass(scope.row, scope.row.manageIp)"
+                    :class="(getPingInfo(scope.row, 'mgt') && getPingInfo(scope.row, 'mgt').status == 1) ? 'green-color' : 'red-color'"
                   ></i>
                   {{scope.row.manageIp ? scope.row.manageIp : '-'}}
                 </template>
               </copy>
-              <div class="active-icon-content" v-if="getPingInfo(scope.row, scope.row.manageIp)">
-                <p v-if="getPingInfo(scope.row, scope.row.manageIp).rtt">
-                  {{$t('asset.rtt') + (getPingInfo(scope.row, scope.row.manageIp).rtt + 'ms')}}
+              <div class="active-icon-content" v-if="getPingInfo(scope.row, 'mgt')">
+                <p v-if="getPingInfo(scope.row, 'mgt').rtt">
+                  {{$t('asset.rtt') + (getPingInfo(scope.row, 'mgt').rtt + 'ms')}}
                 </p>
                 <p>
-                  {{$t('asset.assetStatPre') + (getPingInfo(scope.row, scope.row.manageIp).lastUpdate ? utcTimeToTimezoneStr(getPingInfo(scope.row, scope.row.manageIp).lastUpdate) : $t('asset.assetStatDown'))}}
+                  {{$t('asset.assetStatPre') + (getPingInfo(scope.row, 'mgt').lastUpdate ? utcTimeToTimezoneStr(getPingInfo(scope.row, 'mgt').lastUpdate) : $t('asset.assetStatDown'))}}
                 </p>
               </div>
             </div>
@@ -75,17 +75,17 @@
                 <template slot="copy-text">
                   <i
                     class="ip-icon nz-icon nz-icon-ipmi"
-                    :class="ipColorClass(scope.row, scope.row.ipmiIp)"
+                    :class="(getPingInfo(scope.row, 'ipmi') && getPingInfo(scope.row, 'ipmi').status == 1) ? 'green-color' : 'red-color'"
                   ></i>
-                  {{scope.row.ipmiIp ? scope.row.ipmiIp : ''}}
+                  {{scope.row.ipmiIp ? scope.row.ipmiIp : '-'}}
                 </template>
               </copy>
-              <div class="active-icon-content" v-if="getPingInfo(scope.row, scope.row.ipmiIp)">
-                <p v-if="getPingInfo(scope.row, scope.row.ipmiIp).rtt">
-                  {{$t('asset.rtt') + (getPingInfo(scope.row, scope.row.ipmiIp).rtt + 'ms')}}
+              <div class="active-icon-content" v-if="getPingInfo(scope.row, 'ipmi')">
+                <p v-if="getPingInfo(scope.row, 'ipmi').rtt">
+                  {{$t('asset.rtt') + (getPingInfo(scope.row, 'ipmi').rtt + 'ms')}}
                 </p>
                 <p>
-                  {{$t('asset.assetStatPre') + (getPingInfo(scope.row, scope.row.ipmiIp).lastUpdate ? utcTimeToTimezoneStr(getPingInfo(scope.row, scope.row.ipmiIp).lastUpdate) : $t('asset.assetStatDown'))}}
+                  {{$t('asset.assetStatPre') + (getPingInfo(scope.row, 'ipmi').lastUpdate ? utcTimeToTimezoneStr(getPingInfo(scope.row, 'ipmi').lastUpdate) : $t('asset.assetStatDown'))}}
                 </p>
               </div>
             </div>
@@ -457,28 +457,11 @@ export default {
       return `[${start}-${end}]`
     },
 
-    ipColorClass (row, ip) {
-      let status = 0
-      // 获取ip对应的ping status
-      if (row.pingInfo && row.pingInfo.length) {
-        row.pingInfo.forEach(item => {
-          if (item.host == ip) {
-            status = item.status
-          }
-        })
-      }
-
-      if (status == 1) {
-        return 'green-color'
-      } else if (status == 0) {
-        return 'red-color'
-      }
-    },
-    getPingInfo (row, ip) {
+    getPingInfo (row, type) {
       if (!row.pingInfo || !row.pingInfo.length) {
         return false
       }
-      const info = row.pingInfo.find(item => item.host == ip)
+      const info = row.pingInfo.find(item => item.type == type)
       return info
     }
   }
