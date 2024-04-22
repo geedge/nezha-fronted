@@ -105,7 +105,7 @@ export default {
           label: 'sn',
           disabled: false
         }, {
-          name: this.$t('config.operationlog.ip'),
+          name: this.$t('asset.ip'),
           type: 'input',
           label: 'ip',
           disabled: false

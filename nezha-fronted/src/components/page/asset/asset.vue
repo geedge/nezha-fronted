@@ -317,7 +317,7 @@ export default {
           id: 'sn',
           disabled: false
         }, {
-          name: this.$t('config.operationlog.ip'),
+          name: this.$t('asset.ip'),
           type: 'input',
           label: 'ip',
           id: 'ip',
@@ -963,7 +963,7 @@ export default {
           disabled: false,
           id: 'ip',
           label: 'ip',
-          name: this.$t('config.operationlog.ip'),
+          name: this.$t('asset.ip'),
           type: 'input',
           val: ''
         },
