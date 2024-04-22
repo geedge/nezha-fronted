@@ -63,7 +63,7 @@ const store = new Vuex.Store({
       minStep: 60,
       option: {
         lineWidth: 2,
-        pointSize: 8
+        pointSize: 4
       }
     }
   },
