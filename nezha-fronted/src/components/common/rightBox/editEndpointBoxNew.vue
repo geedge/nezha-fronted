@@ -44,7 +44,7 @@
 <!--              <el-option v-for="item in assetList" :id="'asset-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
 <!--            </el-select>-->
             <v-selectpage
-              :data="assetList"
+              :data="'/asset/asset'"
               :tb-columns="columns"
               :params="{
                 varType: 2, dashboardId: 0,
@@ -56,6 +56,7 @@
               title="ChartSearch"
               key-field="id"
               show-field="name"
+              search-field="q"
               :width="626"
               v-model="editEndpoint.assetId"
               class="form-control"

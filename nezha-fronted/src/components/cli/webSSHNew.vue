@@ -97,7 +97,7 @@
     <!--弹窗-->
     <el-dialog :modal-append-to-body='false' :z-index="1000" :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog webshell-selectAsset" width="620px">
       <div slot="title">{{$t('webshell.selAsset')}}</div>
-      <selectTable ref="selectTable" v-model="assetContent.assetId" :params="selectPageParams" :columns="columns" :tableFormat="tableFormat" api="asset/asset" value-key="id" search-key="manageIp">
+      <selectTable ref="selectTable" v-model="assetContent.assetId" :params="selectPageParams" :columns="columns" :tableFormat="tableFormat" api="asset/asset" value-key="id" search-key="q">
         <template v-slot:searchLeft>
           <el-dropdown trigger="click" class="header-el-dropdown">
             <span class="el-dropdown-link">
@@ -206,7 +206,7 @@ export default {
     terminalSetting: {
       type: Object,
       default: () => {}
-    },
+    }
   },
   computed: {
     language () { return this.$store.getters.getLanguage },

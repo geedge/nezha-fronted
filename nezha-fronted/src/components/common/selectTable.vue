@@ -142,7 +142,7 @@ export default {
     search: bus.debounce(function () {
       this.pageNo = 1
       this.getTableData()
-    }, 500),
+    }, 300),
     pageChange (val) {
       this.pageNo = val
       this.getTableData()
