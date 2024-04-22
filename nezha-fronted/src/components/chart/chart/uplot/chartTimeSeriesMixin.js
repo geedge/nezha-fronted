@@ -23,6 +23,9 @@ export default {
     }
   },
   computed: {
+    lineOption () {
+      return this.nzDefaultConfig.option
+    },
     // timeSeries类型图表联动
     isConnect () {
       return this.$store.state.panel.isConnect
@@ -160,8 +163,8 @@ export default {
         if (chartType === 'point') {
           item.points = {
             show: true,
-            size: 6,
-            width: 3,
+            size: this.lineOption.pointSize * 2,
+            width: this.lineOption.pointSize,
             fill: color,
             stroke: color
           }
@@ -184,7 +187,7 @@ export default {
       const name = legend.name
       const alias = legend.alias
       const statistics = series.statistics
-
+      console.log(devicePixelRatio, this.lineOption.lineWidth)
       const obj = {
         name: name,
         label: alias,
@@ -192,7 +195,7 @@ export default {
         yAxisIndex: isRight, // right
         labels: series.metric ? series.metric : {},
         // values: (u, v) => series.elements.name + JSON.stringify(series.metric),
-        width: 1 / devicePixelRatio,
+        width: this.lineOption.lineWidth / devicePixelRatio,
         expressionIndex: series.expressionIndex,
         paths (taht, seriesIdx, idx0, idx1, filtIdxs) {
           return uplot.paths.spline(taht)(taht, seriesIdx, idx0, idx1, filtIdxs)

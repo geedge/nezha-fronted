@@ -6,6 +6,9 @@
     @mouseleave="mouseLeaveChart"
     v-my-loading="chartLoading"
   >
+    <div class="uplot-toolbox"  @click="changeStack">
+      <i class="nz-icon nz-icon-duidiezhuzhuangtu" :style="{color: isStack ? toolboxIconColor.active : toolboxIconColor.inactive}"/>
+    </div>
     <div class="showMore" v-if="chartIndex !== legends.length && from == 'explore'"><i class="nz-icon nz-icon-jinggao"></i>{{$t("dashboard.dashboard.moreTitle")}} <span class="moreChart" @click="showMore">{{$t("dashboard.dashboard.showAll")+ (chartIndex+1)}}</span></div>
     <div class="chart__canvas" style="position:relative" :class="{'chart-cursor-default':cursorDefault}">
       <div :id="`chart-canvas-${chartId}`"></div>
@@ -65,6 +68,7 @@ import chartTimeSeriesMixin from '@/components/chart/chart/uplot/chartTimeSeries
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import getStackedOpts from './stack'
 import bus from '@/libs/bus'
+import { stackIconSvg } from '@/components/common/js/constants'
 
 export default {
   name: 'chartTimeSeries',
@@ -182,9 +186,9 @@ export default {
   methods: {
     initChart (chartOptions = this.chartOption) {
       this.setDataLink()
-      try {
-        this.isStack = !!this.chartInfo.param.stack
-      } catch (e) {}
+      // try {
+      //   this.isStack = !!this.chartInfo.param.stack
+      // } catch (e) {}
       const self = this
       const leftUnit = this.chartInfo.unit
       const leftUnitCompute = chartDataFormat.getUnit(leftUnit)
@@ -638,6 +642,10 @@ export default {
     themeChange (theme) {
       this.theme = theme
       this.initChart()
+    },
+    changeStack () {
+      this.isStack = !this.isStack
+      this.initChart(true)
     }
   },
   mounted () {

@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "9010685",
+      "name": "堆叠柱状图",
+      "font_class": "duidiezhuzhuangtu",
+      "unicode": "e6c0",
+      "unicode_decimal": 59072
+    },
+    {
       "icon_id": "40012174",
       "name": "MGT",
       "font_class": "mgt",
