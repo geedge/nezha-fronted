@@ -63,10 +63,10 @@
               </copy>
               <div class="active-icon-content" v-if="getPingInfo(scope.row, 'mgt')">
                 <p v-if="getPingInfo(scope.row, 'mgt').rtt">
-                  {{$t('asset.rtt') + (getPingInfo(scope.row, 'mgt').rtt + 'ms')}}
+                  {{$t('asset.rtt') +' '+ (getPingInfo(scope.row, 'mgt').rtt + 'ms')}}
                 </p>
                 <p>
-                  {{$t('asset.assetStatPre') + (getPingInfo(scope.row, 'mgt').lastUpdate ? utcTimeToTimezoneStr(getPingInfo(scope.row, 'mgt').lastUpdate) : $t('asset.assetStatDown'))}}
+                  {{$t('asset.assetStatPre') +' '+ (getPingInfo(scope.row, 'mgt').lastUpdate ? utcTimeToTimezoneStr(getPingInfo(scope.row, 'mgt').lastUpdate) : $t('asset.assetStatDown'))}}
                 </p>
               </div>
             </div>
@@ -82,10 +82,10 @@
               </copy>
               <div class="active-icon-content" v-if="getPingInfo(scope.row, 'ipmi')">
                 <p v-if="getPingInfo(scope.row, 'ipmi').rtt">
-                  {{$t('asset.rtt') + (getPingInfo(scope.row, 'ipmi').rtt + 'ms')}}
+                  {{$t('asset.rtt') +' '+ (getPingInfo(scope.row, 'ipmi').rtt + 'ms')}}
                 </p>
                 <p>
-                  {{$t('asset.assetStatPre') + (getPingInfo(scope.row, 'ipmi').lastUpdate ? utcTimeToTimezoneStr(getPingInfo(scope.row, 'ipmi').lastUpdate) : $t('asset.assetStatDown'))}}
+                  {{$t('asset.assetStatPre') +' '+ (getPingInfo(scope.row, 'ipmi').lastUpdate ? utcTimeToTimezoneStr(getPingInfo(scope.row, 'ipmi').lastUpdate) : $t('asset.assetStatDown'))}}
                 </p>
               </div>
             </div>
