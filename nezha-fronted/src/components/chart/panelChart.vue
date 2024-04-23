@@ -30,6 +30,7 @@
       @downloadCSV="beforeDownloadCSV"
       @groupShow="groupShow"
       @showFullscreen="showFullscreen"
+      @changeStack="changeStack"
     ></chart-header>
     <!-- 全屏的header -->
     <chart-screen-header
@@ -50,6 +51,7 @@
       @refresh="refresh"
       @dateChange="dateChange"
       @close="showFullscreen"
+      @changeStack="changeStack"
     ></chart-screen-header>
     <!-- chart -->
     <!-- 数据查询后传入chart组件，chart组件内不查询，只根据接传递的数据来渲染 -->
@@ -832,6 +834,11 @@ export default {
       this.showAllData = true
       this.$nextTick(() => {
         this.$refs.chart && this.$refs.chart.$refs['chart' + this.chartInfo.id].initChart()
+      })
+    },
+    changeStack () {
+      this.$nextTick(() => {
+        this.$refs.chart && this.$refs.chart.$refs['chart' + this.chartInfo.id].changeStack()
       })
     },
     unitChange (val) {

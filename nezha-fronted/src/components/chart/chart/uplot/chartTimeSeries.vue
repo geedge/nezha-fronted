@@ -6,9 +6,9 @@
     @mouseleave="mouseLeaveChart"
     v-my-loading="chartLoading"
   >
-    <div class="uplot-toolbox"  @click="changeStack">
-      <i class="nz-icon nz-icon-duidiezhuzhuangtu" :style="{color: isStack ? toolboxIconColor.active : toolboxIconColor.inactive}"/>
-    </div>
+<!--    <div class="uplot-toolbox"  @click="changeStack">-->
+<!--      <i class="nz-icon nz-icon-duidiezhuzhuangtu" :style="{color: isStack ? toolboxIconColor.active : toolboxIconColor.inactive}"/>-->
+<!--    </div>-->
     <div class="showMore" v-if="chartIndex !== legends.length && from == 'explore'"><i class="nz-icon nz-icon-jinggao"></i>{{$t("dashboard.dashboard.moreTitle")}} <span class="moreChart" @click="showMore">{{$t("dashboard.dashboard.showAll")+ (chartIndex+1)}}</span></div>
     <div class="chart__canvas" style="position:relative" :class="{'chart-cursor-default':cursorDefault}">
       <div :id="`chart-canvas-${chartId}`"></div>
@@ -270,7 +270,8 @@ export default {
             }
           })
         ],
-        padding: [15, this.autoPadRight, 15, 15],
+        padding: [15, 15, 15, 15],
+        // padding: [15, this.autoPadRight, 15, 15],
         legend: {
           show: false
         },

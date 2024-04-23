@@ -20,7 +20,7 @@ export default {
       isInit: true, // 是否是初始化，初始化时为true，图表初始化结束后设为false
       legends: [], // { name, alias, color, statistics: [{type: min, value: xxx}, ...] }
       toolboxIconColor: {
-        active: '#53a3cb',
+        active: '#FA901C',
         inactive: '#7e7e7e'
       },
       chartId: '',

@@ -49,6 +49,11 @@
           :sign="chartInfo.id"
           @unitChange="unitChange"
         >
+          <template v-slot:stack v-if="isTimeSeries(chartInfo.type)">
+            <button  class="top-tool-btn top-tool-btn--text margin-r-10" :title="$t('dashboard.dashboard.chartForm.stack')" @click="changeStack">
+              <i class="nz-icon nz-icon-duidiezhuzhuangtu" :class="isStack ? 'tool__icon-active' : ''"/>
+             </button>
+          </template>
         </pick-time>
       </span>
       <span class="chart-header__tool" v-if="showSaveBtn(from)">

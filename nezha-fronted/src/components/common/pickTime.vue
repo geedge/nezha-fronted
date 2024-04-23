@@ -2,6 +2,7 @@
   <div class="interval-refresh margin-r-10" style="position: relative">
     <time-picker v-if="showTimePicker" :showLocked="showLocked" ref="timePicker" v-model="searchTime" :default-pick="defaultPick" :show-empty="showEmpty" class="time-picker margin-r-10" size="small" @change="dateChange" :sign="sign"></time-picker>
     <multipleTime v-if="showMultiple" ref="multipleTime" :stepSearchTime="searchTime" class="multiple-time margin-r-10" @change="dateChange(searchTime)"/>
+    <slot name="stack"></slot>
     <chart-unit v-if="useChartUnit" v-model="unit" ref="chartUnit" class="margin-r-10"></chart-unit>
     <div v-show="useRefresh" class="top-tool-btn-group">
       <button :id="id+'-refresh'" class="top-tool-btn top-tool-btn--text" @click="antiShake" :title="id === 'explore' ? '': $t('dashboard.refresh')">

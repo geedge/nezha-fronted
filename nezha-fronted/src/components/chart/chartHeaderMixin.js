@@ -1,4 +1,5 @@
 import bus from '@/libs/bus'
+import {isTimeSeries} from './chart/tools'
 export default {
   props: {
     chartInfo: Object,
@@ -43,13 +44,15 @@ export default {
   data () {
     return {
       dropdownMenuShow: false,
-      errorText: ''
+      errorText: '',
+      isStack: ''
     }
   },
   methods: {
     showFullscreen () {
       this.$emit('showFullscreen', true)
     },
+    isTimeSeries,
     refreshChart () {
       this.$emit('refresh')
     },
@@ -105,6 +108,10 @@ export default {
     },
     unitChange (val) {
       this.$emit('unitChange', val)
+    },
+    changeStack () {
+      this.isStack = !this.isStack
+      this.$emit('changeStack', this.isStack)
     },
     showDownloadCsv (type) {
 
@@ -184,5 +191,10 @@ export default {
         }
       }
     }
+  },
+  mounted() {
+    try {
+      this.isStack = !!this.chartInfo.param.stack
+    } catch (e) {}
   }
 }

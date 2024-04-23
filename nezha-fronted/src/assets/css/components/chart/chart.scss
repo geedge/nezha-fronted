@@ -81,6 +81,9 @@
           font-size: 14px;
           color: $--color-text-primary;
         }
+        .tool__icon-active {
+          color: $--color-primary;
+        }
         .nz-chart-dropdown {
           position: absolute;
           top: 44px;
@@ -161,6 +164,9 @@
           visibility: hidden;
           font-size: 14px;
           color: $--color-text-primary;
+        }
+        .tool__icon-active {
+          color: $--color-primary;
         }
         .nz-chart-dropdown {
           position: absolute;
