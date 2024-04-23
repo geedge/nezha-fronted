@@ -142,7 +142,7 @@
       color: $--button-icon-hover-color;
     }
   }
-  .top-tool-btn:focus:not(.nz-btn-disabled), .top-tool-btn.is-focus {
+  .top-tool-btn.is-focus {
     background-color: $--button-icon-active-background-color;
     border: 1px solid $--button-icon-active-border-color !important;
     color: $--button-icon-active-color;
