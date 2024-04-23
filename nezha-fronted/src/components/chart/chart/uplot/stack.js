@@ -1,5 +1,5 @@
 import uPlot from 'uplot'
-function stack (data, omit) {
+export function stack (data, omit) {
   const data2 = []
   let bands = []
   const d0Len = data[0].length

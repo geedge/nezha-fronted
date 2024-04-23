@@ -61,14 +61,13 @@
 import legend from '../legend'
 import chartMixin from '@/components/chart/chartMixin'
 import renderChart from '@/components/chart/renderChart'
-import { chartLegendPlacement } from '@/components/common/js/constants'
+import { chartLegendPlacement, stackIconSvg } from '@/components/common/js/constants'
 import { getChart, setChart, chartCache } from '@/components/common/js/common'
 import UPlot from 'uplot'
 import chartTimeSeriesMixin from '@/components/chart/chart/uplot/chartTimeSeriesMixin'
 import chartDataFormat from '@/components/chart/chartDataFormat'
-import getStackedOpts from './stack'
+import getStackedOpts, { stack } from './stack'
 import bus from '@/libs/bus'
-import { stackIconSvg } from '@/components/common/js/constants'
 
 export default {
   name: 'chartTimeSeries',
@@ -192,7 +191,6 @@ export default {
       const self = this
       const leftUnit = this.chartInfo.unit
       const leftUnitCompute = chartDataFormat.getUnit(leftUnit)
-      console.log(leftUnitCompute)
       const rightUnit = this.$lodash.get(this.chartInfo, 'param.rightYAxis.unit', 2)
       const rightUnitCompute = chartDataFormat.getUnit(rightUnit)
       const incrs = leftUnitCompute.ascii == 1024 ? this.incrs : undefined
@@ -591,11 +589,32 @@ export default {
           this.$refs.legend.isGrey = arr
         }
       }
+
       this.renderYaxis()
       this.clickout()
     },
+    seriesDataChange (arr) {
+      const echarts = getChart(this.chartId)
+      const indexArr = []
+      arr.forEach((item, index) => {
+        if (!item) {
+          indexArr.push(index)
+        }
+      })
+      const data = this.seriesData.filter((item, j) => indexArr.indexOf(j) !== -1)
+      const stackData = stack(data, i => false)
+      const newData = this.$lodash.cloneDeep(this.seriesData)
+      indexArr.forEach((num, index) => {
+        newData[num] = stackData.data[index]
+      })
+      echarts.setData(newData)
+      console.log(this.seriesData)
+    },
     legendChange (isGrey) {
       this.isGrey = isGrey
+      if (this.isStack) {
+        this.seriesDataChange(isGrey)
+      }
       this.renderYaxis()
     },
     resize () {

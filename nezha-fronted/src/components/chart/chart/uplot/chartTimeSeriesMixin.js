@@ -187,7 +187,6 @@ export default {
       const name = legend.name
       const alias = legend.alias
       const statistics = series.statistics
-      console.log(devicePixelRatio, this.lineOption.lineWidth)
       const obj = {
         name: name,
         label: alias,
