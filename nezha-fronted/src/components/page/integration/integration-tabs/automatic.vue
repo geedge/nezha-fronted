@@ -9,12 +9,13 @@
         <div class="talon-select">
           <span>{{$t('asset.asset')}}</span>
           <v-selectpage
-            :data="assetList"
+            :data="'/asset/asset'"
             :tb-columns="assetColumns"
             :multiple="false"
             :language="language"
             key-field="id"
             show-field="name"
+            search-field="q"
             :width="640"
             v-model="assetId"
             class="form-control"

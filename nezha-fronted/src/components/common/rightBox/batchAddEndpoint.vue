@@ -34,7 +34,7 @@
           </el-form-item>
           <el-form-item :label="$t('asset.asset')" prop="ChartTemplate">
             <v-selectpage
-              :data="assetDataList"
+              :data="'/asset/asset'"
               :tb-columns="columns"
               :params="{
                 varType: 2, dashboardId: 0,
@@ -45,6 +45,7 @@
               title="ChartSearch"
               key-field="id"
               show-field="name"
+              search-field="q"
               :width="640"
               v-model="batchEndpoint.assetIds"
               class="form-control"

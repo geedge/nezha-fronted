@@ -23,7 +23,7 @@
           <!-- asset -->
           <el-form-item :label='$t("asset.asset")' label-width="125px" prop="assetId" v-if="!disabled">
             <v-selectpage
-              :data="assetList"
+              :data="'/asset/asset'"
               :tb-columns="columns"
               :params="{
                 varType: 2, dashboardId: 0,
@@ -34,6 +34,7 @@
               title="ChartSearch"
               key-field="id"
               show-field="name"
+              search-field="q"
               :width="626"
               v-model="editSoftwareAsset.assetId"
               class="form-control"

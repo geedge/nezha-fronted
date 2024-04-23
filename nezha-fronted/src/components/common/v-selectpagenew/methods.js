@@ -229,7 +229,18 @@ export default {
                 if (!initPicked) { // load new page data list
                   this.list = tmpObj.list
                   this.totalRows = tmpObj.totalRow
-                } else this.picked = tmpObj.list// the selected item info
+                } else { // the selected item info
+                  // this.picked = tmpObj.list
+                  if (tmpObj.list != null && tmpObj.list != '' && Array.isArray(tmpObj.list)) {
+                    const arr = this.value.split(',')
+                    if (arr && arr.length) {
+                      const matchRows = tmpObj.list.filter(val => arr.includes(String(val[this.keyField])))
+                      if (matchRows.length) {
+                        this.picked = this.multiple ? matchRows : [matchRows[0]]
+                      }
+                    }
+                  }
+                }
               }
             }
           }
