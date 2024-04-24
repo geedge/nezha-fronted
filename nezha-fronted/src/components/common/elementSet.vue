@@ -149,18 +149,18 @@ export default {
     },
     // 点击第二个cancel
     save () {
-      if (this.tableId == 'assetTable') {
-        let customAssetLabel = false
-        this.custom.forEach(item => {
-          if (customAssetLabel) {
-            item.minWidth = item.label.length * 16 + 20
-            return
-          }
-          if (item.label === 'Label' && item.type == 'title') {
-            customAssetLabel = true
-          }
-        })
-      }
+      // if (this.tableId == 'assetTable') {
+      //   let customAssetLabel = false
+      //   this.custom.forEach(item => {
+      //     if (customAssetLabel) {
+      //       item.minWidth = item.label.length * 16 + 20
+      //       return
+      //     }
+      //     if (item.label === 'Label' && item.type == 'title') {
+      //       customAssetLabel = true
+      //     }
+      //   })
+      // }
       this.$emit('update', this.custom)
       this.esc()
     },

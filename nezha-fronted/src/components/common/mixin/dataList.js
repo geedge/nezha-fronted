@@ -459,18 +459,23 @@ export default {
         return indexA - indexB
       })
 
-      this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
-        item.show = preferenceTableTitle[index] ? preferenceTableTitle[index].show : true
+      this.tools.customTableTitle = tableTitle.map((item) => {
+        // 设置表头显示隐藏
+        const findItem = preferenceTableTitle.find(t => item.prop === t.prop)
+        item.show = findItem ? findItem.show : item.show
+        // 设置表头宽度
+        if (findItem && findItem.width != undefined) {
+          item.width = findItem.width
+        }
         return item
       })
 
-      if (preferenceTableTitle.length > tableTitle.length) { // asset label
-        const arr = preferenceTableTitle.splice(tableTitle.length, preferenceTableTitle.length)
-        arr.forEach(item => {
-          item.minWidth = item.label.length * 16 + 20
-        })
-        this.tools.customTableTitle = this.tools.customTableTitle.concat(arr)
-      }
+      // asset label
+      const arr = preferenceTableTitle.filter(item => item.type === 'label')
+      arr.forEach(item => {
+        item.minWidth = item.label.length * 16 + 20
+      })
+      this.tools.customTableTitle = this.tools.customTableTitle.concat(arr)
     },
     updateCustomTableTitle (custom) {
       this.tools.customTableTitle = custom

@@ -16,11 +16,19 @@
       align="center">
     </el-table-column>
     <el-table-column
-      :resizable="true"
       v-for="(item, index) in customTableTitle"
       v-if="item.show"
       :key="`col-${index}-${item.prop}`"
-      :label="item.label">
+      :fixed="item.fixed"
+      :label="item.label"
+      :min-width="`${item.minWidth}`"
+      :prop="item.prop"
+      :resizable="true"
+      :sort-orders="['ascending', 'descending']"
+      :sortable="item.sortable"
+      :width="`${item.width}`"
+      class="data-column"
+    >
       <template slot-scope="scope" :column="item">
         <span v-if="scope.row[item.prop]" :class="item.prop === 'remark'? 'el-table-remark':''">{{scope.row[item.prop]}}</span>
         <template v-else>-</template>
@@ -71,7 +79,8 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable: 'custom'
         },
         {
           label: this.$t('overall.name'),

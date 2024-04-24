@@ -1,5 +1,6 @@
 import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
 import nzTooltip from '@/components/common/alert/nzTooltip'
+
 export default {
   components: {
     alertDaysInfo,
@@ -121,7 +122,12 @@ export default {
     isBuiltIn (row) {
       return (row.buildIn && row.buildIn == 1) || (row.builtIn && row.builtIn == 1)
     },
-    dragend () {
+    dragend (newWidth, oldWidth, column, event) {
+      const findItem = this.customTableTitle.find(item => item.prop == column.property)
+      findItem && (findItem.width = newWidth)
+      this.$parent.$parent.setPreference()
+      console.log(this.customTableTitle)
+      console.log(column)
       this.$nextTick(() => {
         this.$refs.dataTable.doLayout()
       })

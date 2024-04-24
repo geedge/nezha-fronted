@@ -683,12 +683,8 @@ export default {
             resolve(data)
             setTimeout(() => {
               const title = this.tools.customTableTitle
-              if (!this.$refs.dataTable && !this.$refs.dataDetail) {
-                return
-              }
-              const tableTitle = this.$refs.dataTable ? this.$refs.dataTable.tableTitle : this.$refs.dataDetail.tableTitle
-              const originalTitle = title.slice(0, tableTitle.length) // 原title
-              const oldLabelTitle = title.slice(tableTitle.length, title.length) // 旧labelTitle
+              const originalTitle = title.filter(item => (item.type !== 'label' && item.type !== 'title')) // 原title
+              const oldLabelTitle = title.filter(item => item.type === 'label') // 旧labelTitle
 
               const newLabel = showData.filter(item => { return !oldLabelTitle.find(t => { return item.label === t.label }) })
               newLabel.forEach(item => {
