@@ -99,6 +99,14 @@ Vue.use(vSelectPage, {
     if (params.pageNumber) {
       params.pageNo = params.pageNumber
     }
+
+    // 使用服务端数据 初始化选中数据（直接查询时 第一页可能不存在选中数据）
+    if (params.searchKey) {
+      params.ids = params.searchValue
+      delete params.searchKey
+      delete params.searchValue
+    }
+
     return new Promise((resolve, reject) => {
       get(url, params).then(res => {
         resolve(res)

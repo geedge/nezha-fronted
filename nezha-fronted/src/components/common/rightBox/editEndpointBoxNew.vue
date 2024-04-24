@@ -1882,7 +1882,7 @@ export default {
     this.getProjectList()
     this.getCredential()
     this.getWalkData()
-    this.getAsset()
+    // this.getAsset()
     this.ChartTemplateList()
   },
   computed: {

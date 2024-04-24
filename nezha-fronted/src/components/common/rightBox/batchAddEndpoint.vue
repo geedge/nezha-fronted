@@ -508,7 +508,7 @@ export default {
   created () {
     this.isEdit = true
     this.getModuleList()
-    this.getAssetList()
+    // this.getAssetList()
   },
   watch: {
     'batchEndpoint.tableData': {

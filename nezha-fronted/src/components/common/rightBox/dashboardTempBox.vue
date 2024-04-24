@@ -31,10 +31,26 @@
             ></v-selectpage>
           </el-form-item>
           <!-- link -->
-          <el-form-item v-if="templateType" :label="templateType==1?$t('asset.asset'):$t('asset.endpoint')" prop="link" key="link">
+          <el-form-item v-if="templateType && templateType==1" :label="$t('asset.asset')" prop="link" key="asset">
             <v-selectpage
-              :data="dataList"
-              :tb-columns="templateType==1?assetColumns:endpointColumns"
+              :data="'/asset/asset'"
+              :tb-columns="assetColumns"
+              :multiple="false"
+              :language="language"
+              key-field="id"
+              show-field="name"
+              search-field="q"
+              :width="640"
+              v-model="editDashboard.link"
+              class="form-control"
+              :result-format="resultFormat"
+              @values="linkChange"
+            ></v-selectpage>
+          </el-form-item>
+          <el-form-item v-if="templateType && templateType==2" :label="$t('asset.endpoint')" prop="link" key="endpoint">
+            <v-selectpage
+              :data="endpointList"
+              :tb-columns="endpointColumns"
               :multiple="false"
               :language="language"
               key-field="id"
@@ -236,7 +252,8 @@ export default {
         description: ''
       },
       templateList: [],
-      dataList: [],
+      endpointList: [],
+      assetList: [],
       templateType: undefined // 选中模板的varType
     }
   },
@@ -255,6 +272,7 @@ export default {
       this.templateType = newValue
       // 判断varType是否变化
       if (oldValue != newValue) {
+        this.editDashboard.link = ''
         this.getTableData()
       }
       this.$refs.form.validateField('tmplId')
@@ -278,11 +296,8 @@ export default {
     },
     // 根据选中模板vartype请求数据
     getTableData () {
-      this.editDashboard.link = ''
-      this.dataList = []
-      if (this.templateType === 1) {
-        this.getAssetData()
-      } else if (this.templateType === 2) {
+      this.endpointList = []
+      if (this.templateType === 2) {
         this.getEndpointData()
       }
     },
@@ -290,7 +305,7 @@ export default {
     getAssetData () {
       this.$get('asset/asset', { pageSize: -1 }).then(response => {
         if (response.code === 200) {
-          this.dataList = response.data.list
+          this.assetList = response.data.list
         }
       })
     },
@@ -298,7 +313,7 @@ export default {
     getEndpointData () {
       this.$get('monitor/endpoint', { pageSize: -1 }).then(response => {
         if (response.code === 200) {
-          this.dataList = response.data.list
+          this.endpointList = response.data.list
         }
       })
     },

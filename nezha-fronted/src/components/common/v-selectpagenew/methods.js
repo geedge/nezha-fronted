@@ -170,7 +170,11 @@ export default {
            * search content filter
            */
           if (this.search) {
-            list = list.filter(val => new RegExp(this.search.toLowerCase()).test(val[this.searchColumn].toLowerCase()))
+            list = list.filter(val => {
+              console.log(val[this.searchColumn])
+              console.log(this.searchColumn)
+              return new RegExp(this.search.toLowerCase()).test(val[this.searchColumn].toLowerCase())
+            })
           }
           this.totalRows = list.length
 
