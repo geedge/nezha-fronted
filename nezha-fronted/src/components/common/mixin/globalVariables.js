@@ -120,17 +120,17 @@ export default {
       if (parseInt(range) > 60) {
         const second = parseInt(range) % 60
         let min = parseInt(range / 60)
-        time = min + 'min' + second + 's'
+        time = min + 'm' + (second ? (second + 's') : '')
 
-        if (min > 60) {
+        if (min >= 60) {
           min = parseInt(range / 60) % 60
-          let hour = parseInt(parseInt(range / 60) / 60)
-          time = hour + 'h' + min + 'min'
+          let hour = parseInt(range / 60 / 60)
+          time = hour + 'h' + (min ? (min + 'm') : '')
 
-          if (hour > 24) {
-            hour = parseInt(parseInt(range / 60) / 60) % 24
-            const day = parseInt(parseInt(parseInt(range / 60) / 60) / 24)
-            time = day + 'd' + hour + 'h'
+          if (hour >= 24) {
+            hour = parseInt(range / 60 / 60) % 24
+            const day = parseInt(range / 60 / 60 / 24)
+            time = day + 'd' + (hour ? (hour + 'h') : '')
           }
         }
       }
