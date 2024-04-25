@@ -126,8 +126,6 @@ export default {
       const findItem = this.customTableTitle.find(item => item.prop == column.property)
       findItem && (findItem.width = newWidth)
       this.$parent.$parent.setPreference()
-      console.log(this.customTableTitle)
-      console.log(column)
       this.$nextTick(() => {
         this.$refs.dataTable.doLayout()
       })

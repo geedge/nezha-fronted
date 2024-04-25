@@ -176,7 +176,7 @@ export default {
       // eslint-disable-next-line vue/no-mutating-props
       this.chartInfo.elements = this.chartInfo.elements.map((item, index) => { // 处理表达式的变量
         // 全局变量替换
-        item.expression = this.globalVariablesReplace(item.expression, searchTime)
+        item.expression = this.globalVariablesReplace(item.expression)
         // group图表设置repeat的表达式替换
         if (this.chartInfo.repeatVariable) {
           item.expression = this.variablesReplaceRepeat(item.expression)
@@ -253,7 +253,7 @@ export default {
       if (!this.chartInfo.oldElements) { // 创建一个备份 用于判断变量替换 能拿到原本变量的位置
         this.chartInfo.oldElements = this.chartInfo.elements ? JSON.parse(JSON.stringify(this.chartInfo.elements)) : []
       }
-      this.variablesHandle()
+      this.variablesHandle([startTime * 1000, endTime * 1000])
       const elements = this.chartInfo.elements || []
       if (this.isExportHtml) {
         this.chartInfo.loaded && this.queryData(elements, startTime, endTime, step, params, isRefresh)

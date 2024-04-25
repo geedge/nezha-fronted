@@ -29,6 +29,12 @@ export default {
       if (!timeRange) {
         return
       }
+      if (!isNaN(timeRange[0])) {
+        timeRange[0] = bus.computeTimezone(timeRange[0])
+      }
+      if (!isNaN(timeRange[1])) {
+        timeRange[1] = bus.computeTimezone(timeRange[1])
+      }
       this.globalVariables.forEach(item => {
         switch (item.name) {
           case '$G.dashboard.name': {
@@ -83,6 +89,8 @@ export default {
               value = parseInt(step) * 1000
             } else if (unit === 'm') {
               value = parseInt(step) * 1000 * 60
+            } else if (unit === 'h') {
+              value = parseInt(step) * 1000 * 60 * 60
             }
             item.value = value
             break
@@ -95,6 +103,8 @@ export default {
               value = parseInt(step)
             } else if (unit === 'm') {
               value = parseInt(step) * 60
+            } else if (unit === 'h') {
+              value = parseInt(step) * 60 * 60
             }
             item.value = value
             break
