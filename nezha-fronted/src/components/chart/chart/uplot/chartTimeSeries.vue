@@ -568,6 +568,9 @@ export default {
           this.$refs.legend.isGrey = this.isGrey = arr
         }
       }
+      if (this.isStack) {
+        this.seriesDataChange(arr)
+      }
       this.renderYaxis()
       this.clickout()
     },
@@ -588,6 +591,9 @@ export default {
         if (this.$refs.legend) {
           this.$refs.legend.isGrey = arr
         }
+      }
+      if (this.isStack) {
+        this.seriesDataChange(arr)
       }
 
       this.renderYaxis()
