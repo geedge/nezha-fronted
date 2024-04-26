@@ -239,6 +239,7 @@
                     :is-fullscreen="false"
                     :panelLock="true"
                     :showAllData="showAllData"
+                    @loadMore="loadMore"
                     :isFullscreen="false"
                     :globalVariables="[]"
                     :from="'explore'"
@@ -385,6 +386,7 @@
                     :is-fullscreen="false"
                     :panelLock="true"
                     :showAllData="showAllData"
+                    @loadMore="loadMore"
                     :isFullscreen="false"
                     :globalVariables="[]"
                     :from="'explore'"
@@ -3808,6 +3810,12 @@ export default {
     this.scrollbarWrap.removeEventListener('scroll', this.onScroll)
   },
   methods: {
+    loadMore () {
+      this.showAllData = true
+      this.$nextTick(() => {
+        this.$refs.exploreChart.$children[0].initChart()
+      })
+    },
     changeStack () {
       this.isStack = !this.isStack
       this.$refs.exploreChart.$children[0].changeStack()

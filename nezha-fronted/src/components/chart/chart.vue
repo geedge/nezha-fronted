@@ -18,6 +18,7 @@
         @chartIsNoData="chartIsNoData"
         :from="from"
         :globalVariables="globalVariables"
+        @loadMore="loadMore"
       ></chart-time-series>
       <chart-doughnut
         :ref="'chart' + chartInfo.id"
@@ -416,6 +417,9 @@ export default {
     },
     refreshLogs (params) {
       this.$emit('refreshLogs', params)
+    },
+    loadMore () {
+      this.$emit('loadMore')
     }
   },
   mounted () {

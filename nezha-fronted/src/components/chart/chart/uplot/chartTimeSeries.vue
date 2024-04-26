@@ -662,8 +662,9 @@ export default {
       u.redraw(false, true)
     },
     showMore () {
-      this.showAllData = true
-      this.initChart()
+      // this.showAllData = true
+      // this.initChart()
+      this.$emit('loadMore')
     },
     themeChange (theme) {
       this.theme = theme
