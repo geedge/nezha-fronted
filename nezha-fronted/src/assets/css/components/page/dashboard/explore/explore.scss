@@ -97,6 +97,9 @@
         }
       }
     }
+    .tool__icon-active {
+      color: $--color-primary;
+    }
   }
   .el-collapse-item__wrap {
     background-color: $--background-color-empty;

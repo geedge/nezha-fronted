@@ -225,6 +225,12 @@
             <!--metric-->
             <template v-if="showMetrics">
               <el-collapse-item v-if="!allMatrix && showChart" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+                <!-- 堆叠 -->
+                <div slot="title" class="explore-table-title" style="display:flex; justify-content: flex-end;align-item:center;padding-right:30px;">
+                  <span :title="$t('dashboard.dashboard.chartForm.stack')" @click.stop="changeStack" v-show="collapseValue.some(item=>item==1)" tabindex="0">
+                    <i class="nz-icon nz-icon-duidiezhuzhuangtu tool__icon" :class="isStack ? 'tool__icon-active' : ''"/>
+                  </span>
+                </div>
                 <div class="chart-room">
                   <uplotChart
                     :ref="'exploreChart'"
@@ -364,6 +370,12 @@
             <!--log-->
             <template v-else>
               <el-collapse-item v-show="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+                <!-- 堆叠 -->
+                <div slot="title" class="explore-table-title" style="display:flex; justify-content: flex-end;align-item:center;padding-right:30px;">
+                  <span :title="$t('dashboard.dashboard.chartForm.stack')" @click.stop="changeStack" v-show="collapseValue.some(item=>item==2)" tabindex="0">
+                    <i class="nz-icon nz-icon-duidiezhuzhuangtu tool__icon" :class="isStack ? 'tool__icon-active' : ''"/>
+                  </span>
+                </div>
                 <div class="chart-room">
 <!--                  <chart ref="logChart" :unit="chartUnit" v-my-loading="chartLoading" :timeRange="filterTime"></chart>-->
                   <uplotChart
@@ -3776,7 +3788,8 @@ export default {
       uplotChartInfoLog: logData,
       uplotChartData: [],
       showAllData: false,
-      supplementaryData: []
+      supplementaryData: [],
+      isStack: false
     }
   },
   async created () {
@@ -3795,6 +3808,10 @@ export default {
     this.scrollbarWrap.removeEventListener('scroll', this.onScroll)
   },
   methods: {
+    changeStack () {
+      this.isStack = !this.isStack
+      this.$refs.exploreChart.$children[0].changeStack()
+    },
     async loadWebAssembly () {
       try {
         // eslint-disable-next-line no-undef
@@ -3853,6 +3870,7 @@ export default {
       } else {
         label = 'Metrics'
       }
+      this.isStack = false
       this.changeType(label)
     },
     changeType (value) {
@@ -4048,6 +4066,7 @@ export default {
         this.uplotChartData = []
         this.uplotChartInfoLog.elements = []
         this.uplotChartInfoLog.unit = this.chartUnit
+        this.uplotChartInfoLog.param.stack = this.isStack
         this.logData.forEach((response, index) => {
           if (response.resultType === 'matrix') {
             const promqlIndex = promqlInputIndexs[index]
@@ -4104,6 +4123,7 @@ export default {
         this.uplotChartData = []
         this.uplotChartInfo.elements = []
         this.uplotChartInfo.unit = this.chartUnit
+        this.uplotChartInfo.param.stack = this.isStack
         axios.all(requestArr).then(res => {
           const series = []
           const legend = []
