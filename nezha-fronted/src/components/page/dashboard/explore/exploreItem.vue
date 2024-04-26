@@ -4212,6 +4212,7 @@ export default {
         const tData = []
         let tLabels = []
         if (res.length > 0) {
+          this.pageObj.pageNo = 1
           this.storedTableData = []
           this.rowData = []
           this.tableData = []
@@ -4228,6 +4229,9 @@ export default {
               if (data) {
                 data.forEach((result, i) => {
                   const metrics = Object.assign({}, result.metric)
+                  if (!Array.isArray(result.values) && Array.isArray(result.value)) {
+                    result.values = [result.value]
+                  }
                   this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.values[0][1], null, 2))
                   this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000)))
                   for (const key in metrics) {
@@ -4296,7 +4300,6 @@ export default {
           } else {
             // this.defaultTableVisible = false;
             this.pageObj.total = 0
-            this.pageObj.pageNo = 1
           }
         }
         this.tools.loading = false

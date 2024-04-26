@@ -325,6 +325,7 @@ export default {
       const tData = []
       let tLabels = []
       if (res.length > 0) {
+        this.pageObj.pageNo = 1
         this.storedTableData = []
         this.rowData = []
         this.tableData = []
@@ -424,7 +425,6 @@ export default {
         } else {
           // this.defaultTableVisible = false;
           this.pageObj.total = 0
-          this.pageObj.pageNo = 1
         }
       }
       this.tools.loading = false
