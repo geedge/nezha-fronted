@@ -565,7 +565,7 @@ export default {
             return [hour, minute].join(':')
           } else if (isSameMonth) { // 同一月
             return str + '\n' + [hour, minute].join(':')
-          } else if (maxTime - minTime <= 30 * 24 * 60 * 60) { // 不同月 相差30天以内
+          } else if (maxTime - minTime <= 16 * 24 * 60 * 60) { // 不同月 相差30天以内
             return str + '\n' + [hour, minute].join(':')
           } else { // 大于等于30天
             return str
