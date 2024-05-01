@@ -557,12 +557,15 @@ export default {
 
           const moment1 = moment((minTime * 1000 - localOffset + offset * 60 * 1000))
           const moment2 = moment((maxTime * 1000 - localOffset + offset * 60 * 1000))
+          console.log(minTime, maxTime)
           const isSameDay = moment1.isSame(moment2, 'day')
           const isSameMonth = moment1.isSame(moment2, 'month')
 
           if (isSameDay) { // 同一天
             return [hour, minute].join(':')
           } else if (isSameMonth) { // 同一月
+            return str + '\n' + [hour, minute].join(':')
+          } else if (maxTime - minTime <= 30 * 24 * 60 * 60) { // 不同月 相差30天以内
             return str + '\n' + [hour, minute].join(':')
           } else { // 大于等于30天
             return str
