@@ -39,6 +39,9 @@
                 ></latlng-picker>
               </div>
             </el-form-item>
+            <el-form-item :label='$t("overall.remark")'>
+              <el-input id="dc-box-input-remark" v-model="editDc.remark" maxlength="256" show-word-limit type="textarea" size="small" :rows="2"></el-input>
+            </el-form-item>
             <el-form-item :label='$t("overall.state")' prop="state">
               <el-switch
                 id="dc-box-input-name"
@@ -203,6 +206,9 @@ export default {
           })
         } else {
           this.editDc = { ...JSON.parse(JSON.stringify(n)), lnglat: `${n.longitude},${n.latitude}` }
+          if (!this.editDc.remark) {
+            this.editDc.remark = ''
+          }
           this.$nextTick(() => {
             this.$refs.latlngPicker.setLnglat(this.editDc.latitude, this.editDc.longitude)
           })

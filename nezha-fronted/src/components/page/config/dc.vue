@@ -200,7 +200,8 @@ export default {
         state: 'ON',
         longitude: '',
         latitude: '',
-        lnglat: ''
+        lnglat: '',
+        remark: ''
       },
       cabinet: {
         id: '',
