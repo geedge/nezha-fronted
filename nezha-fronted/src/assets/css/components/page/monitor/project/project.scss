@@ -3,7 +3,8 @@
     width: 100%;
     display: flex;
     background-color: $--background-color-empty;
-    overflow-x: auto;
+    // overflow-x: auto;
+    overflow-x: hidden;
   .project-table {
     //width: calc(100% - 10px) !important;
   }
@@ -20,7 +21,7 @@
     width: calc(50% - 10px);
     margin-right: 10px;
     min-width: 435px;
-    overflow: hidden;
+    // overflow: hidden;
     //div.page {
     //  textarea {
     //    display: none;

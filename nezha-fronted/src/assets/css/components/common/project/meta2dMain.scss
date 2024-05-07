@@ -20,9 +20,11 @@
   height: calc(100% - 78px);
 }
 .meta2d-project{
+  box-sizing: border-box;
   height: calc(100% - 78px);
   border: 1px solid;
   border-color: $--border-color-light !important;
+  overflow: hidden;
 }
 .meta2d-chart {
   //border: 1px solid;
