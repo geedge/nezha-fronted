@@ -118,6 +118,7 @@
           border-color: $--color-primary;
           .chart-header__tools{
             visibility: visible !important;
+            background-color: unset !important;
           }
         }
         .noteboook-chart-addWrap{
