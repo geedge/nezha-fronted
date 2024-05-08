@@ -4,56 +4,6 @@
       position: relative;
     }
   }
-  .active-icon-content {
-    display: none;
-    position: absolute;
-    background: $--background-color-empty;
-    min-width: 150px;
-    border: 1px solid $--border-color-light;
-    padding: 12px;
-    z-index: 2000;
-    color: $--color-text-regular;
-    line-height: 1.4;
-    text-align: justify;
-    font-size: 14px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-    left: 100%;
-    top: 50%;
-    width: auto;
-    white-space: nowrap;
-    transform: translateY(-50%);
-  }
-
-  .ping-info:hover {
-    .active-icon-content {
-      display: block;
-    }
-  }
-
-  .ip-info{
-    .ip-icon{
-      font-size: 16px;
-      margin-right: 4px;
-    }
-    .gray-color{
-      color: $--color-suspended !important;
-    }
-    .red-color {
-      color: $--color-danger !important;
-    }
-    .green-color {
-      color: $--color-success !important;
-    }
-    .document-copy-text{
-      display: flex;
-    }
-  }
-  .ip-info:hover {
-    .active-icon-content {
-      display: block;
-    }
-  }
-
 }
 
 .licenseStatus{
@@ -69,5 +19,56 @@
     i{
       color: $--color-primary;
     }
+  }
+}
+
+.active-icon-content {
+  display: none;
+  position: absolute;
+  background: $--background-color-empty;
+  min-width: 150px;
+  border: 1px solid $--border-color-light;
+  padding: 12px;
+  z-index: 2000;
+  color: $--color-text-regular;
+  line-height: 1.4;
+  text-align: justify;
+  font-size: 14px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  left: 100%;
+  top: 50%;
+  width: auto;
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+
+.ip-info{
+  .ip-icon{
+    font-size: 16px;
+    margin-right: 4px;
+  }
+  .gray-color{
+    color: $--color-suspended !important;
+  }
+  .red-color {
+    color: $--color-danger !important;
+  }
+  .green-color {
+    color: $--color-success !important;
+  }
+  .document-copy-text{
+    display: flex;
+    align-items: center;
+  }
+}
+
+.ip-info:hover {
+  .active-icon-content {
+    display: block;
+  }
+}
+.ping-info:hover {
+  .active-icon-content {
+    display: block;
   }
 }

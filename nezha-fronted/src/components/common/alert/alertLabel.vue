@@ -7,50 +7,73 @@
     @mouseenter="tipHover(true)"
     @mouseleave="tipHover(false)"
   >
-  <!-- user info -->
-  <template v-if="type === 'user'">
-    <div class="alert-label-header-title">
-      <div
-        class="alert-label-header-circle"
-        :style="alertLabelData.online === 1 ? `background: ${userColor}` : `background: ${unUserColor}`"
-      >
-        <i class="nz-icon-user1 nz-icon  user-online" :class="selectIcon(type)"></i>
+    <!-- user info -->
+    <template v-if="type === 'user'">
+      <div class="alert-label-header-title">
+        <div
+          class="alert-label-header-circle"
+          :style="
+            alertLabelData.online === 1
+              ? `background: ${userColor}`
+              : `background: ${unUserColor}`
+          "
+        >
+          <i
+            class="nz-icon-user1 nz-icon user-online"
+            :class="selectIcon(type)"
+          ></i>
+        </div>
+        <div class="alert-label-header-name">
+          {{
+            alertLabelData && alertLabelData.name ? alertLabelData.name : "--"
+          }}
+        </div>
+        <div class="flex-align-center">
+          <el-tag
+            class="alert-label-fa"
+            size="mini"
+            v-if="alertLabelData.mfaLevel > 0"
+            style="margin-left: 5px"
+            >2FA</el-tag
+          >
+        </div>
       </div>
-      <div class="alert-label-header-name">
-        {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
+    </template>
+    <!-- notebook info -->
+    <template v-else-if="type === 'notebook'">
+      <div class="alert-label-header-title">
+        <div
+          class="alert-label-header-circle"
+          style="text-transform: capitalize"
+        >
+          {{
+            alertLabelData && alertLabelData.createUser
+              ? alertLabelData.createUser.name.substr(0, 1)
+              : "-"
+          }}
+        </div>
+        <div class="alert-label-header-name">
+          {{
+            alertLabelData && alertLabelData.name ? alertLabelData.name : "--"
+          }}
+        </div>
       </div>
-      <div class="flex-align-center">
-       <el-tag class="alert-label-fa" size="mini" v-if="alertLabelData.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
+    </template>
+    <template v-else>
+      <div class="alert-label-header-title">
+        <div
+          class="alert-label-header-circle"
+          :style="`background: ${alertColor}`"
+        >
+          <i class="nz-icon" :class="selectIcon(type)"></i>
+        </div>
+        <div class="alert-label-header-name">
+          {{
+            alertLabelData && alertLabelData.name ? alertLabelData.name : "--"
+          }}
+        </div>
       </div>
-    </div>
-  </template>
-  <!-- notebook info -->
-  <template v-else-if="type === 'notebook'">
-    <div class="alert-label-header-title">
-      <div
-        class="alert-label-header-circle"
-        style="text-transform:capitalize;"
-      >
-        {{alertLabelData && alertLabelData.createUser ? alertLabelData.createUser.name.substr(0, 1) : "-" }}
-      </div>
-      <div class="alert-label-header-name">
-        {{alertLabelData && alertLabelData.name ? alertLabelData.name : "--"}}
-      </div>
-    </div>
-  </template>
-  <template v-else>
-    <div class="alert-label-header-title">
-      <div
-        class="alert-label-header-circle"
-        :style="`background: ${alertColor}`"
-      >
-        <i class="nz-icon" :class="selectIcon(type)"></i>
-      </div>
-      <div class="alert-label-header-name">
-        {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
-      </div>
-    </div>
-   </template>
+    </template>
     <div
       class="alert-label-info"
       v-if="type === 'asset'"
@@ -64,29 +87,95 @@
       </div>
       <div class="alert-label-box name-labe">
         <div class="document-copy-block">
-          <div class="alert-label-title">{{$t('overall.name')}}</div>
-          <div class="alert-label-value document-copy-text" :title="alertLabelData && alertLabelData.name ? alertLabelData.name : '--'">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
-          <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
-         </div>
+          <div class="alert-label-title">{{ $t("overall.name") }}</div>
+          <div
+            class="alert-label-value document-copy-text"
+            :title="
+              alertLabelData && alertLabelData.name ? alertLabelData.name : '--'
+            "
+          >
+            {{
+              alertLabelData && alertLabelData.name ? alertLabelData.name : "--"
+            }}
+          </div>
+          <i
+            v-if="alertLabelData && alertLabelData.name"
+            class="nz-icon nz-icon-override"
+            style="visibility: hidden"
+            @click.stop="onCopy(alertLabelData.name)"
+            :title="$t('overall.copyText')"
+          ></i>
+        </div>
       </div>
-       <!-- <div class="alert-label-box name-labe">
+      <!-- <div class="alert-label-box name-labe">
         <div class="alert-label-title">Name</div>
         <div class="alert-label-value">
           {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
         </div>
       </div> -->
-      <div class="alert-label-box document-copy-block">
-        <div class="alert-label-title">{{ $t("asset.manageIp") }}</div>
-        <div class="alert-label-value document-copy-text" :title="alertLabelData && alertLabelData.manageIp
+      <div class="alert-label-box">
+        <div class="alert-label-title">{{ $t("config.operationlog.ip") }}</div>
+        <!-- <div
+          class="alert-label-value document-copy-text"
+          :title="
+            alertLabelData && alertLabelData.manageIp
               ? alertLabelData.manageIp
-              : '--'">
+              : '--'
+          "
+        >
           {{
             alertLabelData && alertLabelData.manageIp
               ? alertLabelData.manageIp
               : "--"
           }}
         </div>
-        <i v-if="alertLabelData && alertLabelData.manageIp" class="nz-icon nz-icon-override asset-manage-ip" style="visibility: hidden" @click.stop="onCopy(alertLabelData.manageIp)" :title="$t('overall.copyText')"></i>
+        <i
+          v-if="alertLabelData && alertLabelData.manageIp"
+          class="nz-icon nz-icon-override asset-manage-ip"
+          style="visibility: hidden"
+          @click.stop="onCopy(alertLabelData.manageIp)"
+          :title="$t('overall.copyText')"
+        ></i> -->
+        <div class="alert-label-value" style="position: relative;">
+          <div class="ip-info">
+            <copy :copyData='alertLabelData.manageIp' :showInfo='alertLabelData.manageIp' v-if="alertLabelData && alertLabelData.manageIp">
+              <template slot="copy-text">
+                <i
+                  class="ip-icon nz-icon nz-icon-mgt"
+                  :class="(getPingInfo(alertLabelData, 'mgt') && getPingInfo(alertLabelData, 'mgt').status == 1) ? 'green-color' : 'red-color'"
+                ></i>
+                {{alertLabelData.manageIp ? alertLabelData.manageIp : '--'}}
+              </template>
+            </copy>
+            <div class="active-icon-content" v-if="getPingInfo(alertLabelData, 'mgt')">
+              <p v-if="getPingInfo(alertLabelData, 'mgt').rtt">
+                {{$t('asset.rtt') +' '+ (getPingInfo(alertLabelData, 'mgt').rtt + 'ms')}}
+              </p>
+              <p>
+                {{$t('asset.assetStatPre') +' '+ (getPingInfo(alertLabelData, 'mgt').lastUpdate ? utcTimeToTimezoneStr(getPingInfo(alertLabelData, 'mgt').lastUpdate) : $t('asset.assetStatDown'))}}
+              </p>
+            </div>
+          </div>
+          <div class="ip-info">
+            <copy :copyData='alertLabelData.ipmiIp' :showInfo='alertLabelData.ipmiIp' v-if="alertLabelData && alertLabelData.ipmiIp">
+              <template slot="copy-text">
+                <i
+                  class="ip-icon nz-icon nz-icon-ipmi"
+                  :class="(getPingInfo(alertLabelData, 'ipmi') && getPingInfo(alertLabelData, 'ipmi').status == 1) ? 'green-color' : 'red-color'"
+                ></i>
+                {{alertLabelData.ipmiIp ? alertLabelData.ipmiIp : '--'}}
+              </template>
+            </copy>
+            <div class="active-icon-content" v-if="getPingInfo(alertLabelData, 'ipmi')">
+              <p v-if="getPingInfo(alertLabelData, 'ipmi').rtt">
+                {{$t('asset.rtt') +' '+ (getPingInfo(alertLabelData, 'ipmi').rtt + 'ms')}}
+              </p>
+              <p>
+                {{$t('asset.assetStatPre') +' '+ (getPingInfo(alertLabelData, 'ipmi').lastUpdate ? utcTimeToTimezoneStr(getPingInfo(alertLabelData, 'ipmi').lastUpdate) : $t('asset.assetStatDown'))}}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("overall.type") }}</div>
@@ -106,32 +195,6 @@
               ? alertLabelData.state.name
               : "--"
           }}
-        </div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Ping</div>
-        <div class="alert-label-value">
-          <div
-            v-if="alertLabelData"
-            :class="{
-              'green-bg':
-                alertLabelData &&
-                alertLabelData.pingInfo &&
-                alertLabelData.pingInfo.status === 1,
-              'red-bg':
-                alertLabelData &&
-                alertLabelData.pingInfo &&
-                alertLabelData.pingInfo.status === 0,
-            }"
-            class="active-icon"
-          ></div>
-          <span v-if="alertLabelData">{{
-            alertLabelData &&
-            alertLabelData.pingInfo &&
-            alertLabelData.pingInfo.rtt
-              ? alertLabelData.pingInfo.rtt + "ms"
-              : ""
-          }}</span>
         </div>
       </div>
       <div class="alert-label-box">
@@ -229,16 +292,31 @@
         </div>
       </div>
       <div class="alert-label-box name-labe">
-         <div class="document-copy-block">
-           <div class="alert-label-title">{{$t('overall.name')}}</div>
-           <div class="alert-label-value document-copy-text" :title="alertLabelData && alertLabelData.name ? alertLabelData.name : '--'">
-             {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
-           </div>
-           <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
-         </div>
+        <div class="document-copy-block">
+          <div class="alert-label-title">{{ $t("overall.name") }}</div>
+          <div
+            class="alert-label-value document-copy-text"
+            :title="
+              alertLabelData && alertLabelData.name ? alertLabelData.name : '--'
+            "
+          >
+            {{
+              alertLabelData && alertLabelData.name ? alertLabelData.name : "--"
+            }}
+          </div>
+          <i
+            v-if="alertLabelData && alertLabelData.name"
+            class="nz-icon nz-icon-override"
+            style="visibility: hidden"
+            @click.stop="onCopy(alertLabelData.name)"
+            :title="$t('overall.copyText')"
+          ></i>
+        </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("project.project.projectName") }}</div>
+        <div class="alert-label-title">
+          {{ $t("project.project.projectName") }}
+        </div>
         <div class="alert-label-value">
           {{
             alertLabelData &&
@@ -324,21 +402,32 @@
           {{ alertLabelData && alertLabelData ? alertLabelData.id : "--" }}
         </div>
       </div>
-       <div class="alert-label-box name-labe">
+      <div class="alert-label-box name-labe">
         <div class="document-copy-block">
-           <div class="alert-label-title">{{$t('overall.name')}}</div>
-           <div class="alert-label-value document-copy-text" :title="alertLabelData && alertLabelData.name ? alertLabelData.name : '--'">
-             {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
-           </div>
-           <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
-         </div>
+          <div class="alert-label-title">{{ $t("overall.name") }}</div>
+          <div
+            class="alert-label-value document-copy-text"
+            :title="
+              alertLabelData && alertLabelData.name ? alertLabelData.name : '--'
+            "
+          >
+            {{
+              alertLabelData && alertLabelData.name ? alertLabelData.name : "--"
+            }}
+          </div>
+          <i
+            v-if="alertLabelData && alertLabelData.name"
+            class="nz-icon nz-icon-override"
+            style="visibility: hidden"
+            @click.stop="onCopy(alertLabelData.name)"
+            :title="$t('overall.copyText')"
+          ></i>
+        </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("overall.module") }}</div>
         <div class="alert-label-value">
-          <i
-            class="nz-icon nz-icon-overview-module monitorColor"
-          />&nbsp;
+          <i class="nz-icon nz-icon-overview-module monitorColor" />&nbsp;
           <span>{{
             alertLabelData && alertLabelData.moduleNum
               ? alertLabelData.moduleNum
@@ -347,7 +436,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('asset.endpoint')}}</div>
+        <div class="alert-label-title">{{ $t("asset.endpoint") }}</div>
         <div class="alert-label-value">
           <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;
           <span>{{
@@ -422,16 +511,31 @@
         </div>
       </div>
       <div class="alert-label-box name-labe">
-         <div class="document-copy-block">
-          <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value document-copy-text" :title=" alertLabelData && alertLabelData.name ? alertLabelData.name : '--'">
-          {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
+        <div class="document-copy-block">
+          <div class="alert-label-title">{{ $t("overall.name") }}</div>
+          <div
+            class="alert-label-value document-copy-text"
+            :title="
+              alertLabelData && alertLabelData.name ? alertLabelData.name : '--'
+            "
+          >
+            {{
+              alertLabelData && alertLabelData.name ? alertLabelData.name : "--"
+            }}
+          </div>
+          <i
+            v-if="alertLabelData && alertLabelData.name"
+            class="nz-icon nz-icon-override"
+            style="visibility: hidden"
+            @click.stop="onCopy(alertLabelData.name)"
+            :title="$t('overall.copyText')"
+          ></i>
         </div>
-          <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
-         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("project.project.projectName") }}</div>
+        <div class="alert-label-title">
+          {{ $t("project.project.projectName") }}
+        </div>
         <div class="alert-label-value">
           {{
             alertLabelData &&
@@ -445,9 +549,7 @@
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("overall.module") }}</div>
         <div class="alert-label-value">
-          <i
-            class="nz-icon nz-icon-overview-module monitorColor"
-          />&nbsp;
+          <i class="nz-icon nz-icon-overview-module monitorColor" />&nbsp;
           <span>{{
             alertLabelData &&
             alertLabelData.module &&
@@ -508,16 +610,30 @@
               {{ $t("overall.metric") }}
             </span>
             <span
-              v-if="alertLabelData && alertLabelData.configs && alertLabelData.configs[0].state === 0"
+              v-if="
+                alertLabelData &&
+                alertLabelData.configs &&
+                alertLabelData.configs[0].state === 0
+              "
             >
               <span class="active-icon red-bg inline-block"></span>
             </span>
             <span
-              v-else-if="alertLabelData && alertLabelData.configs && alertLabelData.configs[0].state === 1"
+              v-else-if="
+                alertLabelData &&
+                alertLabelData.configs &&
+                alertLabelData.configs[0].state === 1
+              "
             >
               <span class="active-icon green-bg inline-block"></span>
             </span>
-            <span v-else-if="alertLabelData && alertLabelData.configs && alertLabelData.configs[0].state">
+            <span
+              v-else-if="
+                alertLabelData &&
+                alertLabelData.configs &&
+                alertLabelData.configs[0].state
+              "
+            >
               <span class="active-icon gray-bg inline-block"></span>
             </span>
           </span>
@@ -527,16 +643,30 @@
               {{ $t("overall.logs") }}
             </span>
             <span
-              v-if="alertLabelData && alertLabelData.configs && alertLabelData.configs[1].state === 0"
+              v-if="
+                alertLabelData &&
+                alertLabelData.configs &&
+                alertLabelData.configs[1].state === 0
+              "
             >
               <span class="active-icon red-bg inline-block"></span>
             </span>
             <span
-              v-else-if="alertLabelData && alertLabelData.configs && alertLabelData.configs[1].state === 1"
+              v-else-if="
+                alertLabelData &&
+                alertLabelData.configs &&
+                alertLabelData.configs[1].state === 1
+              "
             >
               <span class="active-icon green-bg inline-block"></span>
             </span>
-            <span v-else-if="alertLabelData && alertLabelData.configs && alertLabelData.configs[1].state">
+            <span
+              v-else-if="
+                alertLabelData &&
+                alertLabelData.configs &&
+                alertLabelData.configs[1].state
+              "
+            >
               <span class="active-icon gray-bg inline-block"></span>
             </span>
           </span>
@@ -551,14 +681,27 @@
           {{ alertLabelData && alertLabelData.id ? alertLabelData.id : "--" }}
         </div>
       </div>
-       <div class="alert-label-box name-labe">
-         <div class="document-copy-block">
-           <div class="alert-label-title">{{$t('overall.name')}}</div>
-           <div class="alert-label-value document-copy-text" :title="alertLabelData && alertLabelData.name ? alertLabelData.name : '--'">
-             {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
-           </div>
-           <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
-         </div>
+      <div class="alert-label-box name-labe">
+        <div class="document-copy-block">
+          <div class="alert-label-title">{{ $t("overall.name") }}</div>
+          <div
+            class="alert-label-value document-copy-text"
+            :title="
+              alertLabelData && alertLabelData.name ? alertLabelData.name : '--'
+            "
+          >
+            {{
+              alertLabelData && alertLabelData.name ? alertLabelData.name : "--"
+            }}
+          </div>
+          <i
+            v-if="alertLabelData && alertLabelData.name"
+            class="nz-icon nz-icon-override"
+            style="visibility: hidden"
+            @click.stop="onCopy(alertLabelData.name)"
+            :title="$t('overall.copyText')"
+          ></i>
+        </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("asset.location") }}</div>
@@ -660,35 +803,65 @@
         </div>
       </div>
       <div class="alert-label-box name-labe document-copy-block">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
+        <div class="alert-label-title">{{ $t("overall.name") }}</div>
         <div class="alert-label-value document-copy-text">
-          {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
+          {{
+            alertLabelData && alertLabelData.name ? alertLabelData.name : "--"
+          }}
         </div>
-        <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
+        <i
+          v-if="alertLabelData && alertLabelData.name"
+          class="nz-icon nz-icon-override"
+          style="visibility: hidden"
+          @click.stop="onCopy(alertLabelData.name)"
+          :title="$t('overall.copyText')"
+        ></i>
       </div>
       <div class="alert-label-box document-copy-block">
         <div class="alert-label-title">{{ $t("profile.username") }}</div>
         <div class="alert-label-value document-copy-text">
-          {{ alertLabelData && alertLabelData.username ? alertLabelData.username : "--" }}
+          {{
+            alertLabelData && alertLabelData.username
+              ? alertLabelData.username
+              : "--"
+          }}
         </div>
-        <i v-if="alertLabelData && alertLabelData.username" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.username)" :title="$t('overall.copyText')"></i>
+        <i
+          v-if="alertLabelData && alertLabelData.username"
+          class="nz-icon nz-icon-override"
+          style="visibility: hidden"
+          @click.stop="onCopy(alertLabelData.username)"
+          :title="$t('overall.copyText')"
+        ></i>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("profile.role") }}</div>
         <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.roles ? alertLabelData.roles[0].name : "--" }}
+          {{
+            alertLabelData && alertLabelData.roles
+              ? alertLabelData.roles[0].name
+              : "--"
+          }}
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("config.system.email.email") }}</div>
+        <div class="alert-label-title">
+          {{ $t("config.system.email.email") }}
+        </div>
         <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.email ? alertLabelData.email : "--" }}
+          {{
+            alertLabelData && alertLabelData.email ? alertLabelData.email : "--"
+          }}
         </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("profile.source") }}</div>
         <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.source ? alertLabelData.source : "--" }}
+          {{
+            alertLabelData && alertLabelData.source
+              ? alertLabelData.source
+              : "--"
+          }}
         </div>
       </div>
       <div class="alert-label-box">
@@ -696,37 +869,61 @@
         <div class="alert-label-value">
           <div
             v-if="alertLabelData"
-            :style="alertLabelData.status === '1' ? `background: ${userColor}` : `background: ${unUserColor}`"
+            :style="
+              alertLabelData.status === '1'
+                ? `background: ${userColor}`
+                : `background: ${unUserColor}`
+            "
             class="active-icon"
           ></div>
-         {{ alertLabelData && alertLabelData.status === "1" ? $t("overall.enabled") : "--" }}
+          {{
+            alertLabelData && alertLabelData.status === "1"
+              ? $t("overall.enabled")
+              : "--"
+          }}
         </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("config.user.language") }}</div>
         <div class="alert-label-value" v-if="alertLabelData">
-          {{alertLabelData.lang === "en" ? $t("overall.english") : $t("overall.chinese") }}
+          {{
+            alertLabelData.lang === "en"
+              ? $t("overall.english")
+              : $t("overall.chinese")
+          }}
         </div>
         <div class="alert-label-value" v-else>
-          {{"--" }}
+          {{ "--" }}
         </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("profile.lastLoginIp") }}</div>
         <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.lastLoginIp ? alertLabelData.lastLoginIp : "--" }}
+          {{
+            alertLabelData && alertLabelData.lastLoginIp
+              ? alertLabelData.lastLoginIp
+              : "--"
+          }}
         </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("profile.lastLoginTime") }}</div>
         <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.lastLoginTime ? alertLabelData.lastLoginTime : "--" }}
+          {{
+            alertLabelData && alertLabelData.lastLoginTime
+              ? alertLabelData.lastLoginTime
+              : "--"
+          }}
         </div>
       </div>
     </div>
 
     <!-- type === 'notebook' -->
-    <div class="alert-label-info" v-if="type === 'notebook'" v-my-loading="loading">
+    <div
+      class="alert-label-info"
+      v-if="type === 'notebook'"
+      v-my-loading="loading"
+    >
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
         <div class="alert-label-value">
@@ -734,22 +931,38 @@
         </div>
       </div>
       <div class="alert-label-box name-labe document-copy-block">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
+        <div class="alert-label-title">{{ $t("overall.name") }}</div>
         <div class="alert-label-value document-copy-text">
-          {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
+          {{
+            alertLabelData && alertLabelData.name ? alertLabelData.name : "--"
+          }}
         </div>
-        <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
+        <i
+          v-if="alertLabelData && alertLabelData.name"
+          class="nz-icon nz-icon-override"
+          style="visibility: hidden"
+          @click.stop="onCopy(alertLabelData.name)"
+          :title="$t('overall.copyText')"
+        ></i>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('notebook.author')}}</div>
+        <div class="alert-label-title">{{ $t("notebook.author") }}</div>
         <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.createUser ? alertLabelData.createUser.name : "--" }}
+          {{
+            alertLabelData && alertLabelData.createUser
+              ? alertLabelData.createUser.name
+              : "--"
+          }}
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('notebook.modifiedTime')}}</div>
+        <div class="alert-label-title">{{ $t("notebook.modifiedTime") }}</div>
         <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.uts ? momentTz(alertLabelData.uts) : "--" }}
+          {{
+            alertLabelData && alertLabelData.uts
+              ? momentTz(alertLabelData.uts)
+              : "--"
+          }}
         </div>
       </div>
     </div>
@@ -758,10 +971,13 @@
 
 <script>
 import trendMixin from './trendMixins'
-
+import copy from '@/components/common/copy'
 export default {
   name: 'alertLabel',
   mixins: [trendMixin],
+  components: {
+    copy
+  },
   props: {
     id: {},
     type: {},
@@ -805,7 +1021,8 @@ export default {
     calcPosition () {
       return function (position) {
         if (this.$refs.alertLabels) {
-          this.heightList = this.$refs.alertLabels.getBoundingClientRect().height
+          this.heightList =
+            this.$refs.alertLabels.getBoundingClientRect().height
           this.boxWidth = this.$refs.alertLabels.getBoundingClientRect().width
         } else {
           this.heightList = 0
@@ -844,12 +1061,23 @@ export default {
         if (position.top > clientHeight / 2) {
           labelPosition = {
             left: `${position.left + position.width + leftOffSet}px`,
-            top: this.that.type === 'chartTopology' ? `${position.top - this.heightList - topOffSetView}px` : `${position.top - this.heightList - topOffSetView + position.height / 2}px`
+            top:
+              this.that.type === 'chartTopology'
+                ? `${position.top - this.heightList - topOffSetView}px`
+                : `${
+                    position.top -
+                    this.heightList -
+                    topOffSetView +
+                    position.height / 2
+                  }px`
           }
         } else {
           labelPosition = {
             left: `${position.left + position.width + leftOffSet}px`,
-            top: this.that.type === 'chartTopology' ? `${position.top + topOffSet}px` : `${position.top + position.height / 2}px`
+            top:
+              this.that.type === 'chartTopology'
+                ? `${position.top + topOffSet}px`
+                : `${position.top + position.height / 2}px`
           }
         }
         if (position.left > clientWidth / 2) {
@@ -1034,6 +1262,13 @@ export default {
     },
     tipHover (tipLoading) {
       this.$emit('tipHover', tipLoading)
+    },
+    getPingInfo (row, type) {
+      if (!(row && row.pingInfo && row.pingInfo.length)) {
+        return false
+      }
+      const info = row.pingInfo.find(item => item.type == type)
+      return info
     }
   },
   mounted () {
@@ -1048,5 +1283,4 @@ export default {
   beforeDestroy () {}
 }
 </script>
-<style>
-</style>
+<style></style>

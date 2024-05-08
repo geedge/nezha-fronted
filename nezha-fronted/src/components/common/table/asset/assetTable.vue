@@ -458,7 +458,7 @@ export default {
     },
 
     getPingInfo (row, type) {
-      if (!row.pingInfo || !row.pingInfo.length) {
+      if (!(row && row.pingInfo && row.pingInfo.length)) {
         return false
       }
       const info = row.pingInfo.find(item => item.type == type)
