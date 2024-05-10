@@ -87,6 +87,11 @@
             </div>
             <div v-else>-</div>
           </template>
+          <!-- logins -->
+          <template v-else-if="item.prop === 'logins'">
+            <span v-if="scope.row.logins !== null">{{scope.row[item.prop]}}</span>
+            <span v-else>-</span>
+          </template>
           <span v-else-if="scope.row[item.prop]" :class="item.prop === 'remark'? 'el-table-remark':''">{{scope.row[item.prop]}}</span>
           <span v-else>-</span>
         </template>
