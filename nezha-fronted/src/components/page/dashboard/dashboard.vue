@@ -98,7 +98,7 @@
         </div>
         <div id="tableList" class="table-list chart-list-box" style='overflow-y: unset'>
           <div class="table-list-box">
-            <div  id="dashboardScrollbar" class="box-content" v-my-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: scroll;display: flex;flex-direction: column;overflow-x: hidden'>
+            <div  id="dashboardScrollbar" class="box-content" v-my-loading="chartListLoading"  ref="dashboardScrollbar" style='box-sizing:border-box;padding-top:10px;overflow-y: scroll;display: flex;flex-direction: column;overflow-x: hidden;'>
               <panel-variables :labelArrs="variables" :time-range="searchTime" @getPanelData="getPanelData"></panel-variables>
               <chart-list
                 ref="chartList"
