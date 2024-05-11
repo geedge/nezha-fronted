@@ -7,7 +7,7 @@
             <div class="asset-info-collapse">
               <i class="nz-icon nz-icon-basic-info"></i>
               <span>{{$t('asset.information')}}</span>
-              <span>{{chartDetail.feature.os.hostName}}</span>
+              <span :title="chartDetail.feature.os.hostName">{{chartDetail.feature.os.hostName}}</span>
             </div>
           </template>
           <div class="asset-info-list">
@@ -39,8 +39,10 @@
             <div class="asset-info-collapse">
               <i class="nz-icon nz-icon-cpu"></i>
               <span>{{$t('asset.cpu')}}</span>
-              <span>{{chartDetail.feature.cpu.name}}</span>
-              <span v-if="chartDetail.feature.cpu.physicalPackageCount > 1">* {{chartDetail.feature.cpu.physicalPackageCount}}</span>
+              <span :title="chartDetail.feature.cpu.physicalPackageCount > 1 ? (chartDetail.feature.cpu.name + ' * ' + chartDetail.feature.cpu.physicalPackageCount) : (chartDetail.feature.cpu.name)">
+                {{chartDetail.feature.cpu.name}}
+                <span v-if="chartDetail.feature.cpu.physicalPackageCount > 1"> * {{chartDetail.feature.cpu.physicalPackageCount}}</span>
+              </span>
             </div>
           </template>
           <div class="asset-info-list">
@@ -69,10 +71,10 @@
 
         <el-collapse-item>
           <template slot="title">
-            <div class="asset-info-collapse">
+            <div class="asset-info-collapse" :title="chartDetail.feature.memory.total > 0 ? (bytes(chartDetail.feature.memory.total,0,0)) : ''">
               <i class="nz-icon nz-icon-memory"></i>
               <span>{{$t('asset.memory')}}</span>
-              <span v-if="chartDetail.feature.memory.total>0">{{bytes(chartDetail.feature.memory.total,0,0)}}</span>
+              <span v-if="chartDetail.feature.memory.total > 0">{{bytes(chartDetail.feature.memory.total,0,0)}}</span>
             </div>
           </template>
           <div class="asset-info-list">
@@ -93,10 +95,10 @@
 
         <el-collapse-item>
           <template slot="title">
-            <div class="asset-info-collapse">
+            <div class="asset-info-collapse" :title="calcTotal(chartDetail.feature.disk, 'size') > 0 ? (bytes(calcTotal(chartDetail.feature.disk, 'size'),0,0)) : ''">
               <i class="nz-icon nz-icon-disk"></i>
               <span>{{$t('asset.disk')}}</span>
-              <span v-if="calcTotal(chartDetail.feature.disk, 'size')>0">{{bytes(calcTotal(chartDetail.feature.disk, 'size'),0,0)}}</span>
+              <span v-if="calcTotal(chartDetail.feature.disk, 'size') > 0">{{bytes(calcTotal(chartDetail.feature.disk, 'size'),0,0)}}</span>
             </div>
           </template>
           <div class="asset-info-list" v-for="(item,index) in chartDetail.feature.disk" :key="index">
