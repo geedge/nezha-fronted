@@ -326,11 +326,14 @@ export default {
     },
     suspendedStr (status) { // 10进制转为2进制 分别给对应的状态
       if (!status || status === 1 || status == 0) { return '' }
-      const arr = status.toString(2).split('')
+      let arr = status.toString(2).split('')
       while (arr.length < 4) {
         arr.unshift('0')
       }
       arr.pop()
+      if (status == 14) {
+        arr = [0, 0, 0]
+      }
       let str = ''
       arr.forEach((item, index) => {
         if (index === 0) {
