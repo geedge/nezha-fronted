@@ -35,7 +35,7 @@
 </template>
 <script>
 import editRigthBox from '../mixin/editRigthBox'
-import { noSpecialChar } from '../../common/js/validate'
+import { nameValidate } from '../../common/js/validate'
 export default {
   name: 'projectBox',
   props: {
@@ -48,7 +48,7 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: noSpecialChar, trigger: 'change' }
+          { validator: nameValidate, trigger: 'blur' }
         ]
       }
     }

@@ -12,8 +12,8 @@
       <!-- begin--表单-->
       <div class="right-box__container">
         <div class="container__form">
-          <el-form label-width="120px"  :model="editMetaGroup" label-position = "top" ref="editMetaGroupForm">
-            <el-form-item :label='$t("overall.name")' prop="name" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
+          <el-form label-width="120px" :model="editMetaGroup" label-position = "top" ref="editMetaGroupForm" :rules="rules">
+            <el-form-item :label='$t("overall.name")' prop="name">
               <el-input placeholder="" maxlength="64" show-word-limit v-model="editMetaGroup.name" size="small" id="editMetaGroup-box-input-name"></el-input>
             </el-form-item>
             <el-form-item :label='$t("overall.remark")' prop="remark">
@@ -42,6 +42,7 @@
 
 <script>
 import editRigthBox from '../mixin/editRigthBox'
+import { nameValidate } from '@/components/common/js/validate'
 export default {
   name: 'assetMetaGroup',
   props: {
@@ -58,6 +59,12 @@ export default {
       },
       rightBox: { // 面板弹出框相关
         show: false
+      },
+      rules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: nameValidate, trigger: 'blur' }
+        ]
       }
     }
   },

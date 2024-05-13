@@ -488,7 +488,7 @@
 <script>
 import chartDataFormat from '../../chart/chartDataFormat'
 import promqlInput from '../../page/dashboard/explore/promqlInput'
-import { noSpecialChar, nzNumber } from '../js/validate'
+import { nameValidate, nzNumber } from '../js/validate'
 import editRigthBox from '../mixin/editRigthBox'
 import richTextEditor from '@/components/chart/richTextEditor'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
@@ -566,7 +566,7 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: noSpecialChar, trigger: 'change' }
+          { validator: nameValidate, trigger: 'blur' }
         ],
         expr: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' },

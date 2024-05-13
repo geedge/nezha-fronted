@@ -129,6 +129,7 @@ import bus from '@/libs/bus'
 import { sameLabels } from '@/components/common/js/constants'
 // import selectAlertSilence from '../alert/selectAlertSilence'
 import editRigthBox from '../mixin/editRigthBox'
+import { nameValidate } from '@/components/common/js/validate'
 export default {
   name: 'alertSilenceBox',
   components: {
@@ -193,7 +194,8 @@ export default {
           { validator: validate, trigger: 'change' }
         ],
         name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: nameValidate, trigger: 'blur' }
         ]
       },
       rangeTime: '',

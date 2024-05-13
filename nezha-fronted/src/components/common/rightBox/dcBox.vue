@@ -69,7 +69,7 @@
 <script>
 import latlngPicker from '../latlngPicker'
 import editRigthBox from '../mixin/editRigthBox'
-import { noSpecialChar, latlng } from '@/components/common/js/validate'
+import { nameValidate, latlng } from '@/components/common/js/validate'
 
 const latitudeNum = /^[\-\+]?([1-8]?\d{1}\.\d{1,7}|90\.0{1,7}|[1-8]?\d{1}|90)$/ // 纬度正则验证
 const longitudeNum = /^[\-\+]?(0?\d{1,2}\.\d{1,7}|1[0-7]?\d{1}\.\d{1,7}|180\.0{1,7}|0?\d{1,2}|1[0-7]?\d{1}|180)$/ // 经度正则验证
@@ -90,7 +90,7 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: noSpecialChar, trigger: 'blur' }
+          { validator: nameValidate, trigger: 'blur' }
         ],
         lnglat: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' },

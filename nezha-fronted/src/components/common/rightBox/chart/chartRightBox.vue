@@ -147,6 +147,7 @@ import lodash from 'lodash'
 import bus from '@/libs/bus'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import { initColor } from '@/components/chart/chart/tools'
+import { nameValidate } from '@/components/common/js/validate'
 const rz = {
   methods: {
     rz (e) {
@@ -206,8 +207,11 @@ export default {
       ],
       panelName: '',
       rules: {
-        name: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }],
-        panelName: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }]
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: nameValidate, trigger: 'blur' }
+        ],
+        panelName: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       }
     }
   },

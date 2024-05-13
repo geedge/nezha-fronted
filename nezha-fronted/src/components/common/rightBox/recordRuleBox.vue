@@ -170,8 +170,8 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' },
-          { pattern: /^[a-zA-Z_:][a-zA-Z0-9_:]*$/, message: this.$t('overall.ASCIIKey'), trigger: 'change' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { pattern: /^[a-zA-Z_:][a-zA-Z0-9_:]*$/, message: this.$t('overall.ASCIIKey'), trigger: 'blur' }
         ],
         type: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }

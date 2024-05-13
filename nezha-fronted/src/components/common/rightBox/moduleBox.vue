@@ -710,7 +710,7 @@
 </template>
 
 <script>
-import { noSpecialChar, port, nzNumber, arrLength } from '../js/validate'
+import { nameValidate, port, nzNumber, arrLength } from '../js/validate'
 import selectWalk from '../popBox/selectWalk'
 import editRigthBox from '../mixin/editRigthBox'
 import pipelineSelect from './pipelineSelect'
@@ -776,7 +776,7 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: noSpecialChar, trigger: 'change' }
+          { validator: nameValidate, trigger: 'blur' }
         ],
         projectId: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }

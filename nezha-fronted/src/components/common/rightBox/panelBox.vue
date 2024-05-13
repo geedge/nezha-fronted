@@ -383,9 +383,10 @@
 <script>
 import editRigthBox from '../mixin/editRigthBox'
 import bus from '@/libs/bus'
-import { arrLength, datePicker } from '@/components/common/js/validate'
+import { nameValidate, arrLength, datePicker } from '@/components/common/js/validate'
 import draggable from 'vuedraggable'
 import { getUUID } from '@/components/common/js/common'
+
 export default {
   name: 'panelBox',
   components: {
@@ -414,7 +415,8 @@ export default {
       userData: [],
       rules: {
         name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: nameValidate, trigger: 'blur' }
         ],
         varType: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
@@ -520,7 +522,7 @@ export default {
         { value: 60, label: '1m' },
         { value: 300, label: '5m' },
         { value: 900, label: '15m' },
-        { value: 1800, label: '30m' },
+        { value: 1800, label: '30m' }
       ]
     }
   },

@@ -766,7 +766,7 @@
 </template>
 
 <script>
-import { noSpecialChar, port, arrLength } from '../js/validate'
+import { nameValidate, port, arrLength } from '../js/validate'
 import pipelineSelect from './pipelineSelect'
 import selectWalk from '../popBox/selectWalk'
 import editRigthBox from '../mixin/editRigthBox'
@@ -843,8 +843,8 @@ export default {
       showAllBasicOption: false,
       rules: {
         name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' },
-          { validator: this.optionType === 'batch' ? '' : noSpecialChar, trigger: 'change' },
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: this.optionType === 'batch' ? '' : nameValidate, trigger: 'blur' },
           { max: 64, message: this.$t('config.system.link.nameMaxLength'), trigger: 'blur' }
         ],
         assetId: [

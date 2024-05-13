@@ -86,6 +86,7 @@
 <script>
 import editRigthBox from '../mixin/editRigthBox'
 import { port } from '../js/validate'
+import { nameValidate } from '@/components/common/js/validate'
 
 export default {
   name: 'snmpCredentialBox',
@@ -100,7 +101,8 @@ export default {
 
       rules: {
         name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: nameValidate, trigger: 'blur' }
         ],
         'config.username': [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }

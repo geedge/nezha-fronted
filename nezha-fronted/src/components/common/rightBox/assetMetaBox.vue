@@ -180,6 +180,7 @@
 <script>
 import assetTagEx from '../../page/asset/components/assetTagEx'
 import editRigthBox from '../mixin/editRigthBox'
+import { nameValidate } from '@/components/common/js/validate'
 export default {
   name: 'assetLabelBox',
   props: {
@@ -214,7 +215,10 @@ export default {
       },
       groupData: [],
       rules: {
-        name: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }],
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: nameValidate, trigger: 'blur' }
+        ],
         metaKey: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }, { pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: this.$t('overall.ASCIIKey'), trigger: 'change' }],
         groupId: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }],
         type: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }]

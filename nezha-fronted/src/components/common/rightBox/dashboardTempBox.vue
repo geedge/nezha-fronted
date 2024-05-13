@@ -90,6 +90,7 @@
 <script>
 import bus from '@/libs/bus'
 import editRigthBox from '../mixin/editRigthBox'
+import { nameValidate } from '@/components/common/js/validate'
 export default {
   props: {
     from: String
@@ -100,7 +101,8 @@ export default {
       url: '/visual/dashboard/fromTmpl',
       rules: {
         name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: nameValidate, trigger: 'blur' }
         ],
         tmplId: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }

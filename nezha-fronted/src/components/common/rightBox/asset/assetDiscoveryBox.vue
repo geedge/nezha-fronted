@@ -113,7 +113,7 @@
   </div>
 </template>
 <script>
-import { noSpecialChar, arrLength } from '@/components/common/js/validate'
+import { nameValidate, noSpecialChar, arrLength } from '@/components/common/js/validate'
 import editRigthBox from '@/components/common/mixin/editRigthBox'
 export default {
   name: 'agentBox',
@@ -126,7 +126,7 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: noSpecialChar, trigger: 'blur' }
+          { validator: nameValidate, trigger: 'blur' }
         ],
         subnet: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }

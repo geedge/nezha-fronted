@@ -88,7 +88,7 @@
   </div>
 </template>
 <script>
-import { host, noSpecialChar, port } from '../../common/js/validate'
+import { host, nameValidate, port } from '../../common/js/validate'
 import { agent2 } from '@/components/common/js/constants'
 import editRigthBox from '../mixin/editRigthBox'
 export default {
@@ -107,7 +107,7 @@ export default {
         ],
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: noSpecialChar, trigger: 'blur' }
+          { validator: nameValidate, trigger: 'blur' }
         ],
         host: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
