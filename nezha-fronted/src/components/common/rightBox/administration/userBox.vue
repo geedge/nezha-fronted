@@ -111,7 +111,7 @@
 </template>
 
 <script>
-// import { host, port } from '@/components/common/js/validate'
+import { userName } from '@/components/common/js/validate'
 import editRigthBox from '../../mixin/editRigthBox'
 import bus from '@/libs/bus'
 export default {
@@ -151,7 +151,8 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         username: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: userName, trigger: 'blur' }
         ],
         pin: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
@@ -168,8 +169,12 @@ export default {
         ]
       },
       rules2: { // 表单校验规则
-        username: [
+        name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        username: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: userName, trigger: 'blur' }
         ],
         pinChange: [
           { validator: validatePin, trigger: 'blur' }
