@@ -3992,7 +3992,11 @@ export default {
         // 过滤掉state为0的元素
         this.expressions.forEach((item, index) => {
           if (item != '' && this.promqlKeys[index].state && item) {
-            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&limit=' + limit))
+            let query = '/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&limit=' + limit
+            if (this.promqlKeys[index].step) {
+              query += '&step=' + this.promqlKeys[index].step + 's'
+            }
+            requestArr.push(this.$get(query))
             realArr.push(index)
           }
         })
@@ -4465,7 +4469,7 @@ export default {
         const nowTimeType = data.nowTimeType
         this.filterTime = data.searchTime
         if (nowTimeType && nowTimeType.type) {
-          this.setSearchTime('filterTime')
+          this.setSearchTime('filterTime', nowTimeType)
         }
         if (nowTimeType) {
           nowTimeType.start_time = this.filterTime[0]
