@@ -174,7 +174,6 @@
 
 <script>
 import chartDataFormat from '@/components/chart/chartDataFormat'
-import bus from '@/libs/bus'
 export default {
   name: 'chartDetailNew',
   props: {

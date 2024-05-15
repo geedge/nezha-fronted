@@ -213,9 +213,10 @@ export default {
         const requests = [axios.get('dc?pageSize=-1'), axios.get('/stat/overview/map')]
         axios.all(requests).then(result => {
           const dcInfos = result[0].data.data.list
-          const dcStats = result[1].data.data.list.filter(dc => dc.asset)
+          // const dcStats = result[1].data.data.list.filter(dc => dc.asset)
+          const dcStats = result[1].data.data.list
           dcStats.sort((a, b) => {
-            return a.asset.total - b.asset.total
+            return (a.asset ? a.asset.total : -1) - (b.asset ? b.asset.total : -1)
           })
           dcStats.forEach(s => {
             const dc = dcInfos.find(i => i.name === s.name)
@@ -230,7 +231,9 @@ export default {
           dcStats.forEach(dcStat => {
             if (regNum.test(dcStat.latitude) && regNum.test(dcStat.longitude)) {
               let symbolSize
-              if (dcStat.asset.total >= bigBoundary) {
+              if (!dcStat.asset) {
+                symbolSize = smallScatter
+              } else if (dcStat.asset.total >= bigBoundary) {
                 symbolSize = bigScatter
               } else if (dcStat.asset.total < bigBoundary && dcStat.asset.total >= mediumBoundary) {
                 symbolSize = mediumScatter
@@ -248,6 +251,9 @@ export default {
       })
     },
     pointEnter (param) {
+      if (!param.features[0].properties.asset) {
+        return
+      }
       const point = param.point
       const event = param.originalEvent
       const boxWidth = window.innerWidth / 2

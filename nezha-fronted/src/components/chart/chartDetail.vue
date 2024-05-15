@@ -33,10 +33,46 @@
                 <div class="asset-info-value">{{chartDetail.state ? chartDetail.state.name : '--'}}</div>
               </div>
               <div class="asset-info-row">
-                <div class="asset-info-title">Ping</div>
-                <div class="asset-info-value">
-                  <div :class="{'green-bg': chartDetail && chartDetail.pingInfo && chartDetail.pingInfo.status === 1,'red-bg': chartDetail && chartDetail.pingInfo && chartDetail.pingInfo.status === 0}" class="active-icon"></div>
-                  <span>{{chartDetail && chartDetail.pingInfo && chartDetail.pingInfo.rtt ? chartDetail.pingInfo.rtt + 'ms':''}}</span>
+                <div class="asset-info-title">{{ $t("config.operationlog.ip") }}</div>
+                <div class="asset-info-value" style="position: relative;">
+                  <div class="ip-info">
+                    <copy :copyData='chartDetail.manageIp' :showInfo='chartDetail.manageIp' v-if="chartDetail && chartDetail.manageIp">
+                      <template slot="copy-text">
+                        <i
+                          class="ip-icon nz-icon nz-icon-mgt"
+                          :class="(getPingInfo(chartDetail, 'mgt') && getPingInfo(chartDetail, 'mgt').status == 1) ? 'green-color' : 'red-color'"
+                        ></i>
+                        {{chartDetail.manageIp ? chartDetail.manageIp : '--'}}
+                      </template>
+                    </copy>
+                    <div class="active-icon-content" v-if="getPingInfo(chartDetail, 'mgt')">
+                      <p v-if="getPingInfo(chartDetail, 'mgt').rtt">
+                        {{$t('asset.rtt') +' '+ (getPingInfo(chartDetail, 'mgt').rtt + 'ms')}}
+                      </p>
+                      <p>
+                        {{$t('asset.assetStatPre') +' '+ (getPingInfo(chartDetail, 'mgt').lastUpdate ? utcTimeToTimezoneStr(getPingInfo(chartDetail, 'mgt').lastUpdate) : $t('asset.assetStatDown'))}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="ip-info">
+                    <copy :copyData='chartDetail.ipmiIp' :showInfo='chartDetail.ipmiIp' v-if="chartDetail && chartDetail.ipmiIp">
+                      <template slot="copy-text">
+                        <i
+                          class="ip-icon nz-icon nz-icon-ipmi"
+                          :class="(getPingInfo(chartDetail, 'ipmi') && getPingInfo(chartDetail, 'ipmi').status == 1) ? 'green-color' : 'red-color'"
+                        ></i>
+                        {{chartDetail.ipmiIp ? chartDetail.ipmiIp : '--'}}
+                      </template>
+                    </copy>
+                    <div class="active-icon-content" v-if="getPingInfo(chartDetail, 'ipmi')">
+                      <p v-if="getPingInfo(chartDetail, 'ipmi').rtt">
+                        {{$t('asset.rtt') +' '+ (getPingInfo(chartDetail, 'ipmi').rtt + 'ms')}}
+                      </p>
+                      <p>
+                        {{$t('asset.assetStatPre') +' '+ (getPingInfo(chartDetail, 'ipmi').lastUpdate ? utcTimeToTimezoneStr(getPingInfo(chartDetail, 'ipmi').lastUpdate) : $t('asset.assetStatDown'))}}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="asset-info-row">
@@ -172,6 +208,7 @@
 <script>
 import bus from '@/libs/bus'
 import trendMixin from '../common/alert/trendMixins'
+import copy from '@/components/common/copy'
 
 export default {
   name: 'chartDetail',
@@ -179,6 +216,9 @@ export default {
     from: String,
     chartDetail: Object,
     chartInfo: Object
+  },
+  components: {
+    copy
   },
   mixins: [trendMixin],
   watch: {
@@ -284,6 +324,13 @@ export default {
           })
         }
       })
+    },
+    getPingInfo (row, type) {
+      if (!(row && row.pingInfo && row.pingInfo.length)) {
+        return false
+      }
+      const info = row.pingInfo.find(item => item.type == type)
+      return info
     }
   }
 }
