@@ -224,7 +224,7 @@
           <el-collapse v-show="!showIntroduce" v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
             <!--metric-->
             <template v-if="showMetrics">
-              <el-collapse-item v-if="!allMatrix && showChart" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+              <el-collapse-item v-if="showChart" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
                 <!-- 堆叠 -->
                 <div slot="title" class="explore-table-title" style="display:flex; justify-content: flex-end;align-item:center;padding-right:30px;">
                   <span :title="$t('dashboard.dashboard.chartForm.stack')" @click.stop="changeStack" v-show="collapseValue.some(item=>item==1)" tabindex="0">
@@ -246,7 +246,7 @@
                   />
                 </div>
               </el-collapse-item>
-              <el-collapse-item class="el-collapse-item__height" name="2" title="Table" v-if="showTable">
+              <el-collapse-item v-if="showTable" class="el-collapse-item__height" name="2" title="Table">
                 <div slot="title" class="explore-table-title">
                   <span>{{tableMode==='table'?$t('dashboard.dashboard.chartForm.typeVal.table.label'):$t('explore.row')}}</span>
                   <!-- 判断是否折叠 -->
@@ -339,20 +339,12 @@
                         </div>
                         <div class="table-row-right">
                           <h2 class="expand-value" v-if="expandResults">{{$t('overall.value')}}</h2>
-                          <ul v-if="row.valueList" class="valueList">
+                          <ul class="valueList">
                             <li v-for="item in row.valueList" :key="item.timestamp">
                               <span>{{item.value}}</span>
                               <span>{{item.timestamp}}</span>
                               <span>{{item.time}}</span>
                               <span>{{item.interval}}</span>
-                            </li>
-                          </ul>
-                          <ul v-else class="valueList">
-                            <li>
-                              <span>{{row.value}}</span>
-                              <span>{{row.timestamp}}</span>
-                              <span>{{row.time}}</span>
-                              <span style="opacity:0">+30</span>
                             </li>
                           </ul>
                         </div>
@@ -378,7 +370,6 @@
                   </span>
                 </div>
                 <div class="chart-room">
-<!--                  <chart ref="logChart" :unit="chartUnit" v-my-loading="chartLoading" :timeRange="filterTime"></chart>-->
                   <uplotChart
                     :ref="'exploreChart'"
                     :chart-data="uplotChartData"
@@ -3748,8 +3739,6 @@ export default {
       },
       tableTitle: [],
       showIntroduce: true,
-      defaultChartVisible: true,
-      defaultTableVisible: true,
       chartVisible: true,
       tableVisible: true,
       pageObj: {
@@ -3779,7 +3768,6 @@ export default {
       tableHover: false,
       showTopBtn: false, // top按钮
       scrollbarWrap: null,
-      allMatrix: false, // metric是否全部为matrix类型
       rowData: [],
       metricsHistory: [],
       logsHistory: [],
@@ -4067,8 +4055,6 @@ export default {
       if (graphData && graphData.length > 0) {
         const promqlInputIndexs = []
         const queryExpression = []
-        const series = []
-        const legend = []
         this.expressions.forEach((item, index) => {
           if (item !== '' && this.promqlKeys[index].state) {
             promqlInputIndexs.push(index)
@@ -4091,20 +4077,9 @@ export default {
             this.$refs['promql-' + promqlIndex][0].setError('')
           }
         })
-        this.defaultChartVisible = true
-        this.$nextTick(() => {
-          // this.$refs.logChart.setLegend(legend)
-          // this.$refs.logChart.setRandomColors(series.length)
-          // if (!series.length) {
-          //   series = ''
-          // }
-          // this.$refs.logChart.setSeries(series)
-          // this.$refs.logChart.endLoading()
-        })
       }
     },
     queryChartData () {
-      // this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
       if (this.expressions.length > 0) {
         const requestArr = []
         const promqlInputIndexs = []
@@ -4112,20 +4087,15 @@ export default {
         // 过滤掉state为0的元素
         const step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
         this.expressions.forEach((item, index) => {
-          if (item != '' && this.promqlKeys[index].state && !this.promqlKeys[index].matrix && this.promqlKeys[index].queryType == 1) {
+          if (item != '' && this.promqlKeys[index].state && this.promqlKeys[index].queryType == 1) {
             let queryStep = step
             if (this.promqlKeys[index].step) {
               queryStep = this.promqlKeys[index].step + 's'
             }
             promqlInputIndexs.push(index)
             queryExpression.push(item)
-            this.promqlKeys[index].expression = item
-            if (this.promqlKeys[index].queryType === 2) {
-              requestArr.push(this.$get('/prom/api/v1/query_instant?query=' + encodeURIComponent(item) + '&time=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))))
-            } else {
-              this.showChart = true
-              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&step=' + queryStep + '&nullType=null'))
-            }
+            this.showChart = true
+            requestArr.push(this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&step=' + queryStep + '&nullType=null'))
           }
         })
         if (requestArr.length > 0) {
@@ -4137,8 +4107,6 @@ export default {
         this.uplotChartInfo.unit = this.chartUnit
         this.uplotChartInfo.param.stack = this.isStack
         axios.all(requestArr).then(res => {
-          const series = []
-          const legend = []
           if (res.length > 0) {
             res.forEach((response, index) => {
               const promqlIndex = promqlInputIndexs[index]
@@ -4150,56 +4118,6 @@ export default {
                 }
                 this.uplotChartData.push(response.data.result)
                 this.uplotChartInfo.elements.push(this.promqlKeys[promqlInputIndexs[index]])
-                // data.forEach((result, i) => {
-                //   const seriesItem = {
-                //     type: 'line',
-                //     name: '',
-                //     symbol: 'emptyCircle', // 去掉点
-                //     symbolSize: 8,
-                //     showSymbol: false,
-                //     smooth: 0.2, // 曲线变平滑
-                //     data: [],
-                //     lineStyle: {
-                //       width: 2,
-                //       opacity: 0.9
-                //     },
-                //     emphasis: {
-                //       focus: 'none'
-                //     },
-                //     blur: {
-                //       lineStyle: {
-                //         opacity: 0.3
-                //       },
-                //       itemStyle: {
-                //         opacity: 1
-                //       }
-                //     }
-                //   }
-                //   let legendName = ''
-                //   seriesItem.data = result.values.map((item) => {
-                //     return [item[0] * 1000, item[1]]
-                //   })
-                //   if (result.metric && Object.keys(result.metric).length > 0) {
-                //     const metric = Object.assign({}, result.metric)
-                //     seriesItem.name += metric.__name__ ? metric.__name__ : ''
-                //     seriesItem.name += '{'
-                //     delete metric.__name__
-                //     for (const key in metric) {
-                //       seriesItem.name += key + '=' + '"' + metric[key] + '",'
-                //     }
-                //     legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
-                //     legendName += '}'
-                //   } else {
-                //     legendName = queryExpression[index]
-                //   }
-                //   seriesItem.name = legendName + '-' + index
-                //   const tagKeysArr = Object.keys(result.metric)
-                //   // console.log(queryExpression[index], this.expressions[index], tagKeysArr)
-                //   const legendAlias = this.handleLegendAlias(legendName, this.promqlKeys[promqlInputIndexs[index]].legend, tagKeysArr)
-                //   series.push(seriesItem)
-                //   legend.push({ name: seriesItem.name, alias: legendAlias, isGray: false })
-                // })
-
                 this.$refs['promql-' + promqlIndex][0].setError('')
               } else {
                 if (response.error) {
@@ -4211,16 +4129,7 @@ export default {
                 }
               }
             })
-            // this.series = series
-            // this.$refs.exploreChart?.setLegend(legend)
-            // this.$refs.exploreChart?.setRandomColors(series.length)
-            // if (!series.length) {
-            //   series = ''
-            // }
-            // this.$refs.exploreChart?.setSeries(series)
-            this.defaultChartVisible = true
           }
-          // this.$refs.exploreChart && this.$refs.exploreChart.endLoading()
         })
       }
     },
@@ -4231,7 +4140,6 @@ export default {
         this.expressions.forEach((item, index) => {
           // 过滤掉state为0的元素
           if (item !== '' && this.promqlKeys[index].state && this.promqlKeys[index].queryType == 2) {
-            // requestArr.push(this.$get('/prom/api/v1/query?query=' + encodeURIComponent(item)))
             this.showTable = true
             requestArr.push(this.$get('/prom/api/v1/query_instant?query=' + encodeURIComponent(item) + '&time=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1]))))
           }
@@ -4251,12 +4159,8 @@ export default {
           this.tableTitle = []
           this.tools.customTableTitle = []
 
-          // this.allMatrix = res.every(d => d.data.resultType === 'matrix')
-
           res.forEach((response, index) => {
             if (response.data && response.status === 'success') {
-              // matrix类型不请求chart接口 只展示表格数据
-              this.promqlKeys[index].matrix = response.data.resultType === 'matrix'
               const data = response.data.result
               if (data) {
                 data.forEach((result, i) => {
@@ -4290,7 +4194,6 @@ export default {
                   // 处理row模式数据
                   const rowData = this.handlerRowData(result.metric)
                   rowData.value = metrics['value#' + index]
-                  // matrix 类型数据
                   rowData.valueList = result.values.map((item, index) => {
                     const obj = {}
                     obj.value = chartDataFormat.getUnit(this.chartUnit || 2).compute(item[1], null, 2)
@@ -4328,9 +4231,7 @@ export default {
             this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
             this.tableTitle = Object.assign([], tLabels)
             this.tools.customTableTitle = Object.assign([], tLabels)
-            this.defaultTableVisible = true
           } else {
-            // this.defaultTableVisible = false;
             this.pageObj.total = 0
           }
         }
@@ -4439,10 +4340,9 @@ export default {
         }
         if (error) { return }
         if (this.showMetrics) {
-          // this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
           this.showChart = false
           this.showTable = false
-          await this.queryTableData()
+          this.queryTableData()
           this.queryChartData()
           this.storeHistory()
           this.postHistory()
@@ -4842,12 +4742,24 @@ export default {
         this.$message.error(this.$t('explore.queryExpression'))
         return
       }
+      const expressions = this.promqlKeys.map((item, index) => {
+        const obj = {
+          expr: encodeURIComponent(this.expressions[index]),
+          legend: item.legend,
+          step: item.step
+        }
+        if (this.showMetrics) {
+          obj.queryType = item.queryType
+        }
+        return obj
+      })
+
       const params = {
         type: this.showMetrics ? 1 : 2,
         start: this.momentStrToTimestamp(this.filterTime[0]) / 1000,
         end: this.momentStrToTimestamp(this.filterTime[1]) / 1000,
         unit: this.chartUnit,
-        expressions: this.expressions.map(item => encodeURIComponent(item))
+        expressions: expressions
       }
       if (!this.showMetrics) {
         params.limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
@@ -4856,7 +4768,7 @@ export default {
       this.$store.dispatch('dispatchHomeLoading', true)
       let total = 10
       let loaded = 0
-      this.$get('/visual/explore/snapshot', params, {
+      this.$post('/visual/explore/snapshot', params, {}, {
         onDownloadProgress: function (progressEvent) {
           // 处理原生进度事件
           total = progressEvent.total

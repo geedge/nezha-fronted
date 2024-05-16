@@ -161,9 +161,13 @@ export function get (url, params, configs) {
   })
 }
 
-export function post (url, params, headers) {
+export function post (url, params, headers, configs) {
+  const config = {
+    headers,
+    ...configs
+  }
   return new Promise(resolve => {
-    axios.post(url, params, { headers: headers }).then(response => {
+    axios.post(url, params, config).then(response => {
       if (url.indexOf('/sys/license/gen') !== -1) {
         resolve({
           data: response.data,

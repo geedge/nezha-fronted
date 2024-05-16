@@ -22,11 +22,11 @@
     </div>
     <div slot="footer">
       <div class="el-message-box__btns">
-        <button :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button--small nz-btn-style-normal" @click="startTimer">
-          <span style="text-transform:Capitalize">{{$t('overall.exportExcel')}}</span>
-        </button>
         <button class="nz-btn el-button el-button--small el-button--default" @click="closeDialog">
           <span>{{$t('overall.close')}}</span>
+        </button>
+        <button :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button--small nz-btn-style-normal" @click="startTimer">
+          <span style="text-transform:Capitalize">{{$t('overall.exportExcel')}}</span>
         </button>
       </div>
     </div>

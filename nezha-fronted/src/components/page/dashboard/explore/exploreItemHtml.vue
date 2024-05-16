@@ -21,12 +21,29 @@
       <el-collapse v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
         <!--metric-->
         <template v-if="showMetrics">
-          <el-collapse-item v-if="!allMatrix" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+          <el-collapse-item v-if="showChart" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+            <!-- 堆叠 -->
+            <div slot="title" class="explore-table-title" style="display:flex; justify-content: flex-end;align-item:center;padding-right:30px;">
+              <span :title="$t('dashboard.dashboard.chartForm.stack')" @click.stop="changeStack" v-show="collapseValue.some(item=>item==1)" tabindex="0">
+                <i class="nz-icon nz-icon-duidiezhuzhuangtu tool__icon" :class="isStack ? 'tool__icon-active' : ''"/>
+              </span>
+            </div>
             <div class="chart-room">
-              <chart ref="exploreChart" :unit="chartUnitType" :timeRange="filterTime"></chart>
+               <uplotChart
+                  :ref="'exploreChart'"
+                  :chart-data="uplotChartData"
+                  :chart-info="uplotChartInfo"
+                  :is-fullscreen="false"
+                  :panelLock="true"
+                  :showAllData="showAllData"
+                  @loadMore="loadMore"
+                  :isFullscreen="false"
+                  :globalVariables="[]"
+                  :from="'explore'"
+                />
             </div>
           </el-collapse-item>
-          <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
+          <el-collapse-item  v-if="showTable" class="el-collapse-item__height" name="2" title="Table">
             <div slot="title" class="explore-table-title">
               <span>{{tableMode==='table'?$t('dashboard.dashboard.chartForm.typeVal.table.label'):$t('explore.row')}}</span>
               <!-- 判断是否折叠 -->
@@ -151,8 +168,25 @@
         <!--log-->
         <template v-else>
           <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+            <!-- 堆叠 -->
+            <div slot="title" class="explore-table-title" style="display:flex; justify-content: flex-end;align-item:center;padding-right:30px;">
+              <span :title="$t('dashboard.dashboard.chartForm.stack')" @click.stop="changeStack" v-show="collapseValue.some(item=>item==2)" tabindex="0">
+                <i class="nz-icon nz-icon-duidiezhuzhuangtu tool__icon" :class="isStack ? 'tool__icon-active' : ''"/>
+              </span>
+            </div>
             <div class="chart-room">
-              <chart ref="logChart" :unit="chartUnitType" v-my-loading="chartLoading" :timeRange="filterTime"></chart>
+              <uplotChart
+                :ref="'exploreChart'"
+                :chart-data="uplotChartData"
+                :chart-info="uplotChartInfoLog"
+                :is-fullscreen="false"
+                :panelLock="true"
+                :showAllData="showAllData"
+                @loadMore="loadMore"
+                :isFullscreen="false"
+                :globalVariables="[]"
+                :from="'explore'"
+              />
             </div>
           </el-collapse-item>
           <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
@@ -182,6 +216,9 @@ import chart from '@/components/page/dashboard/overview/chart'
 import logTab from '@/components/page/dashboard/explore/logTab'
 import chartUnit from '@/components/common/chartUnit'
 import copy from '@/components/common/copy'
+import uplotChart from '@/components/chart/chart.vue'
+import lineData from '@/components/chart/defaultLineData'
+import logData from '@/components/chart/defaultLogData'
 const dataJson = window.dataJson || {}
 export default {
   name: 'exploreItemHtml',
@@ -196,7 +233,8 @@ export default {
     chart,
     logTab,
     'chart-unit': chartUnit,
-    copy
+    copy,
+    uplotChart
   },
   data () {
     return {
@@ -226,9 +264,15 @@ export default {
       storedTableData: [],
       tableMode: 'table',
       expandResults: false,
-      allMatrix: false, // metric是否全部为matrix类型
       rowData: [],
-      supplementaryData: []
+      showChart: false,
+      showTable: false,
+      uplotChartInfo: lineData,
+      uplotChartInfoLog: logData,
+      uplotChartData: [],
+      showAllData: false,
+      supplementaryData: [],
+      isStack: false
     }
   },
   mounted () {
@@ -246,6 +290,16 @@ export default {
     window.addEventListener('resize', this.logsCollapseChange)
   },
   methods: {
+    loadMore () {
+      this.showAllData = true
+      this.$nextTick(() => {
+        this.$refs.exploreChart.$children[0].initChart()
+      })
+    },
+    changeStack () {
+      this.isStack = !this.isStack
+      this.$refs.exploreChart.$children[0].changeStack()
+    },
     handlerRowData (data) {
       const metric = this.$lodash.cloneDeep(data)
       const metricName = metric.__name__ || ''
@@ -301,6 +355,7 @@ export default {
     },
     stateChange (index) {
       this.dataJson.data[index].state = !this.dataJson.data[index].state
+      this.$forceUpdate()
       this.expressionChange()
     },
     expressionChange () {
@@ -308,7 +363,8 @@ export default {
       this.pageObj.pageNo = 1
       if (this.showMetrics) {
         if (this.dataJson.data && this.dataJson.data.length >= 1) {
-          this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
+          this.showChart = false
+          this.showTable = false
           this.queryTableData()
           this.queryChartData()
           this.storeHistory()
@@ -331,23 +387,18 @@ export default {
         this.tableData = []
         this.tableTitle = []
         this.tools.customTableTitle = []
-
-        this.allMatrix = res.filter((r, i) => r.state).every(d => d.data.resultType === 'matrix' && d.api === 'query')
-
         res.forEach((response, index) => {
           if (!response.state) {
             return
           }
-          if (response.data) {
+          if (response.data && response.data.resultType !== 'matrix') {
+            this.showTable = true
             const data = response.data.result
             if (data) {
               data.forEach((result, i) => {
                 const metrics = Object.assign({}, result.metric)
-                if (!Array.isArray(result.values)) {
-                  const val = result
-                  result = {
-                    values: ['', val]
-                  }
+                if (!Array.isArray(result.values) && Array.isArray(result.value)) {
+                  result.values = [result.value]
                 }
                 this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnitType || 2).compute(result.values[0][1], null, 2))
                 this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000)))
@@ -364,37 +415,27 @@ export default {
                     tLabels.push(label)
                   }
                 }
-                if (response.api === 'query') {
-                  result.values.forEach(item => {
-                    tData.push({
-                      ...metrics,
-                      ['value#' + index]: chartDataFormat.getUnit(this.chartUnit || 2).compute(item[1], null, 2),
-                      time: bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000))
-                    })
+                result.values.forEach(item => {
+                  tData.push({
+                    ...metrics,
+                    ['value#' + index]: chartDataFormat.getUnit(this.chartUnitType || 2).compute(item[1], null, 2),
+                    time: bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000))
                   })
-                } else {
-                  tData.push(metrics)
-                }
+                })
 
                 // 处理row模式数据
                 const rowData = this.handlerRowData(result.metric)
                 rowData.value = metrics['value#' + index]
-                // matrix 类型数据
-                if (response.data.resultType === 'matrix' && response.api === 'query') {
-                  rowData.valueList = result.values.map((item, index) => {
-                    const obj = {}
-                    obj.value = chartDataFormat.getUnit(this.chartUnitType || 2).compute(item[1], null, 2)
-                    obj.timestamp = '@' + item[0]
-                    obj.time = bus.timeFormate(bus.computeTimezone(item[0] * 1000))
-                    if (index) { // 与前一个数据间隔
-                      obj.interval = '+' + parseInt(item[0] - result.values[index - 1][0]).toString()
-                    }
-                    return obj
-                  })
-                } else {
-                  rowData.time = bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000))
-                  rowData.timestamp = '@' + result.values[0][0]
-                }
+                rowData.valueList = result.values.map((item, index) => {
+                  const obj = {}
+                  obj.value = chartDataFormat.getUnit(this.chartUnitType || 2).compute(item[1], null, 2)
+                  obj.timestamp = '@' + item[0]
+                  obj.time = bus.timeFormate(bus.computeTimezone(item[0] * 1000))
+                  if (index) { // 与前一个数据间隔
+                    obj.interval = '+' + parseInt(item[0] - result.values[index - 1][0]).toString()
+                  }
+                  return obj
+                })
                 this.rowData.push(rowData)
               })
             }
@@ -421,98 +462,37 @@ export default {
           this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
           this.tableTitle = Object.assign([], tLabels)
           this.tools.customTableTitle = Object.assign([], tLabels)
-          this.defaultTableVisible = true
         } else {
-          // this.defaultTableVisible = false;
           this.pageObj.total = 0
         }
       }
       this.tools.loading = false
     },
     queryChartData () {
-      this.$refs.exploreChart && this.$refs.exploreChart.startLoading()
-      let res = this.dataJson.data
-      let series = []
-      const promqlInputIndexs = []
-      const legend = []
-      res = res.filter((r, i) => r.state && r.api === 'query_range')
+      const res = this.dataJson.data
       if (res.length > 0) {
+        this.uplotChartData = []
+        this.uplotChartInfo.elements = []
+        this.uplotChartInfo.unit = this.chartUnitType || 2
+        this.uplotChartInfo.param.stack = this.isStack
         res.forEach((response, index) => {
-          const promqlIndex = promqlInputIndexs[index]
-          if (response.data) {
+          if (!response.state) {
+            return
+          }
+          if (response.data && response.data.resultType === 'matrix') {
+            this.showChart = true
             const data = response.data.result
-            if ((!data || data.length < 1) && response.message) {
-              this.$refs['promql-' + promqlIndex][0].setError(response.message)
+            if (!data || data.length < 1) {
               return
             }
-            data.forEach((result, i) => {
-              const seriesItem = {
-                type: 'line',
-                name: '',
-                symbol: 'emptyCircle', // 去掉点
-                symbolSize: 8,
-                showSymbol: false,
-                smooth: 0.2, // 曲线变平滑
-                data: [],
-                lineStyle: {
-                  width: 2,
-                  opacity: 0.9
-                },
-                emphasis: {
-                  focus: 'none'
-                },
-                blur: {
-                  lineStyle: {
-                    opacity: 0.3
-                  },
-                  itemStyle: {
-                    opacity: 1
-                  }
-                }
-              }
-              let legendName = ''
-              seriesItem.data = result.values.map((item) => {
-                return [item[0] * 1000, item[1]]
-              })
-              if (result.metric && Object.keys(result.metric).length > 0) {
-                const metric = Object.assign({}, result.metric)
-                seriesItem.name += metric.__name__ ? metric.__name__ : ''
-                seriesItem.name += '{'
-                delete metric.__name__
-                for (const key in metric) {
-                  seriesItem.name += key + '=' + '"' + metric[key] + '",'
-                }
-                legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
-                legendName += '}'
-              } else {
-                legendName = this.dataJson.data[index].expression
-              }
-              seriesItem.name = legendName + '-' + index
-              series.push(seriesItem)
-              legend.push({ name: seriesItem.name, alias: legendName, isGray: false })
+            this.uplotChartData.push(response.data.result)
+            this.uplotChartInfo.elements.push({
+              expression: response.expression,
+              legend: response.legend
             })
-
-            // this.$refs['promql-' + promqlIndex][0].setError('')
-          } else {
-            if (response.error) {
-              // this.$refs['promql-' + promqlIndex][0].setError(response.error)
-            } else {
-              // this.$refs['promql-' + promqlIndex][0].setError(response)
-            }
           }
-        })
-
-        this.$nextTick(() => {
-          this.$refs.exploreChart.setLegend(legend)
-          this.$refs.exploreChart.setRandomColors(series.length)
-          if (!series.length) {
-            series = ''
-          }
-          this.$refs.exploreChart.setSeries(series)
-          this.defaultChartVisible = true
         })
       }
-      this.$refs.exploreChart && this.$refs.exploreChart.endLoading()
     },
     storeHistory () {
       const expire = 24
@@ -644,89 +624,34 @@ export default {
           }
           this.$nextTick(() => {
             this.logData = logData
-            hasGraph && this.loadLogGraph()
+            const elements = res.map(item => {
+              return {
+                expression: item.expression,
+                legend: item.legend
+              }
+            })
+            hasGraph && this.loadLogGraph(elements)
           })
         }
       }
     },
-    loadLogGraph () {
+    loadLogGraph (elements) {
       const graphData = this.logData.filter(l => l.resultType === 'matrix')
       if (graphData && graphData.length > 0) {
-        this.$refs.logChart.startLoading()
-        const promqlInputIndexs = []
-        const queryExpression = []
-        let series = []
-        const legend = []
-        this.dataJson.data.forEach((item, index) => {
-          if (item.expression !== '' && item.state) {
-            promqlInputIndexs.push(index)
-            queryExpression.push(item.expression)
-          }
-        })
+        this.uplotChartData = []
+        this.uplotChartInfoLog.elements = []
+        this.uplotChartInfoLog.unit = this.chartUnitType || 2
+        this.uplotChartInfoLog.param.stack = this.isStack
         this.logData.forEach((response, index) => {
           if (response.resultType === 'matrix') {
             const data = response.result
             if (!data || data.length < 1) {
               return
             }
-            data.forEach((result, i) => {
-              const seriesItem = {
-                type: 'line',
-                name: '',
-                symbol: 'emptyCircle', // 去掉点
-                symbolSize: 8,
-                showSymbol: false,
-                smooth: 0.2, // 曲线变平滑
-                data: [],
-                lineStyle: {
-                  width: 2,
-                  opacity: 0.9
-                },
-                emphasis: {
-                  focus: 'none'
-                },
-                blur: {
-                  lineStyle: {
-                    opacity: 0.3
-                  },
-                  itemStyle: {
-                    opacity: 1
-                  }
-                }
-              }
-              let legendName = ''
-              seriesItem.data = result.values.map((item) => {
-                return [item[0] * 1000, item[1]]
-              })
-              if (result.metric && Object.keys(result.metric).length > 0) {
-                const metric = Object.assign({}, result.metric)
-                seriesItem.name += metric.__name__ ? metric.__name__ : ''
-                seriesItem.name += '{'
-                delete metric.__name__
-                for (const key in metric) {
-                  seriesItem.name += key + '=' + '"' + metric[key] + '",'
-                }
-                legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
-                legendName += '}'
-              } else {
-                legendName = queryExpression[index]
-              }
-              seriesItem.name = legendName + '-' + index
-              series.push(seriesItem)
-              legend.push({ name: seriesItem.name, alias: legendName, isGray: false })
-            })
+            this.uplotChartData.push(data)
           }
         })
-        this.defaultChartVisible = true
-        this.$nextTick(() => {
-          this.$refs.logChart.setLegend(legend)
-          this.$refs.logChart.setRandomColors(series.length)
-          if (!series.length) {
-            series = ''
-          }
-          this.$refs.logChart.setSeries(series)
-          this.$refs.logChart.endLoading()
-        })
+        this.uplotChartInfoLog.elements = elements
       }
     },
     updateCustomTableTitle (custom) {
