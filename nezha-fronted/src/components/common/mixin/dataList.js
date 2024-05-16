@@ -838,10 +838,10 @@ export default {
           },
           jsonKey: 'val'
         },
-        state: {
+        statuses: {
           target: this.searchLabel,
           isSearchInput: true,
-          propertyName: 'state',
+          propertyName: 'statuses',
           type: 'string',
           defaultJson: {
             disabled: false,
@@ -849,9 +849,11 @@ export default {
             name: 'State',
             readonly: true,
             type: 'select',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'promState'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         },
         dcIds: {
           target: this.searchLabel,
@@ -880,9 +882,11 @@ export default {
             name: 'Type',
             readonly: true,
             type: 'select',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'promType'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         },
         host: {
           target: this.searchLabel,
