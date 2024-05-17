@@ -2,8 +2,6 @@
 .license {
   display: flex;
   justify-content: flex-start;
-  height: calc(100% - 20px) !important;
-  //margin: 10px;
   padding: 10px;
   box-sizing: border-box;
   background: $--background-color-empty;
@@ -206,5 +204,48 @@
     background: $--background-color-empty;
     border: 1px solid $--border-color-light;
     border-color: $--border-color-light;
+  }
+
+  .el-dialog{
+    .el-dialog__header{
+      padding: 16px 20px;
+      border: none;
+      height: unset;
+      line-height: unset;
+      .el-dialog__title{
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .el-dialog__headerbtn{
+        line-height: normal;
+      }
+    }
+    .el-dialog__body{
+      padding-top: 0 !important;
+    }
+    .el-dialog__footer{
+      padding: 20px;
+      .nz-btn.nz-btn-size-normal{
+        height: 32px;
+        line-height: 32px;
+        font-size: 14px;
+      }
+    }
+    .check-tip{
+      word-break: break-word;
+      font-size: 14px;
+      color: $--color-text-regular;
+      line-height: 20px;
+      margin-top: 6px;
+      &:first-of-type{
+        margin-top: 0;
+      }
+      &.isCheck{
+        .el-checkbox__label{
+          color: $--color-text-primary !important;
+          padding-left: 6px;
+        }
+      }
+    }
   }
 }
