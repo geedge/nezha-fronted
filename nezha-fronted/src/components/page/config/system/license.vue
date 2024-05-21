@@ -165,7 +165,7 @@
     </el-dialog>
 
     <el-dialog
-      class="nz-dialog"
+      class="nz-dialog c2vDialog"
       :title="$t('license.downloadID')"
       :show-close="true"
       :visible.sync="checkVisible"
@@ -333,6 +333,7 @@ export default {
       this.downLoading = true
       this.$get('/sys/license/token').then(res => {
         this.downLoading = false
+        this.checkVisible = false
         let fileName = ''
         const resFileName = res.headers['content-disposition'].split('=')[1]
         if (resFileName) {

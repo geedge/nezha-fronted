@@ -35,7 +35,7 @@
 <!--          <div v-if="!license.valid" class="license-upload">-->
           <div class="license-upload" v-if="!license.valid">
 <!--            <button type="button" class="login-btn" @click="downloadMib"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.dowLicense')}}</button>-->
-            <button type="button" class="login-btn download-btn" @click="downloadLogin"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.downloadID')}}
+            <button type="button" class="login-btn download-btn" @click="checkVisible = true"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.downloadID')}}
             </button>
             <button class="license-left-footer-download login-btn download-btn" @click.stop="openQrcode" style="margin-left: -4px;display: inline-block">
               <i class="nz-icon nz-icon-erweima"></i>
@@ -201,6 +201,27 @@
         </div>
       </div>
     </el-dialog>
+    <el-dialog
+      class="nz-dialog c2vDialog"
+      :title="$t('license.downloadID')"
+      :show-close="true"
+      :visible.sync="checkVisible"
+      width="480px"
+      @close="closeCheckDialog"
+      >
+      <p class="check-tip">{{$t('license.check')}}</p>
+      <p class="check-tip">{{$t('license.check1')}}</p>
+      <p class="check-tip">{{$t('license.check2')}}</p>
+      <p class="check-tip">{{$t('license.check3')}}</p>
+      <p class="check-tip">{{$t('license.check4')}}</p>
+      <p class="check-tip isCheck">
+        <el-checkbox v-model="checkCompleted">{{$t('license.checkCompleted')}}</el-checkbox>
+      </p>
+      <div slot="footer">
+        <button @click="checkVisible = false" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-10">{{$t("overall.close")}}</button>
+        <button @click="downloadLicense" class="nz-btn nz-btn-size-normal nz-btn-style-normal" :class="{'nz-btn-disabled': (downLoading || !checkCompleted)}" :disabled="(downLoading || !checkCompleted)">{{$t('overall.download')}}</button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -269,11 +290,17 @@ export default {
       boxWidth: '',
       boxHeight: '',
       qrWidth: 10,
-      paddingLeft: 0
+      paddingLeft: 0,
+      checkVisible: false,
+      downLoading: false,
+      checkCompleted: false
     }
   },
   methods: {
     ...mapActions(['loginSuccess']),
+    closeCheckDialog () {
+      this.checkCompleted = false
+    },
     login () {
       if (this.loading || !this.license.valid) {
         return
@@ -289,7 +316,7 @@ export default {
             this.theme = res.data.user.theme
             this.userInfo = res.data.user
             localStorage.setItem('nz-token', res.data.authToken)
-            localStorage.setItem('nz-userInfo', JSON.stringify( this.userInfo))
+            localStorage.setItem('nz-userInfo', JSON.stringify(this.userInfo))
             if (res.data.authFlag === 1) {
               if (res.data.authBind === 0) {
                 this.verifyShow = true
@@ -385,8 +412,11 @@ export default {
         }
       })
     },
-    downloadLogin () {
+    downloadLicense () {
+      this.downLoading = true
       this.$get('/sys/license/token').then(res => {
+        this.downLoading = false
+        this.checkVisible = false
         let fileName = ''
         const resFileName = res.headers['content-disposition'].split('=')[1]
         if (resFileName) {
@@ -407,6 +437,7 @@ export default {
           a.remove() // 将a标签移除
         }
       }, error => {
+        this.downLoading = false
         const $self = this
         const reader = new FileReader()
         reader.onload = function (event) {
