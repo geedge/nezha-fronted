@@ -1,92 +1,95 @@
 <template>
-  <div ref="legendArea" class='legend-container'>
-    <!-- 带统计的是table形式 -->
-    <template v-if="isStatistics">
-      <div class="legend--table">
-        <div class="legend--table-row table-header">
-          <div class="legend--table-cell"></div>
-          <div v-for="statistics in chartInfo.param.legend.values" :key="statistics" class="legend--table-cell">
-            <span v-if="statisticsList.find(key=>key.value === statistics)" :title="$t(statisticsList.find(key=>key.value === statistics).label)">{{$t(statisticsList.find(key=>key.value === statistics).label)}}</span>
-            <span v-else>--</span>
+  <div class="legend-wrap" ref="legendDom">
+    <div v-if="isFullscreen" class="legend-resize" @mousedown="legendResize"></div>
+    <div ref="legendArea" class='legend-container'>
+      <!-- 带统计的是table形式 -->
+      <template v-if="isStatistics">
+        <div class="legend--table">
+          <div class="legend--table-row table-header">
+            <div class="legend--table-cell"></div>
+            <div v-for="statistics in chartInfo.param.legend.values" :key="statistics" class="legend--table-cell">
+              <span v-if="statisticsList.find(key=>key.value === statistics)" :title="$t(statisticsList.find(key=>key.value === statistics).label)">{{$t(statisticsList.find(key=>key.value === statistics).label)}}</span>
+              <span v-else>--</span>
+            </div>
+          </div>
+          <!-- 左y轴legend -->
+          <div
+            v-for="(item, index) in legends"
+            :key="index"
+            v-show="!isTimeSeries||series[index].yAxisIndex!=1"
+            :class="{'row--inactive': isGrey[index]}"
+            class="legend--table-row"
+            @click="clickLegend(item.name, index)"
+            @mouseenter="hoverLegend(item.name, index,'highlight')"
+            @mouseleave="hoverLegend(item.name, index,'downplay')"
+          >
+            <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
+              <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
+              <span v-else :style="{background: item.color}" class="legend-shape"></span>
+              <span :title="item.alias ? item.alias : item.name">{{item.alias ? item.alias : item.name}}</span>
+              <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name)" :title="$t('overall.copyText')"></i>
+            </div>
+            <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value))}}</div>
+          </div>
+          <!-- 右y轴legend -->
+          <div
+            v-for="(item, index) in legends"
+            :key="index+'right'"
+            v-show="isTimeSeries&&series[index].yAxisIndex==1"
+            :class="{'row--inactive': isGrey[index]}"
+            class="legend--table-row"
+            @click="clickLegend(item.name, index)"
+            @mouseenter="hoverLegend(item.name, index,'highlight')"
+            @mouseleave="hoverLegend(item.name, index,'downplay')"
+          >
+            <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
+              <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
+              <span v-else :style="{background: item.color}" class="legend-shape"></span>
+              <span :title="item.alias ? item.alias : item.name">{{item.alias ? item.alias : item.name}}</span>
+              <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name)" :title="$t('overall.copyText')"></i>
+            </div>
+            <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value, 'right'))}}</div>
           </div>
         </div>
+      </template>
+      <!-- 否则是普通形式 -->
+      <template v-else>
         <!-- 左y轴legend -->
         <div
           v-for="(item, index) in legends"
           :key="index"
           v-show="!isTimeSeries||series[index].yAxisIndex!=1"
-          :class="{'row--inactive': isGrey[index]}"
-          class="legend--table-row"
+          :class="{'legend-item--inactive': isGrey[index]}"
+          :title="item.alias ? item.alias : item.name"
+          class="legend-item"
           @click="clickLegend(item.name, index)"
           @mouseenter="hoverLegend(item.name, index,'highlight')"
           @mouseleave="hoverLegend(item.name, index,'downplay')"
         >
-          <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
-            <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
-            <span v-else :style="{background: item.color}" class="legend-shape"></span>
-            <span :title="item.alias ? item.alias : item.name">{{item.alias ? item.alias : item.name}}</span>
-            <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name)" :title="$t('overall.copyText')"></i>
-          </div>
-          <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value))}}</div>
+          <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
+          <span v-else :style="{background: item.color}" class="legend-shape"></span>
+          <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
+          <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name.split('-')[0])" :title="$t('overall.copyText')"></i>
         </div>
         <!-- 右y轴legend -->
         <div
           v-for="(item, index) in legends"
           :key="index+'right'"
           v-show="isTimeSeries&&series[index].yAxisIndex==1"
-          :class="{'row--inactive': isGrey[index]}"
-          class="legend--table-row"
+          :class="{'legend-item--inactive': isGrey[index]}"
+          :title="item.alias ? item.alias : item.name"
+          class="legend-item"
           @click="clickLegend(item.name, index)"
           @mouseenter="hoverLegend(item.name, index,'highlight')"
           @mouseleave="hoverLegend(item.name, index,'downplay')"
         >
-          <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
-            <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
-            <span v-else :style="{background: item.color}" class="legend-shape"></span>
-            <span :title="item.alias ? item.alias : item.name">{{item.alias ? item.alias : item.name}}</span>
-            <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name)" :title="$t('overall.copyText')"></i>
-          </div>
-          <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value, 'right'))}}</div>
+          <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
+          <span v-else :style="{background: item.color}" class="legend-shape"></span>
+          <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
+          <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name.split('-')[0])" :title="$t('overall.copyText')"></i>
         </div>
-      </div>
-    </template>
-     <!-- 否则是普通形式 -->
-    <template v-else>
-      <!-- 左y轴legend -->
-      <div
-        v-for="(item, index) in legends"
-        :key="index"
-        v-show="!isTimeSeries||series[index].yAxisIndex!=1"
-        :class="{'legend-item--inactive': isGrey[index]}"
-        :title="item.alias ? item.alias : item.name"
-        class="legend-item"
-        @click="clickLegend(item.name, index)"
-        @mouseenter="hoverLegend(item.name, index,'highlight')"
-        @mouseleave="hoverLegend(item.name, index,'downplay')"
-      >
-        <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
-        <span v-else :style="{background: item.color}" class="legend-shape"></span>
-        <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
-        <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name.split('-')[0])" :title="$t('overall.copyText')"></i>
-      </div>
-      <!-- 右y轴legend -->
-      <div
-        v-for="(item, index) in legends"
-        :key="index+'right'"
-        v-show="isTimeSeries&&series[index].yAxisIndex==1"
-        :class="{'legend-item--inactive': isGrey[index]}"
-        :title="item.alias ? item.alias : item.name"
-        class="legend-item"
-        @click="clickLegend(item.name, index)"
-        @mouseenter="hoverLegend(item.name, index,'highlight')"
-        @mouseleave="hoverLegend(item.name, index,'downplay')"
-      >
-        <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
-        <span v-else :style="{background: item.color}" class="legend-shape"></span>
-        <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
-        <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name.split('-')[0])" :title="$t('overall.copyText')"></i>
-      </div>
-    </template>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -129,6 +132,74 @@ export default {
     }
   },
   methods: {
+    legendResize (e) {
+      const placement = this.$lodash.get(this.chartInfo, 'param.legend.placement', 'bottom')
+      if (placement === 'bottom') {
+        this.verticalResize(e)
+      } else {
+        this.horizontalResize(e, placement)
+      }
+    },
+    verticalResize (e) {
+      const legendDom = this.$refs.legendDom
+      // 得到点击时dom的初始高度
+      const chartTotalHeight = this.$parent.$el.offsetHeight
+      const legendInitialHeight = legendDom.offsetHeight
+      // 点击时鼠标的Y轴位置
+      const mouseInitialY = e.clientY
+
+      document.onmousemove = (e) => {
+        e.preventDefault()
+        // 得到鼠标拖动的距离
+        const mouseMoveY = e.clientY - mouseInitialY
+
+        legendDom.style.maxHeight = 'unset'
+        legendDom.style.height = legendInitialHeight - mouseMoveY + 'px'
+
+        // 最大 最小高度限制
+        if (parseInt(legendDom.style.height) >= chartTotalHeight - 100) {
+          legendDom.style.height = chartTotalHeight - 100 + 'px'
+        }
+        if (parseInt(legendDom.style.height) <= 38) {
+          legendDom.style.height = 38 + 'px'
+        }
+
+        this.$parent.resize()
+      }
+      document.onmouseup = () => {
+        document.onmousemove = null
+      }
+    },
+    horizontalResize (e, placement) {
+      const legendDom = this.$refs.legendDom
+      // 得到点击时dom的初始宽度
+      const chartTotalWidth = this.$parent.$el.offsetWidth
+      const legendInitialWidth = legendDom.offsetWidth
+      // 点击时鼠标的X轴位置
+      const mouseInitialX = e.clientX
+
+      document.onmousemove = (e) => {
+        e.preventDefault()
+        // 得到鼠标拖动的距离
+        const mouseMoveX = e.clientX - mouseInitialX
+
+        legendDom.style.maxWidth = 'unset'
+        legendDom.style.width = placement === 'right' ? (legendInitialWidth - mouseMoveX + 'px') : (legendInitialWidth + mouseMoveX + 'px')
+
+        // 最大 最小宽度限制
+        if (parseInt(legendDom.style.width) >= chartTotalWidth - 100) {
+          legendDom.style.width = chartTotalWidth - 100 + 'px'
+        }
+        if (parseInt(legendDom.style.width) <= 50) {
+          legendDom.style.width = 50 + 'px'
+        }
+
+        this.$parent.resize()
+      }
+      document.onmouseup = () => {
+        document.onmousemove = null
+      }
+    },
     clickLegend (legendName, index) {
       /* 点击legend
           * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
