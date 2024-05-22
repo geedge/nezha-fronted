@@ -1,7 +1,7 @@
 <template>
   <div class="log-detail">
     <!-- <div :id="`logChart${tabIndex}`" class="log-chart" v-if="showSwitch"></div> -->
-    <chart ref="logChart" class="log-chart" :unit="unit" :timeRange="timeRange"></chart>
+    <chart ref="logChart" style="margin-bottom: 5px;" class="log-chart" :unit="unit" :timeRange="timeRange"></chart>
     <div class="log-chart chart-no-data" v-if="showSwitch&&noData" style="top: 150px">No data</div>
     <div class="log-operations" v-if="showSwitch">
       <div class="log-operation">

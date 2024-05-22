@@ -13,6 +13,7 @@
   visibility: visible;
 }
 .legend-shape{
+  flex-shrink: 0;
   display:inline-block;
   margin-right:5px;
   border-radius:10px;

@@ -383,7 +383,6 @@
 }
 .legend-container {
   display: flex;
-  flex-wrap: wrap;
   overflow: auto;
   font-size: 12px;
   text-align: left;
@@ -391,12 +390,19 @@
   box-sizing: border-box;
 
   .legend-item {
+    box-sizing: border-box;
     padding: 0 8px;
     white-space: nowrap;
     cursor: pointer;
-    display: inline-block;
     line-height: 20px;
     color: $--color-text-primary;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    .legend-name{
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   .legend-item, .legend--table-row {
     &.legend-item--inactive, &.row--inactive {
@@ -429,12 +435,20 @@
 
   // 表格类型
   .legend--table {
-    display: table;
     width: 100%;
+    display: table;
+    table-layout: fixed;
+
+    .legend--table-body{
+      display: table-row-group;
+    }
 
     .legend--table-row {
       display: table-row;
       width: 100%;
+      .legend--table-cell:not(:first-of-type){
+        width: 48px;
+      }
     }
     .legend--table-row:not(:first-of-type):hover {
       background-color: $--background-color-1;
@@ -443,23 +457,35 @@
         visibility: visible;
       }
     }
-    .legend--table-row:first-of-type {
+    .table-header {
+      position: sticky;
+      top: 0;
+      background-color: $--chart-background-color-base;
       color:#33a2e5;
       font-weight: bold;
       font-size: 12px;
       .legend--table-cell:not(:first-of-type) {
         cursor: pointer;
       }
+      .legend--table-cell{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
     .legend--table-cell {
       display: table-cell;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      word-break: break-all;
       padding: 1px 5px;
       box-sizing: border-box;
-      min-width: 50px;
+      .legend--table-box{
+        display: flex;
+        align-items: center;
+      }
+      .legend-name{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 }
@@ -1136,7 +1162,6 @@
 .legend-wrap{
   padding: 5px 10px 5px 10px;
   box-sizing: border-box;
-  justify-content: space-between;
   .legend-resize{
     flex-shrink: 0;
     background-color: $--border-color-light;
@@ -1180,6 +1205,9 @@
       width: 2px;
       height: 100%;
     }
+    .legend-container{
+      flex: 1;
+    }
   } 
 }
 
@@ -1193,6 +1221,9 @@
       cursor: ew-resize;
       width: 2px;
       height: 100%;
+    }
+    .legend-container{
+      flex: 1;
     }
   }
 }

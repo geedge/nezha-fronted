@@ -24,12 +24,18 @@
             @mouseleave="hoverLegend(item.name, index,'downplay')"
           >
             <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
-              <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
-              <span v-else :style="{background: item.color}" class="legend-shape"></span>
-              <span :title="item.alias ? item.alias : item.name">{{item.alias ? item.alias : item.name}}</span>
-              <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name)" :title="$t('overall.copyText')"></i>
+              <div class="legend--table-box">
+                <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
+                <span v-else :style="{background: item.color}" class="legend-shape"></span>
+                <span :title="item.alias ? item.alias : item.name" class="legend-name">{{item.alias ? item.alias : item.name}}</span>
+                <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name)" :title="$t('overall.copyText')"></i>
+              </div>
             </div>
-            <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value))}}</div>
+            <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">
+              <div class="legend--table-box">
+                <span class="legend-name" :title="keepTwoDecimalFull(statistics.value, 'left')">{{keepTwoDecimalFull(statistics.value, 'left')}}</span>
+              </div>
+            </div>
           </div>
           <!-- 右y轴legend -->
           <div
@@ -43,12 +49,18 @@
             @mouseleave="hoverLegend(item.name, index,'downplay')"
           >
             <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
-              <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
-              <span v-else :style="{background: item.color}" class="legend-shape"></span>
-              <span :title="item.alias ? item.alias : item.name">{{item.alias ? item.alias : item.name}}</span>
-              <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name)" :title="$t('overall.copyText')"></i>
+              <div class="legend--table-box">
+                <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
+                <span v-else :style="{background: item.color}" class="legend-shape"></span>
+                <span :title="item.alias ? item.alias : item.name" class="legend-name">{{item.alias ? item.alias : item.name}}</span>
+                <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name)" :title="$t('overall.copyText')"></i>
+              </div>
             </div>
-            <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value, 'right'))}}</div>
+            <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">
+              <div class="legend--table-box">
+                <span class="legend-name" :title="keepTwoDecimalFull(statistics.value, 'right')">{{keepTwoDecimalFull(statistics.value, 'right')}}</span>
+              </div>
+            </div>
           </div>
         </div>
       </template>
@@ -68,7 +80,7 @@
         >
           <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
           <span v-else :style="{background: item.color}" class="legend-shape"></span>
-          <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
+          <span class="legend-name">{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
           <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name.split('-')[0])" :title="$t('overall.copyText')"></i>
         </div>
         <!-- 右y轴legend -->
@@ -85,7 +97,7 @@
         >
           <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
           <span v-else :style="{background: item.color}" class="legend-shape"></span>
-          <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
+          <span class="legend-name">{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
           <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name.split('-')[0])" :title="$t('overall.copyText')"></i>
         </div>
       </template>
