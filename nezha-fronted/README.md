@@ -36,3 +36,10 @@ https://docs.geedge.net/pages/viewpage.action?pageId=67209306
 dev  正常启动
 dev:html   导出为html
 
+# 部分组件Api
+
+nezha-docs目录下 运行 npm i && npm run dev 若无法运行 尝试切换不同的node版本
+
+新增  参考其中一个src下任意一个文件夹， 创建对应文件。 或者可以根据项目目录创建
+
+之后再docs sidebar.js 创建相应的目录 link 关联到对应index.md里面的 'path'
