@@ -94,16 +94,6 @@
   height: calc(100% - 60px);
   flex: 1;
   background-color: $--background-color-empty;
-  .legend--table-cell,.legend-item {
-    color: $--color-text-primary;
-  }
-  .legend-container {
-    .legend--table-row.table-header {
-      .legend--table-cell {
-        color: #33a2e5;
-      }
-    }
-  }
 }
 .table-list-box {
   height: 100%;

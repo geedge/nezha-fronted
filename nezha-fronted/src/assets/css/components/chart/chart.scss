@@ -274,11 +274,6 @@
     &.nz-chart__component--left {
       flex-direction: row-reverse;
     }
-    &.nz-chart__component--right, &.nz-chart__component--left {
-      .legend-container {
-        flex-direction: column;
-      }
-    }
     .legend-box{
       width: 100%;
       display: flex;
@@ -382,12 +377,19 @@
   }
 }
 .legend-container {
+  flex: 1;
   display: flex;
-  overflow: auto;
+  flex-direction: column;
+  overflow: hidden;
   font-size: 12px;
   text-align: left;
   line-height: 18px;
   box-sizing: border-box;
+
+  .legend-list{
+    display: flex;
+    overflow-y: auto;
+  }
 
   .legend-item {
     box-sizing: border-box;
@@ -396,7 +398,7 @@
     cursor: pointer;
     line-height: 20px;
     color: $--color-text-primary;
-    width: 100%;
+    max-width: 100%;
     display: flex;
     align-items: center;
     .legend-name{
@@ -404,9 +406,14 @@
       text-overflow: ellipsis;
     }
   }
+  .legend--table-cell,.legend-item {
+    color: $--color-text-primary;
+  }
   .legend-item, .legend--table-row {
     &.legend-item--inactive, &.row--inactive {
-      color: $--color-text-secondary;
+      .legend--table-cell,.legend-item {
+        color: $--color-text-secondary !important;
+      }
       .legend-shape {
         background-color: $--background-color-1 !important;
       }
@@ -425,11 +432,29 @@
     vertical-align: middle;
     color: $--color-text-regular !important;
   }
-  .legend-item:hover {
+  .legend-item:not(.legendSelect):hover {
     background-color: $--background-color-1;
     cursor: pointer;
     .nz-icon-override{
       visibility: visible;
+    }
+  }
+
+  .legendSelect{
+    width: 100%;
+    cursor: unset;
+    overflow: unset;
+    span{
+      font-weight: bold;
+      cursor: pointer;
+      &:first-of-type{
+        margin-right: 6px;
+      }
+      &.legendSelect-disabled{
+        opacity: .6;
+        cursor: default;
+        color: $--color-text-secondary !important;
+      }
     }
   }
 
@@ -461,11 +486,11 @@
       position: sticky;
       top: 0;
       background-color: $--chart-background-color-base;
-      color:#33a2e5;
-      font-weight: bold;
-      font-size: 12px;
       .legend--table-cell:not(:first-of-type) {
         cursor: pointer;
+        color:#33a2e5;
+        font-size: 12px;
+        font-weight: bold;
       }
       .legend--table-cell{
         white-space: nowrap;
@@ -1183,6 +1208,9 @@
       width: 100%;
       height: 2px;
     }
+    .legend-list{
+      flex-wrap: wrap;
+    }
   }
 }
 .panel-chart--fullscreen{
@@ -1205,8 +1233,9 @@
       width: 2px;
       height: 100%;
     }
-    .legend-container{
+    .legend-list{
       flex: 1;
+      flex-direction: column;
     }
   } 
 }
@@ -1222,8 +1251,9 @@
       width: 2px;
       height: 100%;
     }
-    .legend-container{
+    .legend-list{
       flex: 1;
+      flex-direction: column;
     }
   }
 }
