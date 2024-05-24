@@ -8,4 +8,14 @@ map:
 3. ChartScreenHeader 全屏chart-header相关设置
 
 
+
+# 示例代码
+```
+ <div>
+    <chart-header v-if= '!isFullscreen' />
+    <chart-screen-header v-if= 'isFullscreen' />
+    <chart />
+ </div>
+```
+
 <API src="./panelChart.vue" lang="zh"></API>

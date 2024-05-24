@@ -17,8 +17,26 @@ export const sidebar = {
     {
       text: '组件',
       items: [
-        { text: 'chartList', link: '/chartList' },
-        { text: 'panelChart', link: '/panelChart' }
+        {
+          text: 'chartList',
+          link: '/chartList',
+          items: [
+            { text: 'chartHeader', link: '/chartHeader' },
+            {
+              text: 'panelChart',
+              link: '/panelChart',
+              items: [
+                {
+                  text: 'chart',
+                  link: '/chart',
+                  items: [
+                    {text: 'chartTimeSeries', link: '/chartTimeSeries'}
+                  ]
+                }
+              ]
+            },
+          ]
+        },
       ],
     }
   ],
