@@ -7,4 +7,13 @@ map:
 # 关联组件
 1. chart-legend legend 相关组件
 
+```vue
+  <div
+    ref="timeSeries-chart-box"
+>
+  <div class="chartId"></div>
+  <chart-legend></chart-legend>
+</div>
+```
+
 <API src="./chartTimeSeries.vue" lang="en"></API>

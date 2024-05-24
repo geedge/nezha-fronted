@@ -30,5 +30,10 @@ map:
 25. chartSankey 桑葚图
 26. chartFunnel 漏斗图
 
+# 备注
+大部分的组件props 跟chartTimeSeries 一致
+
+下面只列举 chartTimeSeries 以及部分需要特殊注意的组件
+
 
 <API src="./chart.vue" lang="zh"></API>
