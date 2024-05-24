@@ -7,11 +7,11 @@ const props = withDefaults(defineProps<{
  /**
    * chart数据
    */
- chartData?:  [],
+ chartData?: Array,
   /**
    * legend 数据
    */
-  legends: [],
+  legends: Array,
   /**
    * 是否全屏
    */
@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<{
   /**
    * 所有根据图表处理过后的数据
    */
-  series: []
+  series: Array
 
 }>(), {
 
