@@ -40,6 +40,14 @@ export const sidebar = {
             },
           ]
         },
+        {
+          text: 'table',
+          link: '/table',
+          items: [
+            { text: 'deleteButton', link: '/deleteButton',},
+            { text: 'nzDataList', link: '/nzDataList',},
+          ]
+        }
       ],
     }
   ],
