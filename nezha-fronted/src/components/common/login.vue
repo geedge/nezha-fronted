@@ -1,9 +1,12 @@
 <template>
-  <div class="login"  id="login-bgimg" style="background: none">
-    <div class="video-box">
+  <div class="login"
+       id="login-bgimg"
+       :style="`${nzDefaultConfig.showVideo ? 'background: none': ''}`"
+  >
+    <div class="video-box" v-if="nzDefaultConfig.showVideo">
       <video class="video-background" preload="auto" loop="" playsinline="" autoplay="" src="/static/video/netsec-bg-video.mp4" tabindex="-1" muted="muted"></video>
     </div>
-<!--    <div class="model"></div>-->
+    <div class="model" v-if="!nzDefaultConfig.showVideo"></div>
     <div class="login-main">
       <div class="logo"><img :src="imageUrl"></div>
       <div class='login-box'>

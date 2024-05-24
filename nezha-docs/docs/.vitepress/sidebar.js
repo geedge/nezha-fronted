@@ -30,7 +30,10 @@ export const sidebar = {
                   text: 'chart',
                   link: '/chart',
                   items: [
-                    {text: 'chartTimeSeries', link: '/chartTimeSeries'}
+                    {text: 'chartTimeSeries', link: '/chartTimeSeries'},
+                    {text: 'chartAutotopology', link: '/chartAutotopology'},
+                    {text: 'chartDiagram', link: '/chartDiagram'},
+                    {text: 'chartLegend', link: '/chartLegend'},
                   ]
                 }
               ]
