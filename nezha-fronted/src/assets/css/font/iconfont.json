@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1570796",
+      "name": "四个圆点",
+      "font_class": "sigeyuandian",
+      "unicode": "e6c1",
+      "unicode_decimal": 59073
+    },
+    {
+      "icon_id": "20104483",
+      "name": "反选",
+      "font_class": "fanxuan",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "20104507",
+      "name": "全选",
+      "font_class": "quanxuan",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
       "icon_id": "9010685",
       "name": "堆叠柱状图",
       "font_class": "duidiezhuzhuangtu",

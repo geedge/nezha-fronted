@@ -1,6 +1,9 @@
 <template>
-  <div class="legend-wrap" ref="legendDom">
-    <div v-if="isFullscreen" class="legend-resize" @mousedown="legendResize"></div>
+  <div class="legend-wrap" :class="{'isStatistics':isStatistics}" ref="legendDom">
+    <div v-if="isFullscreen" class="legend-resize" @mousedown="legendResize">
+      <div class="legend-resize-line"></div>
+      <i class="nz-icon nz-icon-sigeyuandian"></i>
+    </div>
     <div ref="legendArea" class='legend-container'>
       <!-- 带统计的是table形式 -->
       <template v-if="isStatistics">
@@ -8,7 +11,7 @@
           <div class="legend--table-row table-header">
             <div class="legend--table-cell legendSelect">
               <span @click="legendAll" :title="$t('dashboard.legendAll')">{{$t('dashboard.legendAll')}}</span><!--
-           --><span @click="legendInvert" :title="$t('dashboard.legendInvert')" :class="{'legendSelect-disabled':isGrey.every(item=>!item),}">{{$t('dashboard.legendInvert')}}</span>
+           --><span @click="legendInvert" :title="$t('dashboard.legendInvert')" :class="{'legendSelect-disabled':isGrey.every(item=>!item)}">{{$t('dashboard.legendInvert')}}</span>
             </div>
             <div v-for="statistics in chartInfo.param.legend.values" :key="statistics" class="legend--table-cell">
               <span v-if="statisticsList.find(key=>key.value === statistics)" :title="$t(statisticsList.find(key=>key.value === statistics).label)">{{$t(statisticsList.find(key=>key.value === statistics).label)}}</span>
@@ -71,7 +74,7 @@
       <template v-else>
         <div class="legend-item legendSelect">
           <span @click="legendAll" :title="$t('dashboard.legendAll')">{{$t('dashboard.legendAll')}}</span><!--
-       --><span @click="legendInvert" :title="$t('dashboard.legendInvert')" :class="{'legendSelect-disabled':isGrey.every(item=>!item),}">{{$t('dashboard.legendInvert')}}</span>
+       --><span @click="legendInvert" :title="$t('dashboard.legendInvert')" :class="{'legendSelect-disabled':isGrey.every(item=>!item)}">{{$t('dashboard.legendInvert')}}</span>
         </div>
         <!-- 左y轴legend -->
         <div class="legend-list">

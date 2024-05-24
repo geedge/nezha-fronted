@@ -513,8 +513,10 @@
     }
     .legend--table-cell {
       display: table-cell;
-      padding: 1px 5px;
+      padding: 0px 5px;
       box-sizing: border-box;
+      line-height: 20px;
+      vertical-align: middle;
       .legend--table-box{
         display: flex;
         align-items: center;
@@ -1201,10 +1203,24 @@
   padding: 5px 10px 5px 10px;
   box-sizing: border-box;
   .legend-resize{
+    position: relative;
     flex-shrink: 0;
-    background-color: $--border-color-light;
-    &:hover{
-      background: $--color-primary;
+    .legend-resize-line{
+      background-color: $--border-color-light;
+      position: absolute;
+      margin: auto;
+    }
+    &:hover .legend-resize-line{
+      background-color: $--color-primary;
+    }
+    .nz-icon{
+      font-size: 16px;
+      color: $--color-text-regular;
+      width: 16px;
+      height: 2px;
+      line-height: 0;
+      position: absolute;
+      margin: auto;
     }
   }
   &:hover .legendSelect {
@@ -1218,14 +1234,24 @@
 .nz-chart__component--bottom{
   .legend-wrap{
     min-height: 38px;
-    max-height: 92px;
+    max-height: 90px;
     display: flex;
     flex-direction: column;
     .legend-resize{
-      margin-bottom: 5px;
       cursor: ns-resize;
       width: 100%;
-      height: 2px;
+      height: 8px;
+      .legend-resize-line{
+        width: 100%;
+        height: 2px;
+        top: 0;
+        bottom: 0;
+      }
+      .nz-icon{
+        top: -2px;
+        left: 0;
+        right: 0;
+      }
     }
     .legend-list{
       flex-wrap: wrap;
@@ -1235,7 +1261,7 @@
 .panel-chart--fullscreen{
   .nz-chart__component--bottom{
     .legend-wrap{
-      max-height: 100px;
+      max-height: 238px;
     }
   }
 }
@@ -1247,10 +1273,21 @@
     display: flex;
     flex-direction: row-reverse;
     .legend-resize{
-      margin-left: 5px;
       cursor: ew-resize;
-      width: 2px;
+      width: 8px;
       height: 100%;
+      .legend-resize-line{
+        width: 2px;
+        height: 100%;
+        left: 0;
+        right: 0;
+      }
+      .nz-icon{
+        transform: rotate(90deg);
+        top: 0;
+        bottom: 0;
+        right: -10px;
+      }
     }
     .legend-list{
       flex: 1;
@@ -1262,13 +1299,24 @@
 .nz-chart__component--right{
   .legend-wrap{
     padding-top: 15px;
-    max-width: 50%;
+    max-width: 30%;
     display: flex;
     .legend-resize{
-      margin-right: 5px;
       cursor: ew-resize;
-      width: 2px;
+      width: 8px;
       height: 100%;
+      .legend-resize-line{
+        width: 2px;
+        height: 100%;
+        left: 0;
+        right: 0;
+      }
+      .nz-icon{
+        transform: rotate(90deg);
+        top: 0;
+        bottom: 0;
+        left: -10px;
+      }
     }
     .legend-list{
       flex: 1;

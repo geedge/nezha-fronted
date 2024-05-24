@@ -267,7 +267,7 @@ export default {
             }
           })
         ],
-        padding: [15, 15, 0, 15],
+        padding: [15, 15, 10, 15],
         // padding: [15, this.autoPadRight, 15, 15],
         legend: {
           show: false
