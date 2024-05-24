@@ -18,7 +18,6 @@
     </div>
     <chart-legend
       ref="legend"
-      style="flex-shrink: 0"
       v-if="hasLegend"
       :chart-data="chartData"
       :chart-info="chartInfo"
@@ -268,7 +267,7 @@ export default {
             }
           })
         ],
-        padding: [15, 15, 15, 15],
+        padding: [15, 15, 0, 15],
         // padding: [15, this.autoPadRight, 15, 15],
         legend: {
           show: false
@@ -285,13 +284,14 @@ export default {
         axes: [
           {
             scale: 'x',
-            gap: 5,
+            gap: 0,
             stroke: self.color[self.theme].label,
             grid: {
               show: true,
               stroke: self.color[self.theme].grid,
               width: 1
-            }
+            },
+            size: 20
           },
           {
             scale: 'left',
