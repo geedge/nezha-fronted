@@ -1,33 +1,38 @@
 <script lang="ts" setup>
 const props = withDefaults(defineProps<{
   /**
-   * 是否显示强制删除
+   * 当前展示类型
    */
-  forceDeleteShow?: boolean,
+  detailType?: string,
   /**
-   * 需要删除的数组
+   * 表格标题
    */
-  deleteObjs?: Array,
+  tableTitle?: Array<any>,
   /**
-   * 删除接口
+   * 编辑后的表格标题
    */
-  api?: string,
+  customTableTitle?: Array<any>,
   /**
-   * 唯一id
+   * 当前使用的插槽
    */
-  id?: string,
+  layout?: Array<any>,
   /**
-   * 删除按钮的样式 是按钮 还是文字
+   * 搜索框使用的相关参数
    */
-  type?: string,
+  searchMsg?: Array<any>,
   /**
-   * 删除的标题
+   * 当前底弹窗加header的高度
    */
-  deleteTitle?: string,
+  nzTableHeightOffset?: number,
   /**
-   * 是否需要强制删除
+   * 是否隐藏删除
    */
-  single?: boolean,
+  hideDelete?: boolean,
+  /**
+   * 搜索框位置
+   */
+  searchRight?: boolean
+
 }>(), {
 
 })
@@ -36,6 +41,10 @@ const props = withDefaults(defineProps<{
 <template>
   <div>
     <!-- 这里是默认插槽，可以插入自定义内容 -->
-    <slot name="top-tool-left">{{ 213123 }}</slot>
+    <slot name="top-tool-left">{ 213123 }</slot>
+    <slot name="top-tool-right">{{ 213123 }}</slot>
+    <slot name="search">{{ 213123 }}</slot>
+    <slot name="pagination">{{ 213123 }}</slot>
+    <slot name="default">{{ 213123 }}</slot>
   </div>
 </template>

@@ -45,7 +45,17 @@ export const sidebar = {
           link: '/table',
           items: [
             { text: 'deleteButton', link: '/deleteButton',},
-            { text: 'nzDataList', link: '/nzDataList',},
+            {
+              text: 'nzDataList',
+              link: '/nzDataList',
+              items:[
+                {text:'searchBox', link: '/searchBox'},
+                {text:'searchInput', link: '/searchInput'},
+                {text:'bottomBox', link: '/bottomBox'},
+              ]
+            },
+            { text: 'rightBox', link: '/rightBox',},
+            { text: 'nzDetailView', link: '/nzDetailView',},
           ]
         }
       ],
