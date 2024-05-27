@@ -9,5 +9,10 @@ map:
 
 nezha-fronted/src/components/common/searchBox/searchBoxInfo.js
 
+# 示例代码
+```vue
+<search-box />
+```
+
 <API src="./index.vue" lang="en"></API>
 

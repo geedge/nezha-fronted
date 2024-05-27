@@ -8,7 +8,7 @@ map:
 
 1. deleteButton 删除组件
 2. nzDataList table组件公共部分
-3. assetBox 对应的新增 编辑染成
+3. assetBox 对应的新增 编辑
 4. detailViewTopSearch 详细视图搜索框
 5. assetDetail 详细视图
 6. assetTable 对应table组件

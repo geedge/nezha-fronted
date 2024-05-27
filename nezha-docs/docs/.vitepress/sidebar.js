@@ -44,7 +44,6 @@ export const sidebar = {
           text: 'table',
           link: '/table',
           items: [
-            { text: 'deleteButton', link: '/deleteButton',},
             {
               text: 'nzDataList',
               link: '/nzDataList',
@@ -54,11 +53,35 @@ export const sidebar = {
                 {text:'bottomBox', link: '/bottomBox'},
               ]
             },
-            { text: 'rightBox', link: '/rightBox',},
             { text: 'nzDetailView', link: '/nzDetailView',},
+            { text: 'deleteButton', link: '/deleteButton',},
+            { text: 'rightBox', link: '/rightBox',},
+
           ]
         }
       ],
+    },
+
+    {
+      text: '其他组件',
+      items:[
+        {text:'clickSearch', link: '/clickSearch'},
+        {text:'promqlInput', link: '/promqlInput'},
+      ]
+    },
+    {
+      text: '引用插件',
+      items:[
+        {text:'le5le', link: '/le5le'},
+        {text:'map', link: '/map'},
+        {text:'xterm', link: '/xterm'},
+        {text:'时间插件', link: '/time'},
+        {text:'Quill', link: '/quill'},
+      ]
+    },
+    {
+      text: '注意事项',
+      link: '/note',
     }
   ],
 };
