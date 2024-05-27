@@ -6,7 +6,7 @@ map:
 promql 输入组件
 
 # 相关链接
-codemirror : https://github.com/codemirror/codemirror5
+codemirror : https://github.com/codemirror/codemirror5 <br>
 codemirror-promql : https://github.com/prometheus/codemirror-promql
 
 

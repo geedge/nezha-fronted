@@ -67,6 +67,13 @@ export const sidebar = {
       items:[
         {text:'clickSearch', link: '/clickSearch'},
         {text:'promqlInput', link: '/promqlInput'},
+        {
+          text:'pickTime',
+          link: '/pickTime',
+          items: [
+              {text:'multipleTime', link: '/multipleTime'}
+          ]
+        },
       ]
     },
     {
@@ -77,11 +84,18 @@ export const sidebar = {
         {text:'xterm', link: '/xterm'},
         {text:'时间插件', link: '/time'},
         {text:'Quill', link: '/quill'},
+        {text:'D3', link: '/d3'},
+        {text:'selectpage', link: '/selectpage'},
       ]
     },
     {
       text: '注意事项',
       link: '/note',
+      items: [
+        {text:'dashboard 流程'},
+        {text:'主题简单使用教程'},
+        {text:'国际化使用教程'},
+      ]
     }
   ],
 };
