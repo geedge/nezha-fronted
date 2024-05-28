@@ -296,7 +296,7 @@ export default {
       sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
       legend: [],
       searchTime: [],
-      searchTimeHeader: [bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 24 * 7)), bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime()))), '7d'],
+      searchTimeHeader: [bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1)), bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime()))), '1h'],
       searchTimeSelect: bus.getTimezontDateRange(),
       currentMsg: {},
       chartUnit: 5,
@@ -311,9 +311,9 @@ export default {
       isError: false,
       errorContent: '',
       chartInfo: {},
-      defaultPick: 10,
-      defaultPickType: 'date',
-      defaultPickVal: 7
+      defaultPick: 4,
+      defaultPickType: 'hour',
+      defaultPickVal: 1
     }
   },
   created () {

@@ -287,9 +287,9 @@ export default {
     },
     showBottomBox (targetTab, row) {
       this.sign = row.id
-      if (!this.bottomBox.showSubList) {
-        this.bottomBox.targetTab = targetTab
-      }
+      // if (!this.bottomBox.showSubList) {
+      this.bottomBox.targetTab = targetTab
+      // }
       this.bottomBox.object = JSON.parse(JSON.stringify(row))
       this.bottomBox.showSubList = true
     },
