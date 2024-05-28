@@ -40,7 +40,62 @@ export const sidebar = {
             },
           ]
         },
+        {
+          text: 'table',
+          link: '/table',
+          items: [
+            {
+              text: 'nzDataList',
+              link: '/nzDataList',
+              items:[
+                {text:'searchBox', link: '/searchBox'},
+                {text:'searchInput', link: '/searchInput'},
+                {text:'bottomBox', link: '/bottomBox'},
+              ]
+            },
+            { text: 'nzDetailView', link: '/nzDetailView',},
+            { text: 'deleteButton', link: '/deleteButton',},
+            { text: 'rightBox', link: '/rightBox',},
+
+          ]
+        }
       ],
+    },
+
+    {
+      text: '其他组件',
+      items:[
+        {text:'clickSearch', link: '/clickSearch'},
+        {text:'promqlInput', link: '/promqlInput'},
+        {
+          text:'pickTime',
+          link: '/pickTime',
+          items: [
+              {text:'multipleTime', link: '/multipleTime'}
+          ]
+        },
+      ]
+    },
+    {
+      text: '引用插件',
+      items:[
+        {text:'le5le', link: '/le5le'},
+        {text:'map', link: '/map'},
+        {text:'xterm', link: '/xterm'},
+        {text:'时间插件', link: '/time'},
+        {text:'Quill', link: '/quill'},
+        {text:'D3', link: '/d3'},
+        {text:'selectpage', link: '/selectpage'},
+      ]
+    },
+    {
+      text: '注意事项',
+      link: '/note',
+      items: [
+        {text:'dashboard 流程'},
+        {text:'主题简单使用教程'},
+        {text:'国际化使用教程'},
+      ]
     }
   ],
 };
