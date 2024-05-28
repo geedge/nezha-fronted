@@ -15,6 +15,14 @@ export const sidebar = {
       ],
     },
     {
+      text: '前端部分功能介绍',
+      items: [
+        {text:'dashboard 流程', link: '/dashboardFlow'},
+        {text:'主题简单使用教程', link: '/themeUse'},
+        {text:'国际化使用教程', link: '/i18nUse'},
+      ],
+    },
+    {
       text: '组件',
       items: [
         {
@@ -91,11 +99,7 @@ export const sidebar = {
     {
       text: '注意事项',
       link: '/note',
-      items: [
-        {text:'dashboard 流程'},
-        {text:'主题简单使用教程'},
-        {text:'国际化使用教程'},
-      ]
+      items: []
     }
   ],
 };
