@@ -19,19 +19,18 @@
         </div>
       </div>
       <div class="calendar-popover-text" v-else>
-      <el-tooltip class="item" effect="light"  placement="bottom">
-        <div slot="content"> {{searchTime[0]}}<br/><p style="text-align:center">{{$t("dashboard.dashboard.to")}} </p>{{searchTime[1]}}</div>
-        <div class="time-no-data">{{ showTime.text }}</div>
-      </el-tooltip>
-        <!-- <div class="time-no-data">{{ showTime.text }}</div> -->
+        <el-tooltip class="item" effect="light"  placement="bottom" :disabled="!(searchTime[0] && searchTime[1])">
+          <div slot="content">{{searchTime[0]}}<br/><p style="text-align:center">{{$t("dashboard.dashboard.to")}}</p>{{searchTime[1]}}</div>
+          <div class="time-no-data">{{ showTime.text }}</div>
+        </el-tooltip>
       </div>
       <div class="calendar-popover-text">
         <i class="nz-icon"
-           v-if="showLocked"
-           @click.stop="changeLocked()"
-           :title="timePickerLocked ? $t('timepicker.unlockTime') : $t('timepicker.lockTime')"
-           :class="timePickerLocked ? 'nz-icon-push-pin-line colorfa901c' : 'nz-icon-push-pin-line'"
-           style="margin-right: 5px;cursor: pointer"
+          v-if="showLocked"
+          @click.stop="changeLocked()"
+          :title="timePickerLocked ? $t('timepicker.unlockTime') : $t('timepicker.lockTime')"
+          :class="timePickerLocked ? 'nz-icon-push-pin-line colorfa901c' : 'nz-icon-push-pin-line'"
+          style="margin-right: 5px;cursor: pointer"
         />
         <i class="el-icon-arrow-down"></i>
       </div>
