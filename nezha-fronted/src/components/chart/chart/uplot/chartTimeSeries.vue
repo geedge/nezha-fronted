@@ -67,6 +67,7 @@ import chartTimeSeriesMixin from '@/components/chart/chart/uplot/chartTimeSeries
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import getStackedOpts, { stack } from './stack'
 import bus from '@/libs/bus'
+import moment from 'moment-timezone'
 
 export default {
   name: 'chartTimeSeries',
@@ -291,7 +292,28 @@ export default {
               stroke: self.color[self.theme].grid,
               width: 1
             },
-            size: 20
+            size () {
+              const minTime = seriesData[0][0]
+              const maxTime = seriesData[0][seriesData[0].length - 1]
+
+              const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
+              let offset = localStorage.getItem('nz-sys-timezone')
+              offset = moment.tz(offset).utcOffset()
+
+              const moment1 = moment(((minTime * 1000) - localOffset + (offset * 60 * 1000)))
+              const moment2 = moment(((maxTime * 1000) - localOffset + (offset * 60 * 1000)))
+              const isSameDay = moment1.isSame(moment2, 'day')
+              const isSameMonth = moment1.isSame(moment2, 'month')
+              if (isSameDay) { // 同一天
+                return 20
+              } else if (isSameMonth) { // 同一月
+                return 32
+              } else if (maxTime - minTime <= 16 * 24 * 60 * 60) { // 不同月 相差30天以内
+                return 32
+              } else { // 大于等于30天
+                return 20
+              }
+            }
           },
           {
             scale: 'left',

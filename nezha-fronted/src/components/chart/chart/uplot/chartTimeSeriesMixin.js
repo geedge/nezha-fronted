@@ -555,8 +555,8 @@ export default {
             str += [month, day].join('-')
           }
 
-          const moment1 = moment((minTime * 1000 - localOffset + offset * 60 * 1000))
-          const moment2 = moment((maxTime * 1000 - localOffset + offset * 60 * 1000))
+          const moment1 = moment(((minTime * 1000) - localOffset + (offset * 60 * 1000)))
+          const moment2 = moment(((maxTime * 1000) - localOffset + (offset * 60 * 1000)))
           const isSameDay = moment1.isSame(moment2, 'day')
           const isSameMonth = moment1.isSame(moment2, 'month')
 
