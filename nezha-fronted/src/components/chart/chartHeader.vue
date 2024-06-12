@@ -65,8 +65,8 @@
         <span v-if="chartInfo.type=='group' && !chartInfo.repeatIndex&&from!=='integration' && !isExportHtml" class="chart-header__tool" @click="addChartGroup">
           <i class="nz-icon nz-icon-plus tool__icon" :title="$t('tip.add')"></i>
         </span>
-        <!-- refresh -->
-        <span v-if="!isExportHtml && isTimeSeries(chartInfo.type)" class="chart-header__tool" @click="changeStack">
+        <!-- stack -->
+        <span v-if="isTimeSeries(chartInfo.type)" class="chart-header__tool" @click="changeStack">
           <div :title="$t('dashboard.dashboard.chartForm.stack')" effect="light" placement="top">
             <i class="nz-icon nz-icon-duidiezhuzhuangtu tool__icon" :class="isStack ? 'tool__icon-active' : ''"/>
           </div>
