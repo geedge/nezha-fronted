@@ -223,7 +223,7 @@
       }
     }
     .el-dialog__body{
-      padding-top: 0 !important;
+      padding: 0 20px !important;
     }
     .el-dialog__footer{
       padding: 20px;
@@ -234,9 +234,11 @@
       }
     }
     .check-tip{
-      word-break: break-word;
       font-size: 14px;
-      color: $--color-text-regular;
+      color: $--color-text-primary;
+      font-family: Roboto-Black;
+      font-weight: 400;
+      word-break: break-word;
       line-height: 20px;
       margin-top: 6px;
       &:first-of-type{
@@ -247,6 +249,22 @@
           color: $--color-text-primary !important;
           padding-left: 6px;
         }
+      }
+      i{
+        color: $--color-primary;
+      }
+    }
+    .check-content{
+      opacity: 0.9;
+      background: $--background-color-base;
+      border: 1px solid $--border-color-light;
+      border-radius: 2px;
+      padding: 10px;
+      box-sizing: border-box;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      .check-tip{
+        color: $--color-text-regular;
       }
     }
   }
