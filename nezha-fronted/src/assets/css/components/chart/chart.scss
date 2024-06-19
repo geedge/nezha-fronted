@@ -34,7 +34,6 @@
       transition: height linear 0.3s, opacity linear 0.3s;
       .chart-header__tools {
         .chart-header__tool .tool__icon {
-          // visibility: visible;
         }
       }
     }
@@ -158,10 +157,8 @@
 
       .chart-header__tool {
         margin-left: 20px;
-        cursor: pointer;
 
         .tool__icon {
-          visibility: hidden;
           font-size: 14px;
           color: $--color-text-primary;
         }

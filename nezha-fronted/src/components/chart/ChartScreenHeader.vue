@@ -37,12 +37,14 @@
           <i class="nz-icon nz-icon-info-normal tool__icon"></i>
         </el-tooltip>
       </span>
-      <span class="chart-header__tool" v-if="showTime(chartInfo.type)&&!isExportHtml">
+      <span class="chart-header__tool" v-if="showTime(chartInfo.type)">
         <pick-time
           :refresh-data-func="dateChange"
           v-model="searchTime"
-          :use-chart-unit="showUnit(from)"
-          :showMultiple="showMultiple(chartInfo.type)"
+          :useChartUnit="showUnit(from)&&!isExportHtml"
+          :showMultiple="showMultiple(chartInfo.type)&&!isExportHtml"
+          :showTimePicker="!isExportHtml"
+          :useRefresh="!isExportHtml"
           ref="pickTime"
           style="height: 28px;"
           id="line-chart"
@@ -79,7 +81,7 @@ export default {
     },
     fatherNowTimeType () {
       return this.$store.getters.getNowTimeType
-    },
+    }
   },
   data () {
     return {
@@ -93,7 +95,7 @@ export default {
   methods: {
     dateChange () {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-      this.setSearchTime('searchTime', nowTimeType,'', false)
+      this.setSearchTime('searchTime', nowTimeType, '', false)
       this.filter.start_time = bus.timeFormate(this.searchTime[0])
       this.filter.end_time = bus.timeFormate(this.searchTime[1])
       this.filter.value = this.searchTime[2]
