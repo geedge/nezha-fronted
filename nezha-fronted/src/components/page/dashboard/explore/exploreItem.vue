@@ -3774,8 +3774,8 @@ export default {
       lastHistory: [],
       showChart: false,
       showTable: false,
-      uplotChartInfo: lineData,
-      uplotChartInfoLog: logData,
+      uplotChartInfo: null,
+      uplotChartInfoLog: null,
       uplotChartData: [],
       showAllData: false,
       supplementaryData: [],
@@ -3783,6 +3783,10 @@ export default {
     }
   },
   async created () {
+    this.uplotChartInfo = this.$lodash.cloneDeep(lineData)
+    this.uplotChartInfo.id += Date.now()
+    this.uplotChartInfoLog = this.$lodash.cloneDeep(logData)
+    this.uplotChartInfoLog.id += Date.now()
     this.init()
     this.getPanelData()
     this.resetExpression()
