@@ -188,7 +188,7 @@ export default {
   methods: {
     bytes: chartDataFormat.getUnit(7).compute,
     calcTotal (arr, key) {
-      return arr.reduce((acc, curr) => acc + Number(curr[key]), 0)
+      return arr.reduce((acc, curr) => acc + (Number(curr[key] || 0)), 0)
     }
   }
 }
