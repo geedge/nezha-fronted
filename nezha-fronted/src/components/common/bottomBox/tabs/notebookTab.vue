@@ -173,9 +173,11 @@ export default {
       let charts = this.$lodash.cloneDeep(this.$refs.notebookList.copyDataList)
       charts = charts.filter(item => item.name !== 'groupTemp')
       charts.forEach(item => {
-        item.elements.forEach((subItem, subIndex) => {
-          subItem.expression = item.oldElements[subIndex].expression
-        })
+        if (item.datasource == 'metrics' || item.datasource == 'log') {
+          item.elements.forEach((subItem, subIndex) => {
+            subItem.expression = item.oldElements[subIndex].expression
+          })
+        }
         delete item.x
         delete item.y
         delete item.modifiedName
@@ -250,14 +252,10 @@ export default {
         this.chart.position = { position: 'after', id: data.id }
         this.chart.panelName = this.showPanel.name
         this.chart.id = ''
-        this.chart.elements.forEach((item, index) => {
-          item.expression = this.chart.oldElements[index].expression
-          item.id = ''
-          item.chartId = ''
-          delete item.seq
-        })
-        if (this.chart.datasource !== 'metrics' && this.chart.datasource !== 'log') {
-          delete this.chart.elements
+        if (this.chart.datasource == 'metrics' || this.chart.datasource == 'log') {
+          this.chart.elements.forEach((item, index) => {
+            item.expression = this.chart.oldElements[index].expression
+          })
         }
         this.$nextTick(() => {
           this.$refs.addChartModal.isStable = 'stable'
@@ -265,9 +263,11 @@ export default {
       } else {
         this.chart = JSON.parse(JSON.stringify(data))
         this.chart.panelName = this.showPanel.name
-        this.chart.elements.forEach((item, index) => {
-          item.expression = this.chart.oldElements[index].expression
-        })
+        if (this.chart.datasource == 'metrics' || this.chart.datasource == 'log') {
+          this.chart.elements.forEach((item, index) => {
+            item.expression = this.chart.oldElements[index].expression
+          })
+        }
         this.$nextTick(() => {
           this.$refs.addChartModal.isStable = 'stable'
         })
