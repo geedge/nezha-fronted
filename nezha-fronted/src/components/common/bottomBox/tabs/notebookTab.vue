@@ -590,14 +590,16 @@ export default {
       this.notebookLoading = true
       if (this.obj.id) {
         this.$get('/visual/notebook/' + this.obj.id).then(response => {
+          this.notebookLoading = false
           if (response.code === 200) {
-            this.notebookLoading = false
             this.dataList = response.data.charts.map(item => {
               return {
                 ...item,
                 loaded: false
               }
             })
+          } else {
+            this.$message.error(response.msg)
           }
         })
       } else {

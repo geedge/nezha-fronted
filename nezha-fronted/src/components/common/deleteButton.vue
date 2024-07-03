@@ -124,14 +124,14 @@ export default {
       type: String,
       default: 'project.topology.data'
     },
-    single: { // 是否需要强制删除
+    single: {
       type: Boolean
     }
   },
   inject: ['getTableData', 'delCallBack'],
   methods: {
     batchDelete: function () {
-      if (!this.single) {
+      setTimeout(() => {
         this.$emit('before')
         if (this.deleteObjs.length < 1) return
         if (this.clickFunction) {
@@ -149,32 +149,11 @@ export default {
         })
         this.checkAll = true
         this.idStr = this.deleteData.map(item => item.id)
+        if (this.from == 'backup') {
+          this.backupName = this.deleteData.map(item => item.fileName)
+        }
         this.dialogVisible = true
-      } else {
-        setTimeout(() => {
-          this.$emit('before')
-          if (this.deleteObjs.length < 1) return
-          if (this.clickFunction) {
-            this.clickFunction()
-            return
-          }
-          this.idShow = true
-          this.prepare = true
-          this.process = false
-          this.finish = false
-          this.forceDelete = 0
-          this.deleteData = this.$lodash.cloneDeep(this.deleteObjs).map(item => {
-            item.type = this.from
-            return item
-          })
-          this.checkAll = true
-          this.idStr = this.deleteData.map(item => item.id)
-          if (this.from == 'backup') {
-            this.backupName = this.deleteData.map(item => item.fileName)
-          }
-          this.dialogVisible = true
-        }, 50)
-      }
+      }, 50)
     },
     handleClose () {
       this.dialogVisible = false
@@ -213,7 +192,7 @@ export default {
           })
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
           if (this.delCallBack) {
-            this.delCallBack(this.idStr)
+            this.delCallBack(this.idStr, this.from)
           }
           // this.$emit('after')
         } else {
@@ -259,7 +238,6 @@ export default {
     selectIcon (type) {
       switch (type) {
         case 'asset' : return 'nz-icon monitorColor nz-icon-overview-project'
-        case 'datacenter' : return 'nz-icon monitorColor nz-icon-Datacenter2'
         case 'dc' : return 'nz-icon monitorColor nz-icon-Datacenter2'
         case 'project' : return 'nz-icon monitorColor nz-icon-project'
         case 'module' : return 'nz-icon monitorColor nz-icon-overview-module'

@@ -61,7 +61,7 @@ export default {
           if (this.detailType) {
             params.detailType = this.detailType
           }
-          if (this.detailType === 'list' && this.$refs[detailType]  && this.$refs[detailType].bottomBox) {
+          if (this.detailType === 'list' && this.$refs[detailType] && this.$refs[detailType].bottomBox) {
             params.bottomBox = this.$refs[detailType].bottomBox.showSubList
             params.targetTab = this.$refs[detailType].bottomBox.targetTab
           } else {
@@ -71,30 +71,34 @@ export default {
           if (!params.targetTab) delete params.targetTab
           if (!params.bottomBox) delete params.bottomBox
           if (this.detailType === 'list' && this.$refs[detailType]) {
-            const obj = {
-              id: this.$refs[detailType].bottomBox.object.id,
-              name: this.$refs[detailType].bottomBox.object.name,
-              typeId: this.$refs[detailType].bottomBox.object.typeId,
-              childrenNum: this.$refs[detailType].bottomBox.object.childrenNum || '',
-              clientState: this.$refs[detailType].bottomBox.object.clientState || '',
-              protocol: this.$refs[detailType].bottomBox.object.protocol || '',
-              uuid: this.$refs[detailType].bottomBox.object.uuid || '',
-              startTime: this.$refs[detailType].bottomBox.object.startTime || '',
-              model: {
-                tsgAppliance: this.$refs[detailType].bottomBox.object.model ? this.$refs[detailType].bottomBox.object.model.tsgAppliance : ''
+            if (params.bottomBox) {
+              const obj = {
+                id: this.$refs[detailType].bottomBox.object.id,
+                name: this.$refs[detailType].bottomBox.object.name,
+                typeId: this.$refs[detailType].bottomBox.object.typeId,
+                childrenNum: this.$refs[detailType].bottomBox.object.childrenNum || '',
+                clientState: this.$refs[detailType].bottomBox.object.clientState || '',
+                protocol: this.$refs[detailType].bottomBox.object.protocol || '',
+                uuid: this.$refs[detailType].bottomBox.object.uuid || '',
+                startTime: this.$refs[detailType].bottomBox.object.startTime || '',
+                model: {
+                  tsgAppliance: this.$refs[detailType].bottomBox.object.model ? this.$refs[detailType].bottomBox.object.model.tsgAppliance : ''
+                }
               }
-            }
-            if (this.$refs[detailType].bottomBox.object.configs) {
+              if (this.$refs[detailType].bottomBox.object.configs) {
               // 判断是JSON字符串还是对象
-              if (typeof (this.$refs[detailType].bottomBox.object.configs) == 'string') {
-                obj.configs = JSON.parse(this.$refs[detailType].bottomBox.object.configs).map(item => { return { type: item.type, enable: item.enable } })
-              } else {
-                obj.configs = this.$refs[detailType].bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } })
+                if (typeof (this.$refs[detailType].bottomBox.object.configs) == 'string') {
+                  obj.configs = JSON.parse(this.$refs[detailType].bottomBox.object.configs).map(item => { return { type: item.type, enable: item.enable } })
+                } else {
+                  obj.configs = this.$refs[detailType].bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } })
+                }
               }
-            }
-            this.removeEmpty(obj)
-            if (JSON.stringify(obj) != '{}') {
-              params.selectObj = JSON.stringify(obj)
+              this.removeEmpty(obj)
+              if (JSON.stringify(obj) != '{}') {
+                params.selectObj = JSON.stringify(obj)
+              }
+            } else {
+              delete params.targetTab
             }
           } else if (this.$refs[detailType] && this.$refs[detailType].detailViewRightObj) {
             this.$nextTick(() => {

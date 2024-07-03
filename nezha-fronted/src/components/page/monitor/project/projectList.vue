@@ -195,8 +195,8 @@ export default {
         }
       })
     },
-    delCallBack (id) {
-      if (id.indexOf(this.$store.state.currentProject.id) !== -1) {
+    delCallBack (ids) {
+      if (ids.indexOf(this.$store.state.currentProject.id) !== -1) {
         this.$store.commit('currentProjectChange', {
           id: '',
           name: '',

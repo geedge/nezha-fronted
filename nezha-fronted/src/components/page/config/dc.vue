@@ -110,7 +110,7 @@
                 <delete-button
                   ref="deleteButton"
                   :single="false"
-                  :from="'datacenter'"
+                  :from="'dc'"
                   :forceDeleteShow="true"
                   :deleteTitle="'overall.dc'"
                   :type="'link'"

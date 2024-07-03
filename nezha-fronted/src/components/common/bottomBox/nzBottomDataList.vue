@@ -172,7 +172,7 @@ export default {
     },
     showDeleteTableRel (n) {
       if (!n) {
-        this.$parent.getTableData()
+        this.$parent.getTableData && this.$parent.getTableData()
       }
     }
   },
