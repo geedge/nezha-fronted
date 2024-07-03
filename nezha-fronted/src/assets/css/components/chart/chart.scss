@@ -1135,7 +1135,7 @@
           display: flex;
           flex-wrap: wrap;
           .asset-info-list{
-            flex-grow: 1;
+            flex: 1;
             box-sizing: border-box;
             padding: 15px 50px;
             min-width: 50%;
