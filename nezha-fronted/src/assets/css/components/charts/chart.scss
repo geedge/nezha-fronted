@@ -525,12 +525,12 @@
     white-space: initial;
     box-sizing: border-box;
     padding: 12px 15px;
+    li{
+      list-style-type: unset !important;
+    }
   }
   .v-md-copy-code-btn{
     display: none !important;
-  }
-  li{
-    list-style-type: unset !important;
   }
 }
 

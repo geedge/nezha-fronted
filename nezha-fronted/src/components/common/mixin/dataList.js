@@ -62,8 +62,6 @@ export default {
     delCallBack (ids, from) {
       const dataList = this.$refs.dataList
       if ((dataList && dataList.from == from) && (dataList.bottomBox && dataList.bottomBox.showSubList)) {
-        console.log(dataList.bottomBox.object)
-        console.log(dataList.bottomBox.object.id)
         if (ids.indexOf(dataList.bottomBox.object.id) !== -1) {
           dataList.bottomBox.showSubList = false
         }

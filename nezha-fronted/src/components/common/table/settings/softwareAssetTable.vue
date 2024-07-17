@@ -136,6 +136,7 @@
       :id="alertLabelId"
       :that="alertLabelObj"
       :type="alertLabelType"
+      @tipHover="tipHover"
     ></alertLabel>
     <el-upload
       action=""
