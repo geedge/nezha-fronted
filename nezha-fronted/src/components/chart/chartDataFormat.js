@@ -530,19 +530,17 @@ function asciiCompute (num, ascii, units, dot = 2, isBits = false) {
   }
   num = Number(num)
   if (isBits) {
-    num = num / 8
-    if (num < 8) {
+    if (num >= 8) {
+      num = num / 8
+    } else {
       return num.toFixed(dot) + ' ' + units[0]
-    }
-    if (num < ascii) {
-      return num.toFixed(dot) + ' ' + units[1]
     }
   }
   const SIGN = num > 0 ? 1 : -1
   num = Math.abs(num)
   let carry = 0
   if (num > 1) {
-    let log = Math.log(num) / Math.log(ascii)
+    const log = Math.log(num) / Math.log(ascii)
     carry = Math.floor(log)
     num = num / Math.pow(ascii, carry)
   }
@@ -551,6 +549,9 @@ function asciiCompute (num, ascii, units, dot = 2, isBits = false) {
   //   carry = parseInt(log)
   //   num = num / Math.pow(ascii, carry)
   // }
+  if (isBits) {
+    carry++
+  }
   if (Number.isInteger(num)) {
     return num * SIGN + ' ' + units[carry]
   } else {
