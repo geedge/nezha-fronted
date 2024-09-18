@@ -228,13 +228,12 @@ export default {
         const now = new Date(bus.computeTimezone(new Date().getTime()))
         const origin = new Date(bus.timeFormate(bus.formateTimeToTime(this.timeRange[1]), 'YYYY-MM-DD HH:mm:ss'))
         const numInterval = now.getTime() - origin.getTime()
-        let nowTimeType = this.$route.query.nowTimeType
+        let nowTimeType = this.nowTimeType
+        console.log(nowTimeType)
         if (!nowTimeType) {
           nowTimeType = {
             value: 1
           }
-        } else {
-          nowTimeType = JSON.parse(nowTimeType)
         }
         if (numInterval >= 15000 && nowTimeType.value !== -1) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变
           startTime = bus.getNewTime(bus.formateTimeToTime(this.timeRange[0]), numInterval, 'YYYY-MM-DD HH:mm:ss')

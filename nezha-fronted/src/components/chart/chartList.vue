@@ -56,6 +56,7 @@
           :chart-info="item"
           :from="from"
           :time-range="timeRange"
+          :nowTimeType="nowTimeType"
           @groupShow="groupShow"
           :isExportHtml="isExportHtml"
           :dataJson="dataJson"
@@ -96,6 +97,7 @@
         :dataJson="dataJson"
         :panelLock="panelLock"
         :time-range="timeRange"
+        :nowTimeType="nowTimeType"
         @showFullscreen="showFullscreen"
       ></panel-chart>
     </el-dialog>
@@ -120,6 +122,9 @@ export default {
     dashboardId: {},
     chartDetailInfo: Object,
     timeRange: Array, // 时间范围
+    nowTimeType: {
+      type: Object
+    },
     isGroup: Boolean,
     groupInfo: {},
     from: String,
