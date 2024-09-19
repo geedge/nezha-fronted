@@ -70,6 +70,7 @@ import alertDetail from '@/components/common/alert/alertDetail'
 import dashboard from '@/components/page/integration/integration-tabs/dashboard'
 import { fromRoute } from '@/components/common/js/constants'
 import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
+import bus from '@/libs/bus'
 // import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'alertMessageInfoTab',
@@ -185,7 +186,10 @@ export default {
       immediate: true,
       handler (n) {
         if (n && n.length) {
-          this.timeRange = [this.timeFormate(n[0] * 1000), this.timeFormate(n[1] * 1000)]
+          this.timeRange = this.timeRange = [
+            bus.timeFormate(bus.computeTimezone(n[0] * 1000)),
+            bus.timeFormate(bus.computeTimezone(n[1] * 1000))
+          ]
         }
       }
     }

@@ -1309,6 +1309,10 @@ export default {
   },
   beforeDestroy () {
     clearTimeout(this.timer)
+    this.$store.dispatch('dispatchPanelTime', {
+      time: [],
+      nowTimeType: {}
+    })
   },
   destroyed () {
     localStorage.removeItem('alertMessageProjectId')

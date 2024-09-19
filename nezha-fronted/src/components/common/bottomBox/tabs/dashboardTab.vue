@@ -89,7 +89,7 @@
         </div>
       </template>
       <!--图表-->
-      <div id="tableList" class="table-list chart-list-box" style="padding-top: 0;overflow: hidden">
+      <div id="tableList" class="table-list chart-list-box" style="overflow: hidden;">
         <div id="dashboardScrollbar" class="table-list-box">
           <div class="box-content"  ref="dashboardScrollbar" v-my-loading="chartListLoading" style="overflow-y: scroll;display: flex;flex-direction: column;overflow-x: hidden">
             <panel-variables :labelArrs="variables" :time-range="searchTime" @getPanelData="getPanelData"></panel-variables>

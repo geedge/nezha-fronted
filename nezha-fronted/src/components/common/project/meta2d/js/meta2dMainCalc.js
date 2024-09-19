@@ -394,7 +394,7 @@ export default {
             boxHeight = null
           })
           this.position.show = true
-          setTimeout(()=>{
+          setTimeout(() => {
             if (this.$refs.meta2dTooltip && this.$refs.meta2dTooltip.$refs.panelChart) {
               this.$refs.meta2dTooltip.$refs.panelChart.loading = false
               // console.log(this.chartParams)
