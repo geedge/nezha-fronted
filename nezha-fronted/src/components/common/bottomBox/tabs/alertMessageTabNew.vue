@@ -676,7 +676,7 @@ export default {
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.$nextTick(() => {
-          this.searchTime = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
+          this.searchTime = [bus.timeFormate(bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000)), bus.timeFormate(bus.computeTimezoneTime(new Date().getTime()))]
           this.$store.dispatch('dispatchPanelTime', {
             time: this.searchTime,
             nowTimeType: {
@@ -1070,6 +1070,12 @@ export default {
       this.chartInfo = chartInfo
       this.graphShow = show
     }
+  },
+  beforeDestroy () {
+    this.$store.dispatch('dispatchPanelTime', {
+      time: [],
+      nowTimeType: {}
+    })
   }
 }
 </script>

@@ -186,7 +186,7 @@ export default {
       immediate: true,
       handler (n) {
         if (n && n.length) {
-          this.timeRange = this.timeRange = [
+          this.timeRange = [
             bus.timeFormate(bus.computeTimezone(n[0] * 1000)),
             bus.timeFormate(bus.computeTimezone(n[1] * 1000))
           ]

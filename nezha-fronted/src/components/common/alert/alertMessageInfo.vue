@@ -126,7 +126,7 @@ export default {
   },
   methods: {
     isGroup,
-    dateChange (filter, multipleTime) {
+    dateChange (filter, multipleTime, nowTimeType) {
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = bus.formateTimeToTime(filter.start_time)
@@ -144,6 +144,10 @@ export default {
         this.multipleTime = false
       }
       this.time = [startTime, endTime]
+      this.$store.dispatch('dispatchPanelTime', {
+        time: [filter.start_time, filter.end_time],
+        nowTimeType: nowTimeType
+      })
       this.chartInfo.loaded && this.chartInfo.alertRule && this.chartInfo.alertRule.type !== 3 && this.query(elements, startTime, endTime, step)
     },
     // 参数 isRefresh 标识是否是刷新操作

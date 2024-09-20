@@ -105,7 +105,7 @@ export default {
         if (this.$refs.pickTime.$refs.multipleTime && !this.$refs.pickTime.$refs.multipleTime.showDropdown) {
           multipleTime = ''
         }
-        this.$emit('dateChange', this.filter, multipleTime)
+        this.$emit('dateChange', this.filter, multipleTime, nowTimeType)
       }, 100)
     },
     closeDialog () {

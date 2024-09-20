@@ -229,7 +229,6 @@ export default {
         const origin = new Date(bus.timeFormate(bus.formateTimeToTime(this.timeRange[1]), 'YYYY-MM-DD HH:mm:ss'))
         const numInterval = now.getTime() - origin.getTime()
         let nowTimeType = this.nowTimeType
-        console.log(nowTimeType)
         if (!nowTimeType) {
           nowTimeType = {
             value: 1
