@@ -270,7 +270,7 @@ export default {
         language: 'en',
         federationEnabled: '1',
         asset_ping_from: '1',
-        asset_ping_interval: '300',
+        asset_ping_interval: '180',
         default_scrape_interval: '30',
         default_scrape_timeout: '30',
         snmp_trap_listen_port: '162'
